@@ -1,0 +1,251 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+    xmlns:templateSelectors="clr-namespace:Notify.Helpers.TemplateSelectors;assembly=Notify"
+    xmlns:notify="clr-namespace:Notify;assembly=Notify"
+    xmlns:views1="clr-namespace:Notify.Views.Views;assembly=Notify"
+    x:Class="Notify.Views.TabViews.HomeView"
+    BindingContext="{Binding HomeView, Source={StaticResource ViewModelLocator}}"
+    NavigationPage.HasNavigationBar="False">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <templateSelectors:HomeResultsTemplateSelector x:Key="HomeResultsTemplateSelector" />
+            <templateSelectors:HomeScheduleTemplateSelector x:Key="HomeScheduleTemplateSelector" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ScrollView>
+        <StackLayout
+            BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor}, Dark={StaticResource DarkPageBackgroundColor}}">
+            <Grid
+                ColumnDefinitions="*, Auto"
+                RowDefinitions="Auto, Auto"
+                RowSpacing="0"
+                Margin="20, 10, 20, 5">
+                <Label
+                    Grid.Column="0"
+                    Grid.Row="0"
+                    Style="{StaticResource Body1FontSize_ExoRegular}"
+                    Text="Hello"
+                    TextColor="{AppThemeBinding Light={StaticResource LightSecondaryTextColor}, Dark={StaticResource DarkSecondaryTextColor}}"></Label>
+                <Label
+                    Grid.Column="0"
+                    Grid.Row="1"
+                    Style="{StaticResource Body1FontSize_ExoBold}"
+                    Text="Formula 1 Fan"
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}"></Label>
+                <Label
+                    Grid.Column="1"
+                    Grid.Row="0"
+                    Grid.RowSpan="2"
+                    Text="&#xf2bd;"
+                    TextColor="{StaticResource AccentColor}"
+                    Style="{StaticResource Headline2FontSize_FontAwesome}"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    Margin="5, 0, 5, 0">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ProfileCommand}"></TapGestureRecognizer>
+                    </Label.GestureRecognizers>
+                </Label>
+            </Grid>
+            <Label
+                Text="Latest results"
+                Style="{StaticResource Body1FontSize_ExoBold}"
+                Margin="20, 0, 20, 0"></Label>
+            <StackLayout
+                xct:StateLayout.CurrentState="{Binding ResultsState}"
+                xct:StateLayout.AnimateStateChanges="False"
+                HeightRequest="150"
+                Margin="20, 0, 0, 0">
+                <xct:StateLayout.StateViews>
+                    <xct:StateView 
+                        StateKey="Loading"
+                        RepeatCount="1">
+                        <xct:StateView.Template>
+                            <DataTemplate>
+                                <StackLayout>
+                                    <notify:SkeletonView
+                                        HeightRequest="15"
+                                        CornerRadius="15"
+                                        HorizontalOptions="Start"
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource LightCardBackgroundColor}, Dark={StaticResource DarkCardBackgroundColor}}"></notify:SkeletonView>
+                                    <StackLayout
+                                        Orientation="Horizontal"
+                                        Spacing="0">
+                                            <views1:HomeResultsLoadingView></views1:HomeResultsLoadingView>
+                                            <views1:HomeResultsLoadingView></views1:HomeResultsLoadingView>
+                                            <views1:HomeResultsLoadingView></views1:HomeResultsLoadingView>
+                                    </StackLayout>
+                                </StackLayout>
+                            </DataTemplate>
+                        </xct:StateView.Template>
+                    </xct:StateView>
+                    <xct:StateView 
+                        StateKey="Error"
+                        VerticalOptions="FillAndExpand">
+                        <Label Text="Error"></Label>
+                    </xct:StateView>
+                    <xct:StateView 
+                        StateKey="Empty"
+                        VerticalOptions="FillAndExpand">
+                        <Label Text="Empty"></Label>
+                    </xct:StateView>
+                </xct:StateLayout.StateViews>
+                <Label
+                    Text="{Binding LatestRace}"
+                    Style="{StaticResource Body2FontSize_ExoRegular}"></Label>
+                <CollectionView
+                    ItemsSource="{Binding LatestResults}"
+                    ItemTemplate="{StaticResource HomeResultsTemplateSelector}">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout
+                            Orientation="Horizontal"
+                            ItemSpacing="0"></LinearItemsLayout>
+                    </CollectionView.ItemsLayout>
+                </CollectionView>
+            </StackLayout>
+            <Label
+                Text="Next races"
+                Style="{StaticResource Body1FontSize_ExoBold}"
+                Margin="20, 0, 20, 0"></Label>
+            <StackLayout
+                xct:StateLayout.CurrentState="{Binding ScheduleState}"
+                xct:StateLayout.AnimateStateChanges="False"
+                HeightRequest="90"
+                Margin="20, 0, 0, 0">
+                <xct:StateLayout.StateViews>
+                    <xct:StateView 
+                        StateKey="Loading"
+                        RepeatCount="1">
+                        <xct:StateView.Template>
+                            <DataTemplate>
+                                <StackLayout
+                                    Orientation="Horizontal"
+                                    Spacing="0">
+                                    <views1:HomeScheduleLoadingView></views1:HomeScheduleLoadingView>
+                                    <views1:HomeScheduleLoadingView></views1:HomeScheduleLoadingView>
+                                    <views1:HomeScheduleLoadingView></views1:HomeScheduleLoadingView>
+                                </StackLayout>
+                            </DataTemplate>
+                        </xct:StateView.Template>
+                    </xct:StateView>
+                    <xct:StateView 
+                        StateKey="Error"
+                        VerticalOptions="FillAndExpand">
+                        <Label Text="Error"></Label>
+                    </xct:StateView>
+                    <xct:StateView 
+                        StateKey="Empty"
+                        VerticalOptions="FillAndExpand">
+                        <Label Text="Empty"></Label>
+                    </xct:StateView>
+                </xct:StateLayout.StateViews>
+                <CollectionView
+                    ItemsSource="{Binding UpcomingRaceEventList}"
+                    ItemTemplate="{StaticResource HomeScheduleTemplateSelector}">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout
+                            Orientation="Horizontal"
+                            ItemSpacing="0"></LinearItemsLayout>
+                    </CollectionView.ItemsLayout>
+                </CollectionView>
+            </StackLayout>
+            <Label
+                Text="Driver Stadings"
+                Style="{StaticResource Body1FontSize_ExoBold}"
+                Margin="20, 0, 20, 0"></Label>
+            <StackLayout
+                xct:StateLayout.CurrentState="{Binding DriverStadingsState}"
+                xct:StateLayout.AnimateStateChanges="False">
+                <xct:StateLayout.StateViews>
+                    <xct:StateView 
+                        StateKey="Loading"
+                        RepeatCount="3">
+                        <xct:StateView.Template>
+                            <DataTemplate>
+                                <views1:DriverStadingsLoadingView></views1:DriverStadingsLoadingView>
+                            </DataTemplate>
+                        </xct:StateView.Template>
+                    </xct:StateView>
+                    <xct:StateView 
+                        StateKey="Error"
+                        VerticalOptions="FillAndExpand">
+                        <Label Text="Error"></Label>
+                    </xct:StateView>
+                    <xct:StateView 
+                        StateKey="Empty"
+                        VerticalOptions="FillAndExpand">
+                        <Label Text="Empty"></Label>
+                    </xct:StateView>
+                </xct:StateLayout.StateViews>
+                <StackLayout
+                    x:Name="driversList"
+                    BindableLayout.ItemsSource="{Binding DriversList}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <views1:DriverStadingsView></views1:DriverStadingsView>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </StackLayout>
+                <Label
+                    Text="See full stadings"
+                    Style="{StaticResource Link_ExoRegular}"
+                    Margin="30, 0, 20, 0">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer
+                            Command="{Binding SeeDriversCommand}"></TapGestureRecognizer>
+                    </Label.GestureRecognizers>
+                </Label>
+            </StackLayout>
+            <Label
+                Text="Team Stadings"
+                Style="{StaticResource Body1FontSize_ExoBold}"
+                Margin="20, 0, 20, 0"></Label>
+            <StackLayout
+                xct:StateLayout.CurrentState="{Binding TeamStadingsState}"
+                xct:StateLayout.AnimateStateChanges="False">
+                <xct:StateLayout.StateViews>
+                    <xct:StateView 
+                        StateKey="Loading"
+                        RepeatCount="3">
+                        <xct:StateView.Template>
+                            <DataTemplate>
+                                <views1:TeamStadingsLoadingView></views1:TeamStadingsLoadingView>
+                            </DataTemplate>
+                        </xct:StateView.Template>
+                    </xct:StateView>
+                    <xct:StateView 
+                            StateKey="Error"
+                            VerticalOptions="FillAndExpand">
+                        <Label Text="Error"></Label>
+                    </xct:StateView>
+                    <xct:StateView 
+                            StateKey="Empty"
+                            VerticalOptions="FillAndExpand">
+                        <Label Text="Empty"></Label>
+                    </xct:StateView>
+                </xct:StateLayout.StateViews>
+                <StackLayout
+                    x:Name="teamsList"
+                    BindableLayout.ItemsSource="{Binding TeamsList}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <views1:TeamStadingsView></views1:TeamStadingsView>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </StackLayout>
+                <Label
+                    Text="See full stadings"
+                    Style="{StaticResource Link_ExoRegular}"
+                    Margin="30, 0, 20, 10">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer
+                            Command="{Binding SeeTeamsCommand}"></TapGestureRecognizer>
+                    </Label.GestureRecognizers>
+                </Label>
+            </StackLayout>
+        </StackLayout>
+    </ScrollView>
+</ContentPage>
