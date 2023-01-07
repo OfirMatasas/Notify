@@ -11,6 +11,7 @@ namespace Notify
 {
     public partial class MainPage : TabbedPage
     {
+        private readonly Page r_FormRegistration;
         private readonly Page r_FormProfile;
         private readonly Page r_FormFriends;
         private readonly Page r_FormGroups;
@@ -24,6 +25,7 @@ namespace Notify
             Children.Add(r_FormFriends = new FormFriends());
             Children.Add(r_FormGroups = new FormGroups());
             Children.Add(r_FormNotifications = new FormNotifications());
+            Children.Add(r_FormRegistration = new FormRegistration());
 
             this.CurrentPageChanged += NavigationBar_Clicked;
 
@@ -47,6 +49,9 @@ namespace Notify
                     break;
                 case "Notifications":
                     selectedPage = r_FormNotifications;
+                    break;
+                case "Registration":
+                    selectedPage = r_FormRegistration;
                     break;
             }
 

@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="Notify.Forms.FormRegistration">
+<StackLayout VerticalOptions="CenterAndExpand" Padding="5">
+        <Entry Placeholder="Username" x:Name="Username"></Entry>
+      <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">  
+          <Entry Placeholder="First Name" WidthRequest="-1" x:Name="FirstName"></Entry>  
+          <Entry Placeholder="Last Name" WidthRequest="-1" x:Name="LastName"></Entry>  
+      </StackLayout>  
+      <Entry Placeholder="Email" x:Name="Email"></Entry>  
+      <Entry Placeholder="Password" IsPassword="True" x:Name="Password"></Entry>  
+      <Entry Placeholder="Confirm Password" IsPassword="True" x:Name="PasswordConfirmation"></Entry>  
+      <Label Text="Date Of Birth"></Label>  
+      <DatePicker x:Name="Date"></DatePicker>  
+      <Label Text="Address"></Label>  
+      <Entry Placeholder="Address" x:Name="Address"></Entry>  
+      <StackLayout Orientation="Horizontal">  
+          <Label Text="Save Password"></Label>  
+          <Switch IsToggled="False" x:Name="SavePassword"></Switch>  
+      </StackLayout>  
+      <Button Text="Sign Up" Clicked="ButtonSignUp_Clicked"></Button>  
+      <Label Text="Already have account? Sign In" TextColor="Blue"></Label>  
+  </StackLayout>  
+</ContentPage>
