@@ -8,8 +8,15 @@ namespace Notify.Forms
 	{	
 		public FormProfile()
 		{
-			InitializeComponent ();
+			InitializeComponent();
             Title = "Profile";
+        }
+
+        void ButtonLogout_Clicked(Object i_Sender, EventArgs i_Args)
+        {
+            App.IsUserLoggedIn = false;
+            Navigation.InsertPageBefore(new FormLogin(), this.Parent as Page);
+            Navigation.PopAsync();
         }
     }
 }
