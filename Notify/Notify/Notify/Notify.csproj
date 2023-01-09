@@ -16,6 +16,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="PropertyChanged.Fody" Version="4.1.0" />
     <PackageReference Include="Rg.Plugins.Popup" Version="2.1.0" />
     <PackageReference Include="Xamarin.CommunityToolkit" Version="2.0.5" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2545" />
@@ -28,15 +29,6 @@
     <Folder Include="Forms\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\..\..\..\Desktop\Xamarin-Formula1-a235a9b53b51e533830e031364578495f7fcb8ec\Formula1\Formula1\Formula1\Styles\Colors.xaml">
-      <Link>Styles\Colors.xaml</Link>
-    </Content>
-    <Content Include="..\..\..\..\..\Desktop\Xamarin-Formula1-a235a9b53b51e533830e031364578495f7fcb8ec\Formula1\Formula1\Formula1\Styles\Fonts.xaml">
-      <Link>Styles\Fonts.xaml</Link>
-    </Content>
-    <Content Include="..\..\..\..\..\Desktop\Xamarin-Formula1-a235a9b53b51e533830e031364578495f7fcb8ec\Formula1\Formula1\Formula1\Styles\Theme.xaml">
-      <Link>Styles\Theme.xaml</Link>
-    </Content>
     <Content Include="..\..\..\..\..\Desktop\Xamarin-Formula1\Formula1\Formula1\Formula1\Resources\Fonts\Exo-Black.ttf">
       <Link>Resources\Fonts\Exo-Black.ttf</Link>
     </Content>
@@ -61,15 +53,6 @@
     <Content Include="Views\.DS_Store" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\..\..\Desktop\Xamarin-Formula1-a235a9b53b51e533830e031364578495f7fcb8ec\Formula1\Formula1\Formula1\Styles\Colors.xaml.cs">
-      <Link>Styles\Colors.xaml.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\..\..\Desktop\Xamarin-Formula1-a235a9b53b51e533830e031364578495f7fcb8ec\Formula1\Formula1\Formula1\Styles\Fonts.xaml.cs">
-      <Link>Styles\Fonts.xaml.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\..\..\Desktop\Xamarin-Formula1-a235a9b53b51e533830e031364578495f7fcb8ec\Formula1\Formula1\Formula1\Styles\Theme.xaml.cs">
-      <Link>Styles\Theme.xaml.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\..\..\Desktop\Xamarin-Formula1\Formula1\Formula1\Formula1\Controls\SkeletonView.cs">
       <Link>Controls\SkeletonView.cs</Link>
     </Compile>
