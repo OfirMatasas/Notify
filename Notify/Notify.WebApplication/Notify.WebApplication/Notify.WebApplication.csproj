@@ -6,4 +6,9 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="GeoCoordinate.NetCore" Version="1.0.0.1" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.3-beta1" />
+    </ItemGroup>
+
 </Project>
