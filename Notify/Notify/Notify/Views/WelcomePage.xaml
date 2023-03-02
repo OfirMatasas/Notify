@@ -6,56 +6,81 @@
     BindingContext="{Binding WelcomePage, Source={StaticResource ViewModelLocator}}"
     NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
-        <Grid
-            RowDefinitions="Auto, *"
-            RowSpacing="0"
-            BackgroundColor="{StaticResource PrimaryColor}">
-            <Grid
-                Grid.Row="1"
-                RowDefinitions="*, Auto, Auto"
-                RowSpacing="0">
-                <Image
-                    Grid.Row="0"
-                    Aspect="AspectFill"
-                    Source="welcome.png"></Image>
-                <StackLayout 
-                    Grid.Row="1"
-                    VerticalOptions="End">
-                    <Label
-                        Margin="20, 10"
-                        Text="Welcome to your Formula 1 App">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span
-                                    Text="Welcome to your&#x0a;"
-                                    Style="{StaticResource Headline3_ExoRegular}"
-                                    TextColor="{StaticResource DarkPrimaryTextColor}"></Span>
-                                <Span
-                                    Text="Formula 1 App"
-                                    Style="{StaticResource Headline3_ExoBold}"
-                                    TextColor="{StaticResource DarkPrimaryTextColor}"></Span>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label
-                        Margin="20, 10, 20, 30"
-                        Text="Drivers | Teams | Results"
-                        LineHeight="0.85"
-                        Style="{StaticResource Subtitle1FontSize_ExoRegular}"
-                        TextColor="{StaticResource DarkPrimaryTextColor}"/>
-                </StackLayout>
-                <Button
-                    Grid.Row="2"
-                    Text="LET'S START"
-                    FontFamily="Exo_Bold"
-                    FontSize="{StaticResource ButtonFontSize}"
-                    BackgroundColor="{StaticResource AccentColor}"
-                    TextColor="{StaticResource DarkPrimaryTextColor}"
-                    Padding="15, 20"
-                    Margin="15, 15, 15, 30"
-                    Command="{Binding LetsStartCommand}"
-                    CornerRadius="36"></Button>
-            </Grid>
+        <StackLayout>
+        <Grid>
+            <StackLayout Padding="0" Margin="0" HorizontalOptions="FillAndExpand">
+                <Frame Padding="0" Margin="0">
+                    <Image Source="NotifyMainFade.png" HeightRequest="300" Aspect="AspectFill" Margin="0"/>
+                </Frame>
+            </StackLayout>
+            
+            <StackLayout Padding="0" Margin="10,310,10,0" HorizontalOptions="FillAndExpand">
+                <Frame BackgroundColor="#222831" Opacity="0.95" HeightRequest="700" HasShadow="False" Padding="15" Margin="-15">
+                    <StackLayout>
+                        <StackLayout Margin="15">
+                            <Label Text="SIGN IN" TextColor="#EEEEEE" HorizontalOptions="CenterAndExpand" FontAttributes="Bold"/>
+                        </StackLayout>
+                        
+                        <StackLayout Padding="0" Margin="15,10">
+
+                            <Frame BackgroundColor="Transparent" BorderColor="#EEEEEE" Padding="0" HorizontalOptions="FillAndExpand" CornerRadius="30">
+                                <StackLayout Orientation="Horizontal">
+                                    <Frame BackgroundColor="#EEEEEE" HeightRequest="40" WidthRequest="40" CornerRadius="30" Padding="0" Margin="5">
+                                        <Image Source="https://www.findool.com/images/avatars/avatar.png" Aspect="AspectFill" Margin="0"/>
+                                    </Frame>
+                                    
+                                </StackLayout>
+                            </Frame>
+
+                            <Frame BackgroundColor="Transparent" BorderColor="#EEEEEE" Margin="0,15,0,0" Padding="0" HorizontalOptions="FillAndExpand" CornerRadius="30">
+                                <StackLayout Orientation="Horizontal">
+                                    <Frame BackgroundColor="#EEEEEE" HeightRequest="40" WidthRequest="40" CornerRadius="30" Padding="0" Margin="5">
+                                        <Image Source="https://images.all-free-download.com/images/graphicthumb/lock_icon_6813906.jpg" Aspect="AspectFill" Margin="0"/>
+                                    </Frame>
+                                </StackLayout>
+                            </Frame>
+
+                            <StackLayout  Orientation="Horizontal">
+                                <CheckBox IsChecked="False" Color="#EEEEEE" />
+                                <Label Text="Remember me" TextColor="#EEEEEE" FontSize="Small" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
+
+                                <Label Text="Forgot Password" TextColor="#EEEEEE" FontAttributes="Bold" HorizontalOptions="EndAndExpand" FontSize="Small" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
+
+
+                            </StackLayout>
+
+                            <Button Text="SIGN IN" BackgroundColor="#393E46" TextColor="#EEEEEE" CornerRadius="30" />
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+                                <Label Text="Still Not Connected ?" TextColor="#EEEEEE" FontSize="Small"/>
+                                <Label Text="Sign Up" TextColor="#EEEEEE" FontAttributes="Bold" FontSize="Small"/>
+                            </StackLayout>
+                            
+                            <StackLayout Margin="0,25,0,0" Padding="0">
+                                <Grid>
+                                    <BoxView BackgroundColor="DarkGray" HeightRequest="1" WidthRequest="150"  HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    <Frame BackgroundColor="White" HeightRequest="45" WidthRequest="45" CornerRadius="45" HasShadow="False" BorderColor="DarkGray" Margin="0" HorizontalOptions="Center" Padding="0">
+                                        <Label Text="OR" TextColor="#222831" FontSize="Small" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+                                    </Frame>
+                                </Grid>
+                             </StackLayout>
+
+                            <StackLayout>
+                                <Button ImageSource="" Text="SIGN UP WITH GOOGLE" BackgroundColor="#d34836" TextColor="#EEEEEE" CornerRadius="30" />
+                            </StackLayout>
+                             <StackLayout Margin="0,10,0,0">
+                                <Button Text="SIGN UP WITH FACEBOOK" BackgroundColor="#395697" TextColor="#EEEEEE" CornerRadius="30" />
+                            </StackLayout>
+                            
+
+                        </StackLayout>
+
+
+                    </StackLayout>
+
+                </Frame>
+            </StackLayout>
         </Grid>
+    </StackLayout>
+        
     </ContentPage.Content>
 </ContentPage>
