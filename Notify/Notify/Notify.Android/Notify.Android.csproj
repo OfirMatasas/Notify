@@ -57,6 +57,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="FontAwesome" Version="4.7.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="PropertyChanged.Fody" Version="4.1.0" />
     <PackageReference Include="Rg.Plugins.Popup" Version="2.1.0" />
@@ -83,11 +84,13 @@
     <AndroidResource Include="Resources\drawable\driver.png" />
     <AndroidResource Include="Resources\drawable\history.png" />
     <AndroidResource Include="Resources\drawable\home.png" />
+    <AndroidResource Include="Resources\drawable\Notify.png" />
+    <AndroidResource Include="Resources\drawable\NotifyMain.png" />
+    <AndroidResource Include="Resources\drawable\NotifyMainFade.png" />
     <AndroidResource Include="Resources\drawable\splash_background.xml" />
     <AndroidResource Include="Resources\drawable\splash_logo.png" />
     <AndroidResource Include="Resources\drawable\splash_screen.xml" />
     <AndroidResource Include="Resources\drawable\team.png" />
-    <AndroidResource Include="Resources\drawable\welcome.png" />
     <AndroidResource Include="Resources\mipmap-anydpi-v26\icon.xml" />
     <AndroidResource Include="Resources\mipmap-anydpi-v26\icon_round.xml" />
     <AndroidResource Include="Resources\mipmap-hdpi\app_icon_adaptive_back.png" />

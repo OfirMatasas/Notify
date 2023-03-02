@@ -33,7 +33,7 @@ namespace Notify.ViewModels
 
         private async void LetsStartCommandHandler()
         {
-            await Shell.Current.GoToAsync("///main");
+            await Shell.Current.GoToAsync("///welcome");
         }
 
         #endregion
@@ -49,7 +49,7 @@ namespace Notify.ViewModels
             }
             else
             {
-                await Shell.Current.GoToAsync("///main");
+                await Shell.Current.GoToAsync("///welcome");
             }
         }
 
