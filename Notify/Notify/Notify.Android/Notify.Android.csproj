@@ -80,10 +80,14 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\.DS_Store" />
+    <AndroidResource Include="Resources\drawable\avatar.png" />
     <AndroidResource Include="Resources\drawable\calendar.png" />
     <AndroidResource Include="Resources\drawable\driver.png" />
+    <AndroidResource Include="Resources\drawable\facebook.png" />
+    <AndroidResource Include="Resources\drawable\google.png" />
     <AndroidResource Include="Resources\drawable\history.png" />
     <AndroidResource Include="Resources\drawable\home.png" />
+    <AndroidResource Include="Resources\drawable\lock.jpeg" />
     <AndroidResource Include="Resources\drawable\Notify.png" />
     <AndroidResource Include="Resources\drawable\NotifyMain.png" />
     <AndroidResource Include="Resources\drawable\NotifyMainFade.png" />
