@@ -1,86 +1,178 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="Notify.Views.WelcomePage"
     BindingContext="{Binding WelcomePage, Source={StaticResource ViewModelLocator}}"
-    NavigationPage.HasNavigationBar="False">
+    NavigationPage.HasNavigationBar="False"
+    x:Class="Notify.Views.WelcomePage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
     <ContentPage.Content>
         <StackLayout>
-        <Grid>
-            <StackLayout Padding="0" Margin="0" HorizontalOptions="FillAndExpand">
-                <Frame Padding="0" Margin="0">
-                    <Image Source="NotifyMainFade.png" HeightRequest="300" Aspect="AspectFill" Margin="0"/>
-                </Frame>
-            </StackLayout>
-            
-            <StackLayout Padding="0" Margin="10,310,10,0" HorizontalOptions="FillAndExpand">
-                <Frame BackgroundColor="#222831" Opacity="0.95" HeightRequest="700" HasShadow="False" Padding="15" Margin="-15">
-                    <StackLayout>
-                        <StackLayout Margin="15">
-                            <Label Text="SIGN IN" TextColor="#EEEEEE" HorizontalOptions="CenterAndExpand" FontAttributes="Bold"/>
-                        </StackLayout>
-                        
-                        <StackLayout Padding="0" Margin="15,10">
+            <Grid>
+                <!--  Notify image  -->
+                <StackLayout
+                    HorizontalOptions="FillAndExpand"
+                    Margin="0"
+                    Padding="0">
+                    <Frame Margin="0" Padding="0">
+                        <Image
+                            Aspect="AspectFill"
+                            HeightRequest="300"
+                            Margin="0"
+                            Source="NotifyMainFade.png" />
+                    </Frame>
+                </StackLayout>
+                <!--  Sign in Board  -->
+                <StackLayout
+                    HorizontalOptions="FillAndExpand"
+                    Margin="10,310,10,0"
+                    Padding="0">
+                    <Frame
+                        BackgroundColor="#222831"
+                        HasShadow="False"
+                        HeightRequest="700"
+                        Margin="-15"
+                        Opacity="0.95"
+                        Padding="15">
+                        <StackLayout>
+                            <StackLayout Margin="15">
+                                <Label
+                                    FontAttributes="Bold"
+                                    HorizontalOptions="CenterAndExpand"
+                                    Text="SIGN IN"
+                                    TextColor="#EEEEEE" />
+                            </StackLayout>
 
-                            <Frame BackgroundColor="Transparent" BorderColor="#EEEEEE" Padding="0" HorizontalOptions="FillAndExpand" CornerRadius="30">
+                            <StackLayout Margin="15,10" Padding="0">
+
+                                <Frame
+                                    BackgroundColor="Transparent"
+                                    BorderColor="#EEEEEE"
+                                    CornerRadius="30"
+                                    HorizontalOptions="FillAndExpand"
+                                    Padding="0">
+                                    <StackLayout Orientation="Horizontal">
+                                        <Frame
+                                            BackgroundColor="#EEEEEE"
+                                            CornerRadius="30"
+                                            HeightRequest="40"
+                                            Margin="5"
+                                            Padding="0"
+                                            WidthRequest="40">
+                                            <Image
+                                                Aspect="AspectFill"
+                                                Margin="0"
+                                                Source="avatar.png" />
+                                        </Frame>
+                                    </StackLayout>
+                                </Frame>
+
+                                <Frame
+                                    BackgroundColor="Transparent"
+                                    BorderColor="#EEEEEE"
+                                    CornerRadius="30"
+                                    HorizontalOptions="FillAndExpand"
+                                    Margin="0,15,0,0"
+                                    Padding="0">
+                                    <StackLayout Orientation="Horizontal">
+                                        <Frame
+                                            BackgroundColor="#EEEEEE"
+                                            CornerRadius="30"
+                                            HeightRequest="40"
+                                            Margin="5"
+                                            Padding="0"
+                                            WidthRequest="40">
+                                            <Image
+                                                Aspect="AspectFill"
+                                                Margin="0"
+                                                Source="lock.jpg" />
+                                        </Frame>
+                                    </StackLayout>
+                                </Frame>
+
                                 <StackLayout Orientation="Horizontal">
-                                    <Frame BackgroundColor="#EEEEEE" HeightRequest="40" WidthRequest="40" CornerRadius="30" Padding="0" Margin="5">
-                                        <Image Source="https://www.findool.com/images/avatars/avatar.png" Aspect="AspectFill" Margin="0"/>
-                                    </Frame>
-                                    
+                                    <CheckBox Color="#EEEEEE" IsChecked="False" />
+                                    <Label
+                                        FontSize="Small"
+                                        HorizontalTextAlignment="Center"
+                                        Text="Remember me"
+                                        TextColor="#EEEEEE"
+                                        VerticalTextAlignment="Center" />
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontSize="Small"
+                                        HorizontalOptions="EndAndExpand"
+                                        HorizontalTextAlignment="Center"
+                                        Text="Forgot Password"
+                                        TextColor="#EEEEEE"
+                                        VerticalTextAlignment="Center" />
                                 </StackLayout>
-                            </Frame>
 
-                            <Frame BackgroundColor="Transparent" BorderColor="#EEEEEE" Margin="0,15,0,0" Padding="0" HorizontalOptions="FillAndExpand" CornerRadius="30">
-                                <StackLayout Orientation="Horizontal">
-                                    <Frame BackgroundColor="#EEEEEE" HeightRequest="40" WidthRequest="40" CornerRadius="30" Padding="0" Margin="5">
-                                        <Image Source="https://images.all-free-download.com/images/graphicthumb/lock_icon_6813906.jpg" Aspect="AspectFill" Margin="0"/>
-                                    </Frame>
+                                <Button
+                                    BackgroundColor="#393E46"
+                                    CornerRadius="30"
+                                    Text="SIGN IN"
+                                    TextColor="#EEEEEE" />
+                                <StackLayout HorizontalOptions="CenterAndExpand" Orientation="Horizontal">
+                                    <Label
+                                        FontSize="Small"
+                                        Text="Still Not Connected ?"
+                                        TextColor="#EEEEEE" />
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontSize="Small"
+                                        Text="Sign Up"
+                                        TextColor="#EEEEEE" />
                                 </StackLayout>
-                            </Frame>
 
-                            <StackLayout  Orientation="Horizontal">
-                                <CheckBox IsChecked="False" Color="#EEEEEE" />
-                                <Label Text="Remember me" TextColor="#EEEEEE" FontSize="Small" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
+                                <StackLayout Margin="0,25,0,15" Padding="0">
+                                    <Grid>
+                                        <BoxView
+                                            BackgroundColor="DarkGray"
+                                            HeightRequest="1"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="Center"
+                                            WidthRequest="150" />
+                                        <Frame
+                                            BackgroundColor="White"
+                                            BorderColor="DarkGray"
+                                            CornerRadius="45"
+                                            HasShadow="False"
+                                            HeightRequest="45"
+                                            HorizontalOptions="Center"
+                                            Margin="0"
+                                            Padding="0"
+                                            WidthRequest="45">
+                                            <Label
+                                                FontSize="Small"
+                                                HorizontalTextAlignment="Center"
+                                                Text="OR"
+                                                TextColor="#222831"
+                                                VerticalTextAlignment="Center" />
+                                        </Frame>
+                                    </Grid>
+                                </StackLayout>
 
-                                <Label Text="Forgot Password" TextColor="#EEEEEE" FontAttributes="Bold" HorizontalOptions="EndAndExpand" FontSize="Small" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
-
-
+                                <StackLayout>
+                                    <Button
+                                        BackgroundColor="#d34836"
+                                        CornerRadius="30"
+                                        ImageSource="google.png"
+                                        Text="SIGN UP WITH GOOGLE"
+                                        TextColor="#EEEEEE" />
+                                </StackLayout>
+                                <StackLayout Margin="0,10,0,0">
+                                    <Button
+                                        BackgroundColor="#395697"
+                                        CornerRadius="30"
+                                        ImageSource="facebook.png"
+                                        Text="SIGN UP WITH FACEBOOK"
+                                        TextColor="#EEEEEE" />
+                                </StackLayout>
                             </StackLayout>
-
-                            <Button Text="SIGN IN" BackgroundColor="#393E46" TextColor="#EEEEEE" CornerRadius="30" />
-                            <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
-                                <Label Text="Still Not Connected ?" TextColor="#EEEEEE" FontSize="Small"/>
-                                <Label Text="Sign Up" TextColor="#EEEEEE" FontAttributes="Bold" FontSize="Small"/>
-                            </StackLayout>
-                            
-                            <StackLayout Margin="0,25,0,0" Padding="0">
-                                <Grid>
-                                    <BoxView BackgroundColor="DarkGray" HeightRequest="1" WidthRequest="150"  HorizontalOptions="Center" VerticalOptions="Center"/>
-                                    <Frame BackgroundColor="White" HeightRequest="45" WidthRequest="45" CornerRadius="45" HasShadow="False" BorderColor="DarkGray" Margin="0" HorizontalOptions="Center" Padding="0">
-                                        <Label Text="OR" TextColor="#222831" FontSize="Small" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
-                                    </Frame>
-                                </Grid>
-                             </StackLayout>
-
-                            <StackLayout>
-                                <Button ImageSource="" Text="SIGN UP WITH GOOGLE" BackgroundColor="#d34836" TextColor="#EEEEEE" CornerRadius="30" />
-                            </StackLayout>
-                             <StackLayout Margin="0,10,0,0">
-                                <Button Text="SIGN UP WITH FACEBOOK" BackgroundColor="#395697" TextColor="#EEEEEE" CornerRadius="30" />
-                            </StackLayout>
-                            
-
                         </StackLayout>
-
-
-                    </StackLayout>
-
-                </Frame>
-            </StackLayout>
-        </Grid>
-    </StackLayout>
-        
+                    </Frame>
+                </StackLayout>
+            </Grid>
+        </StackLayout>
     </ContentPage.Content>
 </ContentPage>
