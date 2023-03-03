@@ -33,7 +33,7 @@
                     Grid.Column="0"
                     Grid.Row="1"
                     Style="{StaticResource Body1FontSize_ExoBold}"
-                    Text="Formula 1 Fan"
+                    Text="Notifier"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label

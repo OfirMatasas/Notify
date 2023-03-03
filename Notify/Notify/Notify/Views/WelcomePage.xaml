@@ -144,7 +144,7 @@
 
                                 <Button
                                     BackgroundColor="#393E46"
-                                    Clicked="SignInButton_OnClicked"
+                                    Command="{Binding LetsStartCommand}"
                                     CornerRadius="30"
                                     Text="SIGN IN"
                                     TextColor="#EEEEEE"
