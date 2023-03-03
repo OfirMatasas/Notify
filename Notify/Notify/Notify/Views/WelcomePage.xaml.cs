@@ -16,15 +16,15 @@ namespace Notify.Views
         }
 
 
-        private async void SignInButton_OnClicked(object sender, EventArgs e)
-        {
-            UserName = userName.Text;
-            Password = password.Text;
-            if (UserName.Equals("lin") && Password.Equals("123"))
-            {
-                Console.WriteLine("logged successfully!");
-                await Navigation.PushAsync(new HomeView());
-            }
-        }
+        // private async void SignInButton_OnClicked(object sender, EventArgs e)
+        // {
+        //     UserName = userName.Text;
+        //     Password = password.Text;
+        //     if (UserName.Equals("lin") && Password.Equals("123"))
+        //     {
+        //         Console.WriteLine("logged successfully!");
+        //         await Navigation.PushAsync(new HomeView());
+        //     }
+        // }
     }
 }

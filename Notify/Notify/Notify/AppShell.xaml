@@ -5,60 +5,60 @@
     Shell.NavBarIsVisible="False"
     x:Class="Notify.AppShell"
     xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:tabViews="clr-namespace:Notify.Views.TabViews;assembly=Notify"
-    xmlns:views="clr-namespace:Notify.Views;assembly=Notify"
+    xmlns:TabViews="clr-namespace:Notify.Views.TabViews;assembly=Notify"
+    xmlns:Views="clr-namespace:Notify.Views;assembly=Notify"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
     <Shell.Resources>
         <ResourceDictionary>
-            <!-- <Style TargetType="TabBar" x:Key="BaseStyle"> -->
-            <!--     <Setter Property="Shell.BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightTabBarBackgroundColor}, Dark={StaticResource DarkTabBarBackgroundColor}}" /> -->
-            <!--     <Setter Property="Shell.ForegroundColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" /> -->
-            <!--     <Setter Property="Shell.TitleColor" Value="{StaticResource AccentColor}" /> -->
-            <!--     <Setter Property="Shell.DisabledColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" /> -->
-            <!--     <Setter Property="Shell.UnselectedColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" /> -->
-            <!--     <Setter Property="Shell.TabBarBackgroundColor" Value="{AppThemeBinding Light={StaticResource LightTabBarBackgroundColor}, Dark={StaticResource DarkTabBarBackgroundColor}}" /> -->
-            <!--     <Setter Property="Shell.TabBarForegroundColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" /> -->
-            <!--     <Setter Property="Shell.TabBarUnselectedColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" /> -->
-            <!--     <Setter Property="Shell.TabBarTitleColor" Value="{StaticResource AccentColor}" /> -->
-            <!-- </Style> -->
+            <Style TargetType="TabBar" x:Key="BaseStyle">
+                <Setter Property="Shell.BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightTabBarBackgroundColor}, Dark={StaticResource DarkTabBarBackgroundColor}}" />
+                <Setter Property="Shell.ForegroundColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" />
+                <Setter Property="Shell.TitleColor" Value="{StaticResource AccentColor}" />
+                <Setter Property="Shell.DisabledColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" />
+                <Setter Property="Shell.UnselectedColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" />
+                <Setter Property="Shell.TabBarBackgroundColor" Value="{AppThemeBinding Light={StaticResource LightTabBarBackgroundColor}, Dark={StaticResource DarkTabBarBackgroundColor}}" />
+                <Setter Property="Shell.TabBarForegroundColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" />
+                <Setter Property="Shell.TabBarUnselectedColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" />
+                <Setter Property="Shell.TabBarTitleColor" Value="{StaticResource AccentColor}" />
+            </Style>
 
             <Style BasedOn="{StaticResource BaseStyle}" TargetType="TabBar" />
         </ResourceDictionary>
     </Shell.Resources>
 
     <ShellItem Route="welcome">
-        <ShellContent ContentTemplate="{DataTemplate views:WelcomePage}" />
+        <ShellContent ContentTemplate="{DataTemplate Views:WelcomePage}" />
     </ShellItem>
     <TabBar Route="main">
         <Tab
-            Icon="home.png"
+            Icon="notification.png"
             Route="home"
             Title="Home">
-            <ShellContent ContentTemplate="{DataTemplate tabViews:HomeView}" />
+            <ShellContent ContentTemplate="{DataTemplate TabViews:HomeView}" />
         </Tab>
         <Tab
-            Icon="calendar.png"
+            Icon="friends.png"
             Route="schedule"
             Title="Schedule">
-            <ShellContent ContentTemplate="{DataTemplate tabViews:ScheduleView}" />
+            <ShellContent ContentTemplate="{DataTemplate TabViews:ScheduleView}" />
         </Tab>
         <Tab
-            Icon="driver.png"
+            Icon="groups.png"
             Route="drivers"
             Title="Drivers">
-            <ShellContent ContentTemplate="{DataTemplate tabViews:DriversView}" />
+            <ShellContent ContentTemplate="{DataTemplate TabViews:DriversView}" />
         </Tab>
         <Tab
-            Icon="team.png"
+            Icon="profile.png"
             Route="teams"
             Title="Teams">
-            <ShellContent ContentTemplate="{DataTemplate tabViews:TeamsView}" />
+            <ShellContent ContentTemplate="{DataTemplate TabViews:TeamsView}" />
         </Tab>
         <Tab
-            Icon="history.png"
+            Icon="settings.png"
             Route="history"
             Title="History">
-            <ShellContent ContentTemplate="{DataTemplate tabViews:HistoryView}" />
+            <ShellContent ContentTemplate="{DataTemplate TabViews:HistoryView}" />
         </Tab>
     </TabBar>
 </Shell>

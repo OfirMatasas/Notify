@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Notify.Views.TabViews;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -33,7 +34,7 @@ namespace Notify.ViewModels
 
         private async void LetsStartCommandHandler()
         {
-            await Shell.Current.GoToAsync("///welcome");
+            await Shell.Current.GoToAsync("///main");
         }
 
         #endregion
