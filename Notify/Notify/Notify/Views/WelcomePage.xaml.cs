@@ -1,4 +1,5 @@
 ﻿using System;
+using Notify.Views.TabViews;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -22,7 +23,7 @@ namespace Notify.Views
             if (UserName.Equals("lin") && Password.Equals("123"))
             {
                 Console.WriteLine("logged successfully!");
-                await Navigation.PushAsync(new CircuitDetailsPage());
+                await Navigation.PushAsync(new HomeView());
             }
         }
     }
