@@ -1,7 +1,7 @@
 ﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Formula1.Views.TabViews
+namespace Notify.Views.TabViews
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class TeamsView : ContentPage

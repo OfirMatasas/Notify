@@ -1,53 +1,44 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <ContentPage
-    xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
-    xmlns:views1="clr-namespace:Notify.Views.Views;assembly=Notify"
-    x:Class="Formula1.Views.TabViews.TeamsView"
     BindingContext="{Binding TeamsView, Source={StaticResource ViewModelLocator}}"
-    NavigationPage.HasNavigationBar="False">
-    <StackLayout
-        BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor}, Dark={StaticResource DarkPageBackgroundColor}}">
-        <Label 
-            Margin="15, 10, 0, 5">
+    NavigationPage.HasNavigationBar="False"
+    x:Class="Notify.Views.TabViews.TeamsView"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:views="clr-namespace:Notify.Views.Views;assembly=Notify"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:xct="http://xamarin.com/schemas/2020/toolkit">
+    <StackLayout BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor}, Dark={StaticResource DarkPageBackgroundColor}}">
+        <Label Margin="15,10,0,5">
             <Label.FormattedText>
                 <FormattedString>
                     <Span
-                        Text="{Binding Title}"
                         Style="{StaticResource Headline3_ExoBold}"
-                        TextColor="{StaticResource AccentColor}"></Span>
-                    <Span
-                        Text=" Stadings"
-                        Style="{StaticResource Headline3_ExoRegular}"></Span>
+                        Text="{Binding Title}"
+                        TextColor="{StaticResource AccentColor}" />
+                    <Span Style="{StaticResource Headline3_ExoRegular}" Text=" Stadings" />
                 </FormattedString>
             </Label.FormattedText>
         </Label>
         <StackLayout
-            xct:StateLayout.CurrentState="{Binding MainState}"
+            VerticalOptions="FillAndExpand"
             xct:StateLayout.AnimateStateChanges="False"
-            VerticalOptions="FillAndExpand">
+            xct:StateLayout.CurrentState="{Binding MainState}">
             <xct:StateLayout.StateViews>
-                <xct:StateView 
-                    StateKey="Loading"
-                    RepeatCount="10">
+                <xct:StateView RepeatCount="10" StateKey="Loading">
                     <xct:StateView.Template>
                         <DataTemplate>
-                            <views1:TeamStadingsLoadingView></views1:TeamStadingsLoadingView>
+                            <views:TeamStadingsLoadingView />
                         </DataTemplate>
                     </xct:StateView.Template>
                 </xct:StateView>
-                <xct:StateView 
-                    StateKey="Error"
-                    VerticalOptions="FillAndExpand">
-                    <Label Text="Error"></Label>
+                <xct:StateView StateKey="Error" VerticalOptions="FillAndExpand">
+                    <Label Text="Error" />
                 </xct:StateView>
             </xct:StateLayout.StateViews>
-            <CollectionView
-                ItemsSource="{Binding TeamsList}">
+            <CollectionView ItemsSource="{Binding TeamsList}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <views1:TeamStadingsView></views1:TeamStadingsView>
+                        <views:TeamStadingsView />
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

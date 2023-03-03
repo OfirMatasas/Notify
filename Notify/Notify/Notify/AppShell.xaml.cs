@@ -1,5 +1,4 @@
-﻿using Formula1.Views;
-using Notify.Views;
+﻿using Notify.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using DriverDetailsPage = Notify.Views.DriverDetailsPage;
