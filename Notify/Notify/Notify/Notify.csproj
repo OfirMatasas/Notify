@@ -28,9 +28,6 @@
     <None Remove="Forms\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Forms\" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="..\..\..\..\..\Desktop\Xamarin-Formula1\Formula1\Formula1\Formula1\Resources\Fonts\Exo-Black.ttf">
       <Link>Resources\Fonts\Exo-Black.ttf</Link>
     </Content>
