@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    BindingContext="{Binding CircuitLapsPage, Source={StaticResource ViewModelLocator}}"
+    x:Class="Notify.Views.CircuitLapsPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:views="clr-namespace:Notify.Views.Views;assembly=Notify"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:xct="http://xamarin.com/schemas/2020/toolkit">
+    <ContentPage.Content>
+        <Grid BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor}, Dark={StaticResource DarkPageBackgroundColor}}" RowDefinitions="Auto, *">
+            <StackLayout
+                BackgroundColor="{AppThemeBinding Light={StaticResource LightCardBackgroundColor},
+                                                  Dark={StaticResource DarkCardBackgroundColor}}"
+                Grid.Row="0"
+                Spacing="0">
+                <StackLayout
+                    HorizontalOptions="Start"
+                    Margin="20,20,0,0"
+                    Padding="0,5,5,5"
+                    VerticalOptions="Start">
+                    <StackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding BackCommand}" />
+                    </StackLayout.GestureRecognizers>
+                    <Label
+                        FontFamily="FontAwesome_Solid"
+                        FontSize="{StaticResource Subtitle1FontSize}"
+                        HorizontalOptions="Start"
+                        Text="&#xf060;"
+                        TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                    Dark={StaticResource DarkPrimaryTextColor}}" />
+                </StackLayout>
+                <Grid
+                    ColumnDefinitions="*, Auto"
+                    Margin="20,0,20,0"
+                    VerticalOptions="End">
+                    <StackLayout
+                        Grid.Column="0"
+                        Margin="0,0,0,10"
+                        Spacing="0"
+                        VerticalOptions="End">
+                        <Label
+                            Style="{StaticResource CaptionFontSize_ExoRegular}"
+                            Text="{Binding LapResults.Round, StringFormat='Round {0}'}"
+                            TextColor="{StaticResource AccentColor}"
+                            VerticalOptions="Center" />
+                        <Label
+                            Style="{StaticResource Subtitle1FontSize_ExoBold}"
+                            Text="{Binding LapResults.RaceName}"
+                            VerticalOptions="Center" />
+                        <Label
+                            Style="{StaticResource Body2FontSize_ExoRegular}"
+                            Text="{Binding LapResults.Circuit.CircuitName}"
+                            VerticalOptions="Center" />
+                        <Label
+                            Margin="0,2"
+                            Style="{StaticResource CaptionFontSize_ExoMedium}"
+                            VerticalOptions="Center">
+                            <Label.Text>
+                                <MultiBinding StringFormat="{}{0:dd MMM yyyy} {1:hh:mm tt}">
+                                    <Binding Path="LapResults.Date" />
+                                    <Binding Path="LapResults.Time" />
+                                </MultiBinding>
+                            </Label.Text>
+                        </Label>
+                    </StackLayout>
+                    <Image
+                        Aspect="AspectFill"
+                        Grid.Column="1"
+                        HeightRequest="120"
+                        HorizontalOptions="EndAndExpand"
+                        Source="{Binding LapResults.DriverImage.Side}"
+                        VerticalOptions="End"
+                        WidthRequest="120" />
+                </Grid>
+            </StackLayout>
+            <StackLayout
+                Grid.Row="1"
+                Spacing="0"
+                xct:StateLayout.AnimateStateChanges="False"
+                xct:StateLayout.CurrentState="{Binding LapsState}">
+                <xct:StateLayout.StateViews>
+                    <xct:StateView RepeatCount="10" StateKey="Loading">
+                        <xct:StateView.Template>
+                            <DataTemplate>
+                                <views:ScheduleRaceResultsLapByLapLoadingView />
+                            </DataTemplate>
+                        </xct:StateView.Template>
+                    </xct:StateView>
+                    <xct:StateView StateKey="Error" VerticalOptions="FillAndExpand">
+                        <Label Style="{StaticResource Body1FontSize_ExoRegular}" Text="Error" />
+                    </xct:StateView>
+                    <xct:StateView StateKey="Empty" VerticalOptions="FillAndExpand">
+                        <Label Style="{StaticResource Body1FontSize_ExoRegular}" Text="There's no information to display" />
+                    </xct:StateView>
+                </xct:StateLayout.StateViews>
+                <Label
+                    Margin="20,0,0,2"
+                    Style="{StaticResource Body1FontSize_ExoBold}"
+                    Text="Race Lap by Lap" />
+                <CollectionView ItemsSource="{Binding LapResults.Laps}" Margin="20,0,20,10">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <views:ScheduleRaceResultsLapByLapView />
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </StackLayout>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

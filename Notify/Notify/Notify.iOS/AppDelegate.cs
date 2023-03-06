@@ -23,6 +23,7 @@ namespace Notify.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
+            Plugin.MaterialDesignControls.iOS.Renderer.Init();
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);

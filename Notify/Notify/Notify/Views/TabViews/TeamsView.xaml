@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    BindingContext="{Binding TeamsView, Source={StaticResource ViewModelLocator}}"
+    NavigationPage.HasNavigationBar="False"
+    x:Class="Notify.Views.TabViews.TeamsView"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:views="clr-namespace:Notify.Views.Views;assembly=Notify"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:xct="http://xamarin.com/schemas/2020/toolkit">
+    <StackLayout BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor}, Dark={StaticResource DarkPageBackgroundColor}}">
+        <Label Margin="15,10,0,5">
+            <Label.FormattedText>
+                <FormattedString>
+                    <Span
+                        Style="{StaticResource Headline3_ExoBold}"
+                        Text="{Binding Title}"
+                        TextColor="{StaticResource AccentColor}" />
+                    <Span Style="{StaticResource Headline3_ExoRegular}" Text=" Stadings" />
+                </FormattedString>
+            </Label.FormattedText>
+        </Label>
+        <StackLayout
+            VerticalOptions="FillAndExpand"
+            xct:StateLayout.AnimateStateChanges="False"
+            xct:StateLayout.CurrentState="{Binding MainState}">
+            <xct:StateLayout.StateViews>
+                <xct:StateView RepeatCount="10" StateKey="Loading">
+                    <xct:StateView.Template>
+                        <DataTemplate>
+                            <views:TeamStadingsLoadingView />
+                        </DataTemplate>
+                    </xct:StateView.Template>
+                </xct:StateView>
+                <xct:StateView StateKey="Error" VerticalOptions="FillAndExpand">
+                    <Label Text="Error" />
+                </xct:StateView>
+            </xct:StateLayout.StateViews>
+            <CollectionView ItemsSource="{Binding TeamsList}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <views:TeamStadingsView />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </StackLayout>
+    </StackLayout>
+</ContentPage>
