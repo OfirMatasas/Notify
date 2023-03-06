@@ -1,32 +1,34 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Grid
-    xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:notify="clr-namespace:Notify;assembly=Notify"
-    x:Class="Notify.Views.Views.TeamRaceResultsLoadingView"
     RowDefinitions="Auto, Auto, Auto"
-    RowSpacing="5">
-    <notify:SkeletonView
+    RowSpacing="5"
+    x:Class="Notify.Views.Views.TeamRaceResultsLoadingView"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:controls="clr-namespace:Notify.Controls;assembly=Notify"
+    xmlns:notify="clr-namespace:Notify;assembly=Notify"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <controls:SkeletonView
+        BackgroundColor="{StaticResource AccentColor}"
+        CornerRadius="10"
         Grid.Row="0"
         HeightRequest="10"
-        WidthRequest="50"
-        CornerRadius="10"
-        Margin="3, 0, 0, 0"
         HorizontalOptions="Start"
+        Margin="3,0,0,0"
         VerticalOptions="Center"
-        BackgroundColor="{StaticResource AccentColor}"></notify:SkeletonView>
-    <notify:SkeletonView
+        WidthRequest="50" />
+    <controls:SkeletonView
+        BackgroundColor="{AppThemeBinding Light={StaticResource LightCardBackgroundColor},
+                                          Dark={StaticResource DarkCardBackgroundColor}}"
+        CornerRadius="15"
         Grid.Row="1"
         HeightRequest="15"
-        CornerRadius="15"
-        Margin="3, 0, 0, 0"
         HorizontalOptions="Start"
-        VerticalOptions="Center"
-        BackgroundColor="{AppThemeBinding Light={StaticResource LightCardBackgroundColor}, Dark={StaticResource DarkCardBackgroundColor}}"></notify:SkeletonView>
+        Margin="3,0,0,0"
+        VerticalOptions="Center" />
     <StackLayout
         Grid.Row="2"
-        Spacing="5"
-        Margin="0, 5, 0, 0">
+        Margin="0,5,0,0"
+        Spacing="5">
         <BindableLayout.ItemsSource>
             <x:Array Type="{x:Type x:String}">
                 <x:String>Driver 1</x:String>
@@ -36,39 +38,42 @@
         <BindableLayout.ItemTemplate>
             <DataTemplate>
                 <Grid
-                    RowDefinitions="Auto, Auto"
                     ColumnDefinitions="*, Auto"
+                    RowDefinitions="Auto, Auto"
                     RowSpacing="5">
-                    <notify:SkeletonView
+                    <controls:SkeletonView
+                        BackgroundColor="{AppThemeBinding Light={StaticResource LightCardBackgroundColor},
+                                                          Dark={StaticResource DarkCardBackgroundColor}}"
+                        CornerRadius="15"
+                        Grid.Column="0"
                         Grid.Row="0"
                         Grid.RowSpan="2"
-                        Grid.Column="0"
                         HeightRequest="15"
-                        CornerRadius="15"
-                        Margin="3, 0, 0, 0"
                         HorizontalOptions="Start"
-                        VerticalOptions="Center"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource LightCardBackgroundColor}, Dark={StaticResource DarkCardBackgroundColor}}"></notify:SkeletonView>
-                    <notify:SkeletonView
+                        Margin="3,0,0,0"
+                        VerticalOptions="Center" />
+                    <controls:SkeletonView
+                        BackgroundColor="{AppThemeBinding Light={StaticResource LightCardBackgroundColor},
+                                                          Dark={StaticResource DarkCardBackgroundColor}}"
+                        CornerRadius="15"
+                        Grid.Column="1"
                         Grid.Row="0"
-                        Grid.Column="1"
                         HeightRequest="15"
-                        WidthRequest="75"
-                        CornerRadius="15"
-                        Margin="3, 0, 0, 0"
                         HorizontalOptions="End"
+                        Margin="3,0,0,0"
                         VerticalOptions="Center"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource LightCardBackgroundColor}, Dark={StaticResource DarkCardBackgroundColor}}"></notify:SkeletonView>
-                    <notify:SkeletonView
+                        WidthRequest="75" />
+                    <controls:SkeletonView
+                        BackgroundColor="{AppThemeBinding Light={StaticResource LightCardBackgroundColor},
+                                                          Dark={StaticResource DarkCardBackgroundColor}}"
+                        CornerRadius="15"
+                        Grid.Column="1"
                         Grid.Row="1"
-                        Grid.Column="1"
                         HeightRequest="15"
-                        WidthRequest="50"
-                        CornerRadius="15"
-                        Margin="3, 0, 0, 0"
                         HorizontalOptions="End"
+                        Margin="3,0,0,0"
                         VerticalOptions="Center"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource LightCardBackgroundColor}, Dark={StaticResource DarkCardBackgroundColor}}"></notify:SkeletonView>
+                        WidthRequest="50" />
                 </Grid>
             </DataTemplate>
         </BindableLayout.ItemTemplate>
