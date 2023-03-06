@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Notify.Views.TabViews;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -9,13 +10,27 @@ namespace Notify.ViewModels
     {
         #region Commands
 
-        public Command LetsStartCommand { get; set; }
+        public Command LogInCommand { get; set; }
 
         #endregion
 
         #region Properties
 
         public Task Init { get; }
+        
+        private string userName;
+        private string password;
+        public string UserName
+        {
+            get => userName;
+            set => SetProperty(ref userName, value);
+        }
+
+        public string Password
+        {
+            get => password;
+            set => SetProperty(ref password, value);
+        }
 
         #endregion
 
@@ -23,8 +38,8 @@ namespace Notify.ViewModels
 
         public WelcomePageViewModel()
         {
-            LetsStartCommand = new Command(LetsStartCommandHandler);
-
+            LogInCommand = new Command(OnLoginClicked);
+            
             Init = Initialize();
         }
 
@@ -32,9 +47,27 @@ namespace Notify.ViewModels
 
         #region Command Handlers
 
-        private async void LetsStartCommandHandler()
+        private async void OnLoginClicked()
         {
-            await Shell.Current.GoToAsync("///main");
+            IsBusy = true;
+            try
+            {
+                if (userName.Equals("lin") && Password.Equals("123"))
+                {
+                    await Shell.Current.GoToAsync("///main");
+                }
+                else
+                {
+                    await App.Current.MainPage.DisplayAlert("Error", "Invalid credentials", "OK");
+                }
+
+            }
+            catch (Exception e)
+            {
+                await App.Current.MainPage.DisplayAlert("Error", "Empty credentials", "OK");
+            }
+
+            IsBusy = false;
         }
 
         #endregion
