@@ -14,7 +14,6 @@ namespace Notify.iOS
         {
             // if you want to use a different Application Delegate class from "AppDelegate"
             // you can specify it here.
-            Plugin.MaterialDesignControls.iOS.Renderer.Init();
             UIApplication.Main(args, null, typeof(AppDelegate));
         }
     }
