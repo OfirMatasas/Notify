@@ -51,4 +51,12 @@
     <Content Include="ViewModels\.DS_Store" />
     <Content Include="Views\.DS_Store" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\..\..\Desktop\Xamarin-Formula1\Formula1\Formula1\Formula1\Controls\SkeletonView.cs">
+      <Link>Controls\SkeletonView.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\..\Desktop\Xamarin-Formula1\Formula1\Formula1\Formula1\Core\HttpClientFactory.cs">
+      <Link>Core\HttpClientFactory.cs</Link>
+    </Compile>
+  </ItemGroup>
 </Project>

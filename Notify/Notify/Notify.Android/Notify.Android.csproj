@@ -67,6 +67,9 @@
     <PackageReference Include="Xamarin.Essentials" Version="1.7.4" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\..\..\Desktop\Xamarin-Formula1\Formula1\Formula1\Formula1.Android\Renderers\ShellCustomRenderer.cs">
+      <Link>Renderers\ShellCustomRenderer.cs</Link>
+    </Compile>
     <Compile Include="MainActivity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderers\ShellCustomRenderer.cs" />
