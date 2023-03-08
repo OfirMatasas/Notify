@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 25.0.1704.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notify", "Notify.csproj", "{482E73DB-9B9E-4237-AAFD-101DFFB72BBE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{482E73DB-9B9E-4237-AAFD-101DFFB72BBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{482E73DB-9B9E-4237-AAFD-101DFFB72BBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{482E73DB-9B9E-4237-AAFD-101DFFB72BBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{482E73DB-9B9E-4237-AAFD-101DFFB72BBE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B7745C31-82F2-4BD8-BFF6-E680C5473B5C}
+	EndGlobalSection
+EndGlobal

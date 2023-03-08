@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:styles1="clr-namespace:Notify.Styles;assembly=Notify"
+    x:Class="Notify.Styles.Theme">
+    <ResourceDictionary.MergedDictionaries>
+        <styles1:Colors></styles1:Colors>
+        <styles1:Fonts></styles1:Fonts>
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style x:Key="Headline0FontSize_FontAwesome" TargetType="Label">
+        <Setter Property="FontFamily" Value="FontAwesome_Solid" />
+        <Setter Property="FontSize" Value="{StaticResource Headline0FontSize}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" />
+    </Style>
+
+    <Style x:Key="Headline2FontSize_FontAwesome" TargetType="Label">
+        <Setter Property="FontFamily" Value="FontAwesome_Solid" />
+        <Setter Property="FontSize" Value="{StaticResource Headline2FontSize}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" />
+    </Style>
+    <Style x:Key="Headline2_ExoBold" TargetType="Label">
+        <Setter Property="FontFamily" Value="Exo_Bold" />
+        <Setter Property="FontSize" Value="{StaticResource Headline2FontSize}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" />
+    </Style>
+
+    <Style x:Key="Headline3_ExoBold" TargetType="Label">
+        <Setter Property="FontFamily" Value="Exo_Bold" />
+        <Setter Property="FontSize" Value="{StaticResource Headline3FontSize}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" />
+    </Style>
+    <Style x:Key="Headline3_ExoRegular" TargetType="Label">
+        <Setter Property="FontFamily" Value="Exo_Regular" />
+        <Setter Property="FontSize" Value="{StaticResource Headline3FontSize}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" />
+    </Style>
+
+    <Style x:Key="Headline4FontSize_ExoBold" TargetType="Label">
+        <Setter Property="FontFamily" Value="Exo_Bold" />
+        <Setter Property="FontSize" Value="{StaticResource Headline4FontSize}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" />
+    </Style>
+
+    <Style x:Key="Subtitle1FontSize_ExoBold" TargetType="Label">
+        <Setter Property="FontFamily" Value="Exo_Bold" />
+        <Setter Property="FontSize" Value="{StaticResource Subtitle1FontSize}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" />
+    </Style>
+    <Style x:Key="Subtitle1FontSize_ExoRegular" TargetType="Label">
+        <Setter Property="FontFamily" Value="Exo_Regular" />
+        <Setter Property="FontSize" Value="{StaticResource Subtitle1FontSize}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" />
+    </Style>
+
+    <Style x:Key="Body1FontSize_ExoRegular" TargetType="Label">
+        <Setter Property="FontFamily" Value="Exo_Regular" />
+        <Setter Property="FontSize" Value="{StaticResource Body1FontSize}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" />
+    </Style>
+    <Style x:Key="Body1FontSize_ExoBold" TargetType="Label">
+        <Setter Property="FontFamily" Value="Exo_Bold" />
+        <Setter Property="FontSize" Value="{StaticResource Body1FontSize}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" />
+    </Style>
+
+    <Style x:Key="Body2FontSize_ExoRegular" TargetType="Label">
+        <Setter Property="FontFamily" Value="Exo_Regular" />
+        <Setter Property="FontSize" Value="{StaticResource Body2FontSize}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" />
+    </Style>
+    <Style x:Key="Body2FontSize_ExoBold" TargetType="Label">
+        <Setter Property="FontFamily" Value="Exo_Bold" />
+        <Setter Property="FontSize" Value="{StaticResource Body2FontSize}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" />
+    </Style>
+
+    <Style x:Key="Button_ExoRegular" TargetType="Label">
+        <Setter Property="FontFamily" Value="Exo_Regular" />
+        <Setter Property="FontSize" Value="{StaticResource ButtonFontSize}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" />
+    </Style>
+
+    <Style x:Key="Link_ExoRegular" TargetType="Label">
+        <Setter Property="FontFamily" Value="Exo_Regular" />
+        <Setter Property="TextDecorations" Value="Underline" />
+        <Setter Property="FontSize" Value="{StaticResource ButtonFontSize}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" />
+    </Style>
+
+    <Style x:Key="CaptionFontSize_ExoRegular" TargetType="Label">
+        <Setter Property="FontFamily" Value="Exo_Regular" />
+        <Setter Property="FontSize" Value="{StaticResource CaptionFontSize}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" />
+    </Style>
+    <Style x:Key="CaptionFontSize_ExoMedium" TargetType="Label">
+        <Setter Property="FontFamily" Value="Exo_Medium" />
+        <Setter Property="FontSize" Value="{StaticResource CaptionFontSize}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" />
+    </Style>
+    <Style x:Key="CaptionFontSize_FontAwesome" TargetType="Label">
+        <Setter Property="FontFamily" Value="FontAwesome_Solid" />
+        <Setter Property="FontSize" Value="{StaticResource CaptionFontSize}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" />
+    </Style>
+</ResourceDictionary>
