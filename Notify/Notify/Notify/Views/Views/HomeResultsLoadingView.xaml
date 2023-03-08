@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<StackLayout
+    Padding="0,0,0,5"
+    x:Class="Notify.Views.Views.HomeResultsLoadingView"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:controls="clr-namespace:Notify.Controls;assembly=Notify"
+    xmlns:notify="clr-namespace:Notify;assembly=Notify"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <Frame
+        BackgroundColor="{AppThemeBinding Light={StaticResource LightCardBackgroundColor},
+                                          Dark={StaticResource DarkCardBackgroundColor}}"
+        CornerRadius="20"
+        HeightRequest="145"
+        Margin="5,0"
+        Padding="0">
+        <Grid
+            ColumnDefinitions="Auto, Auto"
+            Margin="15,10"
+            RowDefinitions="Auto, Auto, Auto, Auto"
+            RowSpacing="5">
+            <controls:SkeletonView
+                BackgroundColor="{StaticResource AccentColor}"
+                CornerRadius="10"
+                Grid.Column="0"
+                Grid.Row="0"
+                HeightRequest="40"
+                HorizontalOptions="Start"
+                WidthRequest="40" />
+            <controls:SkeletonView
+                BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor},
+                                                  Dark={StaticResource DarkPageBackgroundColor}}"
+                CornerRadius="15"
+                Grid.Column="0"
+                Grid.Row="1"
+                HeightRequest="15"
+                HorizontalOptions="Start" />
+            <controls:SkeletonView
+                BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor},
+                                                  Dark={StaticResource DarkPageBackgroundColor}}"
+                CornerRadius="15"
+                Grid.Column="0"
+                Grid.Row="2"
+                HeightRequest="15"
+                HorizontalOptions="Start" />
+            <controls:SkeletonView
+                BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor},
+                                                  Dark={StaticResource DarkPageBackgroundColor}}"
+                CornerRadius="10"
+                Grid.Column="0"
+                Grid.Row="3"
+                HeightRequest="10"
+                HorizontalOptions="Start" />
+        </Grid>
+    </Frame>
+</StackLayout>
+

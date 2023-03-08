@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Grid
+    ColumnDefinitions="*, Auto"
+    Padding="15,5"
+    RowDefinitions="Auto, Auto, Auto"
+    RowSpacing="5"
+    x:Class="Notify.Views.Views.HistoryScheduleLoadingView"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:controls="clr-namespace:Notify.Controls;assembly=Notify"
+    xmlns:notify="clr-namespace:Notify;assembly=Notify"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <controls:SkeletonView
+        BackgroundColor="{StaticResource AccentColor}"
+        CornerRadius="5"
+        Grid.Column="0"
+        Grid.Row="0"
+        HeightRequest="10"
+        HorizontalOptions="Start"
+        Margin="3,0,0,0"
+        VerticalOptions="Center"
+        WidthRequest="50" />
+    <controls:SkeletonView
+        BackgroundColor="{AppThemeBinding Light={StaticResource LightCardBackgroundColor},
+                                          Dark={StaticResource DarkCardBackgroundColor}}"
+        CornerRadius="15"
+        Grid.Column="0"
+        Grid.Row="1"
+        HeightRequest="15"
+        HorizontalOptions="Start"
+        Margin="3,0,0,0"
+        VerticalOptions="Center" />
+    <controls:SkeletonView
+        BackgroundColor="{AppThemeBinding Light={StaticResource LightCardBackgroundColor},
+                                          Dark={StaticResource DarkCardBackgroundColor}}"
+        CornerRadius="15"
+        Grid.Column="0"
+        Grid.Row="2"
+        HeightRequest="15"
+        HorizontalOptions="Start"
+        Margin="3,0,0,0"
+        VerticalOptions="Center" />
+    <controls:SkeletonView
+        BackgroundColor="{AppThemeBinding Light={StaticResource LightCardBackgroundColor},
+                                          Dark={StaticResource DarkCardBackgroundColor}}"
+        CornerRadius="15"
+        Grid.Column="1"
+        Grid.Row="0"
+        Grid.RowSpan="3"
+        HeightRequest="15"
+        HorizontalOptions="End"
+        VerticalOptions="Center"
+        WidthRequest="75" />
+</Grid>

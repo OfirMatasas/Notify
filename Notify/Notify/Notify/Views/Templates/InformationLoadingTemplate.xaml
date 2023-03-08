@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<StackLayout
+    Margin="0,2"
+    Spacing="5"
+    x:Class="Notify.Views.Templates.InformationLoadingTemplate"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:controls="clr-namespace:Notify.Controls;assembly=Notify"
+    xmlns:notify="clr-namespace:Notify;assembly=Notify"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <controls:SkeletonView
+        BackgroundColor="{AppThemeBinding Light={StaticResource LightCardBackgroundColor},
+                                          Dark={StaticResource DarkCardBackgroundColor}}"
+        CornerRadius="10"
+        HeightRequest="10"
+        HorizontalOptions="Start"
+        VerticalOptions="Center"
+        WidthRequest="50" />
+    <controls:SkeletonView
+        BackgroundColor="{AppThemeBinding Light={StaticResource LightCardBackgroundColor},
+                                          Dark={StaticResource DarkCardBackgroundColor}}"
+        CornerRadius="25"
+        HeightRequest="25"
+        HorizontalOptions="Start"
+        VerticalOptions="Center"
+        WidthRequest="75" />
+</StackLayout>

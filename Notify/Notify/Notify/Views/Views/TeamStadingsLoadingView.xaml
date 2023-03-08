@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Grid
+    ColumnDefinitions="30, 3, *, Auto"
+    Padding="20,3"
+    RowDefinitions="Auto, Auto"
+    RowSpacing="0"
+    x:Class="Notify.Views.Views.TeamStadingsLoadingView"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:controls="clr-namespace:Notify.Controls;assembly=Notify"
+    xmlns:notify="clr-namespace:Notify;assembly=Notify"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <controls:SkeletonView
+        BackgroundColor="{AppThemeBinding Light={StaticResource LightCardBackgroundColor},
+                                          Dark={StaticResource DarkCardBackgroundColor}}"
+        CornerRadius="15"
+        Grid.Column="0"
+        Grid.Row="0"
+        Grid.RowSpan="2"
+        HeightRequest="15"
+        HorizontalOptions="Center"
+        VerticalOptions="Center"
+        WidthRequest="15" />
+    <controls:SkeletonView
+        BackgroundColor="{AppThemeBinding Light={StaticResource LightCardBackgroundColor},
+                                          Dark={StaticResource DarkCardBackgroundColor}}"
+        CornerRadius="15"
+        Grid.Column="1"
+        Grid.Row="0"
+        Grid.RowSpan="2"
+        HorizontalOptions="Center"
+        VerticalOptions="Center"
+        WidthRequest="10" />
+    <controls:SkeletonView
+        BackgroundColor="{AppThemeBinding Light={StaticResource LightCardBackgroundColor},
+                                          Dark={StaticResource DarkCardBackgroundColor}}"
+        CornerRadius="15"
+        Grid.Column="2"
+        Grid.Row="0"
+        HeightRequest="15"
+        HorizontalOptions="Start"
+        Margin="3,0,0,0"
+        VerticalOptions="Center"
+        WidthRequest="75" />
+    <controls:SkeletonView
+        BackgroundColor="{AppThemeBinding Light={StaticResource LightCardBackgroundColor},
+                                          Dark={StaticResource DarkCardBackgroundColor}}"
+        CornerRadius="15"
+        Grid.Column="2"
+        Grid.Row="1"
+        HeightRequest="15"
+        HorizontalOptions="Start"
+        Margin="3,0,0,0"
+        VerticalOptions="Center" />
+    <controls:SkeletonView
+        BackgroundColor="{AppThemeBinding Light={StaticResource LightCardBackgroundColor},
+                                          Dark={StaticResource DarkCardBackgroundColor}}"
+        CornerRadius="15"
+        Grid.Column="3"
+        Grid.Row="0"
+        Grid.RowSpan="2"
+        HeightRequest="15"
+        HorizontalOptions="End"
+        VerticalOptions="Center"
+        WidthRequest="50" />
+</Grid>

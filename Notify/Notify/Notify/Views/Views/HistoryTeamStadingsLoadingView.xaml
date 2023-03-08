@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Grid
+    ColumnDefinitions="30, *, Auto"
+    Padding="20,3"
+    RowSpacing="0"
+    x:Class="Notify.Views.Views.HistoryTeamStadingsLoadingView"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:controls="clr-namespace:Notify.Controls;assembly=Notify"
+    xmlns:notify="clr-namespace:Notify;assembly=Notify"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <controls:SkeletonView
+        BackgroundColor="{AppThemeBinding Light={StaticResource LightCardBackgroundColor},
+                                          Dark={StaticResource DarkCardBackgroundColor}}"
+        CornerRadius="15"
+        Grid.Column="0"
+        HeightRequest="15"
+        HorizontalOptions="Center"
+        VerticalOptions="Center"
+        WidthRequest="15" />
+    <controls:SkeletonView
+        BackgroundColor="{AppThemeBinding Light={StaticResource LightCardBackgroundColor},
+                                          Dark={StaticResource DarkCardBackgroundColor}}"
+        CornerRadius="15"
+        Grid.Column="1"
+        HeightRequest="15"
+        HorizontalOptions="Start"
+        Margin="3,0,0,0"
+        VerticalOptions="Center" />
+    <controls:SkeletonView
+        BackgroundColor="{AppThemeBinding Light={StaticResource LightCardBackgroundColor},
+                                          Dark={StaticResource DarkCardBackgroundColor}}"
+        CornerRadius="15"
+        Grid.Column="2"
+        HeightRequest="15"
+        HorizontalOptions="End"
+        VerticalOptions="Center"
+        WidthRequest="50" />
+</Grid>
