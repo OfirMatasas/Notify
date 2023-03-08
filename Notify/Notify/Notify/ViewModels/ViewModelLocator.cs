@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using Notify.Core;
 using Notify.Services.Ergast;
 using Notify.Services.Information;
 using Notify.ViewModels.Popups;

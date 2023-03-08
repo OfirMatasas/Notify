@@ -1,51 +1,56 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <StackLayout
-    xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:notify="clr-namespace:Notify;assembly=Notify"
+    Padding="0,0,0,5"
     x:Class="Notify.Views.Views.HomeResultsLoadingView"
-    Padding="0, 0, 0, 5">
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:controls="clr-namespace:Notify.Controls;assembly=Notify"
+    xmlns:notify="clr-namespace:Notify;assembly=Notify"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
     <Frame
-        BackgroundColor="{AppThemeBinding Light={StaticResource LightCardBackgroundColor}, Dark={StaticResource DarkCardBackgroundColor}}"
+        BackgroundColor="{AppThemeBinding Light={StaticResource LightCardBackgroundColor},
+                                          Dark={StaticResource DarkCardBackgroundColor}}"
         CornerRadius="20"
-        Margin="5, 0"
-        Padding="0"
-        HeightRequest="145">
+        HeightRequest="145"
+        Margin="5,0"
+        Padding="0">
         <Grid
-            RowDefinitions="Auto, Auto, Auto, Auto"
             ColumnDefinitions="Auto, Auto"
-            RowSpacing="5"
-            Margin="15, 10">
-            <notify:SkeletonView
+            Margin="15,10"
+            RowDefinitions="Auto, Auto, Auto, Auto"
+            RowSpacing="5">
+            <controls:SkeletonView
+                BackgroundColor="{StaticResource AccentColor}"
+                CornerRadius="10"
+                Grid.Column="0"
                 Grid.Row="0"
-                Grid.Column="0"
                 HeightRequest="40"
-                WidthRequest="40"
-                CornerRadius="10"
                 HorizontalOptions="Start"
-                BackgroundColor="{StaticResource AccentColor}"></notify:SkeletonView>
-            <notify:SkeletonView
+                WidthRequest="40" />
+            <controls:SkeletonView
+                BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor},
+                                                  Dark={StaticResource DarkPageBackgroundColor}}"
+                CornerRadius="15"
+                Grid.Column="0"
                 Grid.Row="1"
-                Grid.Column="0"
                 HeightRequest="15"
+                HorizontalOptions="Start" />
+            <controls:SkeletonView
+                BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor},
+                                                  Dark={StaticResource DarkPageBackgroundColor}}"
                 CornerRadius="15"
-                HorizontalOptions="Start"
-                BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor}, Dark={StaticResource DarkPageBackgroundColor}}"></notify:SkeletonView>
-            <notify:SkeletonView
+                Grid.Column="0"
                 Grid.Row="2"
-                Grid.Column="0"
                 HeightRequest="15"
-                CornerRadius="15"
-                HorizontalOptions="Start"
-                BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor}, Dark={StaticResource DarkPageBackgroundColor}}"></notify:SkeletonView>
-            <notify:SkeletonView
-                Grid.Row="3"
-                Grid.Column="0"
-                HeightRequest="10"
+                HorizontalOptions="Start" />
+            <controls:SkeletonView
+                BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor},
+                                                  Dark={StaticResource DarkPageBackgroundColor}}"
                 CornerRadius="10"
-                HorizontalOptions="Start"
-                BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor}, Dark={StaticResource DarkPageBackgroundColor}}"></notify:SkeletonView>
+                Grid.Column="0"
+                Grid.Row="3"
+                HeightRequest="10"
+                HorizontalOptions="Start" />
         </Grid>
     </Frame>
 </StackLayout>
-    
+

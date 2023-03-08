@@ -1,9 +1,10 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <ContentPage
     BindingContext="{Binding HomeView, Source={StaticResource ViewModelLocator}}"
     NavigationPage.HasNavigationBar="False"
     x:Class="Notify.Views.TabViews.HomeView"
     xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:controls="clr-namespace:Notify.Controls;assembly=Notify"
     xmlns:notify="clr-namespace:Notify;assembly=Notify"
     xmlns:templateSelectors="clr-namespace:Notify.Helpers.TemplateSelectors;assembly=Notify"
     xmlns:views="clr-namespace:Notify.Views.Views;assembly=Notify"
@@ -65,7 +66,7 @@
                         <xct:StateView.Template>
                             <DataTemplate>
                                 <StackLayout>
-                                    <notify:SkeletonView
+                                    <controls:SkeletonView
                                         BackgroundColor="{AppThemeBinding Light={StaticResource LightCardBackgroundColor},
                                                                           Dark={StaticResource DarkCardBackgroundColor}}"
                                         CornerRadius="15"

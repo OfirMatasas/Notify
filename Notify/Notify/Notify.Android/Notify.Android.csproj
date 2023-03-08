@@ -72,6 +72,7 @@
     </Compile>
     <Compile Include="MainActivity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Renderers\ShellCustomRenderer.cs" />
     <Compile Include="Resource.designer.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -83,13 +84,10 @@
   <ItemGroup>
     <AndroidResource Include="Resources\.DS_Store" />
     <AndroidResource Include="Resources\drawable\avatar.png" />
-    <AndroidResource Include="Resources\drawable\calendar.png" />
-    <AndroidResource Include="Resources\drawable\driver.png" />
     <AndroidResource Include="Resources\drawable\facebook.png" />
     <AndroidResource Include="Resources\drawable\friends.png" />
     <AndroidResource Include="Resources\drawable\google.png" />
     <AndroidResource Include="Resources\drawable\groups.png" />
-    <AndroidResource Include="Resources\drawable\history.png" />
     <AndroidResource Include="Resources\drawable\home.png" />
     <AndroidResource Include="Resources\drawable\lock.jpeg" />
     <AndroidResource Include="Resources\drawable\notification.png" />
@@ -98,10 +96,6 @@
     <AndroidResource Include="Resources\drawable\NotifyMainFade.png" />
     <AndroidResource Include="Resources\drawable\profile.png" />
     <AndroidResource Include="Resources\drawable\settings.png" />
-    <AndroidResource Include="Resources\drawable\splash_background.xml" />
-    <AndroidResource Include="Resources\drawable\splash_logo.png" />
-    <AndroidResource Include="Resources\drawable\splash_screen.xml" />
-    <AndroidResource Include="Resources\drawable\team.png" />
     <AndroidResource Include="Resources\mipmap-anydpi-v26\icon.xml" />
     <AndroidResource Include="Resources\mipmap-anydpi-v26\icon_round.xml" />
     <AndroidResource Include="Resources\mipmap-hdpi\Notify_adaptive_back.png">
@@ -168,26 +162,6 @@
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\mipmap-hdpi\app_icon_adaptive_back.png" />
-    <AndroidResource Include="Resources\mipmap-hdpi\app_icon_adaptive_fore.png" />
-    <AndroidResource Include="Resources\mipmap-hdpi\icon.png" />
-    <AndroidResource Include="Resources\mipmap-hdpi\launcher_foreground.png" />
-    <AndroidResource Include="Resources\mipmap-mdpi\app_icon_adaptive_back.png" />
-    <AndroidResource Include="Resources\mipmap-mdpi\app_icon_adaptive_fore.png" />
-    <AndroidResource Include="Resources\mipmap-mdpi\icon.png" />
-    <AndroidResource Include="Resources\mipmap-mdpi\launcher_foreground.png" />
-    <AndroidResource Include="Resources\mipmap-xhdpi\app_icon_adaptive_back.png" />
-    <AndroidResource Include="Resources\mipmap-xhdpi\app_icon_adaptive_fore.png" />
-    <AndroidResource Include="Resources\mipmap-xhdpi\icon.png" />
-    <AndroidResource Include="Resources\mipmap-xhdpi\launcher_foreground.png" />
-    <AndroidResource Include="Resources\mipmap-xxhdpi\app_icon_adaptive_back.png" />
-    <AndroidResource Include="Resources\mipmap-xxhdpi\app_icon_adaptive_fore.png" />
-    <AndroidResource Include="Resources\mipmap-xxhdpi\icon.png" />
-    <AndroidResource Include="Resources\mipmap-xxhdpi\launcher_foreground.png" />
-    <AndroidResource Include="Resources\mipmap-xxxhdpi\app_icon_adaptive_back.png" />
-    <AndroidResource Include="Resources\mipmap-xxxhdpi\app_icon_adaptive_fore.png" />
-    <AndroidResource Include="Resources\mipmap-xxxhdpi\icon.png" />
-    <AndroidResource Include="Resources\mipmap-xxxhdpi\launcher_foreground.png" />
     <AndroidResource Include="Resources\values\colors.xml" />
     <AndroidResource Include="Resources\values\styles.xml" />
   </ItemGroup>
