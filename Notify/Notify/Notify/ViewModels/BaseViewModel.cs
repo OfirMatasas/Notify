@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -54,7 +54,6 @@ namespace Notify.ViewModels
         #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
-
         public LayoutState MainState { get; set; }
         public bool HasNoInternetConnection { get; set; }
 
@@ -80,3 +79,4 @@ namespace Notify.ViewModels
         #endregion
     }
 }
+

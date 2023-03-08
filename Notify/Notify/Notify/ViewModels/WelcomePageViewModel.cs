@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Notify.Views.TabViews;
 using Xamarin.Essentials;
@@ -68,8 +68,7 @@ namespace Notify.ViewModels
             }
 
             IsBusy = false;
-        }
-
+         
         #endregion
 
         #region Private Functionality
@@ -90,3 +89,4 @@ namespace Notify.ViewModels
         #endregion
     }
 }
+

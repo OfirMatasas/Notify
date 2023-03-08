@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     BindingContext="{Binding WelcomePage, Source={StaticResource ViewModelLocator}}"
     NavigationPage.HasNavigationBar="False"
@@ -7,6 +7,7 @@
     xmlns:material="clr-namespace:Plugin.MaterialDesignControls;assembly=Plugin.MaterialDesignControls"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
     <ContentPage.Content>
+    
         <RefreshView IsRefreshing="{Binding IsBusy}">
 
             <StackLayout>
