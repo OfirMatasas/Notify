@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Formula1.Helpers;
 using Notify.Views.TabViews;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -50,9 +51,10 @@ namespace Notify.ViewModels
         private async void OnLoginClicked()
         {
             IsBusy = true;
+
             try
             {
-                if (userName.Equals("lin") && Password.Equals("123"))
+                if (userName.Equals(Constants.Username) && Password.Equals(Constants.Password))
                 {
                     await Shell.Current.GoToAsync("///main");
                 }
@@ -62,13 +64,14 @@ namespace Notify.ViewModels
                 }
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 await App.Current.MainPage.DisplayAlert("Error", "Empty credentials", "OK");
             }
 
             IsBusy = false;
-         
+        }
+
         #endregion
 
         #region Private Functionality
@@ -89,4 +92,3 @@ namespace Notify.ViewModels
         #endregion
     }
 }
-

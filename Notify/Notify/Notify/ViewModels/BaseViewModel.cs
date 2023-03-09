@@ -39,17 +39,16 @@ namespace Notify.ViewModels
             backingStore = value;
             onChanged?.Invoke();
             OnPropertyChanged(propertyName);
+
             return true;
         }
 
         #region INotifyPropertyChanged
         protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
-            var changed = PropertyChanged;
-            if (changed == null)
-                return;
+            PropertyChangedEventHandler changed = PropertyChanged;
 
-            changed.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            changed?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
 
@@ -79,4 +78,3 @@ namespace Notify.ViewModels
         #endregion
     }
 }
-

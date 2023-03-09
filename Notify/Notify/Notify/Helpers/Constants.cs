@@ -69,5 +69,8 @@ namespace Formula1.Helpers
         };
 
         #endregion
+
+        public static readonly string Username = "lin";
+        public static readonly string Password = "123";
     }
 }
