@@ -7,9 +7,7 @@
     xmlns:material="clr-namespace:Plugin.MaterialDesignControls;assembly=Plugin.MaterialDesignControls"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
     <ContentPage.Content>
-    
         <RefreshView IsRefreshing="{Binding IsBusy}">
-
             <StackLayout>
                 <Grid>
                     <!--  Notify image  -->

@@ -52,24 +52,24 @@ namespace Notify.ViewModels
         {
             IsBusy = true;
 
-            try
-            {
-                if (userName.Equals(Constants.Username) && Password.Equals(Constants.Password))
-                {
+            // try
+            // {
+            //     if (userName.Equals(Constants.Username) && Password.Equals(Constants.Password))
+            //     {
                     await Shell.Current.GoToAsync("///main");
-                }
-                else
-                {
-                    await App.Current.MainPage.DisplayAlert("Error", "Invalid credentials", "OK");
-                }
+                // }
+                // else
+                // {
+                //     await App.Current.MainPage.DisplayAlert("Error", "Invalid credentials", "OK");
+                // }
 
-            }
-            catch (Exception)
-            {
-                await App.Current.MainPage.DisplayAlert("Error", "Empty credentials", "OK");
-            }
-
-            IsBusy = false;
+            // }
+            // catch (Exception)
+            // {
+            //     await App.Current.MainPage.DisplayAlert("Error", "Empty credentials", "OK");
+            // }
+            //
+            // IsBusy = false;
         }
 
         #endregion
