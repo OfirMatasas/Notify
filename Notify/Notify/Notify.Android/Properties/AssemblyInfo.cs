@@ -14,6 +14,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
+[assembly: Shiny.ShinyApplication(
+    ShinyStartupTypeName = "Notify.NotifyShinyStartup",
+    XamarinFormsAppTypeName = "Notify.App"
+)]
 
 // Version information for an assembly consists of the following four values:
 //
