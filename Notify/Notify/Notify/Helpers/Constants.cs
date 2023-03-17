@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
-namespace Formula1.Helpers
+namespace Notify.Helpers
 {
     public static class Constants
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Formula1.Helpers;
+using Notify.Helpers;
 using Xamarin.Forms;
 
 namespace Notify.ViewModels.Popups
