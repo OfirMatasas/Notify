@@ -31,7 +31,7 @@ namespace Notify.Droid
                     var locShared = new LocationService();
                     locShared.Run(_cts.Token).Wait();
                 }
-                catch (Android.OS.OperationCanceledException)
+                catch (OperationCanceledException)
                 {
                 }
                 finally

@@ -8,7 +8,7 @@ namespace Notify.Droid
     internal class NotificationHelper
     {
         private static string foregroundChannelId = "9001";
-        private static Context context = global::Android.App.Application.Context;
+        private static Context context = Application.Context;
 
 
         public Notification GetServiceStartedNotification()
@@ -25,7 +25,7 @@ namespace Notify.Droid
                 .SetOngoing(true)
                 .SetContentIntent(pendingIntent);
 
-            if (global::Android.OS.Build.VERSION.SdkInt >= BuildVersionCodes.O)
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
             {
                 NotificationChannel notificationChannel = new NotificationChannel(foregroundChannelId, "Title", NotificationImportance.High);
                 notificationChannel.Importance = NotificationImportance.High;

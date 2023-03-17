@@ -19,7 +19,7 @@ namespace Notify.Droid
             base.OnCreate(savedInstanceState);
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
-            global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+            Forms.Init(this, savedInstanceState);
             Plugin.MaterialDesignControls.Android.Renderer.Init();
 
             serviceIntent = new Intent(this, typeof(AndroidLocationService));

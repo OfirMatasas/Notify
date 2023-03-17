@@ -24,7 +24,7 @@ namespace Notify
                         await Task.Delay(2000);
 
                         var request = new GeolocationRequest(GeolocationAccuracy.High);
-                        var location = await Geolocation.GetLocationAsync(request);
+                        var location = await Geolocation.GetLocationAsync(request, token);
                         if (location != null)
                         {
                             var message = new LocationMessage
@@ -39,7 +39,7 @@ namespace Notify
                             });
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         Device.BeginInvokeOnMainThread(() =>
                         {
@@ -48,7 +48,6 @@ namespace Notify
                         });
                     }
                 }
-                return;
             }, token);
         }
     }

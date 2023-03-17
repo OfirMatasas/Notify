@@ -5,7 +5,6 @@ using Plugin.Geolocator;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
-
 namespace Notify.ViewModels
 {
     public class WelcomePageViewModel : BaseViewModel
@@ -17,21 +16,21 @@ namespace Notify.ViewModels
         #endregion
 
         #region Properties
-
-        public Task Init { get; }
-
-        private string userName;
-        private string password;
+        
+        private string m_UserName;
+        private string m_Password;
+        private Task Init { get; }
+        
         public string UserName
         {
-            get => userName;
-            set => SetProperty(ref userName, value);
+            get => m_UserName;
+            set => SetProperty(ref m_UserName, value);
         }
 
         public string Password
         {
-            get => password;
-            set => SetProperty(ref password, value);
+            get => m_Password;
+            set => SetProperty(ref m_Password, value);
         }
 
         #endregion
@@ -40,26 +39,27 @@ namespace Notify.ViewModels
 
         public WelcomePageViewModel()
         {
-            LogInCommand = new Command(OnLoginClicked);
+            LogInCommand = new Command(onLoginClicked);
 
-            Init = Initialize();
+            Init = initialize();
         }
 
         #endregion
 
         #region Command Handlers
 
-        private async void OnLoginClicked()
+        private async void onLoginClicked()
         {
-            permis();
-            IsBusy = true;
             bool debugAutoLogin = true;
+            IsBusy = true;
+            
+            manageLocationTracking();
 
             if (!debugAutoLogin)
             {
                 try
                 {
-                    if (userName.Equals(Constants.Username) && Password.Equals(Constants.Password))
+                    if (m_UserName.Equals(Constants.Username) && Password.Equals(Constants.Password))
                     {
                         await Shell.Current.GoToAsync("///main");
                     }
@@ -82,12 +82,16 @@ namespace Notify.ViewModels
             }
         }
         
-        private void Current_PositionChanged(object sender, Plugin.Geolocator.Abstractions.PositionEventArgs e)
+        #endregion
+
+        #region Private Functionality
+        
+        private void current_PositionChanged(object sender, Plugin.Geolocator.Abstractions.PositionEventArgs e)
         {
             Console.WriteLine($"{e.Position.Latitude}, {e.Position.Longitude}, {e.Position.Timestamp.TimeOfDay}");
         }
-
-        private async void permis()
+        
+        private async Task manageLocationTracking()
         {
             var permission = await Permissions.RequestAsync<Permissions.LocationAlways>();
 
@@ -102,42 +106,39 @@ namespace Notify.ViewModels
                 if (CrossGeolocator.Current.IsListening)
                 {
                     await CrossGeolocator.Current.StopListeningAsync();
-                    CrossGeolocator.Current.PositionChanged -= Current_PositionChanged;
+                    CrossGeolocator.Current.PositionChanged -= current_PositionChanged;
 
                     return;
                 }
 
-                await CrossGeolocator.Current.StartListeningAsync(TimeSpan.FromSeconds(1), 10, false, new Plugin.Geolocator.Abstractions.ListenerSettings
-                {
-                    ActivityType = Plugin.Geolocator.Abstractions.ActivityType.AutomotiveNavigation,
-                    AllowBackgroundUpdates = true,
-                    DeferLocationUpdates = false,
-                    DeferralDistanceMeters = 10,
-                    DeferralTime = TimeSpan.FromSeconds(5),
-                    ListenForSignificantChanges = true,
-                    PauseLocationUpdatesAutomatically = true
-                });
+                await CrossGeolocator.Current.StartListeningAsync(TimeSpan.FromSeconds(1), 10, false,
+                    new Plugin.Geolocator.Abstractions.ListenerSettings
+                    {
+                        ActivityType = Plugin.Geolocator.Abstractions.ActivityType.AutomotiveNavigation,
+                        AllowBackgroundUpdates = true,
+                        DeferLocationUpdates = false,
+                        DeferralDistanceMeters = 10,
+                        DeferralTime = TimeSpan.FromSeconds(5),
+                        ListenForSignificantChanges = true,
+                        PauseLocationUpdatesAutomatically = true
+                    });
 
-                CrossGeolocator.Current.PositionChanged += Current_PositionChanged;
+                CrossGeolocator.Current.PositionChanged += current_PositionChanged;
             }
             else if (Device.RuntimePlatform == Device.Android)
             {
                 if (Preferences.Get("LocationServiceRunning", false) == false)
                 {
-                    StartService();
+                    startService();
                 }
                 else
                 {
-                    StopService();
+                    stopService();
                 }
             }
         }
 
-        #endregion
-
-        #region Private Functionality
-
-        private async Task Initialize()
+        private async Task initialize()
         {
             VersionTracking.Track();
             if (VersionTracking.IsFirstLaunchEver)
@@ -149,35 +150,43 @@ namespace Notify.ViewModels
                 await Shell.Current.GoToAsync("///welcome");
             }
             
+            subscribeToLocationMessaging();
+        }
+
+        private void subscribeToLocationMessaging()
+        {
             if (Device.RuntimePlatform == Device.Android)
             {
-                MessagingCenter.Subscribe<LocationMessage>(this, "Location", message => {
-                    Device.BeginInvokeOnMainThread(() => {
-
-                        Console.WriteLine($"{message.Latitude}, {message.Longitude}, {DateTime.Now.ToLongTimeString()}");
+                MessagingCenter.Subscribe<LocationMessage>(this, "Location",
+                    message =>
+                    {
+                        Device.BeginInvokeOnMainThread(() =>
+                        {
+                            Console.WriteLine(
+                                $"{message.Latitude}, {message.Longitude}, {DateTime.Now.ToLongTimeString()}");
+                        });
                     });
-                });
 
-                MessagingCenter.Subscribe<StopServiceMessage>(this, "ServiceStopped", message => {
-                    Device.BeginInvokeOnMainThread(() => {
-                        Console.WriteLine("Location Service has been stopped!");
+                MessagingCenter.Subscribe<StopServiceMessage>(this, "ServiceStopped",
+                    message =>
+                    {
+                        Device.BeginInvokeOnMainThread(() => { Console.WriteLine("Location Service has been stopped!"); });
                     });
-                });
 
-                MessagingCenter.Subscribe<LocationErrorMessage>(this, "LocationError", message => {
-                    Device.BeginInvokeOnMainThread(() => {
-                        Console.WriteLine("There was an error updating location!");
+                MessagingCenter.Subscribe<LocationErrorMessage>(this, "LocationError",
+                    message =>
+                    {
+                        Device.BeginInvokeOnMainThread(() => { Console.WriteLine("There was an error updating location!"); });
                     });
-                });
 
                 if (Preferences.Get("LocationServiceRunning", false) == true)
                 {
-                    StartService();
+                    startService();
                 }
             }
         }
-        
-        private void StartService()
+
+        private void startService()
         {
             var startServiceMessage = new StartServiceMessage();
             MessagingCenter.Send(startServiceMessage, "ServiceStarted");
@@ -185,7 +194,7 @@ namespace Notify.ViewModels
             Console.WriteLine("Location Service has been started!");
         }
 
-        private void StopService()
+        private void stopService()
         {
             var stopServiceMessage = new StopServiceMessage();
             MessagingCenter.Send(stopServiceMessage, "ServiceStopped");
