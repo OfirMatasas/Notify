@@ -121,4 +121,48 @@
       <Name>Notify</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\Notify.Android\Resources\drawable\avatar.png">
+      <Link>Resources\drawable\avatar.png</Link>
+    </Content>
+    <Content Include="..\Notify.Android\Resources\drawable\facebook.png">
+      <Link>Resources\drawable\facebook.png</Link>
+    </Content>
+    <Content Include="..\Notify.Android\Resources\drawable\friends.png">
+      <Link>Resources\drawable\friends.png</Link>
+    </Content>
+    <Content Include="..\Notify.Android\Resources\drawable\google.png">
+      <Link>Resources\drawable\google.png</Link>
+    </Content>
+    <Content Include="..\Notify.Android\Resources\drawable\groups.png">
+      <Link>Resources\drawable\groups.png</Link>
+    </Content>
+    <Content Include="..\Notify.Android\Resources\drawable\home.png">
+      <Link>Resources\drawable\home.png</Link>
+    </Content>
+    <Content Include="..\Notify.Android\Resources\drawable\lock.jpeg">
+      <Link>Resources\drawable\lock.jpeg</Link>
+    </Content>
+    <Content Include="..\Notify.Android\Resources\drawable\notification.png">
+      <Link>Resources\drawable\notification.png</Link>
+    </Content>
+    <Content Include="..\Notify.Android\Resources\drawable\Notify.png">
+      <Link>Resources\drawable\Notify.png</Link>
+    </Content>
+    <Content Include="..\Notify.Android\Resources\drawable\NotifyMain.png">
+      <Link>Resources\drawable\NotifyMain.png</Link>
+    </Content>
+    <Content Include="..\Notify.Android\Resources\drawable\NotifyMainFade.png">
+      <Link>Resources\drawable\NotifyMainFade.png</Link>
+    </Content>
+    <Content Include="..\Notify.Android\Resources\drawable\NotifyMainSize.png">
+      <Link>Resources\drawable\NotifyMainSize.png</Link>
+    </Content>
+    <Content Include="..\Notify.Android\Resources\drawable\profile.png">
+      <Link>Resources\drawable\profile.png</Link>
+    </Content>
+    <Content Include="..\Notify.Android\Resources\drawable\settings.png">
+      <Link>Resources\drawable\settings.png</Link>
+    </Content>
+  </ItemGroup>
 </Project>

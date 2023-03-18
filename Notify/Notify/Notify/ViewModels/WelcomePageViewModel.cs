@@ -155,7 +155,7 @@ namespace Notify.ViewModels
 
         private void subscribeToLocationMessaging()
         {
-            if (Device.RuntimePlatform == Device.Android)
+            if (Device.RuntimePlatform == Device.Android || Device.RuntimePlatform == Device.iOS)
             {
                 MessagingCenter.Subscribe<LocationMessage>(this, "Location",
                     message =>
