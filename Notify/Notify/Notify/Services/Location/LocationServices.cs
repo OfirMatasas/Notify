@@ -141,7 +141,6 @@ namespace Notify
             MessagingCenter.Send(startServiceMessage, "ServiceStarted");
             Preferences.Set("LocationServiceRunning", true);
             Console.WriteLine("Location Service has been started!");
-            SubscribeToLocationMessaging();
         }
 
         public void StopService()
