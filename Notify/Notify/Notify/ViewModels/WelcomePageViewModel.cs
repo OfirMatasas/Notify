@@ -55,14 +55,13 @@ namespace Notify.ViewModels
             bool debugAutoLogin = true;
             IsBusy = true;
             
-            locationService.ManageLocationTracking();
-
             if (!debugAutoLogin)
             {
                 try
                 {
                     if (m_UserName.Equals(Constants.Username) && Password.Equals(Constants.Password))
                     {
+                        locationService.ManageLocationTracking();
                         await Shell.Current.GoToAsync("///main");
                     }
                     else
@@ -80,6 +79,7 @@ namespace Notify.ViewModels
             }
             else
             {
+                locationService.ManageLocationTracking();
                 await Shell.Current.GoToAsync("///main");
             }
         }
