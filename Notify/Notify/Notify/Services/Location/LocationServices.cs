@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Plugin.Geolocator;
@@ -51,7 +52,7 @@ namespace Notify
 
         public void Current_PositionChanged(object sender, Plugin.Geolocator.Abstractions.PositionEventArgs e)
         {
-            Console.WriteLine($"{e.Position.Latitude}, {e.Position.Longitude}, {e.Position.Timestamp.TimeOfDay}");
+            Debug.WriteLine($"User's current location: {e.Position.Latitude}, {e.Position.Longitude}, {e.Position.Timestamp.TimeOfDay}");
         }
 
         public async Task ManageLocationTracking()
@@ -110,8 +111,8 @@ namespace Notify
                     {
                         Device.BeginInvokeOnMainThread(() =>
                         {
-                            Console.WriteLine(
-                                $"{message.Latitude}, {message.Longitude}, {DateTime.Now.ToLongTimeString()}");
+                            Debug.WriteLine(
+                                $"User's current location: {message.Latitude}, {message.Longitude}, {DateTime.Now.ToLongTimeString()}");
                         });
                     });
 
