@@ -104,7 +104,7 @@ namespace Notify
         
         public void SubscribeToLocationMessaging()
         {
-            if (Device.RuntimePlatform == Device.Android)
+            if (Device.RuntimePlatform == Device.Android || Device.RuntimePlatform == Device.iOS)
             {
                 MessagingCenter.Subscribe<LocationMessage>(this, "Location",
                     message =>
@@ -141,6 +141,7 @@ namespace Notify
             MessagingCenter.Send(startServiceMessage, "ServiceStarted");
             Preferences.Set("LocationServiceRunning", true);
             Console.WriteLine("Location Service has been started!");
+            SubscribeToLocationMessaging();
         }
 
         public void StopService()
