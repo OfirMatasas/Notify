@@ -119,13 +119,13 @@ namespace Notify
                 MessagingCenter.Subscribe<StopServiceMessage>(this, "ServiceStopped",
                     message =>
                     {
-                        Device.BeginInvokeOnMainThread(() => { Console.WriteLine("Location Service has been stopped!"); });
+                        Device.BeginInvokeOnMainThread(() => { Debug.WriteLine("Location Service has been stopped!"); });
                     });
 
                 MessagingCenter.Subscribe<LocationErrorMessage>(this, "LocationError",
                     message =>
                     {
-                        Device.BeginInvokeOnMainThread(() => { Console.WriteLine("There was an error updating location!"); });
+                        Device.BeginInvokeOnMainThread(() => { Debug.WriteLine("There was an error updating location!"); });
                     });
 
                 if (Preferences.Get("LocationServiceRunning", false) == true)
@@ -140,7 +140,7 @@ namespace Notify
             var startServiceMessage = new StartServiceMessage();
             MessagingCenter.Send(startServiceMessage, "ServiceStarted");
             Preferences.Set("LocationServiceRunning", true);
-            Console.WriteLine("Location Service has been started!");
+            Debug.WriteLine("Location Service has been started!");
         }
 
         public void StopService()
