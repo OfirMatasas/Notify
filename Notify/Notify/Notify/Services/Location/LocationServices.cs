@@ -104,7 +104,7 @@ namespace Notify
         
         public void SubscribeToLocationMessaging()
         {
-            if (Device.RuntimePlatform == Device.Android)
+            if (Device.RuntimePlatform == Device.Android || Device.RuntimePlatform == Device.iOS)
             {
                 MessagingCenter.Subscribe<LocationMessage>(this, "Location",
                     message =>
