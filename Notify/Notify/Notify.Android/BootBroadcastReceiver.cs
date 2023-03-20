@@ -3,7 +3,7 @@ using Android.Content;
 
 namespace Notify.Droid
 {
-    [BroadcastReceiver(Name = "com.locationservice.app.BootBroadcastReceiver", Enabled = true)]
+    [BroadcastReceiver(Name = "com.gheorghedarle.formula1.app.BootBroadcastReceiver", Enabled = true)]
     [IntentFilter(new[] { Intent.ActionBootCompleted })]
     public class BootBroadcastReceiver : BroadcastReceiver
     {

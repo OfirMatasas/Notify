@@ -1,3 +1,4 @@
+using Plugin.FirebasePushNotification;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -18,6 +19,13 @@ namespace Notify
             InitializeComponent();
             SetAppTheme();
             MainPage = new AppShell();
+            CrossFirebasePushNotification.Current.Subscribe("all");
+            CrossFirebasePushNotification.Current.OnTokenRefresh += Current_OnTokenRefresh;
+        }
+
+        private void Current_OnTokenRefresh(object source, FirebasePushNotificationTokenEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine($"Token: {e.Token}");
         }
 
         protected override void OnStart()
