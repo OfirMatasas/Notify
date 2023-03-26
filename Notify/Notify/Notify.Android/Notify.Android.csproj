@@ -54,6 +54,9 @@
     <Reference Include="Xamarin.Essentials">
       <HintPath>..\..\..\..\..\.nuget\packages\xamarin.essentials\1.7.5\lib\monoandroid10.0\Xamarin.Essentials.dll</HintPath>
     </Reference>
+    <Reference Include="Xamarin.Forms.Platform.Android">
+      <HintPath>..\..\..\..\..\..\.nuget\packages\xamarin.forms\5.0.0.2578\lib\MonoAndroid10.0\Xamarin.Forms.Platform.Android.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Fody" Version="6.6.4">
@@ -73,7 +76,9 @@
     <Compile Include="AndroidLocationService.cs" />
     <Compile Include="BootBroadcastReceiver.cs" />
     <Compile Include="MainActivity.cs" />
-    <Compile Include="NotificationHelper.cs" />
+    <Compile Include="Notifications\AlarmHandler.cs" />
+    <Compile Include="Notifications\AndroidNotificationManager.cs" />
+    <Compile Include="Notifications\NotificationHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderers\ShellCustomRenderer.cs" />
     <Compile Include="Resource.designer.cs" />

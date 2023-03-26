@@ -4,15 +4,18 @@ using Android.Content.PM;
 using Android.Runtime;
 using Android.OS;
 using Android.Content;
+using Notify.Droid.Notifications;
+using Notify.Notifications;
 using Xamarin.Forms;
 
 namespace Notify.Droid
 {
-    [Activity(Label = "Notify", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize)]
+    [Activity(Label = "Notify", Icon = "@mipmap/icon", Theme = "@style/MainTheme", LaunchMode = LaunchMode.SingleTop, MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         Intent serviceIntent;
         private const int RequestCode = 5469;
+        internal static readonly string CHANNEL_ID = "my_notification_channel";
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -88,6 +91,22 @@ namespace Notify.Droid
             }
 
             base.OnActivityResult(requestCode, resultCode, data);
+        }
+        
+        protected override void OnNewIntent(Intent intent)
+        {
+            CreateNotificationFromIntent(intent);
+        }
+
+        void CreateNotificationFromIntent(Intent intent)
+        {
+            if (intent?.Extras != null)
+            {
+                string title = intent.GetStringExtra(AndroidNotificationManager.titleKey);
+                string message = intent.GetStringExtra(AndroidNotificationManager.messageKey);
+
+                DependencyService.Get<INotificationManager>().ReceiveNotification(title, message);
+            }
         }
     }
 }
