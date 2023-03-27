@@ -23,6 +23,7 @@ namespace Notify
         private readonly Location goalLocation = new Location(latitude: 32.02069, longitude: 34.763419999999996);
         private bool arrivedDestination = false;
         private HttpClient httpClient = new HttpClient();
+        private LocationMessage currentLocation = null;
         
         public AppShell()
         {
@@ -36,6 +37,8 @@ namespace Notify
             {
                 StartService();
             }
+
+            httpClient.BaseAddress = new Uri("https://notifymta.azurewebsites.net/api/");
         }
 
         void RegisterRoutes()
@@ -113,39 +116,44 @@ namespace Notify
         {
             MessagingCenter.Subscribe<LocationMessage>(this, "Location", location =>
             {
-                Debug.WriteLine($"{location.Latitude}, {location.Longitude}, {DateTime.Now.ToLongTimeString()}");
-                double distance = sendCurrentLocationToAzureFunction(location).Result;
-                if (checkIfArrivedDestinationForTheFirstTime(distance))
+                if (currentLocation != location)
                 {
-                    Device.BeginInvokeOnMainThread(() =>
+                    currentLocation = location;
+                    Debug.WriteLine($"{location.Latitude}, {location.Longitude}, {DateTime.Now.ToLongTimeString()}");
+                    double distance = sendCurrentLocationToAzureFunction(location).Result;
+                    if (checkIfArrivedDestinationForTheFirstTime(distance))
                     {
-                        try
+                        Device.BeginInvokeOnMainThread(() =>
                         {
-                            arrivedDestinationForTheFirstTime();
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.WriteLine("Failed in MessagingCenter.Subscribe<LocationMessage>: " + ex.Message);
-                        }
-                    });
+                            try
+                            {
+                                arrivedDestinationForTheFirstTime();
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine("Failed in MessagingCenter.Subscribe<LocationMessage>: " + ex.Message);
+                            }
+                        });
+                    }
                 }
             });
         }
         
-        private async Task<double> sendCurrentLocationToAzureFunction(LocationMessage location)
+        private async Task<double> sendCurrentLocationToAzureFunction(LocationMessage currentLocation)
         {
             double distance = -1;
+
             try
             {
-                string functionUrl = "http://localhost:7071/api/CurrentLocation";
-                dynamic input = new JObject();
-                input.location = new JObject();
-                input.location.latitude = location.Latitude;
-                input.location.longitude = location.Longitude;
-                string json = JsonConvert.SerializeObject(input);
+                dynamic request = new JObject();
+                request.location = new JObject();
+                request.location.latitude = currentLocation.Latitude;
+                request.location.longitude = currentLocation.Longitude;
+                string json = JsonConvert.SerializeObject(request);
+                StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 // Send an HTTP POST request to the Azure Function
-                HttpResponseMessage response = await httpClient.PostAsync(functionUrl, new StringContent(json, Encoding.UTF8, "application/json")).ConfigureAwait(false);
+                HttpResponseMessage response = await httpClient.PostAsync("distance", content).ConfigureAwait(false);
                 response.EnsureSuccessStatusCode();
 
                 // Read the response JSON
