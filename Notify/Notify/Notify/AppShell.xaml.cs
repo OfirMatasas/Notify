@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Notify.Notifications;
 using Notify.Views;
-using Plugin.Geolocator.Abstractions;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -15,9 +19,10 @@ namespace Notify
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AppShell : Shell
     {
-        readonly INotificationManager notificationManager = DependencyService.Get<INotificationManager>();
-        readonly Location goalLocation = new Location(latitude: 32.02069, longitude: 34.763419999999996);
-        bool arrivedDestination = false;
+        private readonly INotificationManager notificationManager = DependencyService.Get<INotificationManager>();
+        private readonly Location goalLocation = new Location(latitude: 32.02069, longitude: 34.763419999999996);
+        private bool arrivedDestination = false;
+        private HttpClient httpClient = new HttpClient();
         
         public AppShell()
         {
@@ -108,23 +113,54 @@ namespace Notify
         {
             MessagingCenter.Subscribe<LocationMessage>(this, "Location", location =>
             {
-                Device.BeginInvokeOnMainThread(() =>
+                Debug.WriteLine($"{location.Latitude}, {location.Longitude}, {DateTime.Now.ToLongTimeString()}");
+                double distance = sendCurrentLocationToAzureFunction(location).Result;
+                if (checkIfArrivedDestinationForTheFirstTime(distance))
                 {
-                    try
+                    Device.BeginInvokeOnMainThread(() =>
                     {
-                        Debug.WriteLine($"{location.Latitude}, {location.Longitude}, {DateTime.Now.ToLongTimeString()}");
-
-                        if (checkIfArrivedDestinationForTheFirstTime(location))
+                        try
                         {
                             arrivedDestinationForTheFirstTime();
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine("Failed in MessagingCenter.Subscribe<LocationMessage>: " + ex.Message);
-                    }
-                });
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine("Failed in MessagingCenter.Subscribe<LocationMessage>: " + ex.Message);
+                        }
+                    });
+                }
             });
+        }
+        
+        private async Task<double> sendCurrentLocationToAzureFunction(LocationMessage location)
+        {
+            double distance = -1;
+            try
+            {
+                string functionUrl = "http://localhost:7071/api/CurrentLocation";
+                dynamic input = new JObject();
+                input.location = new JObject();
+                input.location.latitude = location.Latitude;
+                input.location.longitude = location.Longitude;
+                string json = JsonConvert.SerializeObject(input);
+
+                // Send an HTTP POST request to the Azure Function
+                HttpResponseMessage response = await httpClient.PostAsync(functionUrl, new StringContent(json, Encoding.UTF8, "application/json")).ConfigureAwait(false);
+                response.EnsureSuccessStatusCode();
+
+                // Read the response JSON
+                string responseJson = await response.Content.ReadAsStringAsync();
+                dynamic output = JsonConvert.DeserializeObject(responseJson);
+
+                // Extract the distance value from the output JSON
+                distance = Convert.ToDouble(output.distance);
+            }
+            catch (Exception ex)
+            {
+                DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
+            }
+
+            return distance;
         }
         
         private void arrivedDestinationForTheFirstTime()
@@ -135,9 +171,9 @@ namespace Notify
             arrivedDestination = true;
         }
         
-        private bool checkIfArrivedDestinationForTheFirstTime(LocationMessage location)
+        private bool checkIfArrivedDestinationForTheFirstTime(double distance)
         {
-            return !arrivedDestination && location.Latitude == goalLocation.Latitude && location.Longitude == goalLocation.Longitude;
+            return !arrivedDestination && (int)distance != -1 && distance <= 50 ;
         }
 
         private void setNoficicationManagerNotificationReceived()
