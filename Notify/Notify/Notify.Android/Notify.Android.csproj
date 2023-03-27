@@ -209,6 +209,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AboutResources.txt" />
+    <GoogleServicesJson Include="google-services.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </GoogleServicesJson>
     <Content Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
