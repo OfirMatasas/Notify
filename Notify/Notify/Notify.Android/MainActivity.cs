@@ -29,7 +29,7 @@ namespace Notify.Droid
             {
                 var intent = new Intent(Android.Provider.Settings.ActionManageOverlayPermission);
                 intent.SetFlags(ActivityFlags.NewTask);
-                this.StartActivity(intent);
+                StartActivity(intent);
             }
 
             LoadApplication(new App());
@@ -47,7 +47,7 @@ namespace Notify.Droid
             MessagingCenter.Subscribe<StartServiceMessage>(this, "ServiceStarted", message => {
                 if (!IsServiceRunning(typeof(AndroidLocationService)))
                 {
-                    if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+                    if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
                     {
                         StartForegroundService(serviceIntent);
                     }
@@ -64,7 +64,7 @@ namespace Notify.Droid
             });
         }
 
-        private bool IsServiceRunning(System.Type cls)
+        private bool IsServiceRunning(Type cls)
         {
             ActivityManager manager = (ActivityManager)GetSystemService(Context.ActivityService);
             foreach (var service in manager.GetRunningServices(int.MaxValue))
