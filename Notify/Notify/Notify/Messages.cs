@@ -17,4 +17,9 @@ namespace Notify
     public class LocationErrorMessage
     {
     }
+    
+    public class LocationArrivedMessage
+    {
+
+    }
 }
