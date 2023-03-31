@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using Notify.Helpers;
 using Notify.HttpClient;
