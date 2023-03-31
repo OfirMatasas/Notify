@@ -59,7 +59,7 @@ namespace Notify.ViewModels
             {
                 try
                 {
-                    if (m_UserName.Equals(Constants.Username) && Password.Equals(Constants.Password))
+                    if (m_UserName.Equals(Constants.USERNAME) && Password.Equals(Constants.PASSWORD))
                     {
                         await locationService.ManageLocationTracking();
                         await Shell.Current.GoToAsync("///main");
@@ -91,6 +91,7 @@ namespace Notify.ViewModels
         private async Task initialize()
         {
             locationService = new LocationService();
+
             VersionTracking.Track();
             if (VersionTracking.IsFirstLaunchEver)
             {
