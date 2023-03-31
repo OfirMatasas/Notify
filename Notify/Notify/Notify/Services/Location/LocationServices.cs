@@ -2,35 +2,38 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Notify.Helpers;
 using Plugin.Geolocator;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+using Location = Notify.Core.Location;
 
 namespace Notify
 {
     public class LocationService
     {
-        readonly bool stopping = false;
-        
+        private bool m_Stopping = false;
+
         public async Task Run(CancellationToken token)
         {
             await Task.Run(async () => {
-                while (!stopping)
+                GeolocationRequest request;
+                Xamarin.Essentials.Location location;
+
+                while (!m_Stopping)
                 {
                     token.ThrowIfCancellationRequested();
+
                     try
                     {
                         await Task.Delay(2000);
 
-                        var request = new GeolocationRequest(GeolocationAccuracy.High);
-                        var location = await Geolocation.GetLocationAsync(request, token);
+                        request = new GeolocationRequest(GeolocationAccuracy.High);
+                        location = await Geolocation.GetLocationAsync(request, token);
+                        
                         if (location != null)
                         {
-                            var message = new LocationMessage
-                            {
-                                Latitude = location.Latitude,
-                                Longitude = location.Longitude
-                            };
+                            Location message = new Location(longitude: location.Longitude, latitude: location.Latitude);
 
                             Device.BeginInvokeOnMainThread(() =>
                             {
@@ -42,22 +45,17 @@ namespace Notify
                     {
                         Device.BeginInvokeOnMainThread(() =>
                         {
-                            var errormessage = new LocationErrorMessage();
-                            MessagingCenter.Send(errormessage, "LocationError");
+                            LocationErrorMessage errorMessage = new LocationErrorMessage();
+                            MessagingCenter.Send(errorMessage, "LocationError");
                         });
                     }
                 }
             }, token);
         }
 
-        public void Current_PositionChanged(object sender, Plugin.Geolocator.Abstractions.PositionEventArgs e)
-        {
-            Debug.WriteLine($"User's current location: {e.Position.Latitude}, {e.Position.Longitude}, {e.Position.Timestamp.TimeOfDay}");
-        }
-
         public async Task ManageLocationTracking()
         {
-            var permission = await Permissions.RequestAsync<Permissions.LocationAlways>();
+            PermissionStatus permission = await Permissions.RequestAsync<Permissions.LocationAlways>();
 
             if (permission == PermissionStatus.Denied)
             {
@@ -70,7 +68,6 @@ namespace Notify
                 if (CrossGeolocator.Current.IsListening)
                 {
                     await CrossGeolocator.Current.StopListeningAsync();
-                    CrossGeolocator.Current.PositionChanged -= Current_PositionChanged;
 
                     return;
                 }
@@ -86,12 +83,10 @@ namespace Notify
                         ListenForSignificantChanges = true,
                         PauseLocationUpdatesAutomatically = true
                     });
-
-                CrossGeolocator.Current.PositionChanged += Current_PositionChanged;
             }
             else if (Device.RuntimePlatform == Device.Android)
             {
-                if (Preferences.Get("LocationServiceRunning", false) == false)
+                if (Preferences.Get(Constants.START_LOCATION_SERVICE, false) == false)
                 {
                     StartService();
                 }
@@ -106,13 +101,13 @@ namespace Notify
         {
             if (Device.RuntimePlatform == Device.Android || Device.RuntimePlatform == Device.iOS)
             {
-                MessagingCenter.Subscribe<LocationMessage>(this, "Location",
+                MessagingCenter.Subscribe<Location>(this, "Location",
                     message =>
                     {
                         Device.BeginInvokeOnMainThread(() =>
                         {
                             Debug.WriteLine(
-                                $"User's current location: {message.Latitude}, {message.Longitude}, {DateTime.Now.ToLongTimeString()}");
+                                $"User's current location: {message}, {DateTime.Now.ToLongTimeString()}");
                         });
                     });
 
@@ -128,26 +123,27 @@ namespace Notify
                         Device.BeginInvokeOnMainThread(() => { Debug.WriteLine("There was an error updating location!"); });
                     });
 
-                if (Preferences.Get("LocationServiceRunning", false) == true)
+                if (Preferences.Get(Constants.START_LOCATION_SERVICE, false))
                 {
                     StartService();
                 }
             }
         }
-        
+
         public void StartService()
         {
-            var startServiceMessage = new StartServiceMessage();
-            MessagingCenter.Send(startServiceMessage, "ServiceStarted");
-            Preferences.Set("LocationServiceRunning", true);
-            Debug.WriteLine("Location Service has been started!");
+            StartServiceMessage message = new StartServiceMessage();
+            MessagingCenter.Send(message, "Location service started!");
+            Preferences.Set(Constants.START_LOCATION_SERVICE, true);
+            Debug.WriteLine("Location service as been started!");
         }
-
+        
         public void StopService()
         {
-            var stopServiceMessage = new StopServiceMessage();
-            MessagingCenter.Send(stopServiceMessage, "ServiceStopped");
-            Preferences.Set("LocationServiceRunning", false);
+            StopServiceMessage message = new StopServiceMessage();
+            MessagingCenter.Send(message, "Location service stopped!");
+            Preferences.Set(Constants.START_LOCATION_SERVICE, false);
+            Debug.WriteLine("Location service as been stopped!");
         }
     }
 }
