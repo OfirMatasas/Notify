@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using Notify.Helpers;
+using Notify.HttpClient;
 using Notify.Notifications;
 using Notify.Views;
+using Plugin.Geolocator.Abstractions;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using DriverDetailsPage = Notify.Views.DriverDetailsPage;
+using Location = Notify.Core.Location;
 using ProfilePage = Notify.Views.ProfilePage;
 using TeamDetailsPage = Notify.Views.TeamDetailsPage;
 
@@ -20,10 +19,7 @@ namespace Notify
     public partial class AppShell : Shell
     {
         private readonly INotificationManager notificationManager = DependencyService.Get<INotificationManager>();
-        private readonly Location goalLocation = new Location(latitude: 32.02069, longitude: 34.763419999999996);
-        private bool arrivedDestination = false;
-        private HttpClient httpClient = new HttpClient();
-        private LocationMessage currentLocation = null;
+        private Location m_LastUpdatedLocation = null;
         
         public AppShell()
         {
@@ -33,12 +29,10 @@ namespace Notify
             setNoficicationManagerNotificationReceived();
             setMessagingCenterSubscriptions();
 
-            if (Preferences.Get("LocationServiceRunning", false) == true)
+            if (Preferences.Get(Constants.START_LOCATION_SERVICE, false))
             {
                 StartService();
             }
-
-            httpClient.BaseAddress = new Uri("https://notifymta.azurewebsites.net/api/");
         }
 
         void RegisterRoutes()
@@ -52,13 +46,13 @@ namespace Notify
         
         private void setMessagingCenterSubscriptions()
         {
-            setMessagingCenterLocationMessageSubscription();
+            setMessagingCenterLocationSubscription();
             setMessagingCenterStopServiceMessageSubscription();
             setMessagingCenterLocationErrorMessageSubscription();
             setMessagingCenterLocationArrivedMessageSubscription();
         }
         
-                private void setMessagingCenterLocationArrivedMessageSubscription()
+        private void setMessagingCenterLocationArrivedMessageSubscription()
         {
             MessagingCenter.Subscribe<LocationArrivedMessage>(this, "LocationArrived", message =>
             {
@@ -66,11 +60,11 @@ namespace Notify
                 {
                     try
                     {
-                        Debug.Write("You've arrived your destination!");
+                        Debug.Write("You've arrived at your destination!");
                     }
                     catch (Exception ex)
                     {
-                        Debug.Write("Failed in MessagingCenter.Subscribe<LocationArrivedMessage>: " + ex.Message);
+                        Debug.Write($"Failed in MessagingCenter.Subscribe<LocationArrivedMessage>: {ex.Message}");
                     }
                 });
             });
@@ -88,7 +82,7 @@ namespace Notify
                     }
                     catch (Exception ex)
                     {
-                        Debug.Write("Failed in MessagingCenter.Subscribe<LocationErrorMessage>: " + ex.Message);
+                        Debug.Write($"Failed in MessagingCenter.Subscribe<LocationErrorMessage>: {ex.Message}");
                     }
                 });
             });
@@ -106,82 +100,70 @@ namespace Notify
                     }
                     catch (Exception ex)
                     {
-                        Debug.Write("Failed in MessagingCenter.Subscribe<StopServiceMessage>: " + ex.Message);
+                        Debug.Write($"Failed in MessagingCenter.Subscribe<StopServiceMessage>: {ex.Message}");
                     }
                 });
             });
         }
 
-        private void setMessagingCenterLocationMessageSubscription()
+        private void setMessagingCenterLocationSubscription()
         {
-            MessagingCenter.Subscribe<LocationMessage>(this, "Location", location =>
+            MessagingCenter.Subscribe<Location>(this, "Location", location =>
             {
-                if (currentLocation != location)
+                bool arrived;
+
+                if (requiresLocationUpdate(location))
                 {
-                    currentLocation = location;
-                    Debug.WriteLine($"{location.Latitude}, {location.Longitude}, {DateTime.Now.ToLongTimeString()}");
-                    double distance = sendCurrentLocationToAzureFunction(location).Result;
-                    if (checkIfArrivedDestinationForTheFirstTime(distance))
+                    Debug.WriteLine($"{location}, {DateTime.Now.ToLongTimeString()}");
+                    arrived = AzureHttpClient.Instance.CheckIfArrivedDestination(location);
+                    
+                    if (arrived)
                     {
                         Device.BeginInvokeOnMainThread(() =>
                         {
                             try
                             {
-                                arrivedDestinationForTheFirstTime();
+                                AnnounceDestinationArrival();
                             }
                             catch (Exception ex)
                             {
-                                Debug.WriteLine("Failed in MessagingCenter.Subscribe<LocationMessage>: " + ex.Message);
+                                Debug.WriteLine($"Failed in MessagingCenter.Subscribe<Location>: {ex.Message}");
                             }
                         });
                     }
+                    
+                    m_LastUpdatedLocation = location;
+                    Debug.WriteLine($"Updated last updated location: {m_LastUpdatedLocation}");
                 }
             });
         }
         
-        private async Task<double> sendCurrentLocationToAzureFunction(LocationMessage currentLocation)
+        bool requiresLocationUpdate(Location location)
         {
-            double distance = -1;
+            bool shouldUpdate;
 
-            try
+            if (m_LastUpdatedLocation == null)
             {
-                dynamic request = new JObject();
-                request.location = new JObject();
-                request.location.latitude = currentLocation.Latitude;
-                request.location.longitude = currentLocation.Longitude;
-                string json = JsonConvert.SerializeObject(request);
-                StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                // Send an HTTP POST request to the Azure Function
-                HttpResponseMessage response = await httpClient.PostAsync("distance", content).ConfigureAwait(false);
-                response.EnsureSuccessStatusCode();
-
-                // Read the response JSON
-                string responseJson = await response.Content.ReadAsStringAsync();
-                dynamic output = JsonConvert.DeserializeObject(responseJson);
-
-                // Extract the distance value from the output JSON
-                distance = Convert.ToDouble(output.distance);
+                shouldUpdate = true;
             }
-            catch (Exception ex)
+            else
             {
-                DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
+                double distance = GeolocatorUtils.CalculateDistance(
+                    latitudeStart: location.Latitude, longitudeStart: location.Longitude,
+                    latitudeEnd: location.Latitude, longitudeEnd: m_LastUpdatedLocation.Longitude,
+                    units: GeolocatorUtils.DistanceUnits.Kilometers) * Constants.METERS_IN_KM;
+            
+                Debug.WriteLine($"Distance from last updated location: {distance} meters");
+                shouldUpdate = distance > Constants.DISTANCE_UPDATE_THRESHOLD;
             }
 
-            return distance;
+            return shouldUpdate;
         }
-        
-        private void arrivedDestinationForTheFirstTime()
-        {
-            notificationManager.SendNotification("Destination arrived!", "You're arrived your destination");
-            Debug.WriteLine("You've arrived your destination!");
 
-            arrivedDestination = true;
-        }
-        
-        private bool checkIfArrivedDestinationForTheFirstTime(double distance)
+        private void AnnounceDestinationArrival()
         {
-            return !arrivedDestination && (int)distance != -1 && distance <= 50 ;
+            notificationManager.SendNotification("Destination arrived!", "You've arrived at your destination");
+            Debug.WriteLine("You've arrived at your destination!");
         }
 
         private void setNoficicationManagerNotificationReceived()
@@ -200,15 +182,17 @@ namespace Notify
 
             try
             {
-                MessagingCenter.Send(startServiceMessage, "ServiceStarted");
-                Preferences.Set("LocationServiceRunning", true);
+                if (Preferences.Get(Constants.START_LOCATION_SERVICE, false))
+                {
+                    MessagingCenter.Send(startServiceMessage, "ServiceStarted");
+                    Preferences.Set(Constants.START_LOCATION_SERVICE, false);
 
-                Debug.WriteLine("Location Service has been started!");
-                Debug.WriteLine($"Goal destination: {goalLocation.Latitude},{goalLocation.Longitude}");
+                    Debug.WriteLine("Location Service has been started!");
+                }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Debug.WriteLine(e.Message);
+                Debug.WriteLine(ex.Message);
             }
         }
 

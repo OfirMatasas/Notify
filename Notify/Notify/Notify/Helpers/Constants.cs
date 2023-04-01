@@ -70,7 +70,28 @@ namespace Notify.Helpers
 
         #endregion
 
-        public static readonly string Username = "lin";
-        public static readonly string Password = "123";
+        public static readonly string USERNAME = "lin";
+        public static readonly string PASSWORD = "123";
+
+        #region Http Client
+
+        public static readonly string AZURE_FUNCTIONS_APP_BASE_URL = "https://notifymta.azurewebsites.net/api/";
+        public static readonly string AZURE_FUNCTIONS_PATTERN_DISTANCE = "distance";
+
+        #endregion
+
+        #region Values
+
+        public static readonly int DESTINATION_MAXMIMUM_DISTANCE = 50;
+        public static readonly int DISTANCE_UPDATE_THRESHOLD = 30;
+        public static readonly int METERS_IN_KM = 1000;
+        
+        #endregion
+
+        #region Services
+
+        public static readonly string START_LOCATION_SERVICE = "LocationServiceRunning";
+
+        #endregion
     }
 }

@@ -1,17 +1,15 @@
-using System.Net.Http;
-
 namespace Notify.Core
 {
     public class HttpClientFactory
     {
-        private readonly HttpClient _httpClient;
+        private readonly System.Net.Http.HttpClient _httpClient;
 
         public HttpClientFactory()
         {
-            _httpClient = new HttpClient();
+            _httpClient = new System.Net.Http.HttpClient();
         }
 
-        public HttpClient GetHttpClient()
+        public System.Net.Http.HttpClient GetHttpClient()
         {
             return _httpClient;
         }

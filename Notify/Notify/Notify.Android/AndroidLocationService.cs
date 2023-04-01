@@ -28,8 +28,8 @@ namespace Notify.Droid
             Task.Run(() => {
                 try
                 {
-                    var locShared = new LocationService();
-                    locShared.Run(_cts.Token).Wait();
+                    LocationService locationService = new LocationService();
+                    locationService.Run(_cts.Token).Wait();
                 }
                 catch (OperationCanceledException)
                 {

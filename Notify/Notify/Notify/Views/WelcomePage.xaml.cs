@@ -1,6 +1,4 @@
-﻿using System;
-using Notify.Views.TabViews;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace Notify.Views
