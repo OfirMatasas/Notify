@@ -112,7 +112,7 @@ namespace Notify
             {
                 bool arrived;
 
-                if (isCurrentLocationFarEnoughForUpdating(location))
+                if (requiresLocationUpdate(location))
                 {
                     Debug.WriteLine($"{location}, {DateTime.Now.ToLongTimeString()}");
                     arrived = AzureHttpClient.Instance.CheckIfArrivedDestination(location);
@@ -138,7 +138,7 @@ namespace Notify
             });
         }
         
-        bool isCurrentLocationFarEnoughForUpdating(Location location)
+        bool requiresLocationUpdate(Location location)
         {
             bool shouldUpdate;
 
@@ -151,10 +151,10 @@ namespace Notify
                 double distance = GeolocatorUtils.CalculateDistance(
                     latitudeStart: location.Latitude, longitudeStart: location.Longitude,
                     latitudeEnd: location.Latitude, longitudeEnd: m_LastUpdatedLocation.Longitude,
-                    units: GeolocatorUtils.DistanceUnits.Kilometers) * 1000;
+                    units: GeolocatorUtils.DistanceUnits.Kilometers) * Constants.METERS_IN_KM;
             
                 Debug.WriteLine($"Distance from last updated location: {distance} meters");
-                shouldUpdate = distance > 30;
+                shouldUpdate = distance > Constants.DISTANCE_UPDATE_THRESHOLD;
             }
 
             return shouldUpdate;
@@ -162,7 +162,7 @@ namespace Notify
 
         private void AnnounceDestinationArrival()
         {
-            notificationManager.SendNotification("Destination arrived!", "You're arrived at your destination");
+            notificationManager.SendNotification("Destination arrived!", "You've arrived at your destination");
             Debug.WriteLine("You've arrived at your destination!");
         }
 

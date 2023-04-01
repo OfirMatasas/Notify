@@ -83,6 +83,8 @@ namespace Notify.Helpers
         #region Values
 
         public static readonly int DESTINATION_MAXMIMUM_DISTANCE = 50;
+        public static readonly int DISTANCE_UPDATE_THRESHOLD = 30;
+        public static readonly int METERS_IN_KM = 1000;
         
         #endregion
 

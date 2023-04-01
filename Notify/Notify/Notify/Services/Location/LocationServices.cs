@@ -88,11 +88,11 @@ namespace Notify
             {
                 if (Preferences.Get(Constants.START_LOCATION_SERVICE, false) == false)
                 {
-                    StartService();
+                    startService();
                 }
                 else
                 {
-                    StopService();
+                    stopService();
                 }
             }
         }
@@ -125,25 +125,25 @@ namespace Notify
 
                 if (Preferences.Get(Constants.START_LOCATION_SERVICE, false))
                 {
-                    StartService();
+                    startService();
                 }
             }
         }
 
-        public void StartService()
+        private void startService()
         {
             StartServiceMessage message = new StartServiceMessage();
             MessagingCenter.Send(message, "Location service started!");
             Preferences.Set(Constants.START_LOCATION_SERVICE, true);
-            Debug.WriteLine("Location service as been started!");
+            Debug.WriteLine("Location service has been started!");
         }
-        
-        public void StopService()
+
+        private void stopService()
         {
             StopServiceMessage message = new StopServiceMessage();
             MessagingCenter.Send(message, "Location service stopped!");
             Preferences.Set(Constants.START_LOCATION_SERVICE, false);
-            Debug.WriteLine("Location service as been stopped!");
+            Debug.WriteLine("Location service has been stopped!");
         }
     }
 }
