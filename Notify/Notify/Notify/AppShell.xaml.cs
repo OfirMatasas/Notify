@@ -2,6 +2,9 @@
 using System.Diagnostics;
 using Notify.Helpers;
 using Notify.HttpClient;
+using Android.Net.Wifi;
+using Android.Content;
+using Android.Net;
 using Notify.Notifications;
 using Notify.Views;
 using Plugin.Geolocator.Abstractions;
@@ -13,18 +16,23 @@ using Location = Notify.Core.Location;
 using ProfilePage = Notify.Views.ProfilePage;
 using TeamDetailsPage = Notify.Views.TeamDetailsPage;
 
+
 namespace Notify
 {
+   
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AppShell : Shell
     {
         private readonly INotificationManager notificationManager = DependencyService.Get<INotificationManager>();
         private Location m_LastUpdatedLocation = null;
-        
+        private readonly string my_ssid = "\"AndroidWifi\"";    // DEKEL
+           
         public AppShell()
         {
             InitializeComponent();
             RegisterRoutes();
+            
+            Connectivity.ConnectivityChanged += ConnetivityChangedHandeler;   // DEKEL
             
             setNoficicationManagerNotificationReceived();
             setMessagingCenterSubscriptions();
@@ -32,6 +40,35 @@ namespace Notify
             if (Preferences.Get(Constants.START_LOCATION_SERVICE, false))
             {
                 StartService();
+            }
+        }
+
+        private void ConnetivityChangedHandeler(object sender, ConnectivityChangedEventArgs e)  // TODO: move into Notify.Android
+        {
+            var connectivityManager = (ConnectivityManager)Android.App.Application.Context.GetSystemService(Context.ConnectivityService);
+            var capabilities = connectivityManager.GetNetworkCapabilities(connectivityManager.ActiveNetwork);
+
+            if (capabilities.HasTransport(TransportType.Wifi))
+            {
+                var wifiManager = (WifiManager)Android.App.Application.Context.GetSystemService(Context.WifiService);
+                string ssid = wifiManager.ConnectionInfo.SSID;
+        
+                if (ssid == my_ssid)
+                {
+                    notificationManager.SendNotification("Wifi - Push Notification", 
+                        "You have just connected to your wifi network!");
+                    Debug.WriteLine("Wifi - Push Notification. \nSSID: " + ssid);
+                }
+                else
+                {
+                    notificationManager.SendNotification("Error with ssid",
+                    "SSID: " + ssid + "  my_ssid: " + my_ssid);
+                }
+            }
+            else
+            {
+                notificationManager.SendNotification("Disconnected from Wifi network!","");
+                Debug.WriteLine("Disconnected from WIFI network!");
             }
         }
 
