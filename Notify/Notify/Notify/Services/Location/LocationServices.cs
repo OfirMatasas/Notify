@@ -65,35 +65,32 @@ namespace Notify
 
             if (Device.RuntimePlatform == Device.iOS)
             {
-                if (CrossGeolocator.Current.IsListening)
-                {
-                    await CrossGeolocator.Current.StopListeningAsync();
-
-                    return;
-                }
-
-                await CrossGeolocator.Current.StartListeningAsync(TimeSpan.FromSeconds(1), 10, false,
+                await CrossGeolocator.Current.StartListeningAsync(TimeSpan.FromSeconds(10), 10, false,
                     new Plugin.Geolocator.Abstractions.ListenerSettings
                     {
                         ActivityType = Plugin.Geolocator.Abstractions.ActivityType.AutomotiveNavigation,
                         AllowBackgroundUpdates = true,
-                        DeferLocationUpdates = false,
+                        DeferLocationUpdates = true,
                         DeferralDistanceMeters = 10,
-                        DeferralTime = TimeSpan.FromSeconds(5),
+                        DeferralTime = TimeSpan.FromSeconds(5), 
                         ListenForSignificantChanges = true,
                         PauseLocationUpdatesAutomatically = true
                     });
+                CrossGeolocator.Current.PositionChanged += (sender, args) =>
+                {
+                    MessagingCenter.Send<Location>(new Location(args.Position.Longitude, args.Position.Latitude), "Location");
+                    Debug.WriteLine($"Current location: {args.Position.Latitude},{args.Position.Longitude}");
+                };
+                
             }
-            else if (Device.RuntimePlatform == Device.Android)
+            
+            if (Preferences.Get(Constants.START_LOCATION_SERVICE, false) == false)
             {
-                if (Preferences.Get(Constants.START_LOCATION_SERVICE, false) == false)
-                {
-                    startService();
-                }
-                else
-                {
-                    stopService();
-                }
+                startService();
+            }
+            else
+            {
+                stopService();
             }
         }
         

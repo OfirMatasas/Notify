@@ -13,7 +13,7 @@ namespace Notify.Droid
     [Activity(Label = "Notify", Icon = "@mipmap/icon", Theme = "@style/MainTheme", LaunchMode = LaunchMode.SingleTop, MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
-        Intent serviceIntent;
+        private Intent serviceIntent;
         private const int RequestCode = 5469;
         internal static readonly string CHANNEL_ID = "my_notification_channel";
 
@@ -30,7 +30,7 @@ namespace Notify.Droid
 
             if (Build.VERSION.SdkInt >= BuildVersionCodes.M && !Android.Provider.Settings.CanDrawOverlays(this))
             {
-                var intent = new Intent(Android.Provider.Settings.ActionManageOverlayPermission);
+                Intent intent = new Intent(Android.Provider.Settings.ActionManageOverlayPermission);
                 intent.SetFlags(ActivityFlags.NewTask);
                 this.StartActivity(intent);
             }
@@ -41,7 +41,6 @@ namespace Notify.Droid
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
@@ -70,13 +69,15 @@ namespace Notify.Droid
         private bool IsServiceRunning(System.Type cls)
         {
             ActivityManager manager = (ActivityManager)GetSystemService(Context.ActivityService);
-            foreach (var service in manager.GetRunningServices(int.MaxValue))
+            
+            foreach (ActivityManager.RunningServiceInfo service in manager.GetRunningServices(int.MaxValue))
             {
                 if (service.Service.ClassName.Equals(Java.Lang.Class.FromType(cls).CanonicalName))
                 {
                     return true;
                 }
             }
+            
             return false;
         }
 
