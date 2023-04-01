@@ -150,7 +150,7 @@ namespace Notify
             {
                 double distance = GeolocatorUtils.CalculateDistance(
                     latitudeStart: location.Latitude, longitudeStart: location.Longitude,
-                    latitudeEnd: location.Latitude, longitudeEnd: m_LastUpdatedLocation.Longitude,
+                    latitudeEnd: m_LastUpdatedLocation.Latitude, longitudeEnd: m_LastUpdatedLocation.Longitude,
                     units: GeolocatorUtils.DistanceUnits.Kilometers) * Constants.METERS_IN_KM;
             
                 Debug.WriteLine($"Distance from last updated location: {distance} meters");
