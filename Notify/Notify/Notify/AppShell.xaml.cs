@@ -24,18 +24,18 @@ namespace Notify
         public AppShell()
         {
             InitializeComponent();
-            RegisterRoutes();
+            registerRoutes();
             
             setNoficicationManagerNotificationReceived();
             setMessagingCenterSubscriptions();
 
             if (Preferences.Get(Constants.START_LOCATION_SERVICE, false))
             {
-                StartService();
+                startService();
             }
         }
 
-        void RegisterRoutes()
+        private void registerRoutes()
         {
             Routing.RegisterRoute("profile", typeof(ProfilePage));
             Routing.RegisterRoute("schedule/details", typeof(CircuitDetailsPage));
@@ -138,7 +138,7 @@ namespace Notify
             });
         }
         
-        bool requiresLocationUpdate(Location location)
+        private bool requiresLocationUpdate(Location location)
         {
             bool shouldUpdate;
 
@@ -176,7 +176,7 @@ namespace Notify
             };
         }
         
-        private void StartService()
+        private void startService()
         {
             StartServiceMessage startServiceMessage = new StartServiceMessage();
 

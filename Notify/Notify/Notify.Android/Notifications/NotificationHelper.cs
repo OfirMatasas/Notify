@@ -2,7 +2,6 @@ using Android.App;
 using Android.Content;
 using Android.OS;
 using AndroidX.Core.App;
-using Xamarin.Forms.Platform.Android;
 
 namespace Notify.Droid
 {
@@ -10,7 +9,6 @@ namespace Notify.Droid
     {
         private static string foregroundChannelId = "9001";
         private static Context context = Application.Context;
-
 
         public Notification GetServiceStartedNotification()
         {

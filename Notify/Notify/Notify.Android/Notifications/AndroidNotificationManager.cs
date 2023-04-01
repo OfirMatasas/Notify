@@ -4,13 +4,11 @@ using Android.Content;
 using Android.Graphics;
 using Android.OS;
 using AndroidX.Core.App;
-using Formula1.Droid;
 using Notify.Notifications;
 using Xamarin.Forms;
 using AndroidApp = Android.App.Application;
 
 [assembly: Dependency(typeof(Notify.Droid.Notifications.AndroidNotificationManager))]
-
 namespace Notify.Droid.Notifications
 {
     public class AndroidNotificationManager : INotificationManager
@@ -56,8 +54,7 @@ namespace Notify.Droid.Notifications
                 intent.PutExtra(titleKey, title);
                 intent.PutExtra(messageKey, message);
 
-                pendingIntent =
-                    PendingIntent.GetBroadcast(AndroidApp.Context, pendingIntentId++, intent, pendingIntentFlags);
+                pendingIntent = PendingIntent.GetBroadcast(AndroidApp.Context, pendingIntentId++, intent, pendingIntentFlags);
                 triggerTime = GetNotifyTime(notifyTime.Value);
                 alarmManager = AndroidApp.Context.GetSystemService(Context.AlarmService) as AlarmManager;
                 alarmManager.Set(AlarmType.RtcWakeup, triggerTime, pendingIntent);
@@ -90,9 +87,7 @@ namespace Notify.Droid.Notifications
             intent.PutExtra(titleKey, title);
             intent.PutExtra(messageKey, message);
 
-            pendingIntent =
-                PendingIntent.GetActivity(AndroidApp.Context, pendingIntentId++, intent, pendingIntentFlags);
-
+            pendingIntent = PendingIntent.GetActivity(AndroidApp.Context, pendingIntentId++, intent, pendingIntentFlags);
             notification = buildNotification(title, message, pendingIntent);
 
             manager.Notify(messageId++, notification);
@@ -104,7 +99,8 @@ namespace Notify.Droid.Notifications
                 .SetContentIntent(pendingIntent)
                 .SetContentTitle(title)
                 .SetContentText(message)
-                .SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources,
+                .SetLargeIcon(BitmapFactory.DecodeResource(
+                    AndroidApp.Context.Resources, 
                     Resource.Drawable.notification_icon_background))
                 .SetSmallIcon(Resource.Drawable.notification_icon_background)
                 .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate);
