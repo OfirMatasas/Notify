@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using Notify.Helpers;
 using Notify.HttpClient;
@@ -16,63 +16,59 @@ using Location = Notify.Core.Location;
 using ProfilePage = Notify.Views.ProfilePage;
 using TeamDetailsPage = Notify.Views.TeamDetailsPage;
 
-
 namespace Notify
 {
-   
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AppShell : Shell
     {
         private readonly INotificationManager notificationManager = DependencyService.Get<INotificationManager>();
         private Location m_LastUpdatedLocation = null;
-        private readonly string my_ssid = "\"AndroidWifi\"";    // DEKEL
+        private readonly string m_preDefineSsid = "\"AndroidWifi\"";
            
         public AppShell()
         {
             InitializeComponent();
-            RegisterRoutes();
-            
-            Connectivity.ConnectivityChanged += ConnetivityChangedHandeler;   // DEKEL
-            
+            registerRoutes();
+            Connectivity.ConnectivityChanged += ConnetivityChangedHandeler;
             setNoficicationManagerNotificationReceived();
             setMessagingCenterSubscriptions();
 
             if (Preferences.Get(Constants.START_LOCATION_SERVICE, false))
             {
-                StartService();
+                startService();
             }
         }
 
         private void ConnetivityChangedHandeler(object sender, ConnectivityChangedEventArgs e)  // TODO: move into Notify.Android
         {
-            var connectivityManager = (ConnectivityManager)Android.App.Application.Context.GetSystemService(Context.ConnectivityService);
-            var capabilities = connectivityManager.GetNetworkCapabilities(connectivityManager.ActiveNetwork);
+            ConnectivityManager connectivityManager = (ConnectivityManager)Android.App.Application.Context.GetSystemService(Context.ConnectivityService);
+            NetworkCapabilities capabilities = connectivityManager.GetNetworkCapabilities(connectivityManager.ActiveNetwork);
 
             if (capabilities.HasTransport(TransportType.Wifi))
             {
-                var wifiManager = (WifiManager)Android.App.Application.Context.GetSystemService(Context.WifiService);
+                NetworkCapabilities wifiManager = (WifiManager)Android.App.Application.Context.GetSystemService(Context.WifiService);
                 string ssid = wifiManager.ConnectionInfo.SSID;
         
-                if (ssid == my_ssid)
+                if (ssid == m_preDefineSsid)
                 {
                     notificationManager.SendNotification("Wifi - Push Notification", 
-                        "You have just connected to your wifi network!");
-                    Debug.WriteLine("Wifi - Push Notification. \nSSID: " + ssid);
+                        $"You have just connected to your wifi network: {ssid}!");
+                    Debug.WriteLine($"Wifi - Push Notification. \nSSID: {ssid}");
                 }
                 else
                 {
                     notificationManager.SendNotification("Error with ssid",
-                    "SSID: " + ssid + "  my_ssid: " + my_ssid);
+                    $"SSID: {ssid} \nPre define SSID: {m_preDefineSsid}");
                 }
             }
             else
             {
-                notificationManager.SendNotification("Disconnected from Wifi network!","");
-                Debug.WriteLine("Disconnected from WIFI network!");
+                notificationManager.SendNotification("Disconnected from wifi network!","");
+                Debug.WriteLine("Disconnected from wifi network!");
             }
         }
 
-        void RegisterRoutes()
+        private void registerRoutes()
         {
             Routing.RegisterRoute("profile", typeof(ProfilePage));
             Routing.RegisterRoute("schedule/details", typeof(CircuitDetailsPage));
@@ -175,7 +171,7 @@ namespace Notify
             });
         }
         
-        bool requiresLocationUpdate(Location location)
+        private bool requiresLocationUpdate(Location location)
         {
             bool shouldUpdate;
 
@@ -187,7 +183,7 @@ namespace Notify
             {
                 double distance = GeolocatorUtils.CalculateDistance(
                     latitudeStart: location.Latitude, longitudeStart: location.Longitude,
-                    latitudeEnd: location.Latitude, longitudeEnd: m_LastUpdatedLocation.Longitude,
+                    latitudeEnd: m_LastUpdatedLocation.Latitude, longitudeEnd: m_LastUpdatedLocation.Longitude,
                     units: GeolocatorUtils.DistanceUnits.Kilometers) * Constants.METERS_IN_KM;
             
                 Debug.WriteLine($"Distance from last updated location: {distance} meters");
@@ -213,7 +209,7 @@ namespace Notify
             };
         }
         
-        private void StartService()
+        private void startService()
         {
             StartServiceMessage startServiceMessage = new StartServiceMessage();
 
