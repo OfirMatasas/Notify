@@ -76,6 +76,7 @@
     <Compile Include="AndroidLocationService.cs" />
     <Compile Include="BootBroadcastReceiver.cs" />
     <Compile Include="MainActivity.cs" />
+    <Compile Include="Managers\AndroidWiFiManager.cs" />
     <Compile Include="Notifications\AlarmHandler.cs" />
     <Compile Include="Notifications\AndroidNotificationManager.cs" />
     <Compile Include="Notifications\NotificationHelper.cs" />

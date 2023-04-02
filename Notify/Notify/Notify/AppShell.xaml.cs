@@ -2,11 +2,9 @@ using System;
 using System.Diagnostics;
 using Notify.Helpers;
 using Notify.HttpClient;
-using Android.Net.Wifi;
-using Android.Content;
-using Android.Net;
 using Notify.Notifications;
 using Notify.Views;
+using Notify.WiFi;
 using Plugin.Geolocator.Abstractions;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -22,6 +20,7 @@ namespace Notify
     public partial class AppShell : Shell
     {
         private readonly INotificationManager notificationManager = DependencyService.Get<INotificationManager>();
+        private readonly IWiFiManager m_WiFiManager = DependencyService.Get<IWiFiManager>();
         private Location m_LastUpdatedLocation = null;
         private readonly string m_preDefineSsid = "\"AndroidWifi\"";
            
@@ -29,7 +28,7 @@ namespace Notify
         {
             InitializeComponent();
             registerRoutes();
-            Connectivity.ConnectivityChanged += ConnetivityChangedHandeler;
+            Connectivity.ConnectivityChanged += internetConnectivityChanged;
             setNoficicationManagerNotificationReceived();
             setMessagingCenterSubscriptions();
 
@@ -39,33 +38,9 @@ namespace Notify
             }
         }
 
-        private void ConnetivityChangedHandeler(object sender, ConnectivityChangedEventArgs e)  // TODO: move into Notify.Android
+        private void internetConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
         {
-            ConnectivityManager connectivityManager = (ConnectivityManager)Android.App.Application.Context.GetSystemService(Context.ConnectivityService);
-            NetworkCapabilities capabilities = connectivityManager.GetNetworkCapabilities(connectivityManager.ActiveNetwork);
-
-            if (capabilities.HasTransport(TransportType.Wifi))
-            {
-                NetworkCapabilities wifiManager = (WifiManager)Android.App.Application.Context.GetSystemService(Context.WifiService);
-                string ssid = wifiManager.ConnectionInfo.SSID;
-        
-                if (ssid == m_preDefineSsid)
-                {
-                    notificationManager.SendNotification("Wifi - Push Notification", 
-                        $"You have just connected to your wifi network: {ssid}!");
-                    Debug.WriteLine($"Wifi - Push Notification. \nSSID: {ssid}");
-                }
-                else
-                {
-                    notificationManager.SendNotification("Error with ssid",
-                    $"SSID: {ssid} \nPre define SSID: {m_preDefineSsid}");
-                }
-            }
-            else
-            {
-                notificationManager.SendNotification("Disconnected from wifi network!","");
-                Debug.WriteLine("Disconnected from wifi network!");
-            }
+            m_WiFiManager.PrintConnectedWiFi(sender, e);
         }
 
         private void registerRoutes()
