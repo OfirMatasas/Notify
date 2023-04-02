@@ -54,4 +54,9 @@
     <Content Include="ViewModels\.DS_Store" />
     <Content Include="Views\.DS_Store" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Mono.Android">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\MonoAndroid\v13.0\Mono.Android.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

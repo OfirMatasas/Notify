@@ -4,6 +4,7 @@ using Notify.Helpers;
 using Notify.HttpClient;
 using Notify.Notifications;
 using Notify.Views;
+using Notify.WiFi;
 using Plugin.Geolocator.Abstractions;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -19,13 +20,15 @@ namespace Notify
     public partial class AppShell : Shell
     {
         private readonly INotificationManager notificationManager = DependencyService.Get<INotificationManager>();
+        private readonly IWiFiManager m_WiFiManager = DependencyService.Get<IWiFiManager>();
         private Location m_LastUpdatedLocation = null;
-        
+        private readonly string m_preDefineSsid = "\"AndroidWifi\"";
+           
         public AppShell()
         {
             InitializeComponent();
             registerRoutes();
-            
+            Connectivity.ConnectivityChanged += internetConnectivityChanged;
             setNoficicationManagerNotificationReceived();
             setMessagingCenterSubscriptions();
 
@@ -33,6 +36,11 @@ namespace Notify
             {
                 startService();
             }
+        }
+
+        private void internetConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
+        {
+            m_WiFiManager.PrintConnectedWiFi(sender, e);
         }
 
         private void registerRoutes()

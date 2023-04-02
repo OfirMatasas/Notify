@@ -1,12 +1,17 @@
 ﻿using System;
+using System.Linq;
+using System.Diagnostics;
 using Android.App;
 using Android.Content.PM;
 using Android.Runtime;
 using Android.OS;
 using Android.Content;
+using Android.Net;
+using Android.Net.Wifi;
 using Notify.Droid.Notifications;
 using Notify.Notifications;
 using Xamarin.Forms;
+using Xamarin.Essentials;
 
 namespace Notify.Droid
 {
@@ -16,6 +21,7 @@ namespace Notify.Droid
         private Intent serviceIntent;
         private const int RequestCode = 5469;
         internal static readonly string CHANNEL_ID = "my_notification_channel";
+
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
