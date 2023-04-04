@@ -3,7 +3,7 @@ using Android.Content;
 using Android.OS;
 using AndroidX.Core.App;
 
-namespace Notify.Droid
+namespace Notify.Droid.Notifications
 {
     internal class NotificationHelper
     {
@@ -59,7 +59,7 @@ namespace Notify.Droid
             notificationBuilder = new NotificationCompat.Builder(context, foregroundChannelId)
                 .SetContentTitle("Ofir testing")
                 .SetContentText("You've arrived your destination!")
-                .SetSmallIcon(Resource.Drawable.ic_clock_black_24dp)
+                .SetSmallIcon(Formula1.Droid.Resource.Drawable.ic_clock_black_24dp)
                 .SetOngoing(true)
                 .SetContentIntent(pendingIntent);
 

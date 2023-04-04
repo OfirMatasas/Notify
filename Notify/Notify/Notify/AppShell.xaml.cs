@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using Notify.Helpers;
 using Notify.HttpClient;
+using Notify.Interfaces.Managers;
 using Notify.Notifications;
 using Notify.Views;
 using Notify.WiFi;
@@ -21,8 +22,8 @@ namespace Notify
     {
         private readonly INotificationManager notificationManager = DependencyService.Get<INotificationManager>();
         private readonly IWiFiManager m_WiFiManager = DependencyService.Get<IWiFiManager>();
+        private readonly IBluetoothManager m_BluetoothManager = DependencyService.Get<IBluetoothManager>();
         private Location m_LastUpdatedLocation = null;
-        private readonly string m_preDefineSsid = "\"AndroidWifi\"";
            
         public AppShell()
         {
@@ -36,6 +37,13 @@ namespace Notify
             {
                 startService();
             }
+
+            getBluetoothDevices();
+        }
+
+        private void getBluetoothDevices()
+        {
+            m_BluetoothManager.PrintAllBondedBluetoothDevices();
         }
 
         private void internetConnectivityChanged(object sender, ConnectivityChangedEventArgs e)

@@ -99,10 +99,8 @@ namespace Notify.Droid.Notifications
                 .SetContentIntent(pendingIntent)
                 .SetContentTitle(title)
                 .SetContentText(message)
-                .SetLargeIcon(BitmapFactory.DecodeResource(
-                    AndroidApp.Context.Resources, 
-                    Resource.Drawable.notification_icon_background))
-                .SetSmallIcon(Resource.Drawable.notification_icon_background)
+                .SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources, Formula1.Droid.Resource.Drawable.notification_icon_background))
+                .SetSmallIcon(Formula1.Droid.Resource.Drawable.notification_icon_background)
                 .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate);
 
             return builder.Build();

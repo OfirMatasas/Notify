@@ -8,7 +8,7 @@ using Xamarin.Essentials;
 using Xamarin.Forms;
 using Location = Notify.Core.Location;
 
-namespace Notify
+namespace Notify.Services.Location
 {
     public class LocationService
     {
@@ -33,7 +33,7 @@ namespace Notify
                         
                         if (location != null)
                         {
-                            Location message = new Location(longitude: location.Longitude, latitude: location.Latitude);
+                            Core.Location message = new Core.Location(longitude: location.Longitude, latitude: location.Latitude);
 
                             Device.BeginInvokeOnMainThread(() =>
                             {
@@ -78,10 +78,9 @@ namespace Notify
                     });
                 CrossGeolocator.Current.PositionChanged += (sender, args) =>
                 {
-                    MessagingCenter.Send<Location>(new Location(args.Position.Longitude, args.Position.Latitude), "Location");
+                    MessagingCenter.Send<Core.Location>(new Core.Location(args.Position.Longitude, args.Position.Latitude), "Location");
                     Debug.WriteLine($"Current location: {args.Position.Latitude},{args.Position.Longitude}");
                 };
-                
             }
             
             if (Preferences.Get(Constants.START_LOCATION_SERVICE, false) == false)
@@ -98,7 +97,7 @@ namespace Notify
         {
             if (Device.RuntimePlatform == Device.Android || Device.RuntimePlatform == Device.iOS)
             {
-                MessagingCenter.Subscribe<Location>(this, "Location",
+                MessagingCenter.Subscribe<Core.Location>(this, "Location",
                     message =>
                     {
                         Device.BeginInvokeOnMainThread(() =>
