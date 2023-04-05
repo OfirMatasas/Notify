@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.OS;
+using Notify.Droid.Notifications;
+using Notify.Services.Location;
 using Xamarin.Forms;
 
 namespace Notify.Droid

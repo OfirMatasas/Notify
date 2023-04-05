@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Notify.Helpers;
+using Notify.Services.Location;
 using Plugin.Geolocator;
 using Xamarin.Essentials;
 using Xamarin.Forms;

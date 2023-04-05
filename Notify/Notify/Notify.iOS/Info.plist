@@ -46,6 +46,12 @@
 	<array>
 		<string>location</string>
 		<string>remote-notification</string>
+		<string>bluetooth-central</string>
+		<string>bluetooth-peripheral</string>
 	</array>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>App want to access the bluetooth</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>App want to access the bluetooth</string>
 </dict>
 </plist>
