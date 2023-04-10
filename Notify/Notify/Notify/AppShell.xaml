@@ -29,6 +29,11 @@
     <ShellItem Route="welcome">
         <ShellContent ContentTemplate="{DataTemplate Views:WelcomePage}" />
     </ShellItem>
+
+    <ShellItem Route="register">
+        <ShellContent ContentTemplate="{DataTemplate Views:RegistrationPage}" />
+    </ShellItem>
+
     <TabBar Route="main">
         <Tab
             Icon="notification.png"

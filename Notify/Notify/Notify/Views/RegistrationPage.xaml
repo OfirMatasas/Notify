@@ -1,0 +1,48 @@
+<ContentPage
+    BackgroundColor="#F8F8F8"
+    BindingContext="{Binding RegistrationPage, Source={StaticResource ViewModelLocator}}"
+    x:Class="Notify.Views.RegistrationPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <StackLayout Margin="20">
+        <Label
+            FontAttributes="Bold"
+            FontSize="Large"
+            HorizontalOptions="CenterAndExpand"
+            Margin="0,40,0,20"
+            Text="Create an Account"
+            TextColor="#333333" />
+        <Entry
+            FontSize="Large"
+            Margin="0,0,0,10"
+            Placeholder="Username"
+            Text="{Binding UserName}" />
+        <Entry
+            FontSize="Large"
+            Margin="0,0,0,10"
+            Placeholder="Email"
+            Text="{Binding Email}" />
+        <Entry
+            FontSize="Large"
+            IsPassword="True"
+            Margin="0,0,0,10"
+            Placeholder="Password"
+            Text="{Binding Password}" />
+        <Entry
+            FontSize="Large"
+            IsPassword="True"
+            Margin="0,0,0,20"
+            Placeholder="Confirm Password"
+            Text="{Binding ConfirmPassword}" />
+        <Button
+            BackgroundColor="#2196F3"
+            Command="{Binding RegisterCommand}"
+            CornerRadius="8"
+            FontSize="Large"
+            HeightRequest="50"
+            Margin="0,0,0,40"
+            Text="Register"
+            TextColor="#FFFFFF" />
+    </StackLayout>
+</ContentPage>

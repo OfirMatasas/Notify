@@ -10,14 +10,9 @@ namespace Notify.ViewModels
 {
     public class WelcomePageViewModel : BaseViewModel
     {
-        #region Commands
-
         public Command LogInCommand { get; set; }
-
-        #endregion
-
-        #region Properties
-
+        public Command SignUpCommand { get; set; }
+        
         private LocationService locationService;
         
         private string m_UserName;
@@ -35,22 +30,32 @@ namespace Notify.ViewModels
             get => m_Password;
             set => SetProperty(ref m_Password, value);
         }
-
-        #endregion
-
-        #region Constructors
-
+        
         public WelcomePageViewModel()
         {
             LogInCommand = new Command(onLoginClicked);
+            SignUpCommand = new Command(onSignUpClicked);
 
             Init = initialize();
         }
+        
+        private async Task initialize()
+        {
+            locationService = new LocationService();
 
-        #endregion
-
-        #region Command Handlers
-
+            VersionTracking.Track();
+            if (VersionTracking.IsFirstLaunchEver)
+            {
+                await Shell.Current.GoToAsync("///welcome");
+            }
+            else
+            {
+                await Shell.Current.GoToAsync("///welcome");
+            }
+            
+            locationService.SubscribeToLocationMessaging();
+        }
+        
         private async void onLoginClicked()
         {
             bool debugAutoLogin = true;
@@ -84,28 +89,11 @@ namespace Notify.ViewModels
                 await Shell.Current.GoToAsync("///main");
             }
         }
-        
-        #endregion
 
-        #region Private Functionality
-        
-        private async Task initialize()
+        private async void onSignUpClicked()
         {
-            locationService = new LocationService();
-
-            VersionTracking.Track();
-            if (VersionTracking.IsFirstLaunchEver)
-            {
-                await Shell.Current.GoToAsync("///welcome");
-            }
-            else
-            {
-                await Shell.Current.GoToAsync("///welcome");
-            }
-            
-            locationService.SubscribeToLocationMessaging();
+            await Shell.Current.GoToAsync("///register");
         }
-        
-        #endregion
+
     }
 }

@@ -158,7 +158,12 @@
                                             FontAttributes="Bold"
                                             FontSize="Small"
                                             Text="Sign Up"
-                                            TextColor="#EEEEEE" />
+                                            TextColor="#EEEEEE">
+                                            <Label.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding SignUpCommand}" />
+                                            </Label.GestureRecognizers>
+                                        </Label>
+
                                     </StackLayout>
 
                                     <StackLayout Margin="0,25,0,15" Padding="0">

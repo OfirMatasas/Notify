@@ -22,7 +22,8 @@ namespace Notify.ViewModels
 
         public WelcomePageViewModel WelcomePage => new WelcomePageViewModel();
         public ProfilePageViewModel ProfilePage => new ProfilePageViewModel();
-
+        public RegistrationPageViewModel RegistrationPage => new RegistrationPageViewModel();
+        
         public HomeViewModel HomeView => new HomeViewModel(ergastService.Value);
         public ScheduleViewModel ScheduleView => new ScheduleViewModel(ergastService.Value);
         public DriversViewModel DriversView => new DriversViewModel(ergastService.Value);
