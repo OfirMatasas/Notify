@@ -26,17 +26,11 @@ namespace Notify.Droid
 		
 		public static void UpdateIdValues()
 		{
-			global::Plugin.FirebasePushNotification.Resource.Animation.fragment_fast_out_extra_slow_in = global::Notify.Droid.Resource.Animation.fragment_fast_out_extra_slow_in;
-			global::Plugin.FirebasePushNotification.Resource.Animator.fragment_close_enter = global::Notify.Droid.Resource.Animator.fragment_close_enter;
-			global::Plugin.FirebasePushNotification.Resource.Animator.fragment_close_exit = global::Notify.Droid.Resource.Animator.fragment_close_exit;
-			global::Plugin.FirebasePushNotification.Resource.Animator.fragment_fade_enter = global::Notify.Droid.Resource.Animator.fragment_fade_enter;
-			global::Plugin.FirebasePushNotification.Resource.Animator.fragment_fade_exit = global::Notify.Droid.Resource.Animator.fragment_fade_exit;
-			global::Plugin.FirebasePushNotification.Resource.Animator.fragment_open_enter = global::Notify.Droid.Resource.Animator.fragment_open_enter;
-			global::Plugin.FirebasePushNotification.Resource.Animator.fragment_open_exit = global::Notify.Droid.Resource.Animator.fragment_open_exit;
 			global::Plugin.FirebasePushNotification.Resource.Attribute.alpha = global::Notify.Droid.Resource.Attribute.alpha;
 			global::Plugin.FirebasePushNotification.Resource.Attribute.buttonSize = global::Notify.Droid.Resource.Attribute.buttonSize;
 			global::Plugin.FirebasePushNotification.Resource.Attribute.circleCrop = global::Notify.Droid.Resource.Attribute.circleCrop;
 			global::Plugin.FirebasePushNotification.Resource.Attribute.colorScheme = global::Notify.Droid.Resource.Attribute.colorScheme;
+			global::Plugin.FirebasePushNotification.Resource.Attribute.coordinatorLayoutStyle = global::Notify.Droid.Resource.Attribute.coordinatorLayoutStyle;
 			global::Plugin.FirebasePushNotification.Resource.Attribute.font = global::Notify.Droid.Resource.Attribute.font;
 			global::Plugin.FirebasePushNotification.Resource.Attribute.fontProviderAuthority = global::Notify.Droid.Resource.Attribute.fontProviderAuthority;
 			global::Plugin.FirebasePushNotification.Resource.Attribute.fontProviderCerts = global::Notify.Droid.Resource.Attribute.fontProviderCerts;
@@ -44,19 +38,21 @@ namespace Notify.Droid
 			global::Plugin.FirebasePushNotification.Resource.Attribute.fontProviderFetchTimeout = global::Notify.Droid.Resource.Attribute.fontProviderFetchTimeout;
 			global::Plugin.FirebasePushNotification.Resource.Attribute.fontProviderPackage = global::Notify.Droid.Resource.Attribute.fontProviderPackage;
 			global::Plugin.FirebasePushNotification.Resource.Attribute.fontProviderQuery = global::Notify.Droid.Resource.Attribute.fontProviderQuery;
-			global::Plugin.FirebasePushNotification.Resource.Attribute.fontProviderSystemFontFamily = global::Notify.Droid.Resource.Attribute.fontProviderSystemFontFamily;
 			global::Plugin.FirebasePushNotification.Resource.Attribute.fontStyle = global::Notify.Droid.Resource.Attribute.fontStyle;
 			global::Plugin.FirebasePushNotification.Resource.Attribute.fontVariationSettings = global::Notify.Droid.Resource.Attribute.fontVariationSettings;
 			global::Plugin.FirebasePushNotification.Resource.Attribute.fontWeight = global::Notify.Droid.Resource.Attribute.fontWeight;
 			global::Plugin.FirebasePushNotification.Resource.Attribute.imageAspectRatio = global::Notify.Droid.Resource.Attribute.imageAspectRatio;
 			global::Plugin.FirebasePushNotification.Resource.Attribute.imageAspectRatioAdjust = global::Notify.Droid.Resource.Attribute.imageAspectRatioAdjust;
-			global::Plugin.FirebasePushNotification.Resource.Attribute.nestedScrollViewStyle = global::Notify.Droid.Resource.Attribute.nestedScrollViewStyle;
-			global::Plugin.FirebasePushNotification.Resource.Attribute.queryPatterns = global::Notify.Droid.Resource.Attribute.queryPatterns;
+			global::Plugin.FirebasePushNotification.Resource.Attribute.keylines = global::Notify.Droid.Resource.Attribute.keylines;
+			global::Plugin.FirebasePushNotification.Resource.Attribute.layout_anchor = global::Notify.Droid.Resource.Attribute.layout_anchor;
+			global::Plugin.FirebasePushNotification.Resource.Attribute.layout_anchorGravity = global::Notify.Droid.Resource.Attribute.layout_anchorGravity;
+			global::Plugin.FirebasePushNotification.Resource.Attribute.layout_behavior = global::Notify.Droid.Resource.Attribute.layout_behavior;
+			global::Plugin.FirebasePushNotification.Resource.Attribute.layout_dodgeInsetEdges = global::Notify.Droid.Resource.Attribute.layout_dodgeInsetEdges;
+			global::Plugin.FirebasePushNotification.Resource.Attribute.layout_insetEdge = global::Notify.Droid.Resource.Attribute.layout_insetEdge;
+			global::Plugin.FirebasePushNotification.Resource.Attribute.layout_keyline = global::Notify.Droid.Resource.Attribute.layout_keyline;
 			global::Plugin.FirebasePushNotification.Resource.Attribute.scopeUris = global::Notify.Droid.Resource.Attribute.scopeUris;
-			global::Plugin.FirebasePushNotification.Resource.Attribute.shortcutMatchRequired = global::Notify.Droid.Resource.Attribute.shortcutMatchRequired;
+			global::Plugin.FirebasePushNotification.Resource.Attribute.statusBarBackground = global::Notify.Droid.Resource.Attribute.statusBarBackground;
 			global::Plugin.FirebasePushNotification.Resource.Attribute.ttcIndex = global::Notify.Droid.Resource.Attribute.ttcIndex;
-			global::Plugin.FirebasePushNotification.Resource.Color.androidx_core_ripple_material_light = global::Notify.Droid.Resource.Color.androidx_core_ripple_material_light;
-			global::Plugin.FirebasePushNotification.Resource.Color.androidx_core_secondary_text_default_material_light = global::Notify.Droid.Resource.Color.androidx_core_secondary_text_default_material_light;
 			global::Plugin.FirebasePushNotification.Resource.Color.common_google_signin_btn_text_dark = global::Notify.Droid.Resource.Color.common_google_signin_btn_text_dark;
 			global::Plugin.FirebasePushNotification.Resource.Color.common_google_signin_btn_text_dark_default = global::Notify.Droid.Resource.Color.common_google_signin_btn_text_dark_default;
 			global::Plugin.FirebasePushNotification.Resource.Color.common_google_signin_btn_text_dark_disabled = global::Notify.Droid.Resource.Color.common_google_signin_btn_text_dark_disabled;
@@ -70,6 +66,11 @@ namespace Notify.Droid
 			global::Plugin.FirebasePushNotification.Resource.Color.common_google_signin_btn_tint = global::Notify.Droid.Resource.Color.common_google_signin_btn_tint;
 			global::Plugin.FirebasePushNotification.Resource.Color.notification_action_color_filter = global::Notify.Droid.Resource.Color.notification_action_color_filter;
 			global::Plugin.FirebasePushNotification.Resource.Color.notification_icon_bg_color = global::Notify.Droid.Resource.Color.notification_icon_bg_color;
+			global::Plugin.FirebasePushNotification.Resource.Color.notification_material_background_media_default_color = global::Notify.Droid.Resource.Color.notification_material_background_media_default_color;
+			global::Plugin.FirebasePushNotification.Resource.Color.primary_text_default_material_dark = global::Notify.Droid.Resource.Color.primary_text_default_material_dark;
+			global::Plugin.FirebasePushNotification.Resource.Color.ripple_material_light = global::Notify.Droid.Resource.Color.ripple_material_light;
+			global::Plugin.FirebasePushNotification.Resource.Color.secondary_text_default_material_dark = global::Notify.Droid.Resource.Color.secondary_text_default_material_dark;
+			global::Plugin.FirebasePushNotification.Resource.Color.secondary_text_default_material_light = global::Notify.Droid.Resource.Color.secondary_text_default_material_light;
 			global::Plugin.FirebasePushNotification.Resource.Dimension.compat_button_inset_horizontal_material = global::Notify.Droid.Resource.Dimension.compat_button_inset_horizontal_material;
 			global::Plugin.FirebasePushNotification.Resource.Dimension.compat_button_inset_vertical_material = global::Notify.Droid.Resource.Dimension.compat_button_inset_vertical_material;
 			global::Plugin.FirebasePushNotification.Resource.Dimension.compat_button_padding_horizontal_material = global::Notify.Droid.Resource.Dimension.compat_button_padding_horizontal_material;
@@ -125,39 +126,7 @@ namespace Notify.Droid
 			global::Plugin.FirebasePushNotification.Resource.Drawable.notification_template_icon_low_bg = global::Notify.Droid.Resource.Drawable.notification_template_icon_low_bg;
 			global::Plugin.FirebasePushNotification.Resource.Drawable.notification_tile_bg = global::Notify.Droid.Resource.Drawable.notification_tile_bg;
 			global::Plugin.FirebasePushNotification.Resource.Drawable.notify_panel_notification_icon_bg = global::Notify.Droid.Resource.Drawable.notify_panel_notification_icon_bg;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_action_clickable_span = global::Notify.Droid.Resource.Id.accessibility_action_clickable_span;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_0 = global::Notify.Droid.Resource.Id.accessibility_custom_action_0;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_1 = global::Notify.Droid.Resource.Id.accessibility_custom_action_1;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_10 = global::Notify.Droid.Resource.Id.accessibility_custom_action_10;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_11 = global::Notify.Droid.Resource.Id.accessibility_custom_action_11;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_12 = global::Notify.Droid.Resource.Id.accessibility_custom_action_12;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_13 = global::Notify.Droid.Resource.Id.accessibility_custom_action_13;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_14 = global::Notify.Droid.Resource.Id.accessibility_custom_action_14;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_15 = global::Notify.Droid.Resource.Id.accessibility_custom_action_15;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_16 = global::Notify.Droid.Resource.Id.accessibility_custom_action_16;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_17 = global::Notify.Droid.Resource.Id.accessibility_custom_action_17;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_18 = global::Notify.Droid.Resource.Id.accessibility_custom_action_18;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_19 = global::Notify.Droid.Resource.Id.accessibility_custom_action_19;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_2 = global::Notify.Droid.Resource.Id.accessibility_custom_action_2;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_20 = global::Notify.Droid.Resource.Id.accessibility_custom_action_20;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_21 = global::Notify.Droid.Resource.Id.accessibility_custom_action_21;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_22 = global::Notify.Droid.Resource.Id.accessibility_custom_action_22;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_23 = global::Notify.Droid.Resource.Id.accessibility_custom_action_23;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_24 = global::Notify.Droid.Resource.Id.accessibility_custom_action_24;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_25 = global::Notify.Droid.Resource.Id.accessibility_custom_action_25;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_26 = global::Notify.Droid.Resource.Id.accessibility_custom_action_26;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_27 = global::Notify.Droid.Resource.Id.accessibility_custom_action_27;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_28 = global::Notify.Droid.Resource.Id.accessibility_custom_action_28;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_29 = global::Notify.Droid.Resource.Id.accessibility_custom_action_29;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_3 = global::Notify.Droid.Resource.Id.accessibility_custom_action_3;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_30 = global::Notify.Droid.Resource.Id.accessibility_custom_action_30;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_31 = global::Notify.Droid.Resource.Id.accessibility_custom_action_31;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_4 = global::Notify.Droid.Resource.Id.accessibility_custom_action_4;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_5 = global::Notify.Droid.Resource.Id.accessibility_custom_action_5;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_6 = global::Notify.Droid.Resource.Id.accessibility_custom_action_6;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_7 = global::Notify.Droid.Resource.Id.accessibility_custom_action_7;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_8 = global::Notify.Droid.Resource.Id.accessibility_custom_action_8;
-			global::Plugin.FirebasePushNotification.Resource.Id.accessibility_custom_action_9 = global::Notify.Droid.Resource.Id.accessibility_custom_action_9;
+			global::Plugin.FirebasePushNotification.Resource.Id.action0 = global::Notify.Droid.Resource.Id.action0;
 			global::Plugin.FirebasePushNotification.Resource.Id.actions = global::Notify.Droid.Resource.Id.actions;
 			global::Plugin.FirebasePushNotification.Resource.Id.action_container = global::Notify.Droid.Resource.Id.action_container;
 			global::Plugin.FirebasePushNotification.Resource.Id.action_divider = global::Notify.Droid.Resource.Id.action_divider;
@@ -165,60 +134,71 @@ namespace Notify.Droid
 			global::Plugin.FirebasePushNotification.Resource.Id.action_text = global::Notify.Droid.Resource.Id.action_text;
 			global::Plugin.FirebasePushNotification.Resource.Id.adjust_height = global::Notify.Droid.Resource.Id.adjust_height;
 			global::Plugin.FirebasePushNotification.Resource.Id.adjust_width = global::Notify.Droid.Resource.Id.adjust_width;
+			global::Plugin.FirebasePushNotification.Resource.Id.all = global::Notify.Droid.Resource.Id.all;
 			global::Plugin.FirebasePushNotification.Resource.Id.async = global::Notify.Droid.Resource.Id.async;
 			global::Plugin.FirebasePushNotification.Resource.Id.auto = global::Notify.Droid.Resource.Id.auto;
 			global::Plugin.FirebasePushNotification.Resource.Id.blocking = global::Notify.Droid.Resource.Id.blocking;
+			global::Plugin.FirebasePushNotification.Resource.Id.bottom = global::Notify.Droid.Resource.Id.bottom;
+			global::Plugin.FirebasePushNotification.Resource.Id.cancel_action = global::Notify.Droid.Resource.Id.cancel_action;
+			global::Plugin.FirebasePushNotification.Resource.Id.center = global::Notify.Droid.Resource.Id.center;
+			global::Plugin.FirebasePushNotification.Resource.Id.center_horizontal = global::Notify.Droid.Resource.Id.center_horizontal;
+			global::Plugin.FirebasePushNotification.Resource.Id.center_vertical = global::Notify.Droid.Resource.Id.center_vertical;
 			global::Plugin.FirebasePushNotification.Resource.Id.chronometer = global::Notify.Droid.Resource.Id.chronometer;
+			global::Plugin.FirebasePushNotification.Resource.Id.clip_horizontal = global::Notify.Droid.Resource.Id.clip_horizontal;
+			global::Plugin.FirebasePushNotification.Resource.Id.clip_vertical = global::Notify.Droid.Resource.Id.clip_vertical;
 			global::Plugin.FirebasePushNotification.Resource.Id.dark = global::Notify.Droid.Resource.Id.dark;
-			global::Plugin.FirebasePushNotification.Resource.Id.dialog_button = global::Notify.Droid.Resource.Id.dialog_button;
+			global::Plugin.FirebasePushNotification.Resource.Id.end = global::Notify.Droid.Resource.Id.end;
+			global::Plugin.FirebasePushNotification.Resource.Id.end_padder = global::Notify.Droid.Resource.Id.end_padder;
+			global::Plugin.FirebasePushNotification.Resource.Id.fill = global::Notify.Droid.Resource.Id.fill;
+			global::Plugin.FirebasePushNotification.Resource.Id.fill_horizontal = global::Notify.Droid.Resource.Id.fill_horizontal;
+			global::Plugin.FirebasePushNotification.Resource.Id.fill_vertical = global::Notify.Droid.Resource.Id.fill_vertical;
 			global::Plugin.FirebasePushNotification.Resource.Id.forever = global::Notify.Droid.Resource.Id.forever;
-			global::Plugin.FirebasePushNotification.Resource.Id.fragment_container_view_tag = global::Notify.Droid.Resource.Id.fragment_container_view_tag;
 			global::Plugin.FirebasePushNotification.Resource.Id.icon = global::Notify.Droid.Resource.Id.icon;
 			global::Plugin.FirebasePushNotification.Resource.Id.icon_group = global::Notify.Droid.Resource.Id.icon_group;
 			global::Plugin.FirebasePushNotification.Resource.Id.icon_only = global::Notify.Droid.Resource.Id.icon_only;
 			global::Plugin.FirebasePushNotification.Resource.Id.info = global::Notify.Droid.Resource.Id.info;
 			global::Plugin.FirebasePushNotification.Resource.Id.italic = global::Notify.Droid.Resource.Id.italic;
+			global::Plugin.FirebasePushNotification.Resource.Id.left = global::Notify.Droid.Resource.Id.left;
 			global::Plugin.FirebasePushNotification.Resource.Id.light = global::Notify.Droid.Resource.Id.light;
 			global::Plugin.FirebasePushNotification.Resource.Id.line1 = global::Notify.Droid.Resource.Id.line1;
 			global::Plugin.FirebasePushNotification.Resource.Id.line3 = global::Notify.Droid.Resource.Id.line3;
+			global::Plugin.FirebasePushNotification.Resource.Id.media_actions = global::Notify.Droid.Resource.Id.media_actions;
 			global::Plugin.FirebasePushNotification.Resource.Id.none = global::Notify.Droid.Resource.Id.none;
 			global::Plugin.FirebasePushNotification.Resource.Id.normal = global::Notify.Droid.Resource.Id.normal;
 			global::Plugin.FirebasePushNotification.Resource.Id.notification_background = global::Notify.Droid.Resource.Id.notification_background;
 			global::Plugin.FirebasePushNotification.Resource.Id.notification_main_column = global::Notify.Droid.Resource.Id.notification_main_column;
 			global::Plugin.FirebasePushNotification.Resource.Id.notification_main_column_container = global::Notify.Droid.Resource.Id.notification_main_column_container;
+			global::Plugin.FirebasePushNotification.Resource.Id.right = global::Notify.Droid.Resource.Id.right;
 			global::Plugin.FirebasePushNotification.Resource.Id.right_icon = global::Notify.Droid.Resource.Id.right_icon;
 			global::Plugin.FirebasePushNotification.Resource.Id.right_side = global::Notify.Droid.Resource.Id.right_side;
-			global::Plugin.FirebasePushNotification.Resource.Id.special_effects_controller_view_tag = global::Notify.Droid.Resource.Id.special_effects_controller_view_tag;
 			global::Plugin.FirebasePushNotification.Resource.Id.standard = global::Notify.Droid.Resource.Id.standard;
-			global::Plugin.FirebasePushNotification.Resource.Id.tag_accessibility_actions = global::Notify.Droid.Resource.Id.tag_accessibility_actions;
-			global::Plugin.FirebasePushNotification.Resource.Id.tag_accessibility_clickable_spans = global::Notify.Droid.Resource.Id.tag_accessibility_clickable_spans;
-			global::Plugin.FirebasePushNotification.Resource.Id.tag_accessibility_heading = global::Notify.Droid.Resource.Id.tag_accessibility_heading;
-			global::Plugin.FirebasePushNotification.Resource.Id.tag_accessibility_pane_title = global::Notify.Droid.Resource.Id.tag_accessibility_pane_title;
-			global::Plugin.FirebasePushNotification.Resource.Id.tag_on_apply_window_listener = global::Notify.Droid.Resource.Id.tag_on_apply_window_listener;
-			global::Plugin.FirebasePushNotification.Resource.Id.tag_on_receive_content_listener = global::Notify.Droid.Resource.Id.tag_on_receive_content_listener;
-			global::Plugin.FirebasePushNotification.Resource.Id.tag_on_receive_content_mime_types = global::Notify.Droid.Resource.Id.tag_on_receive_content_mime_types;
-			global::Plugin.FirebasePushNotification.Resource.Id.tag_screen_reader_focusable = global::Notify.Droid.Resource.Id.tag_screen_reader_focusable;
-			global::Plugin.FirebasePushNotification.Resource.Id.tag_state_description = global::Notify.Droid.Resource.Id.tag_state_description;
+			global::Plugin.FirebasePushNotification.Resource.Id.start = global::Notify.Droid.Resource.Id.start;
+			global::Plugin.FirebasePushNotification.Resource.Id.status_bar_latest_event_content = global::Notify.Droid.Resource.Id.status_bar_latest_event_content;
 			global::Plugin.FirebasePushNotification.Resource.Id.tag_transition_group = global::Notify.Droid.Resource.Id.tag_transition_group;
 			global::Plugin.FirebasePushNotification.Resource.Id.tag_unhandled_key_event_manager = global::Notify.Droid.Resource.Id.tag_unhandled_key_event_manager;
 			global::Plugin.FirebasePushNotification.Resource.Id.tag_unhandled_key_listeners = global::Notify.Droid.Resource.Id.tag_unhandled_key_listeners;
-			global::Plugin.FirebasePushNotification.Resource.Id.tag_window_insets_animation_callback = global::Notify.Droid.Resource.Id.tag_window_insets_animation_callback;
 			global::Plugin.FirebasePushNotification.Resource.Id.text = global::Notify.Droid.Resource.Id.text;
 			global::Plugin.FirebasePushNotification.Resource.Id.text2 = global::Notify.Droid.Resource.Id.text2;
 			global::Plugin.FirebasePushNotification.Resource.Id.time = global::Notify.Droid.Resource.Id.time;
 			global::Plugin.FirebasePushNotification.Resource.Id.title = global::Notify.Droid.Resource.Id.title;
-			global::Plugin.FirebasePushNotification.Resource.Id.view_tree_lifecycle_owner = global::Notify.Droid.Resource.Id.view_tree_lifecycle_owner;
-			global::Plugin.FirebasePushNotification.Resource.Id.view_tree_saved_state_registry_owner = global::Notify.Droid.Resource.Id.view_tree_saved_state_registry_owner;
-			global::Plugin.FirebasePushNotification.Resource.Id.view_tree_view_model_store_owner = global::Notify.Droid.Resource.Id.view_tree_view_model_store_owner;
-			global::Plugin.FirebasePushNotification.Resource.Id.visible_removing_fragment_view_tag = global::Notify.Droid.Resource.Id.visible_removing_fragment_view_tag;
+			global::Plugin.FirebasePushNotification.Resource.Id.top = global::Notify.Droid.Resource.Id.top;
 			global::Plugin.FirebasePushNotification.Resource.Id.wide = global::Notify.Droid.Resource.Id.wide;
+			global::Plugin.FirebasePushNotification.Resource.Integer.cancel_button_image_alpha = global::Notify.Droid.Resource.Integer.cancel_button_image_alpha;
 			global::Plugin.FirebasePushNotification.Resource.Integer.google_play_services_version = global::Notify.Droid.Resource.Integer.google_play_services_version;
 			global::Plugin.FirebasePushNotification.Resource.Integer.status_bar_notification_info_maxnum = global::Notify.Droid.Resource.Integer.status_bar_notification_info_maxnum;
-			global::Plugin.FirebasePushNotification.Resource.Layout.custom_dialog = global::Notify.Droid.Resource.Layout.custom_dialog;
 			global::Plugin.FirebasePushNotification.Resource.Layout.notification_action = global::Notify.Droid.Resource.Layout.notification_action;
 			global::Plugin.FirebasePushNotification.Resource.Layout.notification_action_tombstone = global::Notify.Droid.Resource.Layout.notification_action_tombstone;
+			global::Plugin.FirebasePushNotification.Resource.Layout.notification_media_action = global::Notify.Droid.Resource.Layout.notification_media_action;
+			global::Plugin.FirebasePushNotification.Resource.Layout.notification_media_cancel_action = global::Notify.Droid.Resource.Layout.notification_media_cancel_action;
+			global::Plugin.FirebasePushNotification.Resource.Layout.notification_template_big_media = global::Notify.Droid.Resource.Layout.notification_template_big_media;
+			global::Plugin.FirebasePushNotification.Resource.Layout.notification_template_big_media_custom = global::Notify.Droid.Resource.Layout.notification_template_big_media_custom;
+			global::Plugin.FirebasePushNotification.Resource.Layout.notification_template_big_media_narrow = global::Notify.Droid.Resource.Layout.notification_template_big_media_narrow;
+			global::Plugin.FirebasePushNotification.Resource.Layout.notification_template_big_media_narrow_custom = global::Notify.Droid.Resource.Layout.notification_template_big_media_narrow_custom;
 			global::Plugin.FirebasePushNotification.Resource.Layout.notification_template_custom_big = global::Notify.Droid.Resource.Layout.notification_template_custom_big;
 			global::Plugin.FirebasePushNotification.Resource.Layout.notification_template_icon_group = global::Notify.Droid.Resource.Layout.notification_template_icon_group;
+			global::Plugin.FirebasePushNotification.Resource.Layout.notification_template_lines_media = global::Notify.Droid.Resource.Layout.notification_template_lines_media;
+			global::Plugin.FirebasePushNotification.Resource.Layout.notification_template_media = global::Notify.Droid.Resource.Layout.notification_template_media;
+			global::Plugin.FirebasePushNotification.Resource.Layout.notification_template_media_custom = global::Notify.Droid.Resource.Layout.notification_template_media_custom;
 			global::Plugin.FirebasePushNotification.Resource.Layout.notification_template_part_chronometer = global::Notify.Droid.Resource.Layout.notification_template_part_chronometer;
 			global::Plugin.FirebasePushNotification.Resource.Layout.notification_template_part_time = global::Notify.Droid.Resource.Layout.notification_template_part_time;
 			global::Plugin.FirebasePushNotification.Resource.String.common_google_play_services_enable_button = global::Notify.Droid.Resource.String.common_google_play_services_enable_button;
@@ -243,18 +223,32 @@ namespace Notify.Droid
 			global::Plugin.FirebasePushNotification.Resource.String.status_bar_notification_info_overflow = global::Notify.Droid.Resource.String.status_bar_notification_info_overflow;
 			global::Plugin.FirebasePushNotification.Resource.Style.TextAppearance_Compat_Notification = global::Notify.Droid.Resource.Style.TextAppearance_Compat_Notification;
 			global::Plugin.FirebasePushNotification.Resource.Style.TextAppearance_Compat_Notification_Info = global::Notify.Droid.Resource.Style.TextAppearance_Compat_Notification_Info;
+			global::Plugin.FirebasePushNotification.Resource.Style.TextAppearance_Compat_Notification_Info_Media = global::Notify.Droid.Resource.Style.TextAppearance_Compat_Notification_Info_Media;
 			global::Plugin.FirebasePushNotification.Resource.Style.TextAppearance_Compat_Notification_Line2 = global::Notify.Droid.Resource.Style.TextAppearance_Compat_Notification_Line2;
+			global::Plugin.FirebasePushNotification.Resource.Style.TextAppearance_Compat_Notification_Line2_Media = global::Notify.Droid.Resource.Style.TextAppearance_Compat_Notification_Line2_Media;
+			global::Plugin.FirebasePushNotification.Resource.Style.TextAppearance_Compat_Notification_Media = global::Notify.Droid.Resource.Style.TextAppearance_Compat_Notification_Media;
 			global::Plugin.FirebasePushNotification.Resource.Style.TextAppearance_Compat_Notification_Time = global::Notify.Droid.Resource.Style.TextAppearance_Compat_Notification_Time;
+			global::Plugin.FirebasePushNotification.Resource.Style.TextAppearance_Compat_Notification_Time_Media = global::Notify.Droid.Resource.Style.TextAppearance_Compat_Notification_Time_Media;
 			global::Plugin.FirebasePushNotification.Resource.Style.TextAppearance_Compat_Notification_Title = global::Notify.Droid.Resource.Style.TextAppearance_Compat_Notification_Title;
+			global::Plugin.FirebasePushNotification.Resource.Style.TextAppearance_Compat_Notification_Title_Media = global::Notify.Droid.Resource.Style.TextAppearance_Compat_Notification_Title_Media;
 			global::Plugin.FirebasePushNotification.Resource.Style.Widget_Compat_NotificationActionContainer = global::Notify.Droid.Resource.Style.Widget_Compat_NotificationActionContainer;
 			global::Plugin.FirebasePushNotification.Resource.Style.Widget_Compat_NotificationActionText = global::Notify.Droid.Resource.Style.Widget_Compat_NotificationActionText;
-			global::Plugin.FirebasePushNotification.Resource.Styleable.Capability = global::Notify.Droid.Resource.Styleable.Capability;
-			global::Plugin.FirebasePushNotification.Resource.Styleable.Capability_queryPatterns = global::Notify.Droid.Resource.Styleable.Capability_queryPatterns;
-			global::Plugin.FirebasePushNotification.Resource.Styleable.Capability_shortcutMatchRequired = global::Notify.Droid.Resource.Styleable.Capability_shortcutMatchRequired;
+			global::Plugin.FirebasePushNotification.Resource.Style.Widget_Support_CoordinatorLayout = global::Notify.Droid.Resource.Style.Widget_Support_CoordinatorLayout;
 			global::Plugin.FirebasePushNotification.Resource.Styleable.ColorStateListItem = global::Notify.Droid.Resource.Styleable.ColorStateListItem;
 			global::Plugin.FirebasePushNotification.Resource.Styleable.ColorStateListItem_alpha = global::Notify.Droid.Resource.Styleable.ColorStateListItem_alpha;
 			global::Plugin.FirebasePushNotification.Resource.Styleable.ColorStateListItem_android_alpha = global::Notify.Droid.Resource.Styleable.ColorStateListItem_android_alpha;
 			global::Plugin.FirebasePushNotification.Resource.Styleable.ColorStateListItem_android_color = global::Notify.Droid.Resource.Styleable.ColorStateListItem_android_color;
+			global::Plugin.FirebasePushNotification.Resource.Styleable.CoordinatorLayout = global::Notify.Droid.Resource.Styleable.CoordinatorLayout;
+			global::Plugin.FirebasePushNotification.Resource.Styleable.CoordinatorLayout_keylines = global::Notify.Droid.Resource.Styleable.CoordinatorLayout_keylines;
+			global::Plugin.FirebasePushNotification.Resource.Styleable.CoordinatorLayout_Layout = global::Notify.Droid.Resource.Styleable.CoordinatorLayout_Layout;
+			global::Plugin.FirebasePushNotification.Resource.Styleable.CoordinatorLayout_Layout_android_layout_gravity = global::Notify.Droid.Resource.Styleable.CoordinatorLayout_Layout_android_layout_gravity;
+			global::Plugin.FirebasePushNotification.Resource.Styleable.CoordinatorLayout_Layout_layout_anchor = global::Notify.Droid.Resource.Styleable.CoordinatorLayout_Layout_layout_anchor;
+			global::Plugin.FirebasePushNotification.Resource.Styleable.CoordinatorLayout_Layout_layout_anchorGravity = global::Notify.Droid.Resource.Styleable.CoordinatorLayout_Layout_layout_anchorGravity;
+			global::Plugin.FirebasePushNotification.Resource.Styleable.CoordinatorLayout_Layout_layout_behavior = global::Notify.Droid.Resource.Styleable.CoordinatorLayout_Layout_layout_behavior;
+			global::Plugin.FirebasePushNotification.Resource.Styleable.CoordinatorLayout_Layout_layout_dodgeInsetEdges = global::Notify.Droid.Resource.Styleable.CoordinatorLayout_Layout_layout_dodgeInsetEdges;
+			global::Plugin.FirebasePushNotification.Resource.Styleable.CoordinatorLayout_Layout_layout_insetEdge = global::Notify.Droid.Resource.Styleable.CoordinatorLayout_Layout_layout_insetEdge;
+			global::Plugin.FirebasePushNotification.Resource.Styleable.CoordinatorLayout_Layout_layout_keyline = global::Notify.Droid.Resource.Styleable.CoordinatorLayout_Layout_layout_keyline;
+			global::Plugin.FirebasePushNotification.Resource.Styleable.CoordinatorLayout_statusBarBackground = global::Notify.Droid.Resource.Styleable.CoordinatorLayout_statusBarBackground;
 			global::Plugin.FirebasePushNotification.Resource.Styleable.FontFamily = global::Notify.Droid.Resource.Styleable.FontFamily;
 			global::Plugin.FirebasePushNotification.Resource.Styleable.FontFamilyFont = global::Notify.Droid.Resource.Styleable.FontFamilyFont;
 			global::Plugin.FirebasePushNotification.Resource.Styleable.FontFamilyFont_android_font = global::Notify.Droid.Resource.Styleable.FontFamilyFont_android_font;
@@ -273,14 +267,6 @@ namespace Notify.Droid
 			global::Plugin.FirebasePushNotification.Resource.Styleable.FontFamily_fontProviderFetchTimeout = global::Notify.Droid.Resource.Styleable.FontFamily_fontProviderFetchTimeout;
 			global::Plugin.FirebasePushNotification.Resource.Styleable.FontFamily_fontProviderPackage = global::Notify.Droid.Resource.Styleable.FontFamily_fontProviderPackage;
 			global::Plugin.FirebasePushNotification.Resource.Styleable.FontFamily_fontProviderQuery = global::Notify.Droid.Resource.Styleable.FontFamily_fontProviderQuery;
-			global::Plugin.FirebasePushNotification.Resource.Styleable.FontFamily_fontProviderSystemFontFamily = global::Notify.Droid.Resource.Styleable.FontFamily_fontProviderSystemFontFamily;
-			global::Plugin.FirebasePushNotification.Resource.Styleable.Fragment = global::Notify.Droid.Resource.Styleable.Fragment;
-			global::Plugin.FirebasePushNotification.Resource.Styleable.FragmentContainerView = global::Notify.Droid.Resource.Styleable.FragmentContainerView;
-			global::Plugin.FirebasePushNotification.Resource.Styleable.FragmentContainerView_android_name = global::Notify.Droid.Resource.Styleable.FragmentContainerView_android_name;
-			global::Plugin.FirebasePushNotification.Resource.Styleable.FragmentContainerView_android_tag = global::Notify.Droid.Resource.Styleable.FragmentContainerView_android_tag;
-			global::Plugin.FirebasePushNotification.Resource.Styleable.Fragment_android_id = global::Notify.Droid.Resource.Styleable.Fragment_android_id;
-			global::Plugin.FirebasePushNotification.Resource.Styleable.Fragment_android_name = global::Notify.Droid.Resource.Styleable.Fragment_android_name;
-			global::Plugin.FirebasePushNotification.Resource.Styleable.Fragment_android_tag = global::Notify.Droid.Resource.Styleable.Fragment_android_tag;
 			global::Plugin.FirebasePushNotification.Resource.Styleable.GradientColor = global::Notify.Droid.Resource.Styleable.GradientColor;
 			global::Plugin.FirebasePushNotification.Resource.Styleable.GradientColorItem = global::Notify.Droid.Resource.Styleable.GradientColorItem;
 			global::Plugin.FirebasePushNotification.Resource.Styleable.GradientColorItem_android_color = global::Notify.Droid.Resource.Styleable.GradientColorItem_android_color;
@@ -30564,253 +30550,274 @@ namespace Notify.Droid
 			public const int copy_toast_msg = 2131689526;
 			
 			// aapt resource value: 0x7F0F0037
-			public const int error_icon_content_description = 2131689527;
+			public const int default_web_client_id = 2131689527;
 			
 			// aapt resource value: 0x7F0F0038
-			public const int expand_button_title = 2131689528;
+			public const int error_icon_content_description = 2131689528;
 			
 			// aapt resource value: 0x7F0F0039
-			public const int exposed_dropdown_menu_content_description = 2131689529;
+			public const int expand_button_title = 2131689529;
 			
 			// aapt resource value: 0x7F0F003A
-			public const int fab_transformation_scrim_behavior = 2131689530;
+			public const int exposed_dropdown_menu_content_description = 2131689530;
 			
 			// aapt resource value: 0x7F0F003B
-			public const int fab_transformation_sheet_behavior = 2131689531;
+			public const int fab_transformation_scrim_behavior = 2131689531;
 			
 			// aapt resource value: 0x7F0F003C
-			public const int fallback_menu_item_copy_link = 2131689532;
+			public const int fab_transformation_sheet_behavior = 2131689532;
 			
 			// aapt resource value: 0x7F0F003D
-			public const int fallback_menu_item_open_in_browser = 2131689533;
+			public const int fallback_menu_item_copy_link = 2131689533;
 			
 			// aapt resource value: 0x7F0F003E
-			public const int fallback_menu_item_share_link = 2131689534;
+			public const int fallback_menu_item_open_in_browser = 2131689534;
 			
 			// aapt resource value: 0x7F0F003F
-			public const int fcm_fallback_notification_channel_label = 2131689535;
+			public const int fallback_menu_item_share_link = 2131689535;
 			
 			// aapt resource value: 0x7F0F0040
-			public const int hide_bottom_view_on_scroll_behavior = 2131689536;
+			public const int fcm_fallback_notification_channel_label = 2131689536;
 			
 			// aapt resource value: 0x7F0F0041
-			public const int icon_content_description = 2131689537;
+			public const int gcm_defaultSenderId = 2131689537;
 			
 			// aapt resource value: 0x7F0F0042
-			public const int item_view_role_description = 2131689538;
+			public const int google_api_key = 2131689538;
 			
 			// aapt resource value: 0x7F0F0043
-			public const int library_name = 2131689539;
+			public const int google_app_id = 2131689539;
 			
 			// aapt resource value: 0x7F0F0044
-			public const int material_clock_display_divider = 2131689540;
+			public const int google_crash_reporting_api_key = 2131689540;
 			
 			// aapt resource value: 0x7F0F0045
-			public const int material_clock_toggle_content_description = 2131689541;
+			public const int google_storage_bucket = 2131689541;
 			
 			// aapt resource value: 0x7F0F0046
-			public const int material_hour_selection = 2131689542;
+			public const int hide_bottom_view_on_scroll_behavior = 2131689542;
 			
 			// aapt resource value: 0x7F0F0047
-			public const int material_hour_suffix = 2131689543;
+			public const int icon_content_description = 2131689543;
 			
 			// aapt resource value: 0x7F0F0048
-			public const int material_minute_selection = 2131689544;
+			public const int item_view_role_description = 2131689544;
 			
 			// aapt resource value: 0x7F0F0049
-			public const int material_minute_suffix = 2131689545;
+			public const int library_name = 2131689545;
 			
 			// aapt resource value: 0x7F0F004A
-			public const int material_motion_easing_accelerated = 2131689546;
+			public const int material_clock_display_divider = 2131689546;
 			
 			// aapt resource value: 0x7F0F004B
-			public const int material_motion_easing_decelerated = 2131689547;
+			public const int material_clock_toggle_content_description = 2131689547;
 			
 			// aapt resource value: 0x7F0F004C
-			public const int material_motion_easing_emphasized = 2131689548;
+			public const int material_hour_selection = 2131689548;
 			
 			// aapt resource value: 0x7F0F004D
-			public const int material_motion_easing_linear = 2131689549;
+			public const int material_hour_suffix = 2131689549;
 			
 			// aapt resource value: 0x7F0F004E
-			public const int material_motion_easing_standard = 2131689550;
+			public const int material_minute_selection = 2131689550;
 			
 			// aapt resource value: 0x7F0F004F
-			public const int material_slider_range_end = 2131689551;
+			public const int material_minute_suffix = 2131689551;
 			
 			// aapt resource value: 0x7F0F0050
-			public const int material_slider_range_start = 2131689552;
+			public const int material_motion_easing_accelerated = 2131689552;
 			
 			// aapt resource value: 0x7F0F0051
-			public const int material_timepicker_am = 2131689553;
+			public const int material_motion_easing_decelerated = 2131689553;
 			
 			// aapt resource value: 0x7F0F0052
-			public const int material_timepicker_clock_mode_description = 2131689554;
+			public const int material_motion_easing_emphasized = 2131689554;
 			
 			// aapt resource value: 0x7F0F0053
-			public const int material_timepicker_hour = 2131689555;
+			public const int material_motion_easing_linear = 2131689555;
 			
 			// aapt resource value: 0x7F0F0054
-			public const int material_timepicker_minute = 2131689556;
+			public const int material_motion_easing_standard = 2131689556;
 			
 			// aapt resource value: 0x7F0F0055
-			public const int material_timepicker_pm = 2131689557;
+			public const int material_slider_range_end = 2131689557;
 			
 			// aapt resource value: 0x7F0F0056
-			public const int material_timepicker_select_time = 2131689558;
+			public const int material_slider_range_start = 2131689558;
 			
 			// aapt resource value: 0x7F0F0057
-			public const int material_timepicker_text_input_mode_description = 2131689559;
+			public const int material_timepicker_am = 2131689559;
 			
 			// aapt resource value: 0x7F0F0058
-			public const int mtrl_badge_numberless_content_description = 2131689560;
+			public const int material_timepicker_clock_mode_description = 2131689560;
 			
 			// aapt resource value: 0x7F0F0059
-			public const int mtrl_chip_close_icon_content_description = 2131689561;
+			public const int material_timepicker_hour = 2131689561;
 			
 			// aapt resource value: 0x7F0F005A
-			public const int mtrl_exceed_max_badge_number_content_description = 2131689562;
+			public const int material_timepicker_minute = 2131689562;
 			
 			// aapt resource value: 0x7F0F005B
-			public const int mtrl_exceed_max_badge_number_suffix = 2131689563;
+			public const int material_timepicker_pm = 2131689563;
 			
 			// aapt resource value: 0x7F0F005C
-			public const int mtrl_picker_a11y_next_month = 2131689564;
+			public const int material_timepicker_select_time = 2131689564;
 			
 			// aapt resource value: 0x7F0F005D
-			public const int mtrl_picker_a11y_prev_month = 2131689565;
+			public const int material_timepicker_text_input_mode_description = 2131689565;
 			
 			// aapt resource value: 0x7F0F005E
-			public const int mtrl_picker_announce_current_selection = 2131689566;
+			public const int mtrl_badge_numberless_content_description = 2131689566;
 			
 			// aapt resource value: 0x7F0F005F
-			public const int mtrl_picker_cancel = 2131689567;
+			public const int mtrl_chip_close_icon_content_description = 2131689567;
 			
 			// aapt resource value: 0x7F0F0060
-			public const int mtrl_picker_confirm = 2131689568;
+			public const int mtrl_exceed_max_badge_number_content_description = 2131689568;
 			
 			// aapt resource value: 0x7F0F0061
-			public const int mtrl_picker_date_header_selected = 2131689569;
+			public const int mtrl_exceed_max_badge_number_suffix = 2131689569;
 			
 			// aapt resource value: 0x7F0F0062
-			public const int mtrl_picker_date_header_title = 2131689570;
+			public const int mtrl_picker_a11y_next_month = 2131689570;
 			
 			// aapt resource value: 0x7F0F0063
-			public const int mtrl_picker_date_header_unselected = 2131689571;
+			public const int mtrl_picker_a11y_prev_month = 2131689571;
 			
 			// aapt resource value: 0x7F0F0064
-			public const int mtrl_picker_day_of_week_column_header = 2131689572;
+			public const int mtrl_picker_announce_current_selection = 2131689572;
 			
 			// aapt resource value: 0x7F0F0065
-			public const int mtrl_picker_invalid_format = 2131689573;
+			public const int mtrl_picker_cancel = 2131689573;
 			
 			// aapt resource value: 0x7F0F0066
-			public const int mtrl_picker_invalid_format_example = 2131689574;
+			public const int mtrl_picker_confirm = 2131689574;
 			
 			// aapt resource value: 0x7F0F0067
-			public const int mtrl_picker_invalid_format_use = 2131689575;
+			public const int mtrl_picker_date_header_selected = 2131689575;
 			
 			// aapt resource value: 0x7F0F0068
-			public const int mtrl_picker_invalid_range = 2131689576;
+			public const int mtrl_picker_date_header_title = 2131689576;
 			
 			// aapt resource value: 0x7F0F0069
-			public const int mtrl_picker_navigate_to_year_description = 2131689577;
+			public const int mtrl_picker_date_header_unselected = 2131689577;
 			
 			// aapt resource value: 0x7F0F006A
-			public const int mtrl_picker_out_of_range = 2131689578;
+			public const int mtrl_picker_day_of_week_column_header = 2131689578;
 			
 			// aapt resource value: 0x7F0F006B
-			public const int mtrl_picker_range_header_only_end_selected = 2131689579;
+			public const int mtrl_picker_invalid_format = 2131689579;
 			
 			// aapt resource value: 0x7F0F006C
-			public const int mtrl_picker_range_header_only_start_selected = 2131689580;
+			public const int mtrl_picker_invalid_format_example = 2131689580;
 			
 			// aapt resource value: 0x7F0F006D
-			public const int mtrl_picker_range_header_selected = 2131689581;
+			public const int mtrl_picker_invalid_format_use = 2131689581;
 			
 			// aapt resource value: 0x7F0F006E
-			public const int mtrl_picker_range_header_title = 2131689582;
+			public const int mtrl_picker_invalid_range = 2131689582;
 			
 			// aapt resource value: 0x7F0F006F
-			public const int mtrl_picker_range_header_unselected = 2131689583;
+			public const int mtrl_picker_navigate_to_year_description = 2131689583;
 			
 			// aapt resource value: 0x7F0F0070
-			public const int mtrl_picker_save = 2131689584;
+			public const int mtrl_picker_out_of_range = 2131689584;
 			
 			// aapt resource value: 0x7F0F0071
-			public const int mtrl_picker_text_input_date_hint = 2131689585;
+			public const int mtrl_picker_range_header_only_end_selected = 2131689585;
 			
 			// aapt resource value: 0x7F0F0072
-			public const int mtrl_picker_text_input_date_range_end_hint = 2131689586;
+			public const int mtrl_picker_range_header_only_start_selected = 2131689586;
 			
 			// aapt resource value: 0x7F0F0073
-			public const int mtrl_picker_text_input_date_range_start_hint = 2131689587;
+			public const int mtrl_picker_range_header_selected = 2131689587;
 			
 			// aapt resource value: 0x7F0F0074
-			public const int mtrl_picker_text_input_day_abbr = 2131689588;
+			public const int mtrl_picker_range_header_title = 2131689588;
 			
 			// aapt resource value: 0x7F0F0075
-			public const int mtrl_picker_text_input_month_abbr = 2131689589;
+			public const int mtrl_picker_range_header_unselected = 2131689589;
 			
 			// aapt resource value: 0x7F0F0076
-			public const int mtrl_picker_text_input_year_abbr = 2131689590;
+			public const int mtrl_picker_save = 2131689590;
 			
 			// aapt resource value: 0x7F0F0077
-			public const int mtrl_picker_toggle_to_calendar_input_mode = 2131689591;
+			public const int mtrl_picker_text_input_date_hint = 2131689591;
 			
 			// aapt resource value: 0x7F0F0078
-			public const int mtrl_picker_toggle_to_day_selection = 2131689592;
+			public const int mtrl_picker_text_input_date_range_end_hint = 2131689592;
 			
 			// aapt resource value: 0x7F0F0079
-			public const int mtrl_picker_toggle_to_text_input_mode = 2131689593;
+			public const int mtrl_picker_text_input_date_range_start_hint = 2131689593;
 			
 			// aapt resource value: 0x7F0F007A
-			public const int mtrl_picker_toggle_to_year_selection = 2131689594;
+			public const int mtrl_picker_text_input_day_abbr = 2131689594;
 			
 			// aapt resource value: 0x7F0F007B
-			public const int nav_app_bar_navigate_up_description = 2131689595;
+			public const int mtrl_picker_text_input_month_abbr = 2131689595;
 			
 			// aapt resource value: 0x7F0F007C
-			public const int nav_app_bar_open_drawer_description = 2131689596;
+			public const int mtrl_picker_text_input_year_abbr = 2131689596;
 			
 			// aapt resource value: 0x7F0F007D
-			public const int not_set = 2131689597;
+			public const int mtrl_picker_toggle_to_calendar_input_mode = 2131689597;
 			
 			// aapt resource value: 0x7F0F007E
-			public const int overflow_tab_title = 2131689598;
+			public const int mtrl_picker_toggle_to_day_selection = 2131689598;
 			
 			// aapt resource value: 0x7F0F007F
-			public const int password_toggle_content_description = 2131689599;
+			public const int mtrl_picker_toggle_to_text_input_mode = 2131689599;
 			
 			// aapt resource value: 0x7F0F0080
-			public const int path_password_eye = 2131689600;
+			public const int mtrl_picker_toggle_to_year_selection = 2131689600;
 			
 			// aapt resource value: 0x7F0F0081
-			public const int path_password_eye_mask_strike_through = 2131689601;
+			public const int nav_app_bar_navigate_up_description = 2131689601;
 			
 			// aapt resource value: 0x7F0F0082
-			public const int path_password_eye_mask_visible = 2131689602;
+			public const int nav_app_bar_open_drawer_description = 2131689602;
 			
 			// aapt resource value: 0x7F0F0083
-			public const int path_password_strike_through = 2131689603;
+			public const int not_set = 2131689603;
 			
 			// aapt resource value: 0x7F0F0084
-			public const int preference_copied = 2131689604;
+			public const int overflow_tab_title = 2131689604;
 			
 			// aapt resource value: 0x7F0F0085
-			public const int search_menu_title = 2131689605;
+			public const int password_toggle_content_description = 2131689605;
 			
 			// aapt resource value: 0x7F0F0086
-			public const int status_bar_notification_info_overflow = 2131689606;
+			public const int path_password_eye = 2131689606;
 			
 			// aapt resource value: 0x7F0F0087
-			public const int summary_collapsed_preference_list = 2131689607;
+			public const int path_password_eye_mask_strike_through = 2131689607;
 			
 			// aapt resource value: 0x7F0F0088
-			public const int v7_preference_off = 2131689608;
+			public const int path_password_eye_mask_visible = 2131689608;
 			
 			// aapt resource value: 0x7F0F0089
-			public const int v7_preference_on = 2131689609;
+			public const int path_password_strike_through = 2131689609;
+			
+			// aapt resource value: 0x7F0F008A
+			public const int preference_copied = 2131689610;
+			
+			// aapt resource value: 0x7F0F008B
+			public const int project_id = 2131689611;
+			
+			// aapt resource value: 0x7F0F008C
+			public const int search_menu_title = 2131689612;
+			
+			// aapt resource value: 0x7F0F008D
+			public const int status_bar_notification_info_overflow = 2131689613;
+			
+			// aapt resource value: 0x7F0F008E
+			public const int summary_collapsed_preference_list = 2131689614;
+			
+			// aapt resource value: 0x7F0F008F
+			public const int v7_preference_off = 2131689615;
+			
+			// aapt resource value: 0x7F0F0090
+			public const int v7_preference_on = 2131689616;
 			
 			static String()
 			{
