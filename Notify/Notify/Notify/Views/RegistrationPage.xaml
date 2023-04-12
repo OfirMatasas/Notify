@@ -1,48 +1,256 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    BackgroundColor="#F8F8F8"
     BindingContext="{Binding RegistrationPage, Source={StaticResource ViewModelLocator}}"
+    NavigationPage.HasNavigationBar="False"
     x:Class="Notify.Views.RegistrationPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:material="clr-namespace:Plugin.MaterialDesignControls;assembly=Plugin.MaterialDesignControls"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <ContentPage.Content>
+        <StackLayout>
+            <Grid>
+                <!--  Notify image  -->
+                <StackLayout
+                    HorizontalOptions="FillAndExpand"
+                    Margin="0"
+                    Padding="0">
+                    <Frame Margin="0" Padding="0">
+                        <Image
+                            Aspect="AspectFill"
+                            HeightRequest="300"
+                            Margin="0"
+                            Source="NotifyMainFade.png" />
+                    </Frame>
+                </StackLayout>
+                <!--  Sign in Board  -->
+                <StackLayout
+                    HorizontalOptions="FillAndExpand"
+                    Margin="10,310,10,0"
+                    Padding="0">
+                    <Frame
+                        BackgroundColor="#222831"
+                        HasShadow="False"
+                        HeightRequest="700"
+                        Margin="-15"
+                        Opacity="0.95"
+                        Padding="15">
+                        <StackLayout>
+                            <StackLayout Margin="15">
+                                <Label
+                                    FontAttributes="Bold"
+                                    HorizontalOptions="CenterAndExpand"
+                                    Text="SIGN UP"
+                                    TextColor="#EEEEEE" />
+                            </StackLayout>
 
-    <StackLayout Margin="20">
-        <Label
-            FontAttributes="Bold"
-            FontSize="Large"
-            HorizontalOptions="CenterAndExpand"
-            Margin="0,40,0,20"
-            Text="Create an Account"
-            TextColor="#333333" />
-        <Entry
-            FontSize="Large"
-            Margin="0,0,0,10"
-            Placeholder="Username"
-            Text="{Binding UserName}" />
-        <Entry
-            FontSize="Large"
-            Margin="0,0,0,10"
-            Placeholder="Email"
-            Text="{Binding Email}" />
-        <Entry
-            FontSize="Large"
-            IsPassword="True"
-            Margin="0,0,0,10"
-            Placeholder="Password"
-            Text="{Binding Password}" />
-        <Entry
-            FontSize="Large"
-            IsPassword="True"
-            Margin="0,0,0,20"
-            Placeholder="Confirm Password"
-            Text="{Binding ConfirmPassword}" />
-        <Button
-            BackgroundColor="#2196F3"
-            Command="{Binding RegisterCommand}"
-            CornerRadius="8"
-            FontSize="Large"
-            HeightRequest="50"
-            Margin="0,0,0,40"
-            Text="Register"
-            TextColor="#FFFFFF" />
-    </StackLayout>
+                            <StackLayout Margin="15,10" Padding="0">
+                                <!--  Name  -->
+                                <Frame
+                                    BackgroundColor="Transparent"
+                                    BorderColor="#EEEEEE"
+                                    CornerRadius="30"
+                                    HorizontalOptions="FillAndExpand"
+                                    Padding="0">
+                                    <StackLayout Orientation="Horizontal">
+                                        <Frame
+                                            BackgroundColor="#EEEEEE"
+                                            CornerRadius="30"
+                                            HeightRequest="40"
+                                            Margin="5"
+                                            Padding="0"
+                                            WidthRequest="40">
+                                            <Image
+                                                Aspect="AspectFill"
+                                                Margin="0"
+                                                Source="avatar.png" />
+                                        </Frame>
+                                        <StackLayout>
+                                            <material:MaterialEntry
+                                                AnimateError="True"
+                                                BackgroundColor="Transparent"
+                                                BorderColor="Transparent"
+                                                FontSize="16"
+                                                MaxLength="50"
+                                                Opacity="0.5"
+                                                Placeholder="Name"
+                                                PlaceholderColor="#EEEEEE"
+                                                ReturnType="Next"
+                                                TabIndex="1"
+                                                Text="{Binding UserName}"
+                                                TextColor="#EEEEEE"
+                                                Type="Filled" />
+                                        </StackLayout>
+                                    </StackLayout>
+                                </Frame>
+                                <!--  User Name  -->
+                                <Frame
+                                    BackgroundColor="Transparent"
+                                    BorderColor="#EEEEEE"
+                                    CornerRadius="30"
+                                    HorizontalOptions="FillAndExpand"
+                                    Margin="0,15,0,0"
+                                    Padding="0">
+                                    <StackLayout Orientation="Horizontal">
+                                        <Frame
+                                            BackgroundColor="#EEEEEE"
+                                            CornerRadius="30"
+                                            HeightRequest="40"
+                                            Margin="5"
+                                            Padding="0"
+                                            WidthRequest="40">
+                                            <Image
+                                                Aspect="AspectFill"
+                                                Margin="0"
+                                                Source="avatar.png" />
+                                        </Frame>
+                                        <StackLayout>
+                                            <material:MaterialEntry
+                                                AnimateError="True"
+                                                BackgroundColor="Transparent"
+                                                BorderColor="Transparent"
+                                                FontSize="16"
+                                                MaxLength="50"
+                                                Opacity="0.5"
+                                                Placeholder="User Name"
+                                                PlaceholderColor="#EEEEEE"
+                                                ReturnType="Next"
+                                                TabIndex="1"
+                                                Text="{Binding UserName}"
+                                                TextColor="#EEEEEE"
+                                                Type="Filled" />
+                                        </StackLayout>
+                                    </StackLayout>
+                                </Frame>
+                                <!--  Telephone  -->
+                                <Frame
+                                    BackgroundColor="Transparent"
+                                    BorderColor="#EEEEEE"
+                                    CornerRadius="30"
+                                    Margin="0,15,0,0"
+                                    HorizontalOptions="FillAndExpand"
+                                    Padding="0">
+                                    <StackLayout Orientation="Horizontal">
+                                        <Frame
+                                            BackgroundColor="#EEEEEE"
+                                            CornerRadius="30"
+                                            HeightRequest="40"
+                                            Margin="5"
+                                            Padding="0"
+                                            WidthRequest="40">
+                                            <Image
+                                                Aspect="AspectFill"
+                                                Margin="0"
+                                                Source="avatar.png" />
+                                        </Frame>
+                                        <StackLayout>
+                                            <material:MaterialEntry
+                                                AnimateError="True"
+                                                BackgroundColor="Transparent"
+                                                BorderColor="Transparent"
+                                                FontSize="16"
+                                                MaxLength="50"
+                                                Opacity="0.5"
+                                                Placeholder="Telephone"
+                                                PlaceholderColor="#EEEEEE"
+                                                ReturnType="Next"
+                                                TabIndex="1"
+                                                Text="{Binding UserName}"
+                                                TextColor="#EEEEEE"
+                                                Type="Filled" />
+                                        </StackLayout>
+                                    </StackLayout>
+                                </Frame>
+                                <!--  Password  -->
+                                <Frame
+                                    BackgroundColor="Transparent"
+                                    BorderColor="#EEEEEE"
+                                    CornerRadius="30"
+                                    HorizontalOptions="FillAndExpand"
+                                    Margin="0,15,0,0"
+                                    Padding="0">
+                                    <StackLayout Orientation="Horizontal">
+                                        <Frame
+                                            BackgroundColor="#EEEEEE"
+                                            CornerRadius="30"
+                                            HeightRequest="40"
+                                            Margin="5"
+                                            Padding="0"
+                                            WidthRequest="40">
+                                            <Image
+                                                Aspect="AspectFill"
+                                                Margin="0"
+                                                Source="lock.jpg" />
+                                        </Frame>
+                                        <StackLayout>
+                                            <material:MaterialEntry
+                                                AnimateError="True"
+                                                BackgroundColor="Transparent"
+                                                BorderColor="Transparent"
+                                                FontSize="16"
+                                                IsPassword="True"
+                                                MaxLength="50"
+                                                Opacity="0.5"
+                                                Placeholder="Password"
+                                                PlaceholderColor="#EEEEEE"
+                                                ReturnType="Next"
+                                                TabIndex="1"
+                                                Text="{Binding Password}"
+                                                TextColor="#EEEEEE"
+                                                Type="Filled" />
+                                        </StackLayout>
+                                    </StackLayout>
+                                </Frame>
+                                 <Frame
+                                    BackgroundColor="Transparent"
+                                    BorderColor="#EEEEEE"
+                                    CornerRadius="30"
+                                    HorizontalOptions="FillAndExpand"
+                                    Margin="0,15,0,0"
+                                    Padding="0">
+                                    <StackLayout Orientation="Horizontal">
+                                        <Frame
+                                            BackgroundColor="#EEEEEE"
+                                            CornerRadius="30"
+                                            HeightRequest="40"
+                                            Margin="5"
+                                            Padding="0"
+                                            WidthRequest="40">
+                                            <Image
+                                                Aspect="AspectFill"
+                                                Margin="0"
+                                                Source="lock.jpg" />
+                                        </Frame>
+                                        <StackLayout>
+                                            <material:MaterialEntry
+                                                AnimateError="True"
+                                                BackgroundColor="Transparent"
+                                                BorderColor="Transparent"
+                                                FontSize="16"
+                                                IsPassword="True"
+                                                MaxLength="50"
+                                                Opacity="0.5"
+                                                Placeholder="Confirm Password"
+                                                PlaceholderColor="#EEEEEE"
+                                                ReturnType="Next"
+                                                TabIndex="1"
+                                                Text="{Binding Password}"
+                                                TextColor="#EEEEEE"
+                                                Type="Filled" />
+                                        </StackLayout>
+                                    </StackLayout>
+                                </Frame>
+                                <Button
+                                    BackgroundColor="#393E46"
+                                    CornerRadius="30"
+                                    Text="SIGN UP"
+                                    TextColor="#EEEEEE" />
+                                <StackLayout />
+                                <StackLayout Margin="0,10,0,0" />
+                            </StackLayout>
+                        </StackLayout>
+                    </Frame>
+                </StackLayout>
+            </Grid>
+        </StackLayout>
+    </ContentPage.Content>
 </ContentPage>
