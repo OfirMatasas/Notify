@@ -22,7 +22,7 @@
                             Source="NotifyMainFade.png" />
                     </Frame>
                 </StackLayout>
-                <!--  Sign in Board  -->
+                <!--  Sign up Board  -->
                 <StackLayout
                     HorizontalOptions="FillAndExpand"
                     Margin="10,310,10,0"
@@ -76,7 +76,7 @@
                                                 PlaceholderColor="#EEEEEE"
                                                 ReturnType="Next"
                                                 TabIndex="1"
-                                                Text="{Binding UserName}"
+                                                Text="{Binding Name}"
                                                 TextColor="#EEEEEE"
                                                 Type="Filled" />
                                         </StackLayout>
@@ -148,13 +148,13 @@
                                                 BackgroundColor="Transparent"
                                                 BorderColor="Transparent"
                                                 FontSize="16"
-                                                MaxLength="50"
+                                                MaxLength="10"
                                                 Opacity="0.5"
                                                 Placeholder="Telephone"
                                                 PlaceholderColor="#EEEEEE"
                                                 ReturnType="Next"
                                                 TabIndex="1"
-                                                Text="{Binding UserName}"
+                                                Text="{Binding Telephone}"
                                                 TextColor="#EEEEEE"
                                                 Type="Filled" />
                                         </StackLayout>
@@ -200,6 +200,8 @@
                                         </StackLayout>
                                     </StackLayout>
                                 </Frame>
+                                <!-- Confirm Password  -->
+
                                  <Frame
                                     BackgroundColor="Transparent"
                                     BorderColor="#EEEEEE"
@@ -233,13 +235,14 @@
                                                 PlaceholderColor="#EEEEEE"
                                                 ReturnType="Next"
                                                 TabIndex="1"
-                                                Text="{Binding Password}"
+                                                Text="{Binding ConfirmPassword}"
                                                 TextColor="#EEEEEE"
                                                 Type="Filled" />
                                         </StackLayout>
                                     </StackLayout>
                                 </Frame>
                                 <Button
+                                    Margin="0,15,0,0"
                                     BackgroundColor="#393E46"
                                     CornerRadius="30"
                                     Text="SIGN UP"
