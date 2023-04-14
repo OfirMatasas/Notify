@@ -51,26 +51,14 @@
                                     CornerRadius="30"
                                     HorizontalOptions="FillAndExpand"
                                     Padding="0">
-                                    <StackLayout Orientation="Horizontal">
-                                        <Frame
-                                            BackgroundColor="#EEEEEE"
-                                            CornerRadius="30"
-                                            HeightRequest="40"
-                                            Margin="5"
-                                            Padding="0"
-                                            WidthRequest="40">
-                                            <Image
-                                                Aspect="AspectFill"
-                                                Margin="0"
-                                                Source="avatar.png" />
-                                        </Frame>
+                                    <StackLayout Orientation="Vertical">
                                         <StackLayout>
                                             <material:MaterialEntry
                                                 AnimateError="True"
                                                 BackgroundColor="Transparent"
                                                 BorderColor="Transparent"
                                                 FontSize="16"
-                                                MaxLength="50"
+                                                MaxLength="25"
                                                 Opacity="0.5"
                                                 Placeholder="Name"
                                                 PlaceholderColor="#EEEEEE"
@@ -90,26 +78,14 @@
                                     HorizontalOptions="FillAndExpand"
                                     Margin="0,15,0,0"
                                     Padding="0">
-                                    <StackLayout Orientation="Horizontal">
-                                        <Frame
-                                            BackgroundColor="#EEEEEE"
-                                            CornerRadius="30"
-                                            HeightRequest="40"
-                                            Margin="5"
-                                            Padding="0"
-                                            WidthRequest="40">
-                                            <Image
-                                                Aspect="AspectFill"
-                                                Margin="0"
-                                                Source="avatar.png" />
-                                        </Frame>
+                                    <StackLayout Orientation="Vertical">
                                         <StackLayout>
                                             <material:MaterialEntry
                                                 AnimateError="True"
                                                 BackgroundColor="Transparent"
                                                 BorderColor="Transparent"
                                                 FontSize="16"
-                                                MaxLength="50"
+                                                MaxLength="25"
                                                 Opacity="0.5"
                                                 Placeholder="User Name"
                                                 PlaceholderColor="#EEEEEE"
@@ -121,6 +97,7 @@
                                         </StackLayout>
                                     </StackLayout>
                                 </Frame>
+
                                 <!--  Telephone  -->
                                 <Frame
                                     BackgroundColor="Transparent"
@@ -129,27 +106,15 @@
                                     Margin="0,15,0,0"
                                     HorizontalOptions="FillAndExpand"
                                     Padding="0">
-                                    <StackLayout Orientation="Horizontal">
-                                        <Frame
-                                            BackgroundColor="#EEEEEE"
-                                            CornerRadius="30"
-                                            HeightRequest="40"
-                                            Margin="5"
-                                            Padding="0"
-                                            WidthRequest="40">
-                                            <Image
-                                                Aspect="AspectFill"
-                                                Margin="0"
-                                                Source="avatar.png" />
-                                        </Frame>
-                                        <StackLayout>
-                                            <material:MaterialEntry
+                                    <StackLayout Orientation="Vertical">
+                                        <material:MaterialEntry
                                                 AnimateError="True"
                                                 BackgroundColor="Transparent"
                                                 BorderColor="Transparent"
                                                 FontSize="16"
                                                 MaxLength="10"
                                                 Opacity="0.5"
+                                                MinimumWidthRequest="50"
                                                 Placeholder="Telephone"
                                                 PlaceholderColor="#EEEEEE"
                                                 ReturnType="Next"
@@ -157,7 +122,6 @@
                                                 Text="{Binding Telephone}"
                                                 TextColor="#EEEEEE"
                                                 Type="Filled" />
-                                        </StackLayout>
                                     </StackLayout>
                                 </Frame>
                                 <!--  Password  -->
@@ -168,19 +132,7 @@
                                     HorizontalOptions="FillAndExpand"
                                     Margin="0,15,0,0"
                                     Padding="0">
-                                    <StackLayout Orientation="Horizontal">
-                                        <Frame
-                                            BackgroundColor="#EEEEEE"
-                                            CornerRadius="30"
-                                            HeightRequest="40"
-                                            Margin="5"
-                                            Padding="0"
-                                            WidthRequest="40">
-                                            <Image
-                                                Aspect="AspectFill"
-                                                Margin="0"
-                                                Source="lock.jpg" />
-                                        </Frame>
+                                    <StackLayout Orientation="Vertical">
                                         <StackLayout>
                                             <material:MaterialEntry
                                                 AnimateError="True"
@@ -188,7 +140,7 @@
                                                 BorderColor="Transparent"
                                                 FontSize="16"
                                                 IsPassword="True"
-                                                MaxLength="50"
+                                                MaxLength="25"
                                                 Opacity="0.5"
                                                 Placeholder="Password"
                                                 PlaceholderColor="#EEEEEE"
@@ -209,19 +161,7 @@
                                     HorizontalOptions="FillAndExpand"
                                     Margin="0,15,0,0"
                                     Padding="0">
-                                    <StackLayout Orientation="Horizontal">
-                                        <Frame
-                                            BackgroundColor="#EEEEEE"
-                                            CornerRadius="30"
-                                            HeightRequest="40"
-                                            Margin="5"
-                                            Padding="0"
-                                            WidthRequest="40">
-                                            <Image
-                                                Aspect="AspectFill"
-                                                Margin="0"
-                                                Source="lock.jpg" />
-                                        </Frame>
+                                    <StackLayout Orientation="Vertical">
                                         <StackLayout>
                                             <material:MaterialEntry
                                                 AnimateError="True"
@@ -229,7 +169,7 @@
                                                 BorderColor="Transparent"
                                                 FontSize="16"
                                                 IsPassword="True"
-                                                MaxLength="50"
+                                                MaxLength="25"
                                                 Opacity="0.5"
                                                 Placeholder="Confirm Password"
                                                 PlaceholderColor="#EEEEEE"
@@ -246,6 +186,7 @@
                                     BackgroundColor="#393E46"
                                     CornerRadius="30"
                                     Text="SIGN UP"
+                                    Command="{Binding SignUpCommand}"
                                     TextColor="#EEEEEE" />
                                 <StackLayout />
                                 <StackLayout Margin="0,10,0,0" />
