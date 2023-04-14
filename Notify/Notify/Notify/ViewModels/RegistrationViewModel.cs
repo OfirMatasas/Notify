@@ -48,7 +48,7 @@ namespace Notify.ViewModels
             }
         }
         
-        private void ValidateName()
+        private bool ValidateName()
         {
             bool isValid = !string.IsNullOrEmpty(Name) && Regex.IsMatch(Name, @"^[a-zA-Z ]+$");
 
@@ -56,13 +56,11 @@ namespace Notify.ViewModels
             {
                 DisplayError("Please enter a valid name consisting only of letters.");
             }
-            else
-            {
-                IsFormValid = true;
-            }
+
+            return isValid;
         }
 
-        private void ValidatePassword()
+        private bool ValidatePassword()
         {
             bool isValid = !string.IsNullOrEmpty(Password) && Password == ConfirmPassword;
 
@@ -70,13 +68,11 @@ namespace Notify.ViewModels
             {
                 DisplayError("Please enter matching passwords.");
             }
-            else
-            {
-                IsFormValid = true;
-            }
-        }
 
-        private void ValidateTelephone()
+            return isValid;
+        }
+        
+        private bool ValidateTelephone()
         {
             if (!string.IsNullOrEmpty(Telephone))
             {
@@ -85,7 +81,7 @@ namespace Notify.ViewModels
                     if (!Telephone.StartsWith("05"))
                     {
                         DisplayError("Please enter a valid 10-digit telephone number starting with '05'.");
-                        return;
+                        return false;
                     }
                 }
 
@@ -95,13 +91,13 @@ namespace Notify.ViewModels
                 {
                     DisplayError("Please enter a valid 10-digit telephone number starting with '05'.");
                 }
-                else
-                {
-                    IsFormValid = true;
-                }
-            }
-        }
 
+                return isValid;
+            }
+
+            return true;
+        }
+        
         private void DisplayError(string message)
         {
             Application.Current.MainPage.DisplayAlert("Error", message, "OK");
@@ -119,7 +115,7 @@ namespace Notify.ViewModels
             ValidatePassword();
             ValidateTelephone();
 
-            if (IsFormValid)
+            if (ValidateName() && ValidatePassword() && ValidateTelephone())
             {
                 Debug.WriteLine($"You have successfully signed up!\nName: {Name}\nUserName: {UserName}\nPassword: {Password}\nTelephone: {Telephone}");
                 await Application.Current.MainPage.DisplayAlert("Success", "You have successfully signed up!", "OK");
