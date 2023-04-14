@@ -21,6 +21,9 @@
                             Margin="0"
                             Source="NotifyMainFade.png" />
                     </Frame>
+                    <ImageButton
+                        BackgroundColor="Transparent"
+                        Source="back.png" />
                 </StackLayout>
                 <!--  Sign up Board  -->
                 <StackLayout
