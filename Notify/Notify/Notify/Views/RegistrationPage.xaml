@@ -21,9 +21,6 @@
                             Margin="0"
                             Source="NotifyMainFade.png" />
                     </Frame>
-                    <ImageButton
-                        BackgroundColor="Transparent"
-                        Source="back.png" />
                 </StackLayout>
                 <!--  Sign up Board  -->
                 <StackLayout
@@ -38,14 +35,21 @@
                         Opacity="0.95"
                         Padding="15">
                         <StackLayout>
-                            <StackLayout Margin="15">
+                            <StackLayout Margin="15" Orientation="Horizontal">
+                                <!-- Back button -->
+                                <ImageButton
+                                    WidthRequest="25"
+                                    HeightRequest="25"
+                                    BackgroundColor="Transparent"
+                                    Command="{Binding BackCommand}"
+                                    Source="back.png"/>
                                 <Label
                                     FontAttributes="Bold"
                                     HorizontalOptions="CenterAndExpand"
                                     Text="SIGN UP"
                                     TextColor="#EEEEEE" />
                             </StackLayout>
-
+                            
                             <StackLayout Margin="15,10" Padding="0">
                                 <!--  Name  -->
                                 <Frame

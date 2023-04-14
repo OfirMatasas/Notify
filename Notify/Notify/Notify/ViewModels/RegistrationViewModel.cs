@@ -1,9 +1,6 @@
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Xamarin.Forms;
 
 namespace Notify.ViewModels
@@ -16,9 +13,12 @@ namespace Notify.ViewModels
         public RegistrationPageViewModel()
         {
             SignUpCommand = new Command(OnSignUpClicked);
+            BackCommand = new Command(OnBackClicked);
         }
-
+        
         public Command SignUpCommand { get; set; }
+        
+        public Command BackCommand { get; set; }
 
         public string Name { get; set; }
 
@@ -47,7 +47,7 @@ namespace Notify.ViewModels
                 OnPropertyChanged(nameof(IsFormValid));
             }
         }
-
+        
         private void ValidateName()
         {
             bool isValid = !string.IsNullOrEmpty(Name) && Regex.IsMatch(Name, @"^[a-zA-Z ]+$");
@@ -130,7 +130,11 @@ namespace Notify.ViewModels
                 await Shell.Current.GoToAsync("///welcome");
             }
         }
-
+        
+        private async void OnBackClicked()
+        {
+            await Shell.Current.GoToAsync("///welcome");
+        }
         
         public event PropertyChangedEventHandler PropertyChanged;
 
