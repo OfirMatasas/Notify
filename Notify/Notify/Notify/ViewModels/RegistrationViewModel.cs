@@ -55,6 +55,10 @@ namespace Notify.ViewModels
             {
                 DisplayError("Please enter a valid name consisting only of letters.");
             }
+            else
+            {
+                IsFormValid = true;
+            }
         }
 
         private void ValidatePassword()
@@ -64,6 +68,10 @@ namespace Notify.ViewModels
             if (!isValid)
             {
                 DisplayError("Please enter matching passwords.");
+            }
+            else
+            {
+                IsFormValid = true;
             }
         }
 
@@ -85,6 +93,10 @@ namespace Notify.ViewModels
                 if (!isValid)
                 {
                     DisplayError("Please enter a valid 10-digit telephone number starting with '05'.");
+                }
+                else
+                {
+                    IsFormValid = true;
                 }
             }
         }
@@ -108,19 +120,11 @@ namespace Notify.ViewModels
 
             if (IsFormValid)
             {
-                var registrationData = new
-                {
-                    Name,
-                    UserName,
-                    Password,
-                    Telephone
-                };
-
-                // Convert the registration data to JSON and write it to a file
-                string jsonData = JsonConvert.SerializeObject(registrationData);
-                string fileName = "registration_data.json";
-                File.WriteAllText(fileName, jsonData);
-
+                Debug.WriteLine("Name: " + Name);
+                Debug.WriteLine("UserName: " + UserName);
+                Debug.WriteLine("Password: " + Password);
+                Debug.WriteLine("ConfirmPassword: " + ConfirmPassword);
+                Debug.WriteLine("Telephone: " + Telephone);
                 Application.Current.MainPage.DisplayAlert("Success", "You have successfully signed up!", "OK");
             }
         }
