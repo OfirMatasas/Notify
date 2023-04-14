@@ -49,7 +49,7 @@ namespace Notify.ViewModels
 
         private void ValidateName()
         {
-            bool isValid = !string.IsNullOrEmpty(Name) && Regex.IsMatch(Name, @"^[a-zA-Z]+$");
+            bool isValid = !string.IsNullOrEmpty(Name) && Regex.IsMatch(Name, @"^[a-zA-Z ]+$");
 
             if (!isValid)
             {
@@ -100,10 +100,8 @@ namespace Notify.ViewModels
             ValidatePassword();
             ValidateTelephone();
 
-            if (!string.IsNullOrEmpty(Name) && !string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Password) && !string.IsNullOrEmpty(ConfirmPassword) && !string.IsNullOrEmpty(Telephone))
+            if (!string.IsNullOrEmpty(Name) && !string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Password) && !string.IsNullOrEmpty(ConfirmPassword) && !string.IsNullOrEmpty(Telephone) && IsFormValid)
             {
-                IsFormValid = true;
-
                 var registrationData = new
                 {
                     Name,
@@ -119,12 +117,12 @@ namespace Notify.ViewModels
 
                 Application.Current.MainPage.DisplayAlert("Success", "You have successfully signed up!", "OK");
             }
-            else
+            else if (!string.IsNullOrEmpty(Name) || !string.IsNullOrEmpty(UserName) || !string.IsNullOrEmpty(Password) || !string.IsNullOrEmpty(ConfirmPassword) || !string.IsNullOrEmpty(Telephone))
             {
                 DisplayError("Please fill in all required fields.");
             }
         }
-
+        
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged(string propertyName)
