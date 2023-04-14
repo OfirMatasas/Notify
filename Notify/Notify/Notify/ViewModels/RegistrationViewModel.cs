@@ -110,10 +110,6 @@ namespace Notify.ViewModels
                 DisplayError("Please fill in all required fields.");
                 return;
             }
-    
-            // ValidateName();
-            // ValidatePassword();
-            // ValidateTelephone();
 
             if (ValidateName() && ValidatePassword() && ValidateTelephone())
             {
