@@ -96,11 +96,17 @@ namespace Notify.ViewModels
 
         private void OnSignUpClicked()
         {
+            if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(ConfirmPassword) || string.IsNullOrEmpty(Telephone))
+            {
+                DisplayError("Please fill in all required fields.");
+                return;
+            }
+    
             ValidateName();
             ValidatePassword();
             ValidateTelephone();
 
-            if (!string.IsNullOrEmpty(Name) && !string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Password) && !string.IsNullOrEmpty(ConfirmPassword) && !string.IsNullOrEmpty(Telephone) && IsFormValid)
+            if (IsFormValid)
             {
                 var registrationData = new
                 {
@@ -117,11 +123,8 @@ namespace Notify.ViewModels
 
                 Application.Current.MainPage.DisplayAlert("Success", "You have successfully signed up!", "OK");
             }
-            else if (!string.IsNullOrEmpty(Name) || !string.IsNullOrEmpty(UserName) || !string.IsNullOrEmpty(Password) || !string.IsNullOrEmpty(ConfirmPassword) || !string.IsNullOrEmpty(Telephone))
-            {
-                DisplayError("Please fill in all required fields.");
-            }
         }
+
         
         public event PropertyChangedEventHandler PropertyChanged;
 
