@@ -111,9 +111,9 @@ namespace Notify.ViewModels
                 return;
             }
     
-            ValidateName();
-            ValidatePassword();
-            ValidateTelephone();
+            // ValidateName();
+            // ValidatePassword();
+            // ValidateTelephone();
 
             if (ValidateName() && ValidatePassword() && ValidateTelephone())
             {
