@@ -9,9 +9,15 @@ namespace Notify.ViewModels
 {
     public class RegistrationPageViewModel : INotifyPropertyChanged
     {
-        private object m_SignUpCommand;
         private string m_Telephone;
         private bool m_IsFormValid;
+
+        public RegistrationPageViewModel()
+        {
+            SignUpCommand = new Command(OnSignUpClicked);
+        }
+
+        public Command SignUpCommand { get; set; }
 
         public string Name { get; set; }
 
@@ -28,7 +34,6 @@ namespace Notify.ViewModels
             {
                 m_Telephone = value;
                 OnPropertyChanged(nameof(Telephone));
-                ValidateTelephone();
             }
         }
 
@@ -61,18 +66,26 @@ namespace Notify.ViewModels
                 DisplayError("Please enter matching passwords.");
             }
         }
-        
+
         private void ValidateTelephone()
         {
-            bool isValid = !string.IsNullOrEmpty(Telephone) && Regex.IsMatch(Telephone, @"^\d{10}$");
-            if (isValid && !Telephone.StartsWith("05"))
+            if (!string.IsNullOrEmpty(Telephone))
             {
-                isValid = false;
-            }
-        
-            if (!isValid)
-            {
-                DisplayError("Please enter a valid 10-digit telephone number starting with '05'.");
+                if (Telephone.StartsWith("0"))
+                {
+                    if (!Telephone.StartsWith("05"))
+                    {
+                        DisplayError("Please enter a valid 10-digit telephone number starting with '05'.");
+                        return;
+                    }
+                }
+
+                bool isValid = Regex.IsMatch(Telephone, @"^\d{10}$");
+
+                if (!isValid)
+                {
+                    DisplayError("Please enter a valid 10-digit telephone number starting with '05'.");
+                }
             }
         }
 
@@ -87,8 +100,10 @@ namespace Notify.ViewModels
             ValidatePassword();
             ValidateTelephone();
 
-            if (!string.IsNullOrEmpty(Name) && !string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Password) && !string.IsNullOrEmpty(ConfirmPassword) && !string.IsNullOrEmpty(Telephone) && IsFormValid)
+            if (!string.IsNullOrEmpty(Name) && !string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Password) && !string.IsNullOrEmpty(ConfirmPassword) && !string.IsNullOrEmpty(Telephone))
             {
+                IsFormValid = true;
+
                 var registrationData = new
                 {
                     Name,
