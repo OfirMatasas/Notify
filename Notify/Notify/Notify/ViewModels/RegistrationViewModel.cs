@@ -121,11 +121,7 @@ namespace Notify.ViewModels
 
             if (IsFormValid)
             {
-                Debug.WriteLine("You have successfully signed up!");
-                Debug.WriteLine("Name: " + Name);
-                Debug.WriteLine("UserName: " + UserName);
-                Debug.WriteLine("Password: " + Password);
-                Debug.WriteLine("Telephone: " + Telephone);
+                Debug.WriteLine($"You have successfully signed up!\nName: {Name}\nUserName: {UserName}\nPassword: {Password}\nTelephone: {Telephone}");
                 await Application.Current.MainPage.DisplayAlert("Success", "You have successfully signed up!", "OK");
                 await Shell.Current.GoToAsync("///welcome");
             }
