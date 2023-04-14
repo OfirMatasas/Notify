@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Xamarin.Forms;
 
@@ -106,7 +107,7 @@ namespace Notify.ViewModels
             Application.Current.MainPage.DisplayAlert("Error", message, "OK");
         }
 
-        private void OnSignUpClicked()
+        private async void OnSignUpClicked()
         {
             if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(ConfirmPassword) || string.IsNullOrEmpty(Telephone))
             {
@@ -120,12 +121,13 @@ namespace Notify.ViewModels
 
             if (IsFormValid)
             {
+                Debug.WriteLine("You have successfully signed up!");
                 Debug.WriteLine("Name: " + Name);
                 Debug.WriteLine("UserName: " + UserName);
                 Debug.WriteLine("Password: " + Password);
-                Debug.WriteLine("ConfirmPassword: " + ConfirmPassword);
                 Debug.WriteLine("Telephone: " + Telephone);
-                Application.Current.MainPage.DisplayAlert("Success", "You have successfully signed up!", "OK");
+                await Application.Current.MainPage.DisplayAlert("Success", "You have successfully signed up!", "OK");
+                await Shell.Current.GoToAsync("///welcome");
             }
         }
 
