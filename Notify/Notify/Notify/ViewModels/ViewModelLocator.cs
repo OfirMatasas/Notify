@@ -20,9 +20,10 @@ namespace Notify.ViewModels
             informationService = new Lazy<IInformationService>(() => new InformationService(httpClientFactory.Value));
         }
 
-        public WelcomePageViewModel WelcomePage => new WelcomePageViewModel();
+        public LoginPageViewModel LoginPage => new LoginPageViewModel();
         public ProfilePageViewModel ProfilePage => new ProfilePageViewModel();
-
+        public RegistrationPageViewModel RegistrationPage => new RegistrationPageViewModel();
+        
         public HomeViewModel HomeView => new HomeViewModel(ergastService.Value);
         public ScheduleViewModel ScheduleView => new ScheduleViewModel(ergastService.Value);
         public DriversViewModel DriversView => new DriversViewModel(ergastService.Value);
