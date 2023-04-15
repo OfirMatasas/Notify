@@ -59,11 +59,11 @@ namespace Notify.ViewModels
             VersionTracking.Track();
             if (VersionTracking.IsFirstLaunchEver)
             {
-                await Shell.Current.GoToAsync("///welcome");
+                await Shell.Current.GoToAsync("///login");
             }
             else
             {
-                await Shell.Current.GoToAsync("///welcome");
+                await Shell.Current.GoToAsync("///login");
             }
 
             locationService.SubscribeToLocationMessaging();

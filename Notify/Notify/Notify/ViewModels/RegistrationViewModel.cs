@@ -130,13 +130,13 @@ namespace Notify.ViewModels
             {
                 Debug.WriteLine($"You have successfully signed up!\nName: {Name}\nUserName: {UserName}\nPassword: {Password}\nTelephone: {Telephone}");
                 await Application.Current.MainPage.DisplayAlert("Success", "You have successfully signed up!", "OK");
-                await Shell.Current.GoToAsync("///welcome");
+                await Shell.Current.GoToAsync("///login");
             }
         }
         
         private async void onBackClicked()
         {
-            await Shell.Current.GoToAsync("///welcome");
+            await Shell.Current.GoToAsync("///login");
         }
 
         private void OnPropertyChanged(string propertyName)
