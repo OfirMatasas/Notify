@@ -79,7 +79,7 @@ namespace Notify.ViewModels
                 try
                 {
                     bool areCredentialsValid =
-                        m_UserName.Equals(Constants.USERNAME) && Password.Equals(Constants.PASSWORD);
+                        UserName.Equals(Constants.USERNAME) && Password.Equals(Constants.PASSWORD);
 
                     if (areCredentialsValid)
                     {
