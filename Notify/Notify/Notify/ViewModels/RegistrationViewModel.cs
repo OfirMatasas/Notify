@@ -5,15 +5,15 @@ using Xamarin.Forms;
 
 namespace Notify.ViewModels
 {
-    public class RegistrationPageViewModel : INotifyPropertyChanged
+    public sealed class RegistrationPageViewModel : INotifyPropertyChanged
     {
         private string m_Telephone;
         private bool m_IsFormValid;
 
         public RegistrationPageViewModel()
         {
-            SignUpCommand = new Command(OnSignUpClicked);
-            BackCommand = new Command(OnBackClicked);
+            SignUpCommand = new Command(onSignUpClicked);
+            BackCommand = new Command(onBackClicked);
         }
         
         public Command SignUpCommand { get; set; }
@@ -27,7 +27,9 @@ namespace Notify.ViewModels
         public string Password { get; set; }
 
         public string ConfirmPassword { get; set; }
-
+        
+        public event PropertyChangedEventHandler PropertyChanged;
+        
         public string Telephone
         {
             get => m_Telephone;
@@ -48,31 +50,44 @@ namespace Notify.ViewModels
             }
         }
         
-        private bool ValidateName()
+        private bool validateName()
         {
             bool isValid = !string.IsNullOrEmpty(Name) && Regex.IsMatch(Name, @"^[a-zA-Z ]+$");
 
             if (!isValid)
             {
-                DisplayError("Please enter a valid name consisting only of letters.");
+                displayError("Please enter a valid name consisting only of letters.");
             }
 
             return isValid;
         }
 
-        private bool ValidatePassword()
+        private bool validatePassword()
         {
-            bool isValid = !string.IsNullOrEmpty(Password) && Password == ConfirmPassword;
+            bool isValid = !string.IsNullOrEmpty(Password) && 
+                           Regex.IsMatch(Password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$") &&
+                           Password == ConfirmPassword;
 
             if (!isValid)
             {
-                DisplayError("Please enter matching passwords.");
+                if (string.IsNullOrEmpty(Password))
+                {
+                    displayError("Please enter a password.");
+                }
+                else if (Password != ConfirmPassword)
+                {
+                    displayError("Passwords do not match.");
+                }
+                else
+                {
+                    displayError("Please enter a password containing at least 8 characters, with at least one uppercase letter, one lowercase letter, one number, and one special character.");
+                }
             }
 
             return isValid;
         }
         
-        private bool ValidateTelephone()
+        private bool validateTelephone()
         {
             if (!string.IsNullOrEmpty(Telephone))
             {
@@ -80,7 +95,7 @@ namespace Notify.ViewModels
                 {
                     if (!Telephone.StartsWith("05"))
                     {
-                        DisplayError("Please enter a valid 10-digit telephone number starting with '05'.");
+                        displayError("Please enter a valid 10-digit telephone number starting with '05'.");
                         return false;
                     }
                 }
@@ -89,7 +104,7 @@ namespace Notify.ViewModels
 
                 if (!isValid)
                 {
-                    DisplayError("Please enter a valid 10-digit telephone number starting with '05'.");
+                    displayError("Please enter a valid 10-digit telephone number starting with '05'.");
                 }
 
                 return isValid;
@@ -98,20 +113,20 @@ namespace Notify.ViewModels
             return true;
         }
         
-        private void DisplayError(string message)
+        private void displayError(string message)
         {
             Application.Current.MainPage.DisplayAlert("Error", message, "OK");
         }
 
-        private async void OnSignUpClicked()
+        private async void onSignUpClicked()
         {
             if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(ConfirmPassword) || string.IsNullOrEmpty(Telephone))
             {
-                DisplayError("Please fill in all required fields.");
+                displayError("Please fill in all required fields.");
                 return;
             }
 
-            if (ValidateName() && ValidatePassword() && ValidateTelephone())
+            if (validateName() && validatePassword() && validateTelephone())
             {
                 Debug.WriteLine($"You have successfully signed up!\nName: {Name}\nUserName: {UserName}\nPassword: {Password}\nTelephone: {Telephone}");
                 await Application.Current.MainPage.DisplayAlert("Success", "You have successfully signed up!", "OK");
@@ -119,14 +134,12 @@ namespace Notify.ViewModels
             }
         }
         
-        private async void OnBackClicked()
+        private async void onBackClicked()
         {
             await Shell.Current.GoToAsync("///welcome");
         }
-        
-        public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged(string propertyName)
+        private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
