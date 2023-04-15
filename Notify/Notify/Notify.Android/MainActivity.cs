@@ -18,8 +18,7 @@ namespace Notify.Droid
         private Intent serviceIntent;
         private const int RequestCode = 5469;
         internal static readonly string CHANNEL_ID = "my_notification_channel";
-
-
+        
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -42,7 +41,8 @@ namespace Notify.Droid
             
             if (Preferences.ContainsKey("NotifyUserName") && Preferences.ContainsKey("NotifyPassword"))
             {
-                Debug.WriteLine($"logged in with credentials from preferences.\n UserName: {Preferences.Get("NotifyUserName", string.Empty)} and Password: {Preferences.Get("NotifyPassword", string.Empty)}");
+                Debug.WriteLine($"logged in with credentials from preferences.\n UserName: {Preferences.Get("NotifyUserName", string.Empty)}" +
+                                $" and Password: {Preferences.Get("NotifyPassword", string.Empty)}");
                 Shell.Current.GoToAsync("//home");
                 app.MainPage = Shell.Current;
             }
