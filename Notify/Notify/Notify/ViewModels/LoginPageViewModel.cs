@@ -8,7 +8,7 @@ using Xamarin.Forms;
 
 namespace Notify.ViewModels
 {
-    public class WelcomePageViewModel : BaseViewModel
+    public class LoginPageViewModel : BaseViewModel
     {
         public Command LogInCommand { get; set; }
         public Command SignUpCommand { get; set; }
@@ -31,7 +31,7 @@ namespace Notify.ViewModels
             set => SetProperty(ref m_Password, value);
         }
         
-        public WelcomePageViewModel()
+        public LoginPageViewModel()
         {
             LogInCommand = new Command(onLoginClicked);
             SignUpCommand = new Command(onSignUpClicked);
@@ -94,6 +94,5 @@ namespace Notify.ViewModels
         {
             await Shell.Current.GoToAsync("///register");
         }
-
     }
 }

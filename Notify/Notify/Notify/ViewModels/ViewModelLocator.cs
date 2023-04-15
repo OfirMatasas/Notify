@@ -20,7 +20,7 @@ namespace Notify.ViewModels
             informationService = new Lazy<IInformationService>(() => new InformationService(httpClientFactory.Value));
         }
 
-        public WelcomePageViewModel WelcomePage => new WelcomePageViewModel();
+        public LoginPageViewModel LoginPage => new LoginPageViewModel();
         public ProfilePageViewModel ProfilePage => new ProfilePageViewModel();
         public RegistrationPageViewModel RegistrationPage => new RegistrationPageViewModel();
         

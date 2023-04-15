@@ -27,7 +27,7 @@
     </Shell.Resources>
 
     <ShellItem Route="welcome">
-        <ShellContent ContentTemplate="{DataTemplate Views:WelcomePage}" />
+        <ShellContent ContentTemplate="{DataTemplate Views:LoginPage}" />
     </ShellItem>
 
     <ShellItem Route="register">

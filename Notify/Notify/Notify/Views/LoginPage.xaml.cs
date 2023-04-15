@@ -4,12 +4,12 @@ using Xamarin.Forms.Xaml;
 namespace Notify.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class WelcomePage : ContentPage
+    public partial class LoginPage : ContentPage
     {
-        public WelcomePage()
+        public LoginPage()
         {
             InitializeComponent();
-            BindingContext = new ViewModels.WelcomePageViewModel();
+            BindingContext = new ViewModels.LoginPageViewModel();
         }
     }
 }
