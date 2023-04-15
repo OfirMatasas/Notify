@@ -126,7 +126,12 @@
                                     </Frame>
 
                                     <StackLayout Orientation="Horizontal">
-                                        <CheckBox Color="#EEEEEE" IsChecked="False" />
+                                        <CheckBox x:Name="RememberMeCheckBox" Color="#EEEEEE" IsChecked="{Binding RememberMe}">
+                                            <CheckBox.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding RememberMeCommand}" CommandParameter="{Binding Source={x:Reference RememberMeCheckBox}, Path=IsChecked}" />
+                                            </CheckBox.GestureRecognizers>
+                                        </CheckBox>
+
                                         <Label
                                             FontSize="Small"
                                             HorizontalTextAlignment="Center"
