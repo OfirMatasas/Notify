@@ -85,17 +85,7 @@ namespace Notify.ViewModels
                     {
                         if (RememberMe)
                         {
-                            if (!Preferences.ContainsKey("NotifyUserName"))
-                            {
-                                Preferences.Set("NotifyUserName", Constants.USERNAME);
-                            }
-
-                            if (!Preferences.ContainsKey("NotifyPassword"))
-                            {
-                                Preferences.Set("NotifyPassword", Constants.PASSWORD);
-                            }
-
-                            Debug.WriteLine("User credentials saved in preferences");
+                            storeUserCredentialsInPreferences();
                         }
 
                         await locationService.ManageLocationTracking();
@@ -129,5 +119,21 @@ namespace Notify.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        
+        private void storeUserCredentialsInPreferences()
+        {
+            if (!Preferences.ContainsKey("NotifyUserName"))
+            {
+                Preferences.Set("NotifyUserName", Constants.USERNAME);
+            }
+
+            if (!Preferences.ContainsKey("NotifyPassword"))
+            {
+                Preferences.Set("NotifyPassword", Constants.PASSWORD);
+            }
+
+            Debug.WriteLine("User credentials saved in preferences");
+        }
+
     }
 }
