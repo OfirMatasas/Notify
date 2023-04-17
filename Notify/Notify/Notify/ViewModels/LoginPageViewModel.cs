@@ -121,21 +121,13 @@ namespace Notify.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        
+
         private void storeUserCredentialsInPreferences(string userName, string password)
         {
-            if (!Preferences.ContainsKey("NotifyUserName"))
-            {
-                Preferences.Set("NotifyUserName", userName);
-            }
-
-            if (!Preferences.ContainsKey("NotifyPassword"))
-            {
-                Preferences.Set("NotifyPassword", password);
-            }
-
+            Preferences.Set("NotifyUserName", userName);
+            Preferences.Set("NotifyPassword", password);
+            
             Debug.WriteLine("User credentials saved in preferences");
         }
-
     }
 }
