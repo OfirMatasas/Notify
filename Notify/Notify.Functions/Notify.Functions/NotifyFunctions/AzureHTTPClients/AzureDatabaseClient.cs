@@ -6,7 +6,7 @@ namespace Notify.Functions.NotifyFunctions.AzureHTTPClients
     public sealed class AzureDatabaseClient
     {
         private static MongoClient mongoClient;
-        private static object lockInstance= new object();
+        private static object lockInstance = new object();
         private static AzureDatabaseClient client;
         
         private AzureDatabaseClient()
