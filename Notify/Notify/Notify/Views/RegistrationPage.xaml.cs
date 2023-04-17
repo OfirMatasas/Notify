@@ -10,7 +10,6 @@ namespace Notify.Views
         {
             InitializeComponent();
             BindingContext = new ViewModels.RegistrationPageViewModel();
-
         }
     }
 }

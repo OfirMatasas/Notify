@@ -63,7 +63,7 @@
                                             <material:MaterialEntry
                                                 AnimateError="True"
                                                 BackgroundColor="Transparent"
-                                                BorderColor="Transparent"
+                                                BorderColor="{Binding NameBorderColor}"
                                                 FontSize="16"
                                                 MaxLength="25"
                                                 Opacity="0.5"
@@ -90,7 +90,7 @@
                                             <material:MaterialEntry
                                                 AnimateError="True"
                                                 BackgroundColor="Transparent"
-                                                BorderColor="Transparent"
+                                                BorderColor="{Binding UserNameBorderColor}"
                                                 FontSize="16"
                                                 MaxLength="16"
                                                 Opacity="0.5"
@@ -117,7 +117,7 @@
                                         <material:MaterialEntry
                                                 AnimateError="True"
                                                 BackgroundColor="Transparent"
-                                                BorderColor="Transparent"
+                                                BorderColor="{Binding TelephoneBorderColor}"
                                                 FontSize="16"
                                                 MaxLength="10"
                                                 Opacity="0.5"
@@ -144,7 +144,7 @@
                                             <material:MaterialEntry
                                                 AnimateError="True"
                                                 BackgroundColor="Transparent"
-                                                BorderColor="Transparent"
+                                                BorderColor="{Binding PasswordBorderColor}"
                                                 FontSize="16"
                                                 IsPassword="True"
                                                 MaxLength="16"
@@ -160,8 +160,7 @@
                                     </StackLayout>
                                 </Frame>
                                 <!-- Confirm Password  -->
-
-                                 <Frame
+                                <Frame
                                     BackgroundColor="Transparent"
                                     BorderColor="#EEEEEE"
                                     CornerRadius="30"
@@ -173,7 +172,7 @@
                                             <material:MaterialEntry
                                                 AnimateError="True"
                                                 BackgroundColor="Transparent"
-                                                BorderColor="Transparent"
+                                                BorderColor="{Binding ConfirmPasswordBorderColor}"
                                                 FontSize="16"
                                                 IsPassword="True"
                                                 MaxLength="16"
