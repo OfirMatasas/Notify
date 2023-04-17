@@ -18,7 +18,7 @@ using TeamDetailsPage = Notify.Views.TeamDetailsPage;
 namespace Notify
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class AppShell : Shell
+    public partial class AppShell
     {
         private readonly INotificationManager notificationManager = DependencyService.Get<INotificationManager>();
         private readonly IWiFiManager m_WiFiManager = DependencyService.Get<IWiFiManager>();

@@ -1,4 +1,6 @@
 using System;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Notify.Helpers;
 using Notify.Services.Location;
@@ -8,17 +10,16 @@ using Xamarin.Forms;
 
 namespace Notify.ViewModels
 {
-    public class LoginPageViewModel : BaseViewModel
+    public class LoginPageViewModel : BaseViewModel, INotifyPropertyChanged
     {
-        public Command LogInCommand { get; set; }
-        public Command SignUpCommand { get; set; }
-        
-        private LocationService locationService;
-        
         private string m_UserName;
         private string m_Password;
-        private Task Init { get; }
-        
+        private bool m_RememberMe;
+        private LocationService locationService;
+        public event PropertyChangedEventHandler PropertyChanged;
+        public Command LogInCommand { get; set; }
+        public Command SignUpCommand { get; set; }
+
         public string UserName
         {
             get => m_UserName;
@@ -30,15 +31,27 @@ namespace Notify.ViewModels
             get => m_Password;
             set => SetProperty(ref m_Password, value);
         }
-        
+
+        public bool RememberMe
+        {
+            get => m_RememberMe;
+            set
+            {
+                if (m_RememberMe != value)
+                {
+                    m_RememberMe = value;
+                    OnPropertyChanged(nameof(RememberMe));
+                }
+            }
+        }
+
         public LoginPageViewModel()
         {
             LogInCommand = new Command(onLoginClicked);
             SignUpCommand = new Command(onSignUpClicked);
-
-            Init = initialize();
+            initialize();
         }
-        
+
         private async Task initialize()
         {
             locationService = new LocationService();
@@ -46,27 +59,32 @@ namespace Notify.ViewModels
             VersionTracking.Track();
             if (VersionTracking.IsFirstLaunchEver)
             {
-                await Shell.Current.GoToAsync("///welcome");
+                await Shell.Current.GoToAsync("///login");
             }
             else
             {
-                await Shell.Current.GoToAsync("///welcome");
+                await Shell.Current.GoToAsync("///login");
             }
-            
+
             locationService.SubscribeToLocationMessaging();
         }
-        
+
         private async void onLoginClicked()
         {
             bool debugAutoLogin = true;
             IsBusy = true;
-            
-            if (!debugAutoLogin)
+
+            if (debugAutoLogin)
             {
                 try
                 {
-                    if (m_UserName.Equals(Constants.USERNAME) && Password.Equals(Constants.PASSWORD))
+                    if (areCredentialsValid())
                     {
+                        if (RememberMe)
+                        {
+                            storeUserCredentialsInPreferences(UserName, Password);
+                        }
+
                         await locationService.ManageLocationTracking();
                         await Shell.Current.GoToAsync("///main");
                     }
@@ -74,7 +92,6 @@ namespace Notify.ViewModels
                     {
                         await App.Current.MainPage.DisplayAlert("Error", "Invalid credentials", "OK");
                     }
-
                 }
                 catch (Exception)
                 {
@@ -90,9 +107,27 @@ namespace Notify.ViewModels
             }
         }
 
+        private bool areCredentialsValid()
+        {
+            return UserName.Equals(Constants.USERNAME) && Password.Equals(Constants.PASSWORD);
+        }
+
         private async void onSignUpClicked()
         {
             await Shell.Current.GoToAsync("///register");
+        }
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void storeUserCredentialsInPreferences(string userName, string password)
+        {
+            Preferences.Set("NotifyUserName", userName);
+            Preferences.Set("NotifyPassword", password);
+            
+            Debug.WriteLine("User credentials saved in preferences");
         }
     }
 }

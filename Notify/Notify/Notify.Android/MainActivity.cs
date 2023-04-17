@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Linq;
-using System.Diagnostics;
 using Android.App;
 using Android.Content.PM;
 using Android.Runtime;
 using Android.OS;
 using Android.Content;
-using Android.Net;
-using Android.Net.Wifi;
 using Notify.Droid.Notifications;
 using Notify.Notifications;
 using Xamarin.Forms;
 using Xamarin.Essentials;
+using Debug = System.Diagnostics.Debug;
+using Environment = System.Environment;
 
 namespace Notify.Droid
 {
@@ -21,13 +19,12 @@ namespace Notify.Droid
         private Intent serviceIntent;
         private const int RequestCode = 5469;
         internal static readonly string CHANNEL_ID = "my_notification_channel";
-
-
+        
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
-            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
+            Platform.Init(this, savedInstanceState);
             Forms.Init(this, savedInstanceState);
             Plugin.MaterialDesignControls.Android.Renderer.Init();
 
@@ -38,15 +35,30 @@ namespace Notify.Droid
             {
                 Intent intent = new Intent(Android.Provider.Settings.ActionManageOverlayPermission);
                 intent.SetFlags(ActivityFlags.NewTask);
-                this.StartActivity(intent);
+                StartActivity(intent);
             }
 
-            LoadApplication(new App());
-        }
+            App app = new App();
+            
+            if (Preferences.ContainsKey("NotifyUserName") && Preferences.ContainsKey("NotifyPassword"))
+            {
+                Debug.WriteLine($"Logging in with credentials from preferences.{Environment.NewLine}UserName: {Preferences.Get("NotifyUserName", string.Empty)}" +
+                                $" and Password: {Preferences.Get("NotifyPassword", string.Empty)}");
+                //TODO implement the actual login upon database creation
+                Shell.Current.GoToAsync("//home");
+                app.MainPage = Shell.Current;
+            }
+            else
+            {
+                app.MainPage = new AppShell();
+            }
 
+            LoadApplication(app);
+        }
+        
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
-            Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
@@ -55,7 +67,7 @@ namespace Notify.Droid
             MessagingCenter.Subscribe<StartServiceMessage>(this, "ServiceStarted", message => {
                 if (!IsServiceRunning(typeof(AndroidLocationService)))
                 {
-                    if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+                    if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
                     {
                         StartForegroundService(serviceIntent);
                     }
@@ -72,9 +84,9 @@ namespace Notify.Droid
             });
         }
 
-        private bool IsServiceRunning(System.Type cls)
+        private bool IsServiceRunning(Type cls)
         {
-            ActivityManager manager = (ActivityManager)GetSystemService(Context.ActivityService);
+            ActivityManager manager = (ActivityManager)GetSystemService(ActivityService);
             
             foreach (ActivityManager.RunningServiceInfo service in manager.GetRunningServices(int.MaxValue))
             {
