@@ -14,14 +14,14 @@ using Microsoft.AspNetCore.Authorization;
 namespace Notify.Functions.NotifyFunctions.Location
 {
     public static class Distance
-    { 
+    {
         [FunctionName("Distance")]
         [AllowAnonymous]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "Distance")] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("Distance function: Got client's current location HTTP request.");
+            log.LogInformation("Got client's current location HTTP request");
             Coordinate currentLocation, destination;
 
             try
