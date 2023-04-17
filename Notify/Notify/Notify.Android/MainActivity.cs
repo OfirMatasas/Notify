@@ -9,6 +9,7 @@ using Notify.Notifications;
 using Xamarin.Forms;
 using Xamarin.Essentials;
 using Debug = System.Diagnostics.Debug;
+using Environment = System.Environment;
 
 namespace Notify.Droid
 {
@@ -37,12 +38,13 @@ namespace Notify.Droid
                 StartActivity(intent);
             }
 
-            var app = new App();
+            App app = new App();
             
             if (Preferences.ContainsKey("NotifyUserName") && Preferences.ContainsKey("NotifyPassword"))
             {
-                Debug.WriteLine($"logged in with credentials from preferences.\n UserName: {Preferences.Get("NotifyUserName", string.Empty)}" +
+                Debug.WriteLine($"Logging in with credentials from preferences.{Environment.NewLine}UserName: {Preferences.Get("NotifyUserName", string.Empty)}" +
                                 $" and Password: {Preferences.Get("NotifyPassword", string.Empty)}");
+                //TODO implement the actual login upon database creation
                 Shell.Current.GoToAsync("//home");
                 app.MainPage = Shell.Current;
             }

@@ -78,14 +78,11 @@ namespace Notify.ViewModels
             {
                 try
                 {
-                    bool areCredentialsValid =
-                        UserName.Equals(Constants.USERNAME) && Password.Equals(Constants.PASSWORD);
-
-                    if (areCredentialsValid)
+                    if (areCredentialsValid())
                     {
                         if (RememberMe)
                         {
-                            storeUserCredentialsInPreferences();
+                            storeUserCredentialsInPreferences(UserName, Password);
                         }
 
                         await locationService.ManageLocationTracking();
@@ -110,6 +107,11 @@ namespace Notify.ViewModels
             }
         }
 
+        private bool areCredentialsValid()
+        {
+            return UserName.Equals(Constants.USERNAME) && Password.Equals(Constants.PASSWORD);
+        }
+
         private async void onSignUpClicked()
         {
             await Shell.Current.GoToAsync("///register");
@@ -120,16 +122,16 @@ namespace Notify.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         
-        private void storeUserCredentialsInPreferences()
+        private void storeUserCredentialsInPreferences(string userName, string password)
         {
             if (!Preferences.ContainsKey("NotifyUserName"))
             {
-                Preferences.Set("NotifyUserName", Constants.USERNAME);
+                Preferences.Set("NotifyUserName", userName);
             }
 
             if (!Preferences.ContainsKey("NotifyPassword"))
             {
-                Preferences.Set("NotifyPassword", Constants.PASSWORD);
+                Preferences.Set("NotifyPassword", password);
             }
 
             Debug.WriteLine("User credentials saved in preferences");
