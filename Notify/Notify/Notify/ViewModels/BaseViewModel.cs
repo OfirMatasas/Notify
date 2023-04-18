@@ -15,7 +15,7 @@ namespace Notify.ViewModels
 
         #region Properties
 
-        bool isBusy = false;
+        bool isBusy;
         public bool IsBusy
         {
             get { return isBusy; }

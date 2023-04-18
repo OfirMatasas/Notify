@@ -3,56 +3,33 @@
     BindingContext="{Binding LoginPage, Source={StaticResource ViewModelLocator}}"
     NavigationPage.HasNavigationBar="False"
     x:Class="Notify.Views.LoginPage"
-    xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:material="clr-namespace:Plugin.MaterialDesignControls;assembly=Plugin.MaterialDesignControls"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
-    <ContentPage.Content>
-        <RefreshView IsRefreshing="{Binding IsBusy}">
-            <StackLayout>
-                <Grid>
-                    <!--  Notify image  -->
-                    <StackLayout
-                        HorizontalOptions="FillAndExpand"
-                        Margin="0"
-                        Padding="0">
-                        <Frame Margin="0" Padding="0">
-                            <Image
-                                Aspect="AspectFill"
-                                HeightRequest="300"
-                                Margin="0"
-                                Source="NotifyMainFade.png" />
-                        </Frame>
-                    </StackLayout>
-                    <!--  Sign in Board  -->
-                    <StackLayout
-                        HorizontalOptions="FillAndExpand"
-                        Margin="10,310,10,0"
-                        Padding="0">
-                        <Frame
-                            BackgroundColor="#222831"
-                            HasShadow="False"
-                            HeightRequest="700"
-                            Margin="-15"
-                            Opacity="0.95"
-                            Padding="15">
-                            <StackLayout>
-                                <StackLayout Margin="15">
-                                    <Label
-                                        FontAttributes="Bold"
-                                        HorizontalOptions="CenterAndExpand"
-                                        Text="SIGN IN"
-                                        TextColor="#EEEEEE" />
-                                </StackLayout>
-
-                                <StackLayout Margin="15,10" Padding="0">
-                                    <!--  User  -->
-                                    <Frame
+	xmlns="http://xamarin.com/schemas/2014/forms"
+	xmlns:material="clr-namespace:Plugin.MaterialDesignControls;assembly=Plugin.MaterialDesignControls"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+	<RefreshView IsRefreshing="{Binding IsBusy}">
+		<Grid>
+		<Image Source="NotifyNew.png" Aspect="AspectFill" HorizontalOptions="FillAndExpand"
+               VerticalOptions="FillAndExpand"/>
+		<BoxView>
+			<BoxView.Background>
+				<LinearGradientBrush StartPoint="1,0" EndPoint="1,0.8">
+					<GradientStop Color="Transparent" Offset="0"/>
+					<GradientStop Color="#2E4159" Offset="0.9"/>
+					<GradientStop Color="#2E4159" Offset="1"/>
+				</LinearGradientBrush>
+			</BoxView.Background>
+		</BoxView>
+		<Grid RowDefinitions="Auto, Auto, Auto, *, Auto" HeightRequest="500" Margin="30, 30, 30, 100"
+            RowSpacing="20" VerticalOptions="End">
+			<StackLayout Grid.Row="1" Spacing="10">
+									<Frame
                                         BackgroundColor="Transparent"
                                         BorderColor="#EEEEEE"
                                         HorizontalOptions="FillAndExpand"
                                         Padding="0">
                                         <StackLayout Orientation="Horizontal">
-                                            <Frame
+	                                        <!--  User Name  -->
+	                                        <Frame
                                                 BackgroundColor="#EEEEEE"
                                                 HeightRequest="40"
                                                 Margin="5"
@@ -65,12 +42,10 @@
                                             </Frame>
                                             <StackLayout>
                                                 <material:MaterialEntry
-                                                    AnimateError="True"
                                                     BackgroundColor="Transparent"
                                                     BorderColor="Transparent"
                                                     FontSize="16"
                                                     MaxLength="16"
-                                                    Opacity="0.5"
                                                     Placeholder="User Name"
                                                     PlaceholderColor="#EEEEEE"
                                                     ReturnType="Next"
@@ -81,7 +56,7 @@
                                             </StackLayout>
                                         </StackLayout>
                                     </Frame>
-                                    <!--  Password  -->
+									<!--  Password  -->
                                     <Frame
                                         BackgroundColor="Transparent"
                                         BorderColor="#EEEEEE"
@@ -108,7 +83,6 @@
                                                     FontSize="16"
                                                     IsPassword="True"
                                                     MaxLength="16"
-                                                    Opacity="0.5"
                                                     Placeholder="Password"
                                                     PlaceholderColor="#EEEEEE"
                                                     ReturnType="Next"
@@ -119,100 +93,95 @@
                                             </StackLayout>
                                         </StackLayout>
                                     </Frame>
-
-                                    <StackLayout Orientation="Horizontal">
-                                        <CheckBox x:Name="RememberMeCheckBox" Color="#EEEEEE" IsChecked="{Binding RememberMe}">
-                                            <CheckBox.GestureRecognizers>
-                                                <TapGestureRecognizer Command="{Binding RememberMeCommand}" CommandParameter="{Binding Source={x:Reference RememberMeCheckBox}, Path=IsChecked}" />
-                                            </CheckBox.GestureRecognizers>
-                                        </CheckBox>
-
-                                        <Label
-                                            FontSize="Small"
-                                            HorizontalTextAlignment="Center"
-                                            Text="Remember me"
-                                            TextColor="#EEEEEE"
-                                            VerticalTextAlignment="Center" />
-                                        <Label
-                                            FontAttributes="Bold"
-                                            FontSize="Small"
-                                            HorizontalOptions="EndAndExpand"
-                                            HorizontalTextAlignment="Center"
-                                            Text="Forgot Password"
-                                            TextColor="#EEEEEE"
-                                            VerticalTextAlignment="Center" />
-                                    </StackLayout>
-
-                                    <Button
-                                        BackgroundColor="#393E46"
-                                        Command="{Binding LogInCommand}"
-                                        Text="SIGN IN"
-                                        TextColor="#EEEEEE" />
-                                    <StackLayout HorizontalOptions="CenterAndExpand" Orientation="Horizontal">
-                                        <Label
-                                            FontSize="Small"
-                                            Text="Still Not Connected ?"
-                                            TextColor="#EEEEEE" />
-                                        <Label
-                                            FontAttributes="Bold"
-                                            FontSize="Small"
-                                            Text="Sign Up"
-                                            TextColor="#EEEEEE">
-                                            <Label.GestureRecognizers>
-                                                <TapGestureRecognizer Command="{Binding SignUpCommand}" />
-                                            </Label.GestureRecognizers>
-                                        </Label>
-
-                                    </StackLayout>
-
-                                    <StackLayout Margin="0,25,0,15" Padding="0">
-                                        <Grid>
-                                            <BoxView
-                                                BackgroundColor="DarkGray"
-                                                HeightRequest="1"
-                                                HorizontalOptions="Center"
-                                                VerticalOptions="Center"
-                                                WidthRequest="150" />
-                                            <Frame
-                                                BackgroundColor="White"
-                                                BorderColor="DarkGray"
-                                                CornerRadius="45"
-                                                HasShadow="False"
-                                                HeightRequest="45"
-                                                HorizontalOptions="Center"
-                                                Margin="0"
-                                                Padding="0"
-                                                WidthRequest="45">
-                                                <Label
-                                                    FontSize="Small"
-                                                    HorizontalTextAlignment="Center"
-                                                    Text="OR"
-                                                    TextColor="#222831"
-                                                    VerticalTextAlignment="Center" />
-                                            </Frame>
-                                        </Grid>
-                                    </StackLayout>
-
-                                    <StackLayout>
-                                        <Button
-                                            BackgroundColor="#d34836"
-                                            ImageSource="google.png"
-                                            Text="SIGN UP WITH GOOGLE"
-                                            TextColor="#EEEEEE" />
-                                    </StackLayout>
-                                    <StackLayout Margin="0,10,0,0">
-                                        <Button
-                                            BackgroundColor="#395697"
-                                            ImageSource="facebook.png"
-                                            Text="SIGN UP WITH FACEBOOK"
-                                            TextColor="#EEEEEE" />
-                                    </StackLayout>
-                                </StackLayout>
-                            </StackLayout>
-                        </Frame>
-                    </StackLayout>
-                </Grid>
-            </StackLayout>
-        </RefreshView>
-    </ContentPage.Content>
+									<!--  Remember me checkbox  -->
+									<StackLayout Orientation="Horizontal">
+					<CheckBox x:Name="RememberMeCheckBox" Color="#EEEEEE" IsChecked="{Binding RememberMe}">
+						<CheckBox.GestureRecognizers>
+							<TapGestureRecognizer Command="{Binding RememberMeCommand}" CommandParameter="{Binding Source={x:Reference RememberMeCheckBox}, Path=IsChecked}" />
+						</CheckBox.GestureRecognizers>
+					</CheckBox>
+					<Label
+						FontSize="Small"
+						HorizontalTextAlignment="Center"
+						Text="Remember me"
+						TextColor="#EEEEEE"
+						VerticalTextAlignment="Center" />
+					<Label
+						FontAttributes="Bold"
+						FontSize="Small"
+						HorizontalOptions="EndAndExpand"
+						HorizontalTextAlignment="Center"
+						Text="Forgot Password"
+						TextColor="#EEEEEE"
+						VerticalTextAlignment="Center" />
+				</StackLayout>
+									<!--  SIGN IN  -->
+									<Button
+					BackgroundColor="#393E46"
+					Command="{Binding LogInCommand}"
+					CornerRadius="30"
+					Text="SIGN IN"
+					TextColor="#EEEEEE" />
+				<StackLayout HorizontalOptions="CenterAndExpand" Orientation="Horizontal">
+					<Label
+						FontSize="Small"
+						Text="Still Not Connected ?"
+						TextColor="#EEEEEE" />
+					<Label
+						FontAttributes="Bold"
+						FontSize="Small"
+						Text="Sign Up"
+						TextColor="#EEEEEE">
+						<Label.GestureRecognizers>
+							<TapGestureRecognizer Command="{Binding SignUpCommand}" />
+						</Label.GestureRecognizers>
+					</Label>
+				</StackLayout>
+				<StackLayout Margin="0,25,0,15" Padding="0">
+					<Grid>
+						<BoxView
+							BackgroundColor="DarkGray"
+							HeightRequest="1"
+							HorizontalOptions="Center"
+							VerticalOptions="Center"
+							WidthRequest="150" />
+						<Frame
+							BackgroundColor="White"
+							BorderColor="DarkGray"
+							CornerRadius="45"
+							HasShadow="False"
+							HeightRequest="45"
+							HorizontalOptions="Center"
+							Margin="0"
+							Padding="0"
+							WidthRequest="45">
+							<Label
+								FontSize="Small"
+								HorizontalTextAlignment="Center"
+								Text="OR"
+								TextColor="#222831"
+								VerticalTextAlignment="Center" />
+						</Frame>
+					</Grid>
+				</StackLayout>
+				<StackLayout>
+					<Button
+						BackgroundColor="#d34836"
+						CornerRadius="30"
+						ImageSource="google.png"
+						Text="SIGN UP WITH GOOGLE"
+						TextColor="#EEEEEE" />
+				</StackLayout>
+				<StackLayout Margin="0,10,0,0">
+					<Button
+						BackgroundColor="#395697"
+						CornerRadius="30"
+						ImageSource="facebook.png"
+						Text="SIGN UP WITH FACEBOOK"
+						TextColor="#EEEEEE" />
+				</StackLayout>
+			</StackLayout>
+		</Grid>
+	</Grid>
+	</RefreshView>
 </ContentPage>
