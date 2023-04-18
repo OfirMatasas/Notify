@@ -46,17 +46,14 @@
 
                                 <StackLayout Margin="15,10" Padding="0">
                                     <!--  User  -->
-
                                     <Frame
                                         BackgroundColor="Transparent"
                                         BorderColor="#EEEEEE"
-                                        CornerRadius="30"
                                         HorizontalOptions="FillAndExpand"
                                         Padding="0">
                                         <StackLayout Orientation="Horizontal">
                                             <Frame
                                                 BackgroundColor="#EEEEEE"
-                                                CornerRadius="30"
                                                 HeightRequest="40"
                                                 Margin="5"
                                                 Padding="0"
@@ -72,7 +69,7 @@
                                                     BackgroundColor="Transparent"
                                                     BorderColor="Transparent"
                                                     FontSize="16"
-                                                    MaxLength="50"
+                                                    MaxLength="16"
                                                     Opacity="0.5"
                                                     Placeholder="User Name"
                                                     PlaceholderColor="#EEEEEE"
@@ -88,14 +85,12 @@
                                     <Frame
                                         BackgroundColor="Transparent"
                                         BorderColor="#EEEEEE"
-                                        CornerRadius="30"
                                         HorizontalOptions="FillAndExpand"
                                         Margin="0,15,0,0"
                                         Padding="0">
                                         <StackLayout Orientation="Horizontal">
                                             <Frame
                                                 BackgroundColor="#EEEEEE"
-                                                CornerRadius="30"
                                                 HeightRequest="40"
                                                 Margin="5"
                                                 Padding="0"
@@ -112,7 +107,7 @@
                                                     BorderColor="Transparent"
                                                     FontSize="16"
                                                     IsPassword="True"
-                                                    MaxLength="50"
+                                                    MaxLength="16"
                                                     Opacity="0.5"
                                                     Placeholder="Password"
                                                     PlaceholderColor="#EEEEEE"
@@ -151,7 +146,6 @@
                                     <Button
                                         BackgroundColor="#393E46"
                                         Command="{Binding LogInCommand}"
-                                        CornerRadius="30"
                                         Text="SIGN IN"
                                         TextColor="#EEEEEE" />
                                     <StackLayout HorizontalOptions="CenterAndExpand" Orientation="Horizontal">
@@ -202,7 +196,6 @@
                                     <StackLayout>
                                         <Button
                                             BackgroundColor="#d34836"
-                                            CornerRadius="30"
                                             ImageSource="google.png"
                                             Text="SIGN UP WITH GOOGLE"
                                             TextColor="#EEEEEE" />
@@ -210,7 +203,6 @@
                                     <StackLayout Margin="0,10,0,0">
                                         <Button
                                             BackgroundColor="#395697"
-                                            CornerRadius="30"
                                             ImageSource="facebook.png"
                                             Text="SIGN UP WITH FACEBOOK"
                                             TextColor="#EEEEEE" />

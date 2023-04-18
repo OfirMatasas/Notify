@@ -55,7 +55,6 @@
                                 <Frame
                                     BackgroundColor="Transparent"
                                     BorderColor="#EEEEEE"
-                                    CornerRadius="30"
                                     HorizontalOptions="FillAndExpand"
                                     Padding="0">
                                     <StackLayout Orientation="Vertical">
@@ -81,7 +80,6 @@
                                 <Frame
                                     BackgroundColor="Transparent"
                                     BorderColor="#EEEEEE"
-                                    CornerRadius="30"
                                     HorizontalOptions="FillAndExpand"
                                     Margin="0,15,0,0"
                                     Padding="0">
@@ -109,7 +107,6 @@
                                 <Frame
                                     BackgroundColor="Transparent"
                                     BorderColor="#EEEEEE"
-                                    CornerRadius="30"
                                     Margin="0,15,0,0"
                                     HorizontalOptions="FillAndExpand"
                                     Padding="0">
@@ -135,7 +132,6 @@
                                 <Frame
                                     BackgroundColor="Transparent"
                                     BorderColor="#EEEEEE"
-                                    CornerRadius="30"
                                     HorizontalOptions="FillAndExpand"
                                     Margin="0,15,0,0"
                                     Padding="0">
@@ -163,7 +159,6 @@
                                 <Frame
                                     BackgroundColor="Transparent"
                                     BorderColor="#EEEEEE"
-                                    CornerRadius="30"
                                     HorizontalOptions="FillAndExpand"
                                     Margin="0,15,0,0"
                                     Padding="0">
@@ -190,7 +185,6 @@
                                 <Button
                                     Margin="0,15,0,0"
                                     BackgroundColor="#393E46"
-                                    CornerRadius="30"
                                     Text="SIGN UP"
                                     Command="{Binding SignUpCommand}"
                                     TextColor="#EEEEEE" />
