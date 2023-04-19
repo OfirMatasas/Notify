@@ -103,9 +103,9 @@
     <AndroidResource Include="Resources\drawable\lock.jpeg" />
     <AndroidResource Include="Resources\drawable\notification.png" />
     <AndroidResource Include="Resources\drawable\Notify.png" />
-    <AndroidResource Include="Resources\drawable\NotifyMain.png" />
+    <AndroidResource Include="Resources\drawable\OldNotify.png" />
     <AndroidResource Include="Resources\drawable\NotifyMainFade.png" />
-    <AndroidResource Include="Resources\drawable\NotifyNew.png" />
+    <AndroidResource Include="Resources\drawable\NotifyLanding.png" />
     <AndroidResource Include="Resources\drawable\profile.png" />
     <AndroidResource Include="Resources\drawable\settings.png" />
     <AndroidResource Include="Resources\mipmap-anydpi-v26\icon.xml" />

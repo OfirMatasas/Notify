@@ -8,7 +8,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 	<RefreshView IsRefreshing="{Binding IsBusy}">
 		<Grid>
-		<Image Source="NotifyNew.png" Aspect="AspectFill" HorizontalOptions="FillAndExpand"
+		<Image Source="NotifyLanding.png" Aspect="AspectFill" HorizontalOptions="FillAndExpand"
                VerticalOptions="FillAndExpand"/>
 		<BoxView>
 			<BoxView.Background>
