@@ -102,7 +102,6 @@
                                         </StackLayout>
                                     </StackLayout>
                                 </Frame>
-
                                 <!--  Telephone  -->
                                 <Frame
                                     BackgroundColor="Transparent"
