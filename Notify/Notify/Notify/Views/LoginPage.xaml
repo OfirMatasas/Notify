@@ -42,7 +42,7 @@
                                             </Frame>
                                             <StackLayout>
                                                 <material:MaterialEntry
-                                                    BackgroundColor="Transparent"
+	                                                BackgroundColor="Transparent"
                                                     BorderColor="Transparent"
                                                     FontSize="16"
                                                     MaxLength="16"

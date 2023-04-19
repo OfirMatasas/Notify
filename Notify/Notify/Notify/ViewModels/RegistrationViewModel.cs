@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using Notify.Helpers;
 using Xamarin.Forms;
 
 namespace Notify.ViewModels
@@ -64,12 +65,17 @@ namespace Notify.ViewModels
         private bool validateName()
         {
             bool isValid = !string.IsNullOrEmpty(Name) && Regex.IsMatch(Name, @"^[a-zA-Z ]+$");
-            NameBorderColor = isValid ? Color.SeaGreen : Color.Red;
 
-            if (!isValid)
+            if (isValid)
             {
+                NameBorderColor = Constants.VALID_COLOR;
+            }
+            else
+            {
+                NameBorderColor = Constants.INVALID_COLOR;
                 displayError("Please enter a valid name consisting only of letters.");
             }
+            
             return isValid;
         }
 
@@ -78,11 +84,15 @@ namespace Notify.ViewModels
             bool isValid = !string.IsNullOrEmpty(Password) && 
                            Regex.IsMatch(Password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$") &&
                            Password == ConfirmPassword;
-            PasswordBorderColor = isValid ? Color.SeaGreen : Color.Red;
-            ConfirmPasswordBorderColor = isValid ? Color.SeaGreen : Color.Red;
-            
-            if (!isValid)
+
+            if (isValid)
             {
+                PasswordBorderColor = ConfirmPasswordBorderColor = Constants.VALID_COLOR;
+            }
+            else
+            {
+                PasswordBorderColor = ConfirmPasswordBorderColor = Constants.INVALID_COLOR;
+
                 if (string.IsNullOrEmpty(Password))
                 {
                     displayError("Please enter a password.");
@@ -96,49 +106,54 @@ namespace Notify.ViewModels
                     displayError("Please enter a password containing at least 8 characters, with at least one uppercase letter, one lowercase letter, one number, and one special character.");
                 }
             }
-            
+    
             return isValid;
         }
+
         
         private bool validateUserName()
         {
             bool isValid = !string.IsNullOrEmpty(UserName) && Regex.IsMatch(UserName, @"^[a-zA-Z0-9]+$");
-            UserNameBorderColor = isValid ? Color.SeaGreen : Color.Red;
-            
-            if (!isValid)
+    
+            if (isValid)
             {
+                UserNameBorderColor = Constants.VALID_COLOR;
+            }
+            else
+            {
+                UserNameBorderColor = Constants.INVALID_COLOR;
                 displayError("Please enter a valid username consisting only of letters and numbers.");
             }
+    
             return isValid;
         }
+
         
         private bool validateTelephone()
         {
+            bool isValid = false;
+
             if (!string.IsNullOrEmpty(Telephone))
             {
-                if (Telephone.StartsWith("0"))
+                if (Regex.IsMatch(Telephone, @"^05\d{8}$"))
                 {
-                    if (!Telephone.StartsWith("05"))
-                    {
-                        displayError("Please enter a valid 10-digit telephone number starting with '05'.");
-                        TelephoneBorderColor = Color.Red;
-                        return false;
-                    }
+                    isValid = true;
                 }
-
-                bool isValid = Regex.IsMatch(Telephone, @"^\d{10}$");
-                TelephoneBorderColor = isValid ? Color.SeaGreen : Color.Red;
-                
-                if (!isValid)
+                else
                 {
                     displayError("Please enter a valid 10-digit telephone number starting with '05'.");
                 }
-
-                return isValid;
+            }
+            else
+            {
+                displayError("Please enter a telephone number.");
             }
 
-            return true;
+            TelephoneBorderColor = isValid ? Constants.VALID_COLOR : Constants.INVALID_COLOR;
+
+            return isValid;
         }
+
         
         private void displayError(string message)
         {
