@@ -56,12 +56,16 @@ namespace Notify.ViewModels
         {
             bool isValid = !string.IsNullOrEmpty(Name) && Regex.IsMatch(Name, @"^[a-zA-Z ]+$");
 
-            if (!isValid)
+            if (isValid)
+            {
+                NameBorderColor = Constants.VALID_COLOR;
+            }
+            else
             {
                 NameBorderColor = Constants.INVALID_COLOR;
                 displayError("Please enter a valid name consisting only of letters.");
             }
-            NameBorderColor = Constants.VALID_COLOR;
+            
             return isValid;
         }
 
@@ -71,11 +75,16 @@ namespace Notify.ViewModels
                            Regex.IsMatch(Password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$") &&
                            Password == ConfirmPassword;
 
-            if (!isValid)
+            if (isValid)
+            {
+                PasswordBorderColor = Constants.VALID_COLOR;
+                ConfirmPasswordBorderColor = Constants.VALID_COLOR;
+            }
+            else
             {
                 PasswordBorderColor = Constants.INVALID_COLOR;
                 ConfirmPasswordBorderColor = Constants.INVALID_COLOR;
-                
+
                 if (string.IsNullOrEmpty(Password))
                 {
                     displayError("Please enter a password.");
@@ -89,56 +98,61 @@ namespace Notify.ViewModels
                     displayError("Please enter a password containing at least 8 characters, with at least one uppercase letter, one lowercase letter, one number, and one special character.");
                 }
             }
-            
-            PasswordBorderColor = Constants.VALID_COLOR;
-            ConfirmPasswordBorderColor = Constants.VALID_COLOR;
-            
+
             return isValid;
         }
         
         private bool validateUserName()
         {
             bool isValid = !string.IsNullOrEmpty(UserName) && Regex.IsMatch(UserName, @"^[a-zA-Z0-9]+$");
-            
-            if (!isValid)
+    
+            if (isValid)
+            {
+                UserNameBorderColor = Constants.VALID_COLOR;
+            }
+            else
             {
                 UserNameBorderColor = Constants.INVALID_COLOR;
                 displayError("Please enter a valid username consisting only of letters and numbers.");
             }
-            
-            UserNameBorderColor = Constants.VALID_COLOR;
-
+    
             return isValid;
         }
         
         private bool validateTelephone()
         {
-            if (!string.IsNullOrEmpty(Telephone))
+            if (string.IsNullOrEmpty(Telephone))
             {
-                if (Telephone.StartsWith("0"))
-                {
-                    if (!Telephone.StartsWith("05"))
-                    {
-                        displayError("Please enter a valid 10-digit telephone number starting with '05'.");
-                        TelephoneBorderColor = Constants.INVALID_COLOR;
-                        return false;
-                    }
-                }
-
-                bool isValid = Regex.IsMatch(Telephone, @"^\d{10}$");
-                
-                if (!isValid)
-                {
-                    TelephoneBorderColor = Constants.INVALID_COLOR;
-                    displayError("Please enter a valid 10-digit telephone number starting with '05'.");
-                }
-                
-                TelephoneBorderColor = Constants.VALID_COLOR;
-                
-                return isValid;
+                return true;
             }
 
-            return true;
+            if (Telephone.StartsWith("0"))
+            {
+                if (Telephone.StartsWith("05"))
+                {
+                    bool isValid = Regex.IsMatch(Telephone, @"^\d{10}$");
+
+                    if (!isValid)
+                    {
+                        TelephoneBorderColor = Constants.INVALID_COLOR;
+                        displayError("Please enter a valid 10-digit telephone number starting with '05'.");
+                    }
+                    else
+                    {
+                        TelephoneBorderColor = Constants.VALID_COLOR;
+                    }
+
+                    return isValid;
+                }
+
+                TelephoneBorderColor = Constants.INVALID_COLOR;
+                displayError("Please enter a valid 10-digit telephone number starting with '05'.");
+                return false;
+            }
+
+            TelephoneBorderColor = Constants.INVALID_COLOR;
+            displayError("Please enter a valid 10-digit telephone number starting with '05'.");
+            return false;
         }
         
         private void displayError(string message)
