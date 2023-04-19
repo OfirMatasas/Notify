@@ -10,23 +10,24 @@ namespace Notify.ViewModels
     public class BaseViewModel : INotifyPropertyChanged
     {
         #region Private & Protected
+        
+        private bool m_IsBusy;
+        private string m_Title = string.Empty;
 
         #endregion
 
         #region Properties
 
-        bool isBusy;
         public bool IsBusy
         {
-            get { return isBusy; }
-            set { SetProperty(ref isBusy, value); }
+            get => m_IsBusy;
+            set => SetProperty(ref m_IsBusy, value);
         }
 
-        string title = string.Empty;
         public string Title
         {
-            get { return title; }
-            set { SetProperty(ref title, value); }
+            get => m_Title;
+            set => SetProperty(ref m_Title, value);
         }
 
         protected bool SetProperty<T>(ref T backingStore, T value,

@@ -27775,16 +27775,16 @@ namespace Notify.Droid
 			public const int Notify = 2131165332;
 			
 			// aapt resource value: 0x7F070096
-			public const int NotifyMain = 2131165334;
+			public const int NotifyLandingPage = 2131165334;
 			
 			// aapt resource value: 0x7F070097
 			public const int NotifyMainFade = 2131165335;
 			
-			// aapt resource value: 0x7F070098
-			public const int NotifyNew = 2131165336;
-			
 			// aapt resource value: 0x7F070095
 			public const int notify_panel_notification_icon_bg = 2131165333;
+			
+			// aapt resource value: 0x7F070098
+			public const int OldNotify = 2131165336;
 			
 			// aapt resource value: 0x7F070099
 			public const int preference_list_divider_material = 2131165337;

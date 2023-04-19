@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using Notify.Helpers;
 using Xamarin.Forms;
 
 namespace Notify.ViewModels
@@ -51,25 +52,16 @@ namespace Notify.ViewModels
             }
         }
 
-        public bool IsFormValid
-        {
-            get => m_IsFormValid;
-            set
-            {
-                m_IsFormValid = value;
-                OnPropertyChanged(nameof(IsFormValid));
-            }
-        }
-        
         private bool validateName()
         {
             bool isValid = !string.IsNullOrEmpty(Name) && Regex.IsMatch(Name, @"^[a-zA-Z ]+$");
-            NameBorderColor = isValid ? Color.SeaGreen : Color.Red;
 
             if (!isValid)
             {
+                NameBorderColor = Constants.INVALID_COLOR;
                 displayError("Please enter a valid name consisting only of letters.");
             }
+            NameBorderColor = Constants.VALID_COLOR;
             return isValid;
         }
 
@@ -78,11 +70,12 @@ namespace Notify.ViewModels
             bool isValid = !string.IsNullOrEmpty(Password) && 
                            Regex.IsMatch(Password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$") &&
                            Password == ConfirmPassword;
-            PasswordBorderColor = isValid ? Color.SeaGreen : Color.Red;
-            ConfirmPasswordBorderColor = isValid ? Color.SeaGreen : Color.Red;
-            
+
             if (!isValid)
             {
+                PasswordBorderColor = Constants.INVALID_COLOR;
+                ConfirmPasswordBorderColor = Constants.INVALID_COLOR;
+                
                 if (string.IsNullOrEmpty(Password))
                 {
                     displayError("Please enter a password.");
@@ -97,18 +90,24 @@ namespace Notify.ViewModels
                 }
             }
             
+            PasswordBorderColor = Constants.VALID_COLOR;
+            ConfirmPasswordBorderColor = Constants.VALID_COLOR;
+            
             return isValid;
         }
         
         private bool validateUserName()
         {
             bool isValid = !string.IsNullOrEmpty(UserName) && Regex.IsMatch(UserName, @"^[a-zA-Z0-9]+$");
-            UserNameBorderColor = isValid ? Color.SeaGreen : Color.Red;
             
             if (!isValid)
             {
+                UserNameBorderColor = Constants.INVALID_COLOR;
                 displayError("Please enter a valid username consisting only of letters and numbers.");
             }
+            
+            UserNameBorderColor = Constants.VALID_COLOR;
+
             return isValid;
         }
         
@@ -121,19 +120,21 @@ namespace Notify.ViewModels
                     if (!Telephone.StartsWith("05"))
                     {
                         displayError("Please enter a valid 10-digit telephone number starting with '05'.");
-                        TelephoneBorderColor = Color.Red;
+                        TelephoneBorderColor = Constants.INVALID_COLOR;
                         return false;
                     }
                 }
 
                 bool isValid = Regex.IsMatch(Telephone, @"^\d{10}$");
-                TelephoneBorderColor = isValid ? Color.SeaGreen : Color.Red;
                 
                 if (!isValid)
                 {
+                    TelephoneBorderColor = Constants.INVALID_COLOR;
                     displayError("Please enter a valid 10-digit telephone number starting with '05'.");
                 }
-
+                
+                TelephoneBorderColor = Constants.VALID_COLOR;
+                
                 return isValid;
             }
 

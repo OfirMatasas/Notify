@@ -88,6 +88,13 @@ namespace Notify.Helpers
         
         #endregion
 
+        #region Colors
+
+        public static readonly Color VALID_COLOR = Color.SeaGreen;
+        public static readonly Color INVALID_COLOR = Color.Red;
+        
+        #endregion
+
         #region Services
 
         public static readonly string START_LOCATION_SERVICE = "LocationServiceRunning";
