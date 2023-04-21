@@ -176,6 +176,7 @@
                             </Frame>
                         </Grid>
                     </StackLayout>
+                    
                     <StackLayout>
                         <Button
                             BackgroundColor="#d34836"
