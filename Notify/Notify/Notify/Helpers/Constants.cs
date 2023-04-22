@@ -80,6 +80,18 @@ namespace Notify.Helpers
 
         #endregion
 
+        #region Database
+
+        public static readonly string AZURE_DATABASE = "Notify_MTA";
+        public static readonly string AZURE_DATABASE_COLLECTION_USER = "User";
+        public static readonly string AZURE_DATABASE_COLLECTION_DESTINATION = "Destination";
+        public static readonly string AZURE_DATABASE_COLLECTION_FRIEND = "Friend";
+        public static readonly string AZURE_DATABASE_COLLECTION_FRIEND_REQUEST = "Friend_Request";
+        public static readonly string AZURE_DATABASE_COLLECTION_GROUP = "Group";
+        public static readonly string AZURE_DATABASE_COLLECTION_NOTIFICATION = "Notification";
+
+        #endregion
+
         #region Values
 
         public static readonly int DESTINATION_MAXMIMUM_DISTANCE = 50;
