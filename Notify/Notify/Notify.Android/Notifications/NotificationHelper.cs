@@ -59,7 +59,7 @@ namespace Notify.Droid.Notifications
             notificationBuilder = new NotificationCompat.Builder(context, foregroundChannelId)
                 .SetContentTitle("Ofir testing")
                 .SetContentText("You've arrived your destination!")
-                .SetSmallIcon(Formula1.Droid.Resource.Drawable.ic_clock_black_24dp)
+                .SetSmallIcon(Resource.Drawable.notification_icon_background)
                 .SetOngoing(true)
                 .SetContentIntent(pendingIntent);
 

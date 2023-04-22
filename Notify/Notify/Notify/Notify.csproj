@@ -31,22 +31,22 @@
     <None Remove="Forms\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\..\..\..\Desktop\Xamarin-Formula1\Formula1\Formula1\Formula1\Resources\Fonts\Exo-Black.ttf">
+    <Content Include="..\..\..\..\..\Desktop\Xamarin-Notify\Notify\Notify\Notify\Resources\Fonts\Exo-Black.ttf">
       <Link>Resources\Fonts\Exo-Black.ttf</Link>
     </Content>
-    <Content Include="..\..\..\..\..\Desktop\Xamarin-Formula1\Formula1\Formula1\Formula1\Resources\Fonts\Exo-Bold.ttf">
+    <Content Include="..\..\..\..\..\Desktop\Xamarin-Notify\Notify\Notify\Notify\Resources\Fonts\Exo-Bold.ttf">
       <Link>Resources\Fonts\Exo-Bold.ttf</Link>
     </Content>
-    <Content Include="..\..\..\..\..\Desktop\Xamarin-Formula1\Formula1\Formula1\Formula1\Resources\Fonts\Exo-Medium.ttf">
+    <Content Include="..\..\..\..\..\Desktop\Xamarin-Notify\Notify\Notify\Notify\Resources\Fonts\Exo-Medium.ttf">
       <Link>Resources\Fonts\Exo-Medium.ttf</Link>
     </Content>
-    <Content Include="..\..\..\..\..\Desktop\Xamarin-Formula1\Formula1\Formula1\Formula1\Resources\Fonts\Exo-Regular.ttf">
+    <Content Include="..\..\..\..\..\Desktop\Xamarin-Notify\Notify\Notify\Notify\Resources\Fonts\Exo-Regular.ttf">
       <Link>Resources\Fonts\Exo-Regular.ttf</Link>
     </Content>
-    <Content Include="..\..\..\..\..\Desktop\Xamarin-Formula1\Formula1\Formula1\Formula1\Resources\Fonts\FontAwesome-Regular.ttf">
+    <Content Include="..\..\..\..\..\Desktop\Xamarin-Notify\Notify\Notify\Notify\Resources\Fonts\FontAwesome-Regular.ttf">
       <Link>Resources\Fonts\FontAwesome-Regular.ttf</Link>
     </Content>
-    <Content Include="..\..\..\..\..\Desktop\Xamarin-Formula1\Formula1\Formula1\Formula1\Resources\Fonts\FontAwesome-Solid.ttf">
+    <Content Include="..\..\..\..\..\Desktop\Xamarin-Notify\Notify\Notify\Notify\Resources\Fonts\FontAwesome-Solid.ttf">
       <Link>Resources\Fonts\FontAwesome-Solid.ttf</Link>
     </Content>
     <Content Include="Helpers\.DS_Store" />

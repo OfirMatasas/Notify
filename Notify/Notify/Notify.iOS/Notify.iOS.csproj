@@ -152,9 +152,6 @@
     <Content Include="..\Notify.Android\Resources\drawable\Notify.png">
       <Link>Resources\drawable\Notify.png</Link>
     </Content>
-    <Content Include="..\Notify.Android\Resources\drawable\NotifyMain.png">
-      <Link>Resources\drawable\NotifyMain.png</Link>
-    </Content>
     <Content Include="..\Notify.Android\Resources\drawable\NotifyMainFade.png">
       <Link>Resources\drawable\NotifyMainFade.png</Link>
     </Content>
@@ -167,5 +164,11 @@
     <Content Include="..\Notify.Android\Resources\drawable\settings.png">
       <Link>Resources\drawable\settings.png</Link>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\NotifyLanding.png">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+    </AndroidResource>
   </ItemGroup>
 </Project>
