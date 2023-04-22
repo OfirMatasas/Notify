@@ -8,6 +8,18 @@ namespace Notify.ViewModels
 {
     public class NotificationCreationViewModel : INotifyPropertyChanged
     {
+        public class Friend
+        {
+            public string Name { get; set; }
+            public bool IsSelected { get; set; }
+
+            public Friend(string name, bool isSelected)
+            {
+                Name = name;
+                IsSelected = isSelected;
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
     
         public string NotificationName { get; set; }
@@ -44,8 +56,9 @@ namespace Notify.ViewModels
             get { return selectedTimeOption; }
             set { selectedTimeOption = value; }
         }
-    
-        public List<string> Friends { get; set; } = new List<string> { "Friend 1", "Friend 2", "Friend 3" };
+
+        public List<Friend> Friends { get; set; } = new List<Friend> {  new Friend("Friend1", true),
+            new Friend("Friend2", true)};
     
         public ICommand CreateNotificationCommand { get; set; }
     
@@ -58,8 +71,8 @@ namespace Notify.ViewModels
         {
             // Implement the logic to create the notification with the selected values.
         }
-    
-        protected virtual void OnPropertyChanged(string propertyName)
+
+        private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

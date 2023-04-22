@@ -15,6 +15,7 @@ namespace Notify.Views
         public NotificationCreationPage()
         {
             InitializeComponent();
+            BindingContext = new ViewModels.NotificationCreationViewModel();
         }
     }
 }

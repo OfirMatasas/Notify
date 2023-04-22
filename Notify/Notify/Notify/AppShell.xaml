@@ -33,10 +33,6 @@
     <ShellItem Route="register">
         <ShellContent ContentTemplate="{DataTemplate Views:RegistrationPage}" />
     </ShellItem>
-    
-    <ShellItem Route="notificationcreation">
-        <ShellContent ContentTemplate="{DataTemplate Views:NotificationCreationPage}" />
-    </ShellItem>
 
     <TabBar Route="main">
         <Tab
@@ -61,7 +57,7 @@
             Icon="profile.png"
             Route="teams"
             Title="Teams">
-            <ShellContent ContentTemplate="{DataTemplate TabViews:TeamsView}" />
+            <ShellContent ContentTemplate="{DataTemplate Views:NotificationCreationPage}" />
         </Tab>
         <Tab
             Icon="settings.png"
