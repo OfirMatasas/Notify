@@ -21,8 +21,9 @@ namespace Notify.ViewModels
         }
 
         public LoginPageViewModel LoginPage => new LoginPageViewModel();
-        public ProfilePageViewModel ProfilePage => new ProfilePageViewModel();
         public RegistrationPageViewModel RegistrationPage => new RegistrationPageViewModel();
+        public ProfilePageViewModel ProfilePage => new ProfilePageViewModel();
+        public SettingsPageViewModel SettingsPage => new SettingsPageViewModel();
         public NotificationCreationViewModel NotificationCreationPage => new NotificationCreationViewModel();
 
         

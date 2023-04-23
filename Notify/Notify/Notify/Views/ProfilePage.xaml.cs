@@ -9,6 +9,7 @@ namespace Notify.Views
         public ProfilePage()
         {
             InitializeComponent();
+            BindingContext = new ViewModels.ProfilePageViewModel();
         }
     }
 }

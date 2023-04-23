@@ -44,6 +44,32 @@ namespace Notify.HttpClient
             }
         }
 
+        public void updateDestination(string destinationName, Location location)
+        {
+            dynamic data = new JObject();
+            string json;
+            HttpResponseMessage response;
+
+
+            data.user = "Lin";  // TODO: get the user name from the logged in user
+            data.location = new JObject();
+
+            data.location.name = destinationName;
+            data.location.longitude = location.Longitude;
+            data.location.latitude = location.Latitude;
+            
+            json = JsonConvert.SerializeObject(data);
+            Debug.WriteLine($"request:{Environment.NewLine}{data}");
+            
+            response = postAsync(
+                requestUri: Constants.AZURE_FUNCTIONS_PATTERN_DESTINATION_UPDATE, 
+                content: createJsonStringContent(json)
+            ).Result;
+
+            response.EnsureSuccessStatusCode();
+            Debug.WriteLine($"Successful status code from Azure Function from updateDestination, location: {location}!");
+        }
+        
         public bool CheckIfArrivedDestination(Location location)
         {
             dynamic request = new JObject();

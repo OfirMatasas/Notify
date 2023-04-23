@@ -33,6 +33,14 @@
     <ShellItem Route="register">
         <ShellContent ContentTemplate="{DataTemplate Views:RegistrationPage}" />
     </ShellItem>
+    
+    <ShellItem Route="profile">
+        <ShellContent ContentTemplate="{DataTemplate Views:ProfilePage}" />
+    </ShellItem>
+    
+    <ShellItem Route="settings">
+        <ShellContent ContentTemplate="{DataTemplate Views:SettingsPage}" />
+    </ShellItem>
 
     <TabBar Route="main">
         <Tab
