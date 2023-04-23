@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -8,15 +10,48 @@ namespace Notify.ViewModels
 {
     public class NotificationCreationViewModel : INotifyPropertyChanged
     {
-        public class Friend
+        public sealed class Friend : INotifyPropertyChanged
         {
-            public string Name { get; set; }
-            public bool IsSelected { get; set; }
+            private string name;
+            private bool isSelected;
+
+            public string Name
+            {
+                get => name;
+                set
+                {
+                    if (name != value)
+                    {
+                        name = value;
+                        OnPropertyChanged();
+                    }
+                }
+            }
+
+            public bool IsSelected
+            {
+                get => isSelected;
+                set
+                {
+                    if (isSelected != value)
+                    {
+                        isSelected = value;
+                        OnPropertyChanged();
+                    }
+                }
+            }
 
             public Friend(string name, bool isSelected)
             {
                 Name = name;
                 IsSelected = isSelected;
+            }
+
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
         }
 
@@ -24,7 +59,7 @@ namespace Notify.ViewModels
     
         public string NotificationName { get; set; }
     
-        public List<string> NotificationTypes { get; set; } = new List<string> { "location", "time" };
+        public List<string> NotificationTypes { get; set; } = new List<string> { "Location", "Time" };
     
         private string selectedNotificationType;
         public string SelectedNotificationType
@@ -46,8 +81,8 @@ namespace Notify.ViewModels
         private string selectedLocationOption;
         public string SelectedLocationOption
         {
-            get { return selectedLocationOption; }
-            set { selectedLocationOption = value; }
+            get => selectedLocationOption;
+            set => selectedLocationOption = value;
         }
     
         private static TimeSpan selectedTimeOption = new TimeSpan();
@@ -57,9 +92,12 @@ namespace Notify.ViewModels
             set { selectedTimeOption = value; }
         }
 
-        public List<Friend> Friends { get; set; } = new List<Friend> {  new Friend("Friend1", true),
-            new Friend("Friend2", true)};
-    
+        public List<Friend> Friends { get; set; } = new List<Friend> 
+        {  
+            new Friend("Friend1", true),
+            new Friend("Friend2", true)
+        };
+
         public ICommand CreateNotificationCommand { get; set; }
     
         public NotificationCreationViewModel()
@@ -67,9 +105,9 @@ namespace Notify.ViewModels
             CreateNotificationCommand = new Command(OnCreateNotification);
         }
     
-        private void OnCreateNotification()
+        private async void OnCreateNotification()
         {
-            // Implement the logic to create the notification with the selected values.
+            await App.Current.MainPage.DisplayAlert("Testing", "Empty credentials", "OK");
         }
 
         private void OnPropertyChanged(string propertyName)

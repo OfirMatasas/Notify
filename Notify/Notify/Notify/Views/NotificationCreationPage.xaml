@@ -5,39 +5,51 @@
     Title="Notification Creation"
     x:Class="Notify.Views.NotificationCreationPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:Notify.Views.Views;assembly=Notify">
     <StackLayout>
+        
+        <Grid Column="2"
+              ColumnDefinitions="auto, *" 
+              RowDefinitions="auto, auto">
+        <Label Grid.Column="0" Text="Notification Name" TextColor="Black" VerticalOptions="Center" />
+            <Entry Grid.Column="1" Text="{Binding NotificationName}" />
+        </Grid>
+        
+        <Grid Column="2"
+              ColumnDefinitions="auto, *" 
+              RowDefinitions="auto, auto">
+            <Label Grid.Column="0" Text="Notification Type" TextColor="Black" VerticalOptions="Center" />
+            <Picker Grid.Column="1"
+                TextColor="Black"
+                ItemDisplayBinding="{Binding .}"
+                ItemsSource="{Binding NotificationTypes}"
+                SelectedItem="{Binding SelectedNotificationType}" />
+        </Grid>
 
+        <Grid Column="2"
+              ColumnDefinitions="auto, *" 
+              RowDefinitions="auto, auto"
+              IsVisible="{Binding IsLocationTypeSelected}">
+            <Label Grid.Column="0" Text="Location Option" TextColor="Black" VerticalOptions="Center" />
+            <Picker Grid.Column="1" ItemsSource="{Binding LocationOptions}" SelectedItem="{Binding SelectedLocationOption}" />
 
-        <Label BackgroundColor="Black" Text="Notification Name" />
-        <Entry Text="{Binding NotificationName}" />
+        </Grid>
+        
+        <Grid Column="3"
+              ColumnDefinitions="auto, *, *" 
+              RowDefinitions="auto, auto, auto"
+              IsVisible="{Binding IsTimeTypeSelected}">
+            <Label Grid.Column="0" Text="Time Option" TextColor="Black" VerticalOptions="Center" />
+            <TimePicker Grid.Column="1" x:Name="TimePicker" Format="hh:mm tt" />
+            <DatePicker Grid.Column="2" x:Name="DatePicker" Format="dd/MM/yyyy" />
+        </Grid>
 
-        <Label Text="Notification Type" />
-        <Picker
-            BackgroundColor="Black"
-            ItemDisplayBinding="{Binding .}"
-            ItemsSource="{Binding NotificationTypes}"
-            SelectedItem="{Binding SelectedNotificationType}" />
-
-        <StackLayout BackgroundColor="Black" IsVisible="{Binding IsLocationTypeSelected}">
-            <Label Text="Location Option" />
-            <Picker ItemsSource="{Binding LocationOptions}" SelectedItem="{Binding SelectedLocationOption}" />
-        </StackLayout>
-
-        <StackLayout IsVisible="{Binding IsTimeTypeSelected}">
-            <Label Text="Time Option" />
-        </StackLayout>
-
-        <Label Text="Friend" />
-        <CollectionView ItemsSource="{Binding Friends}" SelectionMode="Multiple">
+        <Label Text="Friends" TextColor="Black" />
+        <CollectionView ItemsSource="{Binding Friends}" SelectionMode="Multiple" SelectionChanged="SelectableItemsView_OnSelectionChanged">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <ViewCell>
-                        <StackLayout Orientation="Horizontal">
-                            <Label Text="{Binding Name}" />
-                            <CheckBox IsChecked="{Binding IsSelected}" />
-                        </StackLayout>
-                    </ViewCell>
+                    <views:FriendsListView />
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
@@ -45,5 +57,4 @@
         <Button Command="{Binding CreateNotificationCommand}" Text="Create" />
 
     </StackLayout>
-
 </ContentPage>
