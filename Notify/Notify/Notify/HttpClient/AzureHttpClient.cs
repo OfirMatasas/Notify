@@ -114,8 +114,8 @@ namespace Notify.HttpClient
                 request.notification = new JObject();
                 request.notification.name = notificationName;
                 request.notification.type = notificationType;
-                request.notification.date = dateTime.Date;
-                request.notification.time = dateTime.TimeOfDay;
+                request.notification.date = dateTime.Date.ToString();
+                request.notification.time = dateTime.TimeOfDay.ToString();
                 request["users"] = JToken.FromObject(users);
 
                 json = JsonConvert.SerializeObject(request);
@@ -152,7 +152,7 @@ namespace Notify.HttpClient
                 request.notification = new JObject();
                 request.notification.name = notificationName;
                 request.notification.type = notificationType;
-                request.notification.date = location;
+                request.notification.location = location;
                 request["users"] = JToken.FromObject(users);
 
                 json = JsonConvert.SerializeObject(request);
