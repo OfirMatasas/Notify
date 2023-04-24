@@ -77,6 +77,7 @@ namespace Notify.Helpers
 
         public static readonly string AZURE_FUNCTIONS_APP_BASE_URL = "https://notifymta.azurewebsites.net/api/";
         public static readonly string AZURE_FUNCTIONS_PATTERN_DISTANCE = "distance";
+        public static readonly string AZURE_FUNCTIONS_PATTERN_NOTIFICATION = "notification";
 
         #endregion
 

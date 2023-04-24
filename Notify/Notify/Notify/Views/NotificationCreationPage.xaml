@@ -24,7 +24,8 @@
                 TextColor="Black"
                 ItemDisplayBinding="{Binding .}"
                 ItemsSource="{Binding NotificationTypes}"
-                SelectedItem="{Binding SelectedNotificationType}" />
+                SelectedItem="{Binding SelectedNotificationType}"
+                x:Name="NotificationType" />
         </Grid>
 
         <Grid Column="2"
@@ -32,7 +33,9 @@
               RowDefinitions="auto, auto"
               IsVisible="{Binding IsLocationTypeSelected}">
             <Label Grid.Column="0" Text="Location Option" TextColor="Black" VerticalOptions="Center" />
-            <Picker Grid.Column="1" ItemsSource="{Binding LocationOptions}" SelectedItem="{Binding SelectedLocationOption}" />
+            <Picker Grid.Column="1" 
+                    ItemsSource="{Binding LocationOptions}" 
+                    SelectedItem="{Binding SelectedLocationOption}" />
 
         </Grid>
         
@@ -41,8 +44,14 @@
               RowDefinitions="auto, auto, auto"
               IsVisible="{Binding IsTimeTypeSelected}">
             <Label Grid.Column="0" Text="Time Option" TextColor="Black" VerticalOptions="Center" />
-            <TimePicker Grid.Column="1" x:Name="TimePicker" Format="hh:mm tt" />
-            <DatePicker Grid.Column="2" x:Name="DatePicker" Format="dd/MM/yyyy" />
+            <TimePicker Grid.Column="1" 
+                        x:Name="TimePicker" 
+                        Format="hh:mm tt" PropertyChanged="TimePicker_OnPropertyChanged" 
+                        Time="{Binding SelectedTimeOption}" />
+            <DatePicker Grid.Column="2" 
+                        x:Name="DatePicker" 
+                        Format="dd/MM/yyyy" DateSelected="DatePicker_OnDateSelected" 
+                        Date="{Binding SelectedDateOption}" />
         </Grid>
 
         <Label Text="Friends" TextColor="Black" />
@@ -54,7 +63,7 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <Button Command="{Binding CreateNotificationCommand}" Text="Create" />
+        <Button Command="{Binding CreateNotificationCommand}" Text="Create" x:Name="CreateNotificationButton" />
 
     </StackLayout>
 </ContentPage>
