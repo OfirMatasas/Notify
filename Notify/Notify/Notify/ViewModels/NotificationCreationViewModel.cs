@@ -13,17 +13,17 @@ namespace Notify.ViewModels
     {
         public sealed class Friend : INotifyPropertyChanged
         {
-            private string name;
-            private bool isSelected;
+            private string m_Name;
+            private bool m_IsSelected;
 
             public string Name
             {
-                get => name;
+                get => m_Name;
                 set
                 {
-                    if (name != value)
+                    if (m_Name != value)
                     {
-                        name = value;
+                        m_Name = value;
                         OnPropertyChanged();
                     }
                 }
@@ -31,12 +31,12 @@ namespace Notify.ViewModels
 
             public bool IsSelected
             {
-                get => isSelected;
+                get => m_IsSelected;
                 set
                 {
-                    if (isSelected != value)
+                    if (m_IsSelected != value)
                     {
-                        isSelected = value;
+                        m_IsSelected = value;
                         OnPropertyChanged();
                     }
                 }
@@ -62,13 +62,13 @@ namespace Notify.ViewModels
     
         public List<string> NotificationTypes { get; set; } = new List<string> { "Location", "Time" };
     
-        private string selectedNotificationType;
+        private string m_SelectedNotificationType;
         public string SelectedNotificationType
         {
-            get => selectedNotificationType;
+            get => m_SelectedNotificationType;
             set
             {
-                selectedNotificationType = value;
+                m_SelectedNotificationType = value;
                 OnPropertyChanged(nameof(IsLocationTypeSelected));
                 OnPropertyChanged(nameof(IsTimeTypeSelected));
             }
@@ -79,25 +79,32 @@ namespace Notify.ViewModels
     
         public List<string> LocationOptions { get; set; } = new List<string> { "Home", "Work" };
     
-        private string selectedLocationOption;
+        private string m_SelectedLocationOption;
         public string SelectedLocationOption
         {
-            get => selectedLocationOption;
-            set => selectedLocationOption = value;
-        }
-    
-        private static DateTime selectedTimeOption;
-        public static DateTime SelectedTimeOption
-        {
-            get => selectedTimeOption;
-            set => selectedTimeOption = value;
+            get => m_SelectedLocationOption;
+            set => m_SelectedLocationOption = value;
         }
         
-        private static DateTime selectedDateOption;
+        private string m_NotificationInfo;
+        public string NotificationInfo
+        {
+            get => m_NotificationInfo;
+            set => m_NotificationInfo = value;
+        }
+    
+        private static TimeSpan m_SelectedTimeOption = DateTime.Today.TimeOfDay;
+        public static TimeSpan SelectedTimeOption
+        {
+            get => m_SelectedTimeOption;
+            set => m_SelectedTimeOption = value;
+        }
+        
+        private static DateTime m_SelectedDateOption = DateTime.Today;
         public static DateTime SelectedDateOption
         {
-            get => selectedDateOption;
-            set => selectedDateOption = value;
+            get => m_SelectedDateOption;
+            set => m_SelectedDateOption = value;
         }
 
         public List<Friend> Friends { get; set; } = new List<Friend> 
@@ -118,7 +125,7 @@ namespace Notify.ViewModels
         {
             List<string> selectedFriends, errorMessages;
             string completeErrorMessage;
-            DateTime selectedDateTime = selectedDateOption.Date.Add(selectedTimeOption.TimeOfDay);
+            DateTime selectedDateTime = SelectedDateOption.Date.Add(SelectedTimeOption);
             bool created;
 
             if (checkIfSelectionsAreValid(out selectedFriends, out errorMessages))
@@ -127,7 +134,8 @@ namespace Notify.ViewModels
                 {
                     created = AzureHttpClient.Instance.CreateTimeNotification(
                         NotificationName,
-                        selectedNotificationType,
+                        NotificationInfo,
+                        SelectedNotificationType,
                         selectedDateTime,
                         selectedFriends);
                 }
@@ -135,8 +143,9 @@ namespace Notify.ViewModels
                 {
                     created = AzureHttpClient.Instance.CreateLocationNotification(
                         NotificationName,
-                        selectedNotificationType,
-                        selectedLocationOption,
+                        NotificationInfo,
+                        SelectedNotificationType,
+                        SelectedLocationOption,
                         selectedFriends);
                 }
                 else
@@ -170,17 +179,17 @@ namespace Notify.ViewModels
                 errorMessages.Add("You must name the notification");
             }
 
-            if (string.IsNullOrEmpty(selectedNotificationType))
+            if (string.IsNullOrEmpty(m_SelectedNotificationType))
             {
                 errorMessages.Add("You must choose a notification type");
             }
-            else if (IsLocationTypeSelected && string.IsNullOrEmpty(selectedLocationOption))
+            else if (IsLocationTypeSelected && string.IsNullOrEmpty(m_SelectedLocationOption))
             {
                 errorMessages.Add("You must choose a location");
             }
             else if (IsTimeTypeSelected)
             {
-                if (selectedDateOption.Date.Add(selectedTimeOption.TimeOfDay) < DateTime.Now)
+                if (SelectedDateOption.Date.Add(SelectedTimeOption) < DateTime.Now)
                 {
                     errorMessages.Add("You must choose a time in the future");
                 }

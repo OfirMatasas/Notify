@@ -101,79 +101,68 @@ namespace Notify.HttpClient
             return new StringContent(json, Encoding.UTF8, "application/json");
         }
 
-        public bool CreateTimeNotification(string notificationName, string notificationType, DateTime dateTime, List<string> users)
+        public bool CreateTimeNotification(string notificationName, string info, string notificationType, 
+            DateTime dateTime, List<string> users)
         {
-            dynamic request = new JObject();
+            long timestamp = ((DateTimeOffset)dateTime).ToUnixTimeSeconds();
+
+            return createNotification(notificationName, info, notificationType, "timestamp", timestamp, users, 
+                Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_TIME);
+        }
+        
+        public bool CreateLocationNotification(string notificationName, string info, string notificationType, 
+            string location, List<string> users)
+        {
+            return createNotification(notificationName, info, notificationType, "location", location, users, 
+                Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_LOCATION);
+        }
+
+        private bool createNotification(string notificationName, string info, string notificationType, 
+            string key, JToken value, List<string> users, string uri)
+        {
             string json;
             HttpResponseMessage response;
             bool created;
 
             try
             {
-                request.creator = "Ofir";
-                request.notification = new JObject();
-                request.notification.name = notificationName;
-                request.notification.type = notificationType;
-                request.notification.date = dateTime.Date.ToString();
-                request.notification.time = dateTime.TimeOfDay.ToString();
-                request["users"] = JToken.FromObject(users);
+                json = createJsonOfNotificationRequest(notificationName, info, notificationType, key, value , users);
+                Debug.WriteLine($"request:{Environment.NewLine}{json}");
 
-                json = JsonConvert.SerializeObject(request);
-                Debug.WriteLine($"request:{Environment.NewLine}{request}");
-
-                response = postAsync(
-                    requestUri: Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION,
-                    content: createJsonStringContent(json)
-                ).Result;
+                response = postAsync(uri, createJsonStringContent(json)).Result;
 
                 response.EnsureSuccessStatusCode();
-                Debug.WriteLine($"Successful status code from Azure Function from CreateTimeNotification!");
+                Debug.WriteLine($"Successful status code from Azure Function from createNotification!");
                 created = true;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error occured on CreateTimeNotification:{Environment.NewLine}{ex.Message}");
+                Debug.WriteLine($"Error occured on createNotification: {ex.Message}");
                 created = false;
             }
 
             return created;
         }
 
-        public bool CreateLocationNotification(string notificationName, string notificationType, string location, List<string> users)
+        private string createJsonOfNotificationRequest(string notificationName, string info, string notificationType,
+            string key, JToken value, List<string> users)
         {
-            dynamic request = new JObject();
-            string json;
-            HttpResponseMessage response;
-            bool created;
-
-            try
+            dynamic request = new JObject
             {
-                request.creator = "Ofir";
-                request.notification = new JObject();
-                request.notification.name = notificationName;
-                request.notification.type = notificationType;
-                request.notification.location = location;
-                request["users"] = JToken.FromObject(users);
+                { "creator", "Ofir" /* TODO: Get username from current logged in user */ },
+                { "info", info?.Trim() },
+                {
+                    "notification", new JObject
+                    {
+                        { "name", notificationName?.Trim() },
+                        { "type", notificationType },
+                        { key, value }
+                    }
+                },
+                { "users", JToken.FromObject(users) }
+            };
 
-                json = JsonConvert.SerializeObject(request);
-                Debug.WriteLine($"request:{Environment.NewLine}{request}");
-
-                response = postAsync(
-                    requestUri: Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION,
-                    content: createJsonStringContent(json)
-                ).Result;
-
-                response.EnsureSuccessStatusCode();
-                Debug.WriteLine($"Successful status code from Azure Function from CreateLocationNotification!");
-                created = true;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error occured on CreateLocationNotification:{Environment.NewLine}{ex.Message}");
-                created = false;
-            }
-
-            return created;
+            return JsonConvert.SerializeObject(request);
         }
     }
 }

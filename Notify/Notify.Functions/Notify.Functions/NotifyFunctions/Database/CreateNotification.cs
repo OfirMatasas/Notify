@@ -52,18 +52,18 @@ namespace Notify.Functions.NotifyFunctions.Database
                 return new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }
         }
+        
+        private static void getCollection(out IMongoCollection<BsonDocument> collection)
+        {
+            IMongoDatabase database = AzureDatabaseClient.Instance.GetDatabase(Constants.DATABASE_NOTIFY_MTA);
+            collection = database.GetCollection<BsonDocument>(Constants.COLLECTION_NOTIFICATIONS);        
+        }
 
         private static async Task<JToken> convertRequestBodyIntoJsonAsync(HttpRequest request)
         {
             string requestBody = await new StreamReader(request.Body).ReadToEndAsync();
             
             return JToken.Parse(requestBody);        
-        }
-
-        private static void getCollection(out IMongoCollection<BsonDocument> collection)
-        {
-            IMongoDatabase database = AzureDatabaseClient.Instance.GetDatabase(Constants.DATABASE_NOTIFY_MTA);
-            collection = database.GetCollection<BsonDocument>(Constants.COLLECTION_NOTIFICATIONS);        
         }
 
         private static void createDocumentForEachUser(JToken json, string type, ref List<BsonDocument> documentsList)
@@ -78,7 +78,9 @@ namespace Notify.Functions.NotifyFunctions.Database
                 document = new BsonDocument
                 {
                     { "creator", json["creator"].ToString() },
-                    { "creation_timestamp", int.Parse(json["creation_timestamp"].ToString()) },
+                    { "creation_timestamp", DateTimeOffset.Now.ToUnixTimeSeconds() },
+                    { "status", "new" },
+                    { "info", json["info"].ToString() },
                     {
                         "notification", new BsonDocument
                         {

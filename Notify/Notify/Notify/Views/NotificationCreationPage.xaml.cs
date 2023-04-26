@@ -34,6 +34,8 @@ namespace Notify.Views
             {
                 DisplayAlert("Invalid Date", "Please select a time in the future", "OK");
             }
+            
+            NotificationCreationViewModel.SelectedDateOption = e.NewDate;
         }
 
         private void TimePicker_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -48,6 +50,8 @@ namespace Notify.Views
                 {
                     DisplayAlert("Error", "Please select a time in the future.", "OK");
                 }
+
+                NotificationCreationViewModel.SelectedTimeOption = TimePicker.Time;
             }
         }
     }

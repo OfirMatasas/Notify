@@ -19,13 +19,19 @@
         <Grid Column="2"
               ColumnDefinitions="auto, *" 
               RowDefinitions="auto, auto">
+            <Label Grid.Column="0" Text="Notification Info" TextColor="Black" VerticalOptions="Center" />
+            <Entry Grid.Column="1" Text="{Binding NotificationInfo}" />
+        </Grid>
+        
+        <Grid Column="2"
+              ColumnDefinitions="auto, *" 
+              RowDefinitions="auto, auto">
             <Label Grid.Column="0" Text="Notification Type" TextColor="Black" VerticalOptions="Center" />
             <Picker Grid.Column="1"
                 TextColor="Black"
                 ItemDisplayBinding="{Binding .}"
                 ItemsSource="{Binding NotificationTypes}"
-                SelectedItem="{Binding SelectedNotificationType}"
-                x:Name="NotificationType" />
+                SelectedItem="{Binding SelectedNotificationType}" />
         </Grid>
 
         <Grid Column="2"

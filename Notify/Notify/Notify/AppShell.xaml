@@ -36,7 +36,7 @@
 
     <TabBar Route="main">
         <Tab
-            Icon="notification.png"
+            Icon="profile.png"
             Route="home"
             Title="Home">
             <ShellContent ContentTemplate="{DataTemplate TabViews:HomeView}" />
@@ -54,9 +54,9 @@
             <ShellContent ContentTemplate="{DataTemplate TabViews:DriversView}" />
         </Tab>
         <Tab
-            Icon="profile.png"
+            Icon="notification.png"
             Route="teams"
-            Title="Teams">
+            Title="Notifications">
             <ShellContent ContentTemplate="{DataTemplate Views:NotificationCreationPage}" />
         </Tab>
         <Tab
