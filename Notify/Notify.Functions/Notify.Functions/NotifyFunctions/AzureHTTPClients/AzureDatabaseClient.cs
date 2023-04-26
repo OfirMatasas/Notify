@@ -1,4 +1,3 @@
-using System;
 using MongoDB.Driver;
 using Notify.Functions.Core;
 
@@ -6,45 +5,38 @@ namespace Notify.Functions.NotifyFunctions.AzureHTTPClients
 {
     public sealed class AzureDatabaseClient
     {
-        private static AzureDatabaseClient m_Instance;
-        private static MongoClient m_MongoClient;
-        private static readonly object m_LockInstance = new object();
+        private static MongoClient mongoClient;
+        private static object lockInstance = new object();
+        private static AzureDatabaseClient client;
         
         private AzureDatabaseClient()
         {
-            string connectionString = Environment.GetEnvironmentVariable("AzureDatabaseConnectionString");
-            
-            if (string.IsNullOrEmpty(connectionString))
-            {
-                throw new ArgumentNullException("AzureDatabaseConnectionString environment variable not found.");
-            }
-
-            MongoClientSettings settings = MongoClientSettings.FromUrl(new MongoUrl(connectionString));
-            m_MongoClient = new MongoClient(settings);
+            MongoClientSettings settings = MongoClientSettings.FromUrl(new MongoUrl(Constants.DATABASE_CONNECTION_STRING));
+            mongoClient = new MongoClient(settings);
         }
 
         public static AzureDatabaseClient Instance
         {
             get
             {
-                if (m_Instance == null)
+                if (client == null)
                 {
-                    lock (m_LockInstance)
+                    lock (lockInstance)
                     {
-                        if (m_Instance == null)
+                        if (client == null)
                         {
-                            m_Instance = new AzureDatabaseClient();
+                            client = new AzureDatabaseClient();
                         }
                     }
                 }
 
-                return m_Instance;
+                return client;
             }
         }
         
         public IMongoDatabase GetDatabase(string databaseName)
         {
-            return m_MongoClient.GetDatabase(databaseName);
+            return mongoClient.GetDatabase(databaseName);
         }
     }
 }

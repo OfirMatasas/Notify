@@ -77,9 +77,18 @@ namespace Notify.Helpers
 
         public static readonly string AZURE_FUNCTIONS_APP_BASE_URL = "https://notifymta.azurewebsites.net/api/";
         public static readonly string AZURE_FUNCTIONS_PATTERN_DISTANCE = "distance";
-        public static readonly string AZURE_FUNCTIONS_PATTERN_NOTIFICATION = "notification";
-        public static readonly string AZURE_FUNCTIONS_PATTERN_NOTIFICATION_TIME = $"{AZURE_FUNCTIONS_PATTERN_NOTIFICATION}/time";
-        public static readonly string AZURE_FUNCTIONS_PATTERN_NOTIFICATION_LOCATION = $"{AZURE_FUNCTIONS_PATTERN_NOTIFICATION}/location";
+
+        #endregion
+
+        #region Database
+
+        public static readonly string AZURE_DATABASE = "Notify_MTA";
+        public static readonly string AZURE_DATABASE_COLLECTION_USER = "User";
+        public static readonly string AZURE_DATABASE_COLLECTION_DESTINATION = "Destination";
+        public static readonly string AZURE_DATABASE_COLLECTION_FRIEND = "Friend";
+        public static readonly string AZURE_DATABASE_COLLECTION_FRIEND_REQUEST = "Friend_Request";
+        public static readonly string AZURE_DATABASE_COLLECTION_GROUP = "Group";
+        public static readonly string AZURE_DATABASE_COLLECTION_NOTIFICATION = "Notification";
 
         #endregion
 

@@ -64,9 +64,5 @@
       <DependentUpon>RegistrationPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\NotificationCreationPage.xaml.cs">
-      <DependentUpon>NotificationCreationPage.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
 </Project>
