@@ -4,6 +4,11 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using Notify.Helpers;
 using Xamarin.Forms;
+using System.Security.Cryptography;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
+using Twilio.Types;
+using Xamarin.Essentials;
 
 namespace Notify.ViewModels
 {
@@ -162,6 +167,7 @@ namespace Notify.ViewModels
 
         private async void onSignUpClicked()
         {
+            // Validate the user input
             if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(ConfirmPassword) || string.IsNullOrEmpty(Telephone))
             {
                 displayError("Please fill in all required fields.");
@@ -173,13 +179,23 @@ namespace Notify.ViewModels
             bool isPasswordValid = validatePassword();
             bool isTelephoneValid = validateTelephone();
 
-            if (isNameValid && isUserNameValid && isPasswordValid && isTelephoneValid)
+            //if (isNameValid && isUserNameValid && isPasswordValid && isTelephoneValid)
             {
-                Debug.WriteLine($"You have successfully signed up!{Environment.NewLine}Name: {Name}{Environment.NewLine}UserName: {UserName}{Environment.NewLine}Password: {Password}{Environment.NewLine}Telephone: {Telephone}");
-                await Application.Current.MainPage.DisplayAlert("Success", "You have successfully signed up!", "OK");
-                await Shell.Current.GoToAsync("///login");
+                var accountSid = "YOUR_ACCOUNT_SID_HERE";
+                var authToken = "YOUR_AUTH_TOKEN_HERE";
+                TwilioClient.Init(accountSid, authToken);
+
+                var messageOptions = new CreateMessageOptions(
+                    new PhoneNumber("+1415XXXXXXX"), // Replace with the phone number you want to send the SMS message to
+                    from: new PhoneNumber("YOUR_TWILIO_PHONE_NUMBER_HERE"), // Replace with your Twilio phone number
+                    body: $"Your verification code is {generateVerificationCode()}");
+
+                var message = MessageResource.Create(messageOptions);
+
+                Debug.WriteLine($"SMS sent successfully to {message.To} with Message SID: {message.Sid}");
             }
         }
+
         
         private async void onBackClicked()
         {
@@ -189,6 +205,17 @@ namespace Notify.ViewModels
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        
+        private string generateVerificationCode()
+        {
+            using (var randomNumberGenerator = new RNGCryptoServiceProvider())
+            {
+                var randomBytes = new byte[4];
+                randomNumberGenerator.GetBytes(randomBytes);
+                int code = BitConverter.ToInt32(randomBytes, 0) & 0x7FFFFFFF; // Ensure the generated number is positive
+                return (code % 1000000).ToString("D6"); // Format the number as a 6-digit string
+            }
         }
     }
 }
