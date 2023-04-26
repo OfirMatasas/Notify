@@ -32,7 +32,7 @@ namespace Notify.Functions.NotifyFunctions.Database
             try
             {
                 getCollection(out collection);
-                log.LogInformation($"Got reference to {Constants.COLLECTION_DESTINATIONS} collection on {Constants.DATABASE_NOTIFY_MTA} database");
+                log.LogInformation($"Got reference to {Constants.COLLECTION_DESTINATION} collection on {Constants.DATABASE_NOTIFY_MTA} database");
 
                 json = convertRequestBodyIntoJsonAsync(request).Result;
                 log.LogInformation($"Data:{Environment.NewLine}{json}");
@@ -56,7 +56,7 @@ namespace Notify.Functions.NotifyFunctions.Database
         private static void getCollection(out IMongoCollection<BsonDocument> collection)
         {
             IMongoDatabase database = AzureDatabaseClient.Instance.GetDatabase(Constants.DATABASE_NOTIFY_MTA);
-            collection = database.GetCollection<BsonDocument>(Constants.COLLECTION_NOTIFICATIONS);        
+            collection = database.GetCollection<BsonDocument>(Constants.COLLECTION_NOTIFICATION);        
         }
 
         private static async Task<JToken> convertRequestBodyIntoJsonAsync(HttpRequest request)

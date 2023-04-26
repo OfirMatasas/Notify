@@ -33,9 +33,9 @@ namespace Notify.Functions.NotifyFunctions.Database
             log.LogInformation($"Got client's HTTP request to delete destination");
 
             database = AzureDatabaseClient.Instance.GetDatabase(Constants.DATABASE_NOTIFY_MTA);
-            collection = database.GetCollection<BsonDocument>(Constants.COLLECTION_DESTINATIONS);
+            collection = database.GetCollection<BsonDocument>(Constants.COLLECTION_DESTINATION);
             
-            log.LogInformation($"Got reference to {Constants.COLLECTION_DESTINATIONS} collection on {Constants.DATABASE_NOTIFY_MTA} database");
+            log.LogInformation($"Got reference to {Constants.COLLECTION_DESTINATION} collection on {Constants.DATABASE_NOTIFY_MTA} database");
             
             requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             data = JsonConvert.DeserializeObject(requestBody);
