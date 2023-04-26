@@ -179,24 +179,44 @@ namespace Notify.ViewModels
             bool isPasswordValid = validatePassword();
             bool isTelephoneValid = validateTelephone();
 
-            //if (isNameValid && isUserNameValid && isPasswordValid && isTelephoneValid)
+            if (isNameValid && isUserNameValid && isPasswordValid && isTelephoneValid)
             {
-                var accountSid = "YOUR_ACCOUNT_SID_HERE";
-                var authToken = "YOUR_AUTH_TOKEN_HERE";
+                string verificationCode = generateVerificationCode();
+                string twilioPhoneNumber = ConvertToTwilioPhoneNumber(Telephone);
+                
+                const string accountSid = "AC69d9dfdd4925966544c7fe354872f852";
+                const string authToken = "74188da6cd7b6c9ebab0dba30e369ac9";
                 TwilioClient.Init(accountSid, authToken);
 
                 var messageOptions = new CreateMessageOptions(
-                    new PhoneNumber("+1415XXXXXXX"), // Replace with the phone number you want to send the SMS message to
-                    from: new PhoneNumber("YOUR_TWILIO_PHONE_NUMBER_HERE"), // Replace with your Twilio phone number
-                    body: $"Your verification code is {generateVerificationCode()}");
-
-                var message = MessageResource.Create(messageOptions);
+                    new PhoneNumber(twilioPhoneNumber));
+                messageOptions.From = new PhoneNumber("+16812068707");
+                messageOptions.Body = $"Your Notify verification code: {verificationCode}";
+                
+                var message = await MessageResource.CreateAsync(messageOptions);
 
                 Debug.WriteLine($"SMS sent successfully to {message.To} with Message SID: {message.Sid}");
+                Debug.WriteLine(message.Body);
             }
         }
 
-        
+        private string ConvertToTwilioPhoneNumber(string phoneNumber)
+        {
+            if (string.IsNullOrEmpty(phoneNumber))
+            {
+                return string.Empty;
+            }
+
+            string twilioPhoneNumber = phoneNumber.Trim();
+
+            if (twilioPhoneNumber.StartsWith("05") && twilioPhoneNumber.Length == 10)
+            {
+                twilioPhoneNumber = $"+972{twilioPhoneNumber.Substring(1)}";
+            }
+
+            return twilioPhoneNumber;
+        }
+
         private async void onBackClicked()
         {
             await Shell.Current.GoToAsync("///login");
