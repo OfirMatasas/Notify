@@ -86,8 +86,7 @@ namespace Notify.ViewModels
                         }
 
                         await locationService.ManageLocationTracking();
-                        //await Shell.Current.GoToAsync("///main");     // DEKEL - TODO - fix (change only for develop the "profile" page)
-                        await Shell.Current.GoToAsync("///profile");
+                        await Shell.Current.GoToAsync("///main");
                     }
                     else
                     {

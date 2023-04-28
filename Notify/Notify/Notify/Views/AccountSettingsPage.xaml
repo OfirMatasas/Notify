@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ContentPage 
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:materialDesignControls1="clr-namespace:Plugin.MaterialDesignControls;assembly=Plugin.MaterialDesignControls"
+    x:Class="Notify.Views.AccountSettingsPage"
+    BindingContext="{Binding AccountSettingsPage, Source={StaticResource ViewModelLocator}}"
+    NavigationPage.HasNavigationBar="False">
+    <ContentPage.Content>
+        <Grid
+            RowDefinitions="Auto, Auto, Auto, *"
+            BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor}, Dark={StaticResource DarkPageBackgroundColor}}">
+            <StackLayout
+                Grid.Row="0"
+                Margin="40">
+                <Label
+                    Text="Account Settings"
+                    Style="{StaticResource Body1FontSize_ExoBold}"
+                    FontSize="Large"
+                    HorizontalTextAlignment="Center">
+                </Label>
+            </StackLayout>
+            <StackLayout 
+                Margin="0,30,350,0">
+                <ImageButton
+                    Source="backButton.png"
+                    BackgroundColor="Transparent"
+                    Aspect="AspectFit"
+                    Command="{Binding backCommand}">
+                </ImageButton>
+            </StackLayout>
+            <StackLayout
+                Margin="20,200,20,0">
+                <materialDesignControls1:MaterialPicker 
+                    LabelText ="Select the destination:"
+                    SelectedItem="{Binding Destination}">
+                    <materialDesignControls1:MaterialPicker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>Home</x:String>
+                            <x:String>Work</x:String>
+                            <x:String>School</x:String>
+                        </x:Array>
+                    </materialDesignControls1:MaterialPicker.ItemsSource>
+                </materialDesignControls1:MaterialPicker>
+                <materialDesignControls1:MaterialEntry
+                    BackgroundColor="White"
+                    BorderColor="Transparent"
+                    FontSize="16"
+                    MaxLength="16"
+                    Placeholder="Longitude"
+                    PlaceholderColor="Gray"
+                    ReturnType="Next"
+                    TabIndex="1"
+                    Text="{Binding Longitude}"
+                    TextColor="Black"
+                    Type="Filled" />
+                <materialDesignControls1:MaterialEntry
+                    BackgroundColor="White"
+                    BorderColor="Transparent"
+                    FontSize="16"
+                    MaxLength="16"
+                    Placeholder="Latitude"
+                    PlaceholderColor="Gray"
+                    ReturnType="Next"
+                    TabIndex="1"
+                    Text="{Binding Latitude}"
+                    TextColor="Black"
+                    Type="Filled" />
+                <Button
+                    BackgroundColor="#393E46"
+                    Command="{Binding UpdateLocationCommand}"
+                    CornerRadius="30"
+                    Text="UPDATE LOCATION"
+                    TextColor="#EEEEEE">
+                </Button>
+            </StackLayout>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

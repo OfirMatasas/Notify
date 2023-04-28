@@ -44,30 +44,41 @@ namespace Notify.HttpClient
             }
         }
 
-        public void updateDestination(string destinationName, Location location)
+        public bool updateDestination(string destinationName, Location location)
         {
             dynamic data = new JObject();
             string json;
             HttpResponseMessage response;
+            bool isSuccess;
 
+            try
+            {
+                data.user = "Lin"; // TODO: get the user name from the logged in user
+                data.location = new JObject();
 
-            data.user = "Lin";  // TODO: get the user name from the logged in user
-            data.location = new JObject();
+                data.location.name = destinationName;
+                data.location.longitude = location.Longitude;
+                data.location.latitude = location.Latitude;
 
-            data.location.name = destinationName;
-            data.location.longitude = location.Longitude;
-            data.location.latitude = location.Latitude;
-            
-            json = JsonConvert.SerializeObject(data);
-            Debug.WriteLine($"request:{Environment.NewLine}{data}");
-            
-            response = postAsync(
-                requestUri: Constants.AZURE_FUNCTIONS_PATTERN_DESTINATION_UPDATE, 
-                content: createJsonStringContent(json)
-            ).Result;
+                json = JsonConvert.SerializeObject(data);
+                Debug.WriteLine($"request:{Environment.NewLine}{data}");
 
-            response.EnsureSuccessStatusCode();
-            Debug.WriteLine($"Successful status code from Azure Function from updateDestination, location: {location}!");
+                response = postAsync(
+                    requestUri: Constants.AZURE_FUNCTIONS_PATTERN_DESTINATION_UPDATE,
+                    content: createJsonStringContent(json)
+                ).Result;
+
+                response.EnsureSuccessStatusCode();
+                Debug.WriteLine($"Successful status code from Azure Function from updateDestination, for location: {location}!");
+                isSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error occured on updateDestination: {Environment.NewLine}{ex.Message}");
+                isSuccess = false;
+            }
+
+            return isSuccess;
         }
         
         public bool CheckIfArrivedDestination(Location location)

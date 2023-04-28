@@ -1,9 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <ContentPage
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
-    xmlns:materialDesignControls="clr-namespace:Plugin.MaterialDesignControls;assembly=Plugin.MaterialDesignControls"
     x:Class="Notify.Views.SettingsPage"
     BindingContext="{Binding SettingsPage, Source={StaticResource ViewModelLocator}}"
     NavigationPage.HasNavigationBar="False">
@@ -50,47 +49,33 @@
             </StackLayout>
             <StackLayout
                 Margin="20,200,20,0">
-                <materialDesignControls:MaterialPicker 
-                    LabelText ="Select the destination:"
-                    SelectedItem="{Binding Destination}">
-                    <materialDesignControls:MaterialPicker.ItemsSource>
-                        <x:Array Type="{x:Type x:String}">
-                            <x:String>Home</x:String>
-                            <x:String>Work</x:String>
-                            <x:String>School</x:String>
-                        </x:Array>
-                    </materialDesignControls:MaterialPicker.ItemsSource>
-                </materialDesignControls:MaterialPicker>
-                <materialDesignControls:MaterialEntry
-                    BackgroundColor="White"
-                    BorderColor="Transparent"
-                    FontSize="16"
-                    MaxLength="16"
-                    Placeholder="Longitude"
-                    PlaceholderColor="Gray"
-                    ReturnType="Next"
-                    TabIndex="1"
-                    Text="{Binding Longitude}"
-                    TextColor="Black"
-                    Type="Filled" />
-                <materialDesignControls:MaterialEntry
-                    BackgroundColor="White"
-                    BorderColor="Transparent"
-                    FontSize="16"
-                    MaxLength="16"
-                    Placeholder="Latitude"
-                    PlaceholderColor="Gray"
-                    ReturnType="Next"
-                    TabIndex="1"
-                    Text="{Binding Latitude}"
-                    TextColor="Black"
-                    Type="Filled" />
                 <Button
                     BackgroundColor="#393E46"
-                    Command="{Binding UpdateLocationCommand}"
+                    Command="{Binding GoAccountSettingsPageCommand}"
                     CornerRadius="30"
-                    Text="UPDATE LOCATION"
+                    Text="Account Settings"
                     TextColor="#EEEEEE">
+                </Button>
+                <Button
+                    BackgroundColor="#393E46"
+                    Command="{Binding GoNotificationSettingsPageCommand}"
+                    CornerRadius="30"
+                    Text="Notification Settings"
+                    TextColor="#EEEEEE">
+                </Button>
+                <Button
+                    BackgroundColor="#393E46"
+                    Command="{Binding GoWifiSettingsPageCommand}"
+                    CornerRadius="30"
+                    Text="WiFi Settings"
+                    TextColor="#EEEEEE"><!-- ImageSource="wifi.png" -->
+                </Button>
+                <Button
+                    BackgroundColor="#393E46"
+                    Command="{Binding GoBluetoothSettingsPageCommand}"
+                    CornerRadius="30"
+                    Text="Bluetooth Settings"
+                    TextColor="#EEEEEE"><!-- ImageSource="bluetooth.png" -->
                 </Button>
             </StackLayout>
         </Grid>

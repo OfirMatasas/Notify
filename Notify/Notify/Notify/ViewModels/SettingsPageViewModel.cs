@@ -2,20 +2,18 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Notify.HttpClient;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Notify.ViewModels
 {
-    public class SettingsPageViewModel : BaseViewModel
+    public class SettingsPageViewModel
     {
-        private string m_Destination;
-        private string m_Longitude;
-        private string m_Latitude;
-        
         public Command backCommand { get; set; }
-        public Command UpdateLocationCommand { get; set; }
+        public Command GoAccountSettingsPageCommand { get; set; }
+        public Command GoNotificationSettingsPageCommand { get; set; }
+        public Command GoWifiSettingsPageCommand { get; set; }
+        public Command GoBluetoothSettingsPageCommand { get; set; }
         public Command DarkModeToggleCommand { get; set; }
         
         public Task Init { get; }
@@ -24,7 +22,10 @@ namespace Notify.ViewModels
         public SettingsPageViewModel()
         {
             backCommand = new Command(onBackButtonClicked);
-            UpdateLocationCommand = new Command(onUpdateHomeLocationButtonClicked);
+            GoAccountSettingsPageCommand = new Command(onAccountSettingsButtonClicked);
+            GoNotificationSettingsPageCommand = new Command(onNotificationSettingsButtonClicked);
+            GoWifiSettingsPageCommand = new Command(onWifiSettingsButtonClicked);
+            GoBluetoothSettingsPageCommand = new Command(onBluetoothSettingsButtonClicked);
             DarkModeToggleCommand = new Command(DarkModeToggleCommandHandler);
 
             Init = Initialize();
@@ -39,47 +40,27 @@ namespace Notify.ViewModels
         private async void onBackButtonClicked()
         {
             // await Shell.Current.Navigation.PopAsync();
-            await Shell.Current.GoToAsync("///profile");
+            await Shell.Current.GoToAsync("///home");
         }
-
-        public string Destination
+        
+        private async void onAccountSettingsButtonClicked()
         {
-            get => m_Destination;
-            set => SetProperty(ref m_Destination, value);
+            await Shell.Current.GoToAsync("///account_settings");
         }
-        public string Longitude
+        
+        private async void onNotificationSettingsButtonClicked()
         {
-            get => m_Longitude;
-            set => SetProperty(ref m_Longitude, value);
+            await Shell.Current.GoToAsync("///notification_settings");
         }
-
-        public string Latitude
+        
+        private async void onWifiSettingsButtonClicked()
         {
-            get => m_Latitude;
-            set => SetProperty(ref m_Latitude, value);
+            await Shell.Current.GoToAsync("///wifi_settings");
         }
-        private async void onUpdateHomeLocationButtonClicked()
+        
+        private async void onBluetoothSettingsButtonClicked()
         {
-            double longitude, latitude;
-
-            Debug.WriteLine($"Location picked: {m_Destination}.{Environment.NewLine}");
-
-            if (double.TryParse(m_Longitude, out longitude) && double.TryParse(m_Latitude, out latitude))
-            {
-                if (latitude >= -90.0 && latitude <= 90.0 && longitude >= -180.0 && longitude <= 180.0)
-                {
-                    Debug.WriteLine($"Both Longitude and Latitude are in the right range - updating location.{Environment.NewLine}"); 
-                    AzureHttpClient.Instance.updateDestination(m_Destination, new Core.Location(latitude, longitude));
-                }
-                else
-                {
-                    await App.Current.MainPage.DisplayAlert("Error", "Longitude and Latitude are not in the right range!", "OK");
-                }
-            }
-            else
-            {
-                await App.Current.MainPage.DisplayAlert("Error", "Longitude and Latitude must be numbers!", "OK");
-            }
+            await Shell.Current.GoToAsync("///bluetooth_settings");
         }
         
         private void DarkModeToggleCommandHandler()
