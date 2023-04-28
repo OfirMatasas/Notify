@@ -1,10 +1,4 @@
-﻿using System.ComponentModel;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Android.Icu.Text;
-using Notify.Services.Ergast;
-using Xamarin.Essentials;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 
 namespace Notify.ViewModels
 {

@@ -24,7 +24,7 @@ namespace Notify.ViewModels
         public RegistrationPageViewModel RegistrationPage => new RegistrationPageViewModel();
         public ProfilePageViewModel ProfilePage => new ProfilePageViewModel();
         public SettingsPageViewModel SettingsPage => new SettingsPageViewModel();
-        public AccountSettingsPageViewModel AccountSettingsPage => new AccountSettingsPageViewModel();
+        public LocationSettingsPageViewModel AccountSettingsPage => new LocationSettingsPageViewModel();
         public NotificationSettingsPageViewModel NotificationSettingsPage => new NotificationSettingsPageViewModel();
         public WifiSettingsPageViewModel WifiSettingsPage => new WifiSettingsPageViewModel();
         public BluetoothSettingsPageViewModel BluetoothSettingsPage => new BluetoothSettingsPageViewModel();

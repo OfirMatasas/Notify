@@ -51,9 +51,9 @@
                 Margin="20,200,20,0">
                 <Button
                     BackgroundColor="#393E46"
-                    Command="{Binding GoAccountSettingsPageCommand}"
+                    Command="{Binding GoLocationSettingsPageCommand}"
                     CornerRadius="30"
-                    Text="Account Settings"
+                    Text="Location Settings"
                     TextColor="#EEEEEE">
                 </Button>
                 <Button
@@ -68,14 +68,14 @@
                     Command="{Binding GoWifiSettingsPageCommand}"
                     CornerRadius="30"
                     Text="WiFi Settings"
-                    TextColor="#EEEEEE"><!-- ImageSource="wifi.png" -->
+                    TextColor="#EEEEEE">
                 </Button>
                 <Button
                     BackgroundColor="#393E46"
                     Command="{Binding GoBluetoothSettingsPageCommand}"
                     CornerRadius="30"
                     Text="Bluetooth Settings"
-                    TextColor="#EEEEEE"><!-- ImageSource="bluetooth.png" -->
+                    TextColor="#EEEEEE">
                 </Button>
             </StackLayout>
         </Grid>

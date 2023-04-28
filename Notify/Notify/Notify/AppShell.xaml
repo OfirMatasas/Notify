@@ -37,8 +37,8 @@
         <ShellContent ContentTemplate="{DataTemplate Views:SettingsPage}" />
     </ShellItem>
     
-    <ShellItem Route="account_settings">
-        <ShellContent ContentTemplate="{DataTemplate Views:AccountSettingsPage}" />
+    <ShellItem Route="location_settings">
+        <ShellContent ContentTemplate="{DataTemplate Views:LocationSettingsPage}" />
     </ShellItem>
     
     <ShellItem Route="notification_settings">

@@ -3,7 +3,7 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:materialDesignControls1="clr-namespace:Plugin.MaterialDesignControls;assembly=Plugin.MaterialDesignControls"
-    x:Class="Notify.Views.AccountSettingsPage"
+    x:Class="Notify.Views.LocationSettingsPage"
     BindingContext="{Binding AccountSettingsPage, Source={StaticResource ViewModelLocator}}"
     NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
@@ -14,7 +14,7 @@
                 Grid.Row="0"
                 Margin="40">
                 <Label
-                    Text="Account Settings"
+                    Text="Location Settings"
                     Style="{StaticResource Body1FontSize_ExoBold}"
                     FontSize="Large"
                     HorizontalTextAlignment="Center">
@@ -32,7 +32,9 @@
             <StackLayout
                 Margin="20,200,20,0">
                 <materialDesignControls1:MaterialPicker 
-                    LabelText ="Select the destination:"
+                    Placeholder="Select destination"
+                    FontSize="16"
+                    Type="Filled"
                     SelectedItem="{Binding Destination}">
                     <materialDesignControls1:MaterialPicker.ItemsSource>
                         <x:Array Type="{x:Type x:String}">
@@ -48,7 +50,6 @@
                     FontSize="16"
                     MaxLength="16"
                     Placeholder="Longitude"
-                    PlaceholderColor="Gray"
                     ReturnType="Next"
                     TabIndex="1"
                     Text="{Binding Longitude}"
@@ -60,7 +61,6 @@
                     FontSize="16"
                     MaxLength="16"
                     Placeholder="Latitude"
-                    PlaceholderColor="Gray"
                     ReturnType="Next"
                     TabIndex="1"
                     Text="{Binding Latitude}"

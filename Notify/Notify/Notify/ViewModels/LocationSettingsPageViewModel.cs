@@ -9,7 +9,7 @@ using System;
 
 namespace Notify.ViewModels
 {
-    public class AccountSettingsPageViewModel : BaseViewModel
+    public class LocationSettingsPageViewModel : BaseViewModel
     {
         private string m_Destination;
         private string m_Longitude;
@@ -19,7 +19,7 @@ namespace Notify.ViewModels
         public Command UpdateLocationCommand { get; set; }
 
 
-        public AccountSettingsPageViewModel()
+        public LocationSettingsPageViewModel()
         {
             backCommand = new Command(onBackButtonClicked);
             UpdateLocationCommand = new Command(onUpdateHomeLocationButtonClicked);
