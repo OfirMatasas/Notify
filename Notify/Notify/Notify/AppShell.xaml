@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Shell
     BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor},
                                       Dark={StaticResource DarkPageBackgroundColor}}"
@@ -31,6 +31,10 @@
 
     <ShellItem Route="register">
         <ShellContent ContentTemplate="{DataTemplate Views:RegistrationPage}" />
+    </ShellItem>
+    
+    <ShellItem Route="create_notification">
+        <ShellContent ContentTemplate="{DataTemplate Views:NotificationCreationPage}" />
     </ShellItem>
     
     <ShellItem Route="settings">
@@ -77,7 +81,7 @@
             Icon="notification.png"
             Route="teams"
             Title="Notifications">
-            <ShellContent ContentTemplate="{DataTemplate Views:NotificationCreationPage}" />
+            <ShellContent ContentTemplate="{DataTemplate Views:NotificationsPage}" />
         </Tab>
         <Tab
             Icon="settings.png"

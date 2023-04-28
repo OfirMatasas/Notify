@@ -29,8 +29,8 @@ namespace Notify.ViewModels
         public WifiSettingsPageViewModel WifiSettingsPage => new WifiSettingsPageViewModel();
         public BluetoothSettingsPageViewModel BluetoothSettingsPage => new BluetoothSettingsPageViewModel();
         public NotificationCreationViewModel NotificationCreationPage => new NotificationCreationViewModel();
+        public NotificationsPageViewModel NotificationPage => new NotificationsPageViewModel();
 
-        
         public HomeViewModel HomeView => new HomeViewModel(ergastService.Value);
         public ScheduleViewModel ScheduleView => new ScheduleViewModel(ergastService.Value);
         public DriversViewModel DriversView => new DriversViewModel(ergastService.Value);

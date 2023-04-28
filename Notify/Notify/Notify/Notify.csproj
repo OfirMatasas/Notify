@@ -68,9 +68,8 @@
       <DependentUpon>NotificationCreationPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Remove="ViewModels\PickerBehavior.cs" />
-    <Compile Update="Views\NotificationCreationPage.xaml.cs">
-      <DependentUpon>NotificationCreationPage.xaml</DependentUpon>
+    <Compile Update="Views\NotificationsPage.xaml.cs">
+      <DependentUpon>NotificationsPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

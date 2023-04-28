@@ -58,6 +58,8 @@ namespace Notify.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
     
+        public Command BackCommand { get; set; }
+
         public string NotificationName { get; set; }
     
         public List<string> NotificationTypes { get; set; } = new List<string> { "Location", "Time" };
@@ -119,6 +121,7 @@ namespace Notify.ViewModels
         public NotificationCreationViewModel()
         {
             CreateNotificationCommand = new Command(OnCreateNotification);
+            BackCommand = new Command(onBackClicked);
         }
 
         private async void OnCreateNotification()
@@ -206,6 +209,11 @@ namespace Notify.ViewModels
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        
+        private async void onBackClicked()
+        {
+            await Shell.Current.GoToAsync("///teams");
         }
     }
 }
