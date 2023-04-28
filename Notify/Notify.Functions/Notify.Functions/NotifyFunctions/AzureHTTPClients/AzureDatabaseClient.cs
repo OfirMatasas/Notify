@@ -12,14 +12,7 @@ namespace Notify.Functions.NotifyFunctions.AzureHTTPClients
         
         private AzureDatabaseClient()
         {
-            string connectionString = Environment.GetEnvironmentVariable("AzureDatabaseConnectionString");
-            
-            if (string.IsNullOrEmpty(connectionString))
-            {
-                throw new ArgumentNullException("AzureDatabaseConnectionString environment variable not found.");
-            }
-
-            MongoClientSettings settings = MongoClientSettings.FromUrl(new MongoUrl(connectionString));
+            MongoClientSettings settings = MongoClientSettings.FromUrl(new MongoUrl(Constants.CONNECTION_STRING));
             m_MongoClient = new MongoClient(settings);
         }
 
