@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Fody" Version="6.6.4">
+    <PackageReference Include="Fody" Version="6.7.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -64,6 +64,11 @@
       <DependentUpon>RegistrationPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\NotificationCreationPage.xaml.cs">
+      <DependentUpon>NotificationCreationPage.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Remove="ViewModels\PickerBehavior.cs" />
     <Compile Update="Views\NotificationCreationPage.xaml.cs">
       <DependentUpon>NotificationCreationPage.xaml</DependentUpon>
       <SubType>Code</SubType>

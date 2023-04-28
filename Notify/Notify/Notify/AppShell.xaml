@@ -21,7 +21,6 @@
                 <Setter Property="Shell.TabBarUnselectedColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Setter Property="Shell.TabBarTitleColor" Value="{StaticResource AccentColor}" />
             </Style>
-
             <Style BasedOn="{StaticResource BaseStyle}" TargetType="TabBar" />
         </ResourceDictionary>
     </Shell.Resources>
@@ -33,13 +32,34 @@
     <ShellItem Route="register">
         <ShellContent ContentTemplate="{DataTemplate Views:RegistrationPage}" />
     </ShellItem>
+    
+    <ShellItem Route="settings">
+        <ShellContent ContentTemplate="{DataTemplate Views:SettingsPage}" />
+    </ShellItem>
+    
+    <ShellItem Route="location_settings">
+        <ShellContent ContentTemplate="{DataTemplate Views:LocationSettingsPage}" />
+    </ShellItem>
+    
+    <ShellItem Route="notification_settings">
+        <ShellContent ContentTemplate="{DataTemplate Views:NotificationSettingsPage}" />
+    </ShellItem>
+    
+    <ShellItem Route="wifi_settings">
+        <ShellContent ContentTemplate="{DataTemplate Views:WifiSettingsPage}" />
+    </ShellItem>
+    
+    <ShellItem Route="bluetooth_settings">
+        <ShellContent ContentTemplate="{DataTemplate Views:BluetoothSettingsPage}" />
+    </ShellItem>
+    
 
     <TabBar Route="main">
         <Tab
             Icon="profile.png"
             Route="home"
             Title="Home">
-            <ShellContent ContentTemplate="{DataTemplate TabViews:HomeView}" />
+            <ShellContent ContentTemplate="{DataTemplate Views:ProfilePage}" />
         </Tab>
         <Tab
             Icon="friends.png"

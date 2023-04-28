@@ -4,12 +4,12 @@ using Xamarin.Forms.Xaml;
 namespace Notify.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ProfilePage : ContentPage
+    public partial class LocationSettingsPage : ContentPage
     {
-        public ProfilePage()
+        public LocationSettingsPage()
         {
             InitializeComponent();
-            BindingContext = new ViewModels.ProfilePageViewModel();
+            BindingContext = new ViewModels.LocationSettingsPageViewModel();
         }
     }
 }

@@ -80,6 +80,7 @@ namespace Notify.Helpers
         public static readonly string AZURE_FUNCTIONS_PATTERN_NOTIFICATION = "notification";
         public static readonly string AZURE_FUNCTIONS_PATTERN_NOTIFICATION_TIME = $"{AZURE_FUNCTIONS_PATTERN_NOTIFICATION}/time";
         public static readonly string AZURE_FUNCTIONS_PATTERN_NOTIFICATION_LOCATION = $"{AZURE_FUNCTIONS_PATTERN_NOTIFICATION}/location";
+        public static readonly string AZURE_FUNCTIONS_PATTERN_DESTINATION_UPDATE = "destination/update";
 
         #endregion
 
