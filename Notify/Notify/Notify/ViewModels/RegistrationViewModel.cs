@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using Notify.Helpers;
 using Xamarin.Forms;
 using System.Security.Cryptography;
+using Rg.Plugins.Popup.Services;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
@@ -167,7 +168,6 @@ namespace Notify.ViewModels
 
         private async void onSignUpClicked()
         {
-            // Validate the user input
             if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(ConfirmPassword) || string.IsNullOrEmpty(Telephone))
             {
                 displayError("Please fill in all required fields.");
@@ -181,40 +181,63 @@ namespace Notify.ViewModels
 
             if (isNameValid && isUserNameValid && isPasswordValid && isTelephoneValid)
             {
-                string verificationCode = generateVerificationCode();
-                string twilioPhoneNumber = ConvertToTwilioPhoneNumber(Telephone);
-                
-                const string accountSid = "AC69d9dfdd4925966544c7fe354872f852";
-                const string authToken = "74188da6cd7b6c9ebab0dba30e369ac9";
-                TwilioClient.Init(accountSid, authToken);
-
-                var messageOptions = new CreateMessageOptions(
-                    new PhoneNumber(twilioPhoneNumber));
-                messageOptions.From = new PhoneNumber("+16812068707");
-                messageOptions.Body = $"Your Notify verification code: {verificationCode}";
-                
-                var message = await MessageResource.CreateAsync(messageOptions);
-
-                Debug.WriteLine($"SMS sent successfully to {message.To} with Message SID: {message.Sid}");
-                Debug.WriteLine(message.Body);
+                sendVerificationCode();
             }
         }
 
-        private string ConvertToTwilioPhoneNumber(string phoneNumber)
+        private async void sendVerificationCode()
+        {
+            string verificationCode = generateVerificationCode();
+            string IsraelPhoneNumber = convertToIsraelPhoneNumber(Telephone);
+            string accountSid = Environment.GetEnvironmentVariable("TWILIO_ACCOUNT_SID");
+            string authToken = Environment.GetEnvironmentVariable("TWILIO_AUTH_TOKEN");
+            string fromPhoneNumber = Environment.GetEnvironmentVariable("TWILIO_PHONE_NUMBER");
+            
+            if (string.IsNullOrEmpty(accountSid) || string.IsNullOrEmpty(authToken) || string.IsNullOrEmpty(fromPhoneNumber))
+            {
+                displayError("Missing environment variable values. Please check Twilio configuration.");
+                return;
+            }
+            
+            TwilioClient.Init(accountSid, authToken);
+
+            CreateMessageOptions messageOptions = new CreateMessageOptions(new PhoneNumber(IsraelPhoneNumber))
+            {
+                From = new PhoneNumber(fromPhoneNumber),
+                Body = $"Your Notify verification code: {verificationCode}"
+            };
+
+            try
+            {
+                MessageResource message = await MessageResource.CreateAsync(messageOptions);
+
+                Debug.WriteLine($"SMS sent successfully to {message.To} with Message SID: {message.Sid}");
+                Debug.WriteLine(message.Body);
+                
+                var verificationPage = new VerificationPage(IsraelPhoneNumber, verificationCode);
+                await PopupNavigation.Instance.PushAsync(verificationPage);
+            }
+            catch (Exception ex)
+            {
+                displayError($"Failed to send verification code: {ex.Message}");
+            }
+        }
+
+        private string convertToIsraelPhoneNumber(string phoneNumber)
         {
             if (string.IsNullOrEmpty(phoneNumber))
             {
                 return string.Empty;
             }
 
-            string twilioPhoneNumber = phoneNumber.Trim();
+            string IsraelPhoneNumber = phoneNumber.Trim();
 
-            if (twilioPhoneNumber.StartsWith("05") && twilioPhoneNumber.Length == 10)
+            if (IsraelPhoneNumber.StartsWith("05") && IsraelPhoneNumber.Length == 10)
             {
-                twilioPhoneNumber = $"+972{twilioPhoneNumber.Substring(1)}";
+                IsraelPhoneNumber = $"+972{IsraelPhoneNumber.Substring(1)}";
             }
 
-            return twilioPhoneNumber;
+            return IsraelPhoneNumber;
         }
 
         private async void onBackClicked()
@@ -233,8 +256,8 @@ namespace Notify.ViewModels
             {
                 var randomBytes = new byte[4];
                 randomNumberGenerator.GetBytes(randomBytes);
-                int code = BitConverter.ToInt32(randomBytes, 0) & 0x7FFFFFFF; // Ensure the generated number is positive
-                return (code % 1000000).ToString("D6"); // Format the number as a 6-digit string
+                int code = BitConverter.ToInt32(randomBytes, 0) & 0x7FFFFFFF;
+                return (code % 1000000).ToString("D6"); 
             }
         }
     }
