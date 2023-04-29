@@ -2,8 +2,8 @@ namespace Notify.Core
 {
     public class Location
     {
-        public double Longitude { get; set; }
-        public double Latitude { get; set; }
+        public double Longitude { get; }
+        public double Latitude { get; }
 
         public Location(double longitude, double latitude)
         {

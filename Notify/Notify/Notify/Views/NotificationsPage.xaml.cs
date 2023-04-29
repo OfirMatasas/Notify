@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using Notify.ViewModels;
 using Xamarin.Forms;

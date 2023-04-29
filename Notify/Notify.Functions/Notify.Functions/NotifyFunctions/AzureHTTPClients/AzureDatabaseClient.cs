@@ -38,5 +38,10 @@ namespace Notify.Functions.NotifyFunctions.AzureHTTPClients
         {
             return m_MongoClient.GetDatabase(databaseName);
         }
+        
+        public IMongoCollection<T> GetCollection<T>(string databaseName, string collectionName)
+        {
+            return GetDatabase(databaseName).GetCollection<T>(collectionName);
+        }
     }
 }

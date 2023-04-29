@@ -138,23 +138,23 @@ namespace Notify.HttpClient
             return new StringContent(json, Encoding.UTF8, "application/json");
         }
 
-        public bool CreateTimeNotification(string notificationName, string info, string notificationType, 
+        public bool CreateTimeNotification(string notificationName, string description, string notificationType, 
             DateTime dateTime, List<string> users)
         {
             long timestamp = ((DateTimeOffset)dateTime).ToUnixTimeSeconds();
 
-            return createNotification(notificationName, info, notificationType, "timestamp", timestamp, users, 
+            return createNotification(notificationName, description, notificationType, "timestamp", timestamp, users, 
                 Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_TIME);
         }
         
-        public bool CreateLocationNotification(string notificationName, string info, string notificationType, 
+        public bool CreateLocationNotification(string notificationName, string description, string notificationType, 
             string location, List<string> users)
         {
-            return createNotification(notificationName, info, notificationType, "location", location, users, 
+            return createNotification(notificationName, description, notificationType, "location", location, users, 
                 Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_LOCATION);
         }
 
-        private bool createNotification(string notificationName, string info, string notificationType, 
+        private bool createNotification(string notificationName, string description, string notificationType, 
             string key, JToken value, List<string> users, string uri)
         {
             string json;
@@ -163,7 +163,7 @@ namespace Notify.HttpClient
 
             try
             {
-                json = createJsonOfNotificationRequest(notificationName, info, notificationType, key, value , users);
+                json = createJsonOfNotificationRequest(notificationName, description, notificationType, key, value , users);
                 Debug.WriteLine($"request:{Environment.NewLine}{json}");
 
                 response = postAsync(uri, createJsonStringContent(json)).Result;
@@ -181,13 +181,13 @@ namespace Notify.HttpClient
             return created;
         }
 
-        private string createJsonOfNotificationRequest(string notificationName, string info, string notificationType,
+        private string createJsonOfNotificationRequest(string notificationName, string description, string notificationType,
             string key, JToken value, List<string> users)
         {
             dynamic request = new JObject
             {
                 { "creator", "Ofir" /* TODO: Get username from current logged in user */ },
-                { "info", info?.Trim() },
+                { "description", description?.Trim() },
                 {
                     "notification", new JObject
                     {
@@ -200,6 +200,53 @@ namespace Notify.HttpClient
             };
 
             return JsonConvert.SerializeObject(request);
+        }
+
+        public async Task<List<Notification>> GetNotifications()
+        {
+            List<Notification> notifications = new List<Notification>();
+            NotificationType notificationType;
+            object notificationTypeValue;
+
+            try
+            {
+                HttpResponseMessage response = getAsync(Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION).Result;
+                response.EnsureSuccessStatusCode();
+                Debug.WriteLine($"Successful status code from Azure Function from GetNotifications!");
+
+                dynamic returnedObject = DeserializeObjectFromResponseAsync(response).Result;
+                Debug.WriteLine($"returnedObject:\n{returnedObject.ToString()}");
+                
+                foreach (dynamic item in returnedObject)
+                {
+                    notificationType = item.notification.location == null ? NotificationType.Time : NotificationType.Location;
+                    notificationTypeValue = item.notification.location ?? DateTimeOffset.FromUnixTimeSeconds((long)item.notification.timestamp).LocalDateTime;
+                    
+                    Notification notification = new Notification(
+                        name: (string)item.notification.name,
+                        description: (string)(item.description ?? item.info),
+                        creationDateTime: DateTimeOffset.FromUnixTimeSeconds((long)item.creation_timestamp).LocalDateTime,
+                        status: (string)item.status,
+                        creator: (string)item.creator,
+                        type: notificationType,
+                        typeInfo: notificationTypeValue,
+                        target: (string)item.user);
+
+                    notifications.Add(notification);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error occured on GetNotifications: {ex.Message}");
+            }
+
+            return notifications;
+        }
+        
+        private async Task<HttpResponseMessage> getAsync(string requestUri)
+        {
+            HttpResponseMessage response = await m_HttpClient.GetAsync(requestUri).ConfigureAwait(false);
+            return response;
         }
     }
 }

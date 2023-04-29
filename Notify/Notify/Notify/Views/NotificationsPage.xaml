@@ -1,76 +1,62 @@
 <?xml version="1.0" encoding="utf-8" ?>
-
 <ContentPage
     BindingContext="{Binding NotificationPage, Source={StaticResource ViewModelLocator}}"
     Title="Notification Creation"
     x:Class="Notify.Views.NotificationsPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
     xmlns:views="clr-namespace:Notify.Views.Views;assembly=Notify">
+    
     <StackLayout>
-        <Label Text="Notifications" VerticalOptions="Start" HorizontalOptions="Center" FontAttributes="Bold" />
-
-        <Grid
-            Column="3"
-            ColumnDefinitions="auto, *, auto">
+        <Label Text="Notifications" VerticalOptions="Start" HorizontalOptions="Center" FontAttributes="Bold" FontSize="25" Margin="10" />
+        
+        <Grid Column="3" ColumnDefinitions="auto, *, auto">
+            <Image Source="refresh_icon.png"
+                         Aspect="AspectFit"
+                         HeightRequest="50"
+                         Margin="10"
+                         Grid.Column="0"
+                         HorizontalOptions="Start">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding RefreshNotificationsCommand}" />
+                </Image.GestureRecognizers>
+            </Image>
             
-            <Image Source="history_icon.jpg" 
-                   Aspect="AspectFit"
-                   HeightRequest="30"
-                   Grid.Column="0" 
-                   HorizontalOptions="Start" />
-            
-            <Image Source="plus_sign_icon.jpg" 
-                   Aspect="AspectFit"
-                   HeightRequest="30"
-                   Grid.Column="2" 
-                   HorizontalOptions="End">
+            <Image Source="add_icon.png"
+                         Aspect="AspectFit"
+                         HeightRequest="50"
+                         Margin="10"
+                         Grid.Column="2"
+                         HorizontalOptions="End">
                 <Image.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding CreateNotificationCommand}" />
                 </Image.GestureRecognizers>
             </Image>
-
         </Grid>
-        
-        <Grid 
-            Column="3" 
-            Row="1"
-            ColumnDefinitions="auto, auto, auto"
-            RowDefinitions="auto">
             
-            <CheckBox Grid.Column="0" IsChecked="{Binding TimeFilter}" />
-            <DatePicker Grid.Column="1" 
-                        x:Name="StartDatePicker" 
-                        Format="dd/MM/yyyy" 
-                        DateSelected="StartDatePicker_OnDateSelected" 
-                        Date="{Binding StartDate}"
-                        IsEnabled="{Binding TimeFilter}" />
-            <DatePicker Grid.Column="2" 
-                        x:Name="EndDatePicker" 
-                        Format="dd/MM/yyyy" 
-                        DateSelected="EndDatePicker_OnDateSelected" 
-                        Date="{Binding EndDate}"
-                        IsEnabled="{Binding TimeFilter}" />
-        </Grid>
-        
-        <Grid
-            Column="2"
-            ColumnDefinitions="auto, auto">
-            
-            <CheckBox Grid.Column="0" IsChecked="{Binding LocationFilter}" />
-            <Entry Text="{Binding LocationSearchText}" IsEnabled="{Binding LocationFilter }" />
-            <CollectionView ItemsSource="{Binding FilteredLocations}" IsEnabled="{Binding LocationFilter }">
+        <ScrollView>
+            <CollectionView ItemsSource="{Binding Notifications}">
+                <CollectionView.Header>
+                    <Grid ColumnDefinitions="*, *, *">
+                        <Label Grid.Column="0" Text="Name" HorizontalOptions="CenterAndExpand" FontSize="18" FontAttributes="Bold" />
+                        <Label Grid.Column="1" Text="Description" HorizontalOptions="CenterAndExpand" FontSize="18" FontAttributes="Bold" />
+                        <Label Grid.Column="2" Text="Status" HorizontalOptions="CenterAndExpand" FontSize="18" FontAttributes="Bold" />
+                    </Grid>
+                </CollectionView.Header>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Label Text="{Binding}" />
+                        <Grid Column="3" 
+                              ColumnDefinitions="*, *, *"
+                              RowDefinitions="auto"
+                              HorizontalOptions="Center">
+                            <Label Grid.Column="0" Text="{Binding Name}" HorizontalOptions="Center" FontSize="15" />
+                            <Label Grid.Column="1" Text="{Binding Description}" HorizontalOptions="Center" FontSize="15" />
+                            <Label Grid.Column="2" Text="{Binding Status}" HorizontalOptions="Center" FontSize="15" />
+                        </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-
-
-
-            
-        </Grid>
-
+        </ScrollView>
     </StackLayout>
 </ContentPage>

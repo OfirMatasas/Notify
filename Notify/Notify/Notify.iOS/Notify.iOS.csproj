@@ -208,7 +208,7 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\Drawable\history_icon.jpg" />
-    <BundleResource Include="Resources\Drawable\plus_sign_icon.jpg" />
+    <BundleResource Include="Resources\Drawable\refresh_icon.png" />
+    <BundleResource Include="Resources\Drawable\add_icon.png" />
   </ItemGroup>
 </Project>

@@ -31,8 +31,8 @@
         <Grid Column="2"
               ColumnDefinitions="auto, *" 
               RowDefinitions="auto, auto">
-            <Label Grid.Column="0" Text="Notification Info" TextColor="Black" VerticalOptions="Center" />
-            <Entry Grid.Column="1" Text="{Binding NotificationInfo}" />
+            <Label Grid.Column="0" Text="Notification Description" TextColor="Black" VerticalOptions="Center" />
+            <Entry Grid.Column="1" Text="{Binding NotificationDescription}" />
         </Grid>
         
         <Grid Column="2"

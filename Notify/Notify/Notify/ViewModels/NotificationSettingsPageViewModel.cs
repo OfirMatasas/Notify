@@ -13,7 +13,6 @@ namespace Notify.ViewModels
         
         private async void onBackButtonClicked()
         {
-            // await Shell.Current.Navigation.PopAsync();
             await Shell.Current.GoToAsync("///settings");
         }
     }

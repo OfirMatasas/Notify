@@ -82,7 +82,7 @@ namespace Notify.Functions.NotifyFunctions.Database
                     { "creator", json["creator"].ToString() },
                     { "creation_timestamp", DateTimeOffset.Now.ToUnixTimeSeconds() },
                     { "status", "new" },
-                    { "info", json["info"].ToString() },
+                    { "description", json["description"].ToString() },
                     {
                         "notification", new BsonDocument
                         {
