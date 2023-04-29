@@ -2,85 +2,80 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Threading;
+using System.Threading.Tasks;
 using Notify.Core;
 using Notify.HttpClient;
+using Notify.Views.Views;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Notify.ViewModels
 {
-    public class NotificationsPageViewModel : INotifyPropertyChanged
+    public sealed class NotificationsPageViewModel : INotifyPropertyChanged
     {
+        #region Constructor
+
         public NotificationsPageViewModel()
         {
             CreateNotificationCommand = new Command(onCreateNotificationClicked);
             RefreshNotificationsCommand = new Command(onNotificationsRefreshClicked);
-            
-            Notifications = AzureHttpClient.Instance.GetNotifications().Result;
+            NotificationSelectedCommand = new Command(onNotificationSelected);
 
-            //new Thread(pullNotificationsFromServer) { IsBackground = true }.Start();
+            onNotificationsRefreshClicked();
         }
+
+        #endregion
 
         #region Create_Notification
 
         public Command CreateNotificationCommand { get; set; }
-        public Command RefreshNotificationsCommand { get; set; }
 
         private async void onCreateNotificationClicked()
         {
             await Shell.Current.GoToAsync("///create_notification");
         }
-        
-        private void onNotificationsRefreshClicked()
+
+        #endregion
+
+        #region Refresh_Notifications
+
+        public Command RefreshNotificationsCommand { get; set; }
+
+        private async void onNotificationsRefreshClicked()
         {
-            Notifications = AzureHttpClient.Instance.GetNotifications().Result;
+            await Task.Run(() => Notifications = AzureHttpClient.Instance.GetNotifications().Result);
         }
 
         #endregion
 
         #region Notifications_List
 
-        public List<Notification> Notifications { get; set; }
+        public List<Notification> Notifications { get; set; } = new List<Notification>();
+        public Command NotificationSelectedCommand { get; set; }
         
-        private void pullNotificationsFromServer()
+        public Notification SelectedNotification { get; set; }
+        
+        private async void onNotificationSelected()
         {
-            Console.WriteLine("Daemon thread started...");
-            
-            //while (true)
-            {
-                //Thread.Sleep(5000);
-                Notifications = AzureHttpClient.Instance.GetNotifications().Result;
-            }
+            await Shell.Current.Navigation.PushAsync(new NotificationDetailsPage(SelectedNotification));
         }
 
         #endregion
 
         #region Interface_Methods
-
+        
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        
-        protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+
+        private bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
         {
             if (EqualityComparer<T>.Default.Equals(field, value)) return false;
             field = value;
             OnPropertyChanged(propertyName);
-            return true;
-        }
-        
-        protected bool SetProperty<T>(ref T backingStore, T value, [CallerMemberName] string propertyName = "", Action onChanged = null)
-        {
-            if (EqualityComparer<T>.Default.Equals(backingStore, value))
-                return false;
-
-            backingStore = value;
-            onChanged?.Invoke();
-            OnPropertyChanged(propertyName);
-
             return true;
         }
         

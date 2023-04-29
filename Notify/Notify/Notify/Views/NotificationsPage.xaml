@@ -36,23 +36,28 @@
         </Grid>
             
         <ScrollView>
-            <CollectionView ItemsSource="{Binding Notifications}">
+            <CollectionView ItemsSource="{Binding Notifications}"
+                            SelectionMode="Single"
+                            SelectionChangedCommand="{Binding NotificationSelectedCommand}"
+                            SelectedItem="{Binding SelectedNotification}">
                 <CollectionView.Header>
-                    <Grid ColumnDefinitions="*, *, *">
+                    <Grid ColumnDefinitions="*, *, *, *">
                         <Label Grid.Column="0" Text="Name" HorizontalOptions="CenterAndExpand" FontSize="18" FontAttributes="Bold" />
                         <Label Grid.Column="1" Text="Description" HorizontalOptions="CenterAndExpand" FontSize="18" FontAttributes="Bold" />
                         <Label Grid.Column="2" Text="Status" HorizontalOptions="CenterAndExpand" FontSize="18" FontAttributes="Bold" />
+                        <Label Grid.Column="3" Text="Type" HorizontalOptions="CenterAndExpand" FontSize="18" FontAttributes="Bold" />
                     </Grid>
                 </CollectionView.Header>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Grid Column="3" 
-                              ColumnDefinitions="*, *, *"
+                              ColumnDefinitions="*, *, *, *"
                               RowDefinitions="auto"
                               HorizontalOptions="Center">
                             <Label Grid.Column="0" Text="{Binding Name}" HorizontalOptions="Center" FontSize="15" />
                             <Label Grid.Column="1" Text="{Binding Description}" HorizontalOptions="Center" FontSize="15" />
                             <Label Grid.Column="2" Text="{Binding Status}" HorizontalOptions="Center" FontSize="15" />
+                            <Label Grid.Column="3" Text="{Binding Type}" HorizontalOptions="Center" FontSize="15" />
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

@@ -9,7 +9,7 @@ namespace Notify.ViewModels
 {
     public class SettingsPageViewModel
     {
-        public Command backCommand { get; set; }
+        public Command BackCommand { get; set; }
         public Command GoLocationSettingsPageCommand { get; set; }
         public Command GoNotificationSettingsPageCommand { get; set; }
         public Command GoWifiSettingsPageCommand { get; set; }
@@ -21,7 +21,7 @@ namespace Notify.ViewModels
 
         public SettingsPageViewModel()
         {
-            backCommand = new Command(onBackButtonClicked);
+            BackCommand = new Command(onBackButtonClicked);
             GoLocationSettingsPageCommand = new Command(onLocationSettingsButtonClicked);
             GoNotificationSettingsPageCommand = new Command(onNotificationSettingsButtonClicked);
             GoWifiSettingsPageCommand = new Command(onWifiSettingsButtonClicked);

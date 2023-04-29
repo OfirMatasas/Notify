@@ -4,11 +4,11 @@ namespace Notify.ViewModels
 {
     public class BluetoothSettingsPageViewModel
     {
-        public Command backCommand { get; set; }
+        public Command BackCommand { get; set; }
         
         public BluetoothSettingsPageViewModel()
         {
-            backCommand = new Command(onBackButtonClicked);
+            BackCommand = new Command(onBackButtonClicked);
         }
         
         private async void onBackButtonClicked()
