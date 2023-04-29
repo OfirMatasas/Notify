@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using Notify.Helpers;
 using Xamarin.Forms;
 using System.Security.Cryptography;
-using Rg.Plugins.Popup.Services;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
@@ -58,16 +57,6 @@ namespace Notify.ViewModels
             }
         }
 
-        public bool IsFormValid
-        {
-            get => m_IsFormValid;
-            set
-            {
-                m_IsFormValid = value;
-                OnPropertyChanged(nameof(IsFormValid));
-            }
-        }
-        
         private bool validateName()
         {
             bool isValid = !string.IsNullOrEmpty(Name) && Regex.IsMatch(Name, @"^[a-zA-Z ]+$");
@@ -115,7 +104,6 @@ namespace Notify.ViewModels
     
             return isValid;
         }
-
         
         private bool validateUserName()
         {
@@ -133,7 +121,6 @@ namespace Notify.ViewModels
     
             return isValid;
         }
-
         
         private bool validateTelephone()
         {
@@ -159,7 +146,6 @@ namespace Notify.ViewModels
 
             return isValid;
         }
-
         
         private void displayError(string message)
         {
@@ -187,18 +173,20 @@ namespace Notify.ViewModels
 
         private async void sendVerificationCode()
         {
+            bool isVerificationSuccessful = false;
             string verificationCode = generateVerificationCode();
             string IsraelPhoneNumber = convertToIsraelPhoneNumber(Telephone);
-            string accountSid = Environment.GetEnvironmentVariable("TWILIO_ACCOUNT_SID");
-            string authToken = Environment.GetEnvironmentVariable("TWILIO_AUTH_TOKEN");
-            string fromPhoneNumber = Environment.GetEnvironmentVariable("TWILIO_PHONE_NUMBER");
-            
-            if (string.IsNullOrEmpty(accountSid) || string.IsNullOrEmpty(authToken) || string.IsNullOrEmpty(fromPhoneNumber))
+            string accountSid = "AC69d9dfdd4925966544c7fe354872f852";
+            string authToken = "74188da6cd7b6c9ebab0dba30e369ac9";
+            string fromPhoneNumber = "+16812068707";
+
+            if (string.IsNullOrEmpty(accountSid) || string.IsNullOrEmpty(authToken) ||
+                string.IsNullOrEmpty(fromPhoneNumber))
             {
                 displayError("Missing environment variable values. Please check Twilio configuration.");
                 return;
             }
-            
+
             TwilioClient.Init(accountSid, authToken);
 
             CreateMessageOptions messageOptions = new CreateMessageOptions(new PhoneNumber(IsraelPhoneNumber))
@@ -206,23 +194,46 @@ namespace Notify.ViewModels
                 From = new PhoneNumber(fromPhoneNumber),
                 Body = $"Your Notify verification code: {verificationCode}"
             };
-
-            try
+            
+            while (!isVerificationSuccessful)
             {
-                MessageResource message = await MessageResource.CreateAsync(messageOptions);
+                try
+                {
+                    MessageResource message = await MessageResource.CreateAsync(messageOptions);
 
-                Debug.WriteLine($"SMS sent successfully to {message.To} with Message SID: {message.Sid}");
-                Debug.WriteLine(message.Body);
-                
-                var verificationPage = new VerificationPage(IsraelPhoneNumber, verificationCode);
-                await PopupNavigation.Instance.PushAsync(verificationPage);
-            }
-            catch (Exception ex)
-            {
-                displayError($"Failed to send verification code: {ex.Message}");
+                    Debug.WriteLine($"SMS sent successfully to {message.To} with Message SID: {message.Sid}");
+                    Debug.WriteLine(message.Body);
+
+                    string userEnteredCode = await Application.Current.MainPage.DisplayPromptAsync(
+                        "Verify Phone Number", $"Please enter the verification code sent to {Telephone}",
+                        maxLength: 6);
+
+                    if (userEnteredCode == verificationCode)
+                    {
+                        isVerificationSuccessful = true;
+                        await Application.Current.MainPage.DisplayAlert("Registration Success",
+                            "You have successfully registered to Notify.", "OK");
+                        await Shell.Current.GoToAsync("///login");
+                    }
+                    else
+                    {
+                        bool tryAgain = await Application.Current.MainPage.DisplayAlert("Verification Error",
+                            "The verification code you entered is invalid. Do you want to try again?", "Yes", "No");
+
+                        if (!tryAgain)
+                        {
+                            break;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    displayError($"Failed to send verification code: {ex.Message}");
+                    break;
+                }
             }
         }
-
+        
         private string convertToIsraelPhoneNumber(string phoneNumber)
         {
             if (string.IsNullOrEmpty(phoneNumber))
