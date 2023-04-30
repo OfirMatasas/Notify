@@ -1,7 +1,13 @@
-﻿using Notify.HttpClient;
+﻿using System.Threading.Tasks;
+using Notify.HttpClient;
 using Xamarin.Forms;
+using Notify.HttpClient;
+using Xamarin.Essentials;
+using System.ComponentModel;
 using System.Diagnostics;
 using System;
+using System.Collections.Generic;
+using Android.Print;
 
 namespace Notify.ViewModels
 {
@@ -10,14 +16,20 @@ namespace Notify.ViewModels
         private string m_Destination;
         private string m_Longitude;
         private string m_Latitude;
+
+        private string m_SearchText;
+        private List<string> m_DropBoxSuggestions;
         
         public Command BackCommand { get; set; }
         public Command UpdateLocationCommand { get; set; }
+        public Command GetAddressSuggestionsCommand { get; set; }
+        
 
         public LocationSettingsPageViewModel()
         {
             BackCommand = new Command(onBackButtonClicked);
             UpdateLocationCommand = new Command(onUpdateHomeLocationButtonClicked);
+            GetAddressSuggestionsCommand = new Command(onGetAddressSuggestionsButtonClicked);
         }
         
         private async void onBackButtonClicked()
@@ -36,13 +48,11 @@ namespace Notify.ViewModels
             get => m_Longitude;
             set => SetProperty(ref m_Longitude, value);
         }
-        
         public string Latitude
         {
             get => m_Latitude;
             set => SetProperty(ref m_Latitude, value);
         }
-        
         private async void onUpdateHomeLocationButtonClicked()
         {
             double longitude, latitude;
@@ -76,6 +86,29 @@ namespace Notify.ViewModels
                     await App.Current.MainPage.DisplayAlert("Error", "Longitude and latitude must be numbers", "OK");
                 }
             }
+        }
+        
+        public string SearchText
+        {
+            get => m_SearchText;
+            set => SetProperty(ref m_SearchText, value);
+        }
+        public List<string> DropBoxOptions
+        {
+            get { return m_DropBoxSuggestions; }
+            set { m_DropBoxSuggestions = value; OnPropertyChanged(nameof(DropBoxOptions)); }
+        }
+        
+        public async void UpdateDropBoxOptions()
+        {
+            Debug.WriteLine($"Suggestions for: {m_SearchText}");
+            
+            DropBoxOptions = await GoogleHttpClient.GetAddressSuggestions(m_SearchText);
+        }
+
+        private async void onGetAddressSuggestionsButtonClicked()
+        {
+            UpdateDropBoxOptions();
         }
     }
 }

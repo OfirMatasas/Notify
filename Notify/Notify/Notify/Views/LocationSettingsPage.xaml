@@ -66,6 +66,33 @@
                     Text="{Binding Latitude}"
                     TextColor="Black"
                     Type="Filled" />
+                <materialDesignControls1:MaterialEntry
+                    BackgroundColor="White"
+                    BorderColor="Transparent"
+                    FontSize="16"
+                    MaxLength="16"
+                    Placeholder="Enter Address"
+                    ReturnType="Next"
+                    TabIndex="1"
+                    Text="{Binding SearchText}"
+                    TextColor="Black"
+                    Type="Filled" />
+                <materialDesignControls1:MaterialPicker 
+                    Placeholder="Suggestions"
+                    FontSize="16"
+                    Type="Filled"
+                    SelectedItem="{Binding Destination}">
+                    <materialDesignControls1:MaterialPicker.ItemsSource>
+                        <Binding Path="DropBoxOptions" />
+                    </materialDesignControls1:MaterialPicker.ItemsSource>
+                </materialDesignControls1:MaterialPicker>
+                <Button
+                    BackgroundColor="#393E46"
+                    Command="{Binding GetAddressSuggestionsCommand}"
+                    CornerRadius="30"
+                    Text="GET ADDRESS SUGGESTIONS"
+                    TextColor="#EEEEEE">
+                </Button>
                 <Button
                     BackgroundColor="#393E46"
                     Command="{Binding UpdateLocationCommand}"
