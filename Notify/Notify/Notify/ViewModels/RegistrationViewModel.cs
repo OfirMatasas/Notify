@@ -64,7 +64,7 @@ namespace Notify.ViewModels
             }
         }
 
-        private bool validateName()
+        private void validateName()
         {
             bool isValid = !string.IsNullOrEmpty(Name) && Regex.IsMatch(Name, @"^[a-zA-Z ]+$");
 
@@ -77,11 +77,9 @@ namespace Notify.ViewModels
                 NameBorderColor = Constants.INVALID_COLOR;
                 displayError("Please enter a valid name consisting only of letters.");
             }
-            
-            return isValid;
         }
 
-        private bool validatePassword()
+        private void validatePassword()
         {
             bool isValid = !string.IsNullOrEmpty(Password) && 
                            Regex.IsMatch(Password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$") &&
@@ -108,11 +106,9 @@ namespace Notify.ViewModels
                     displayError("Please enter a password containing at least 8 characters, with at least one uppercase letter, one lowercase letter, one number, and one special character.");
                 }
             }
-    
-            return isValid;
         }
         
-        private bool validateUserName()
+        private void validateUserName()
         {
             bool isValid = !string.IsNullOrEmpty(UserName) && Regex.IsMatch(UserName, @"^[a-zA-Z0-9]+$");
     
@@ -125,11 +121,9 @@ namespace Notify.ViewModels
                 UserNameBorderColor = Constants.INVALID_COLOR;
                 displayError("Please enter a valid username consisting only of letters and numbers.");
             }
-    
-            return isValid;
         }
         
-        private bool validateTelephone()
+        private void validateTelephone()
         {
             bool isValid = false;
 
@@ -150,8 +144,6 @@ namespace Notify.ViewModels
             }
 
             TelephoneBorderColor = isValid ? Constants.VALID_COLOR : Constants.INVALID_COLOR;
-
-            return isValid;
         }
         
         private void displayError(string message)
@@ -161,8 +153,6 @@ namespace Notify.ViewModels
 
         private async void onSignUpClicked()
         {
-            ErrorMessages.Clear();
-
             if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(Password) ||
                 string.IsNullOrEmpty(ConfirmPassword) || string.IsNullOrEmpty(Telephone))
             {
@@ -179,12 +169,13 @@ namespace Notify.ViewModels
                 string completeErrorMessage = string.Join(Environment.NewLine,
                     ErrorMessages.Select(errorMessage => $"- {errorMessage}"));
                 await Application.Current.MainPage.DisplayAlert("Invalid sign up", completeErrorMessage, "OK");
+                ErrorMessages.Clear();
                 return;
             }
 
             sendSMSVerificationCode();
         }
-        
+
         private async void sendSMSVerificationCode()
         {
             if (string.IsNullOrEmpty(VerificationCode))
