@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Notify.Helpers;
 using Xamarin.Forms;
@@ -49,6 +51,8 @@ namespace Notify.ViewModels
         public object ConfirmPasswordBorderColor { get; set; }
 
         public string VerificationCode { get; set; }
+
+        public List<string> ErrorMessages { get; set; } = new List<string>();
         
         public string Telephone
         {
@@ -152,28 +156,35 @@ namespace Notify.ViewModels
         
         private void displayError(string message)
         {
-            Application.Current.MainPage.DisplayAlert("Error", message, "OK");
+            ErrorMessages.Add(message);
         }
 
         private async void onSignUpClicked()
         {
-            if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(ConfirmPassword) || string.IsNullOrEmpty(Telephone))
+            ErrorMessages.Clear();
+
+            if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(Password) ||
+                string.IsNullOrEmpty(ConfirmPassword) || string.IsNullOrEmpty(Telephone))
             {
                 displayError("Please fill in all required fields.");
+            }
+
+            validateName();
+            validateUserName();
+            validatePassword();
+            validateTelephone();
+
+            if (ErrorMessages.Count > 0)
+            {
+                string completeErrorMessage = string.Join(Environment.NewLine,
+                    ErrorMessages.Select(errorMessage => $"- {errorMessage}"));
+                await Application.Current.MainPage.DisplayAlert("Invalid sign up", completeErrorMessage, "OK");
                 return;
             }
 
-            bool isNameValid = validateName();
-            bool isUserNameValid = validateUserName();
-            bool isPasswordValid = validatePassword();
-            bool isTelephoneValid = validateTelephone();
-
-            if (isNameValid && isUserNameValid && isPasswordValid && isTelephoneValid)
-            {
-                sendSMSVerificationCode();
-            }
+            sendSMSVerificationCode();
         }
-
+        
         private async void sendSMSVerificationCode()
         {
             if (string.IsNullOrEmpty(VerificationCode))
@@ -235,23 +246,8 @@ namespace Notify.ViewModels
             await Shell.Current.GoToAsync("///login");
         }
 
-        private string convertToIsraelPhoneNumber(string phoneNumber)
-        {
-            if (string.IsNullOrEmpty(phoneNumber))
-            {
-                return string.Empty;
-            }
-
-            string IsraelPhoneNumber = phoneNumber.Trim();
-
-            if (IsraelPhoneNumber.StartsWith("05") && IsraelPhoneNumber.Length == 10)
-            {
-                IsraelPhoneNumber = $"+972{IsraelPhoneNumber.Substring(1)}";
-            }
-
-            return IsraelPhoneNumber;
-        }
-
+        private string convertToIsraelPhoneNumber(string phoneNumber) => $"+972{phoneNumber.Substring(1)}";
+        
         private async void onBackClicked()
         {
             await Shell.Current.GoToAsync("///login");
