@@ -1,11 +1,12 @@
-using Xamarin.Forms;
 using System.Threading.Tasks;
 using Notify.HttpClient;
-using Notify.HttpClient;
+using Xamarin.Forms;
 using Xamarin.Essentials;
 using System.ComponentModel;
 using System.Diagnostics;
 using System;
+using System.Collections.Generic;
+using Android.Print;
 using Notify.Azure.HttpClient;
 using System.Collections.Generic;
 using Android.Print;
@@ -27,7 +28,6 @@ namespace Notify.ViewModels
         public Command UpdateLocationCommand { get; set; }
         public Command GetAddressSuggestionsCommand { get; set; }
         public Command GetGeographicCoordinatesCommand { get; set; }
-        
 
         public LocationSettingsPageViewModel()
         {
@@ -153,6 +153,29 @@ namespace Notify.ViewModels
             Debug.WriteLine($"Suggestions for: {m_SearchText}");
             
             DropBoxOptions = await GoogleHttpClient.GetAddressSuggestions(m_SearchText);
+        }
+        
+        public string SearchText
+        {
+            get => m_SearchText;
+            set => SetProperty(ref m_SearchText, value);
+        }
+        public List<string> DropBoxOptions
+        {
+            get { return m_DropBoxSuggestions; }
+            set { m_DropBoxSuggestions = value; OnPropertyChanged(nameof(DropBoxOptions)); }
+        }
+        
+        public async void UpdateDropBoxOptions()
+        {
+            Debug.WriteLine($"Suggestions for: {m_SearchText}");
+            
+            DropBoxOptions = await GoogleHttpClient.GetAddressSuggestions(m_SearchText);
+        }
+
+        private async void onGetAddressSuggestionsButtonClicked()
+        {
+            UpdateDropBoxOptions();
         }
     }
 }
