@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using Notify.Helpers;
 using Xamarin.Forms;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
@@ -46,6 +47,8 @@ namespace Notify.ViewModels
         public object PasswordBorderColor { get; set; }
         
         public object ConfirmPasswordBorderColor { get; set; }
+
+        public string VerificationCode { get; set; }
         
         public string Telephone
         {
@@ -167,73 +170,71 @@ namespace Notify.ViewModels
 
             if (isNameValid && isUserNameValid && isPasswordValid && isTelephoneValid)
             {
-                sendVerificationCode();
+                sendSMSVerificationCode();
             }
         }
 
-        private async void sendVerificationCode()
+        private async void sendSMSVerificationCode()
         {
-            bool isVerificationSuccessful = false;
-            string verificationCode = generateVerificationCode();
+            if (string.IsNullOrEmpty(VerificationCode))
+            {
+                VerificationCode = generateVerificationCode();
+            }
+
             string IsraelPhoneNumber = convertToIsraelPhoneNumber(Telephone);
             string accountSid = "AC69d9dfdd4925966544c7fe354872f852";
             string authToken = "74188da6cd7b6c9ebab0dba30e369ac9";
             string fromPhoneNumber = "+16812068707";
-
-            if (string.IsNullOrEmpty(accountSid) || string.IsNullOrEmpty(authToken) ||
-                string.IsNullOrEmpty(fromPhoneNumber))
-            {
-                displayError("Missing environment variable values. Please check Twilio configuration.");
-                return;
-            }
 
             TwilioClient.Init(accountSid, authToken);
 
             CreateMessageOptions messageOptions = new CreateMessageOptions(new PhoneNumber(IsraelPhoneNumber))
             {
                 From = new PhoneNumber(fromPhoneNumber),
-                Body = $"Your Notify verification code: {verificationCode}"
+                Body = $"Your Notify verification code: {VerificationCode}"
             };
-            
-            while (!isVerificationSuccessful)
+
+            try
             {
-                try
-                {
-                    MessageResource message = await MessageResource.CreateAsync(messageOptions);
+                MessageResource message = await MessageResource.CreateAsync(messageOptions);
 
-                    Debug.WriteLine($"SMS sent successfully to {message.To} with Message SID: {message.Sid}");
-                    Debug.WriteLine(message.Body);
+                Debug.WriteLine(
+                    $"SMS sent successfully to {message.To}.{Environment.NewLine}Message content: {message.Body}");
 
-                    string userEnteredCode = await Application.Current.MainPage.DisplayPromptAsync(
-                        "Verify Phone Number", $"Please enter the verification code sent to {Telephone}",
-                        maxLength: 6);
-
-                    if (userEnteredCode == verificationCode)
-                    {
-                        isVerificationSuccessful = true;
-                        await Application.Current.MainPage.DisplayAlert("Registration Success",
-                            "You have successfully registered to Notify.", "OK");
-                        await Shell.Current.GoToAsync("///login");
-                    }
-                    else
-                    {
-                        bool tryAgain = await Application.Current.MainPage.DisplayAlert("Verification Error",
-                            "The verification code you entered is invalid. Do you want to try again?", "Yes", "No");
-
-                        if (!tryAgain)
-                        {
-                            break;
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    displayError($"Failed to send verification code: {ex.Message}");
-                    break;
-                }
+                await verifyCode();
+            }
+            catch (Exception ex)
+            {
+                displayError($"Failed to send to: {Telephone} the verification code: {ex.Message}");
             }
         }
-        
+
+        private async Task verifyCode()
+        {
+            string userEnteredCode;
+            do
+            {
+                userEnteredCode = await Application.Current.MainPage.DisplayPromptAsync(
+                    "Verify Your Phone Number", $"Please enter the verification code sent to {Telephone}",
+                    maxLength: 6);
+
+                if (userEnteredCode != VerificationCode)
+                {
+                    bool tryAgain = await Application.Current.MainPage.DisplayAlert("Verification Error",
+                        "The verification code you entered is invalid. Do you want to try again?", "Yes", "No");
+
+                    if (!tryAgain)
+                    {
+                        return;
+                    }
+                }
+            } while (userEnteredCode != VerificationCode);
+
+            await Application.Current.MainPage.DisplayAlert("Registration Success",
+                "You have successfully registered to Notify.", "OK");
+            await Shell.Current.GoToAsync("///login");
+        }
+
         private string convertToIsraelPhoneNumber(string phoneNumber)
         {
             if (string.IsNullOrEmpty(phoneNumber))
