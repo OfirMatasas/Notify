@@ -1,32 +1,26 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<ContentPage 
-    xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="Notify.Views.NotificationSettingsPage"
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
     BindingContext="{Binding NotificationSettingsPage, Source={StaticResource ViewModelLocator}}"
-    NavigationPage.HasNavigationBar="False">
+    NavigationPage.HasNavigationBar="False"
+    x:Class="Notify.Views.NotificationSettingsPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
     <ContentPage.Content>
-        <Grid
-            RowDefinitions="Auto, Auto, Auto, *"
-            BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor}, Dark={StaticResource DarkPageBackgroundColor}}">
-            <StackLayout
-                Grid.Row="0"
-                Margin="40">
+        <Grid BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor}, Dark={StaticResource DarkPageBackgroundColor}}" RowDefinitions="Auto, Auto, Auto, *">
+            <StackLayout Grid.Row="0" Margin="40">
                 <Label
-                    Text="Notification Settings"
-                    Style="{StaticResource Body1FontSize_ExoBold}"
                     FontSize="Large"
-                    HorizontalTextAlignment="Center">
-                </Label>
+                    HorizontalTextAlignment="Center"
+                    Style="{StaticResource Body1FontSize_ExoBold}"
+                    Text="Notification Settings"
+                    TextColor="Black" />
             </StackLayout>
-            <StackLayout 
-                Margin="0,30,350,0">
+            <StackLayout Margin="0,30,350,0">
                 <ImageButton
-                    Source="backButton.png"
-                    BackgroundColor="Transparent"
                     Aspect="AspectFit"
-                    Command="{Binding backCommand}">
-                </ImageButton>
+                    BackgroundColor="Transparent"
+                    Command="{Binding backCommand}"
+                    Source="backButton.png" />
             </StackLayout>
         </Grid>
     </ContentPage.Content>

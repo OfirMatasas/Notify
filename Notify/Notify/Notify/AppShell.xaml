@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <Shell
     BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor},
                                       Dark={StaticResource DarkPageBackgroundColor}}"
@@ -7,8 +7,8 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:TabViews="clr-namespace:Notify.Views.TabViews;assembly=Notify"
     xmlns:Views="clr-namespace:Notify.Views;assembly=Notify"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:views="clr-namespace:Notify.Views.Views;assembly=Notify">
+    xmlns:views="clr-namespace:Notify.Views.Views;assembly=Notify"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
     <Shell.Resources>
         <ResourceDictionary>
             <Style TargetType="TabBar" x:Key="BaseStyle">
@@ -33,35 +33,35 @@
     <ShellItem Route="register">
         <ShellContent ContentTemplate="{DataTemplate Views:RegistrationPage}" />
     </ShellItem>
-    
+
     <ShellItem Route="create_notification">
         <ShellContent ContentTemplate="{DataTemplate Views:NotificationCreationPage}" />
     </ShellItem>
-    
+
     <ShellItem Route="notification_details">
         <ShellContent ContentTemplate="{DataTemplate views:NotificationDetailsPage}" />
     </ShellItem>
-    
+
     <ShellItem Route="settings">
         <ShellContent ContentTemplate="{DataTemplate Views:SettingsPage}" />
     </ShellItem>
-    
+
     <ShellItem Route="location_settings">
         <ShellContent ContentTemplate="{DataTemplate Views:LocationSettingsPage}" />
     </ShellItem>
-    
+
     <ShellItem Route="notification_settings">
         <ShellContent ContentTemplate="{DataTemplate Views:NotificationSettingsPage}" />
     </ShellItem>
-    
+
     <ShellItem Route="wifi_settings">
         <ShellContent ContentTemplate="{DataTemplate Views:WifiSettingsPage}" />
     </ShellItem>
-    
+
     <ShellItem Route="bluetooth_settings">
         <ShellContent ContentTemplate="{DataTemplate Views:BluetoothSettingsPage}" />
     </ShellItem>
-    
+
 
     <TabBar Route="main">
         <Tab

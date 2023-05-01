@@ -4,60 +4,115 @@
     Title="Notification Creation"
     x:Class="Notify.Views.NotificationsPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:views="clr-namespace:Notify.Views.Views;assembly=Notify"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
-    xmlns:views="clr-namespace:Notify.Views.Views;assembly=Notify">
-    
+    xmlns:xct="http://xamarin.com/schemas/2020/toolkit">
+
     <StackLayout>
-        <Label Text="Notifications" VerticalOptions="Start" HorizontalOptions="Center" FontAttributes="Bold" FontSize="25" Margin="10" />
-        
+        <Label
+            FontAttributes="Bold"
+            FontSize="25"
+            HorizontalOptions="Center"
+            Margin="10"
+            Text="Notifications"
+            TextColor="Black"
+            VerticalOptions="Start" />
+
         <Grid Column="3" ColumnDefinitions="auto, *, auto">
-            <Image Source="refresh_icon.png"
-                         Aspect="AspectFit"
-                         HeightRequest="50"
-                         Margin="10"
-                         Grid.Column="0"
-                         HorizontalOptions="Start">
+            <Image
+                Aspect="AspectFit"
+                Grid.Column="0"
+                HeightRequest="50"
+                HorizontalOptions="Start"
+                Margin="10"
+                Source="refresh_icon.png">
                 <Image.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding RefreshNotificationsCommand}" />
                 </Image.GestureRecognizers>
             </Image>
-            
-            <Image Source="add_icon.png"
-                         Aspect="AspectFit"
-                         HeightRequest="50"
-                         Margin="10"
-                         Grid.Column="2"
-                         HorizontalOptions="End">
+
+            <Image
+                Aspect="AspectFit"
+                Grid.Column="2"
+                HeightRequest="50"
+                HorizontalOptions="End"
+                Margin="10"
+                Source="add_icon.png">
                 <Image.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding CreateNotificationCommand}" />
                 </Image.GestureRecognizers>
             </Image>
         </Grid>
-            
+
         <ScrollView>
-            <CollectionView ItemsSource="{Binding Notifications}"
-                            SelectionMode="Single"
-                            SelectionChangedCommand="{Binding NotificationSelectedCommand}"
-                            SelectedItem="{Binding SelectedNotification}">
+            <CollectionView
+                ItemsSource="{Binding Notifications}"
+                SelectedItem="{Binding SelectedNotification}"
+                SelectionChangedCommand="{Binding NotificationSelectedCommand}"
+                SelectionMode="Single">
                 <CollectionView.Header>
                     <Grid ColumnDefinitions="*, *, *, *">
-                        <Label Grid.Column="0" Text="Name" HorizontalOptions="CenterAndExpand" FontSize="18" FontAttributes="Bold" />
-                        <Label Grid.Column="1" Text="Description" HorizontalOptions="CenterAndExpand" FontSize="18" FontAttributes="Bold" />
-                        <Label Grid.Column="2" Text="Status" HorizontalOptions="CenterAndExpand" FontSize="18" FontAttributes="Bold" />
-                        <Label Grid.Column="3" Text="Type" HorizontalOptions="CenterAndExpand" FontSize="18" FontAttributes="Bold" />
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="18"
+                            Grid.Column="0"
+                            HorizontalOptions="CenterAndExpand"
+                            Text="Name"
+                            TextColor="Black" />
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="18"
+                            Grid.Column="1"
+                            HorizontalOptions="CenterAndExpand"
+                            Text="Description"
+                            TextColor="Black" />
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="18"
+                            Grid.Column="2"
+                            HorizontalOptions="CenterAndExpand"
+                            Text="Status"
+                            TextColor="Black" />
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="18"
+                            Grid.Column="3"
+                            HorizontalOptions="CenterAndExpand"
+                            Text="Type"
+                            TextColor="Black" />
                     </Grid>
                 </CollectionView.Header>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Grid Column="3" 
-                              ColumnDefinitions="*, *, *, *"
-                              RowDefinitions="auto"
-                              HorizontalOptions="Center">
-                            <Label Grid.Column="0" Text="{Binding Name}" HorizontalOptions="Center" FontSize="15" />
-                            <Label Grid.Column="1" Text="{Binding Description}" HorizontalOptions="Center" FontSize="15" />
-                            <Label Grid.Column="2" Text="{Binding Status}" HorizontalOptions="Center" FontSize="15" />
-                            <Label Grid.Column="3" Text="{Binding Type}" HorizontalOptions="Center" FontSize="15" />
+                        <Grid
+                            Column="3"
+                            ColumnDefinitions="*, *, *, *"
+                            HorizontalOptions="Center"
+                            RowDefinitions="auto">
+                            <Label
+                                FontSize="15"
+                                Grid.Column="0"
+                                HorizontalOptions="Center"
+                                Text="{Binding Name}"
+                                TextColor="Black" />
+                            <Label
+                                FontSize="15"
+                                Grid.Column="1"
+                                HorizontalOptions="Center"
+                                Text="{Binding Description}"
+                                TextColor="Black" />
+                            <Label
+                                FontSize="15"
+                                Grid.Column="2"
+                                HorizontalOptions="Center"
+                                Text="{Binding Status}"
+                                TextColor="Black" />
+                            <Label
+                                FontSize="15"
+                                Grid.Column="3"
+                                HorizontalOptions="Center"
+                                Text="{Binding Type}"
+                                TextColor="Black" />
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
