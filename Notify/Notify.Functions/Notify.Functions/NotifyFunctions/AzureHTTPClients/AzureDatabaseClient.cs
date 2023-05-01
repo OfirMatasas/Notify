@@ -1,4 +1,8 @@
+using System;
+using System.Threading.Tasks;
+using Azure.Security.KeyVault.Secrets;
 using MongoDB.Driver;
+using Azure.Identity;
 using Notify.Functions.Core;
 
 namespace Notify.Functions.NotifyFunctions.AzureHTTPClients
@@ -11,7 +15,7 @@ namespace Notify.Functions.NotifyFunctions.AzureHTTPClients
         
         private AzureDatabaseClient()
         {
-            MongoClientSettings settings = MongoClientSettings.FromUrl(new MongoUrl(Constants.CONNECTION_STRING));
+            MongoClientSettings settings = MongoClientSettings.FromUrl(new MongoUrl(GetDatabaseConnectionString().Result));
             m_MongoClient = new MongoClient(settings);
         }
 
@@ -42,6 +46,13 @@ namespace Notify.Functions.NotifyFunctions.AzureHTTPClients
         public IMongoCollection<T> GetCollection<T>(string databaseName, string collectionName)
         {
             return GetDatabase(databaseName).GetCollection<T>(collectionName);
+        }
+        
+        public static async Task<string> GetDatabaseConnectionString()
+        {
+            SecretClient client = new SecretClient(new Uri("https://Notify-keys-vault .vault.azure.net/"), new DefaultAzureCredential());
+            KeyVaultSecret secret = await client.GetSecretAsync("MONGO-CONNECTION-STRING");
+            return secret.Value;
         }
     }
 }
