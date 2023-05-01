@@ -21,7 +21,8 @@ namespace Notify.Functions.NotifyFunctions.Database
         [FunctionName("CreateNotification")]
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "notification/{type}")] HttpRequest request, ILogger log, string type)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "notification/{type}")]
+            HttpRequest request, ILogger log, string type)
         {
             IMongoCollection<BsonDocument> collection;
             JToken json;
@@ -32,7 +33,8 @@ namespace Notify.Functions.NotifyFunctions.Database
             try
             {
                 getCollection(out collection);
-                log.LogInformation($"Got reference to {Constants.COLLECTION_DESTINATION} collection on {Constants.DATABASE_NOTIFY_MTA} database");
+                log.LogInformation(
+                    $"Got reference to {Constants.COLLECTION_DESTINATION} collection on {Constants.DATABASE_NOTIFY_MTA} database");
 
                 json = convertRequestBodyIntoJsonAsync(request).Result;
                 log.LogInformation($"Data:{Environment.NewLine}{json}");
@@ -42,35 +44,35 @@ namespace Notify.Functions.NotifyFunctions.Database
 
                 await collection.InsertManyAsync(documentsList);
                 log.LogInformation($"{documentsList.Count} documents inserted successfully");
-                
+
                 return new OkResult();
             }
             catch (Exception ex)
             {
                 log.LogError(ex.Message);
-                
+
                 return new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }
         }
-        
+
         private static void getCollection(out IMongoCollection<BsonDocument> collection)
         {
             IMongoDatabase database = AzureDatabaseClient.Instance.GetDatabase(Constants.DATABASE_NOTIFY_MTA);
-            collection = database.GetCollection<BsonDocument>(Constants.COLLECTION_NOTIFICATION);        
+            collection = database.GetCollection<BsonDocument>(Constants.COLLECTION_NOTIFICATION);
         }
 
         private static async Task<JToken> convertRequestBodyIntoJsonAsync(HttpRequest request)
         {
             string requestBody = await new StreamReader(request.Body).ReadToEndAsync();
-            
-            return JToken.Parse(requestBody);        
+
+            return JToken.Parse(requestBody);
         }
 
         private static void createDocumentForEachUser(JToken json, string type, ref List<BsonDocument> documentsList)
         {
             BsonDocument document;
             BsonElement extraElement;
-            
+
             setExtraElementBaseOnType(type, json, out extraElement);
 
             foreach (string user in json["users"]?.ToObject<List<string>>()!)
@@ -80,7 +82,7 @@ namespace Notify.Functions.NotifyFunctions.Database
                     { "creator", json["creator"].ToString() },
                     { "creation_timestamp", DateTimeOffset.Now.ToUnixTimeSeconds() },
                     { "status", "new" },
-                    { "info", json["info"].ToString() },
+                    { "description", json["description"].ToString() },
                     {
                         "notification", new BsonDocument
                         {

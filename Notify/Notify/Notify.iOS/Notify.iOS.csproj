@@ -207,4 +207,8 @@
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
     </AndroidResource>
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\Drawable\refresh_icon.png" />
+    <BundleResource Include="Resources\Drawable\add_icon.png" />
+  </ItemGroup>
 </Project>

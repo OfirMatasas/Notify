@@ -25,7 +25,7 @@
                     Source="backButton.png"
                     BackgroundColor="Transparent"
                     Aspect="AspectFit"
-                    Command="{Binding backCommand}">
+                    Command="{Binding BackCommand}">
                 </ImageButton>
             </StackLayout>
         </Grid>

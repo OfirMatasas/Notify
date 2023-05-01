@@ -4,16 +4,15 @@ namespace Notify.ViewModels
 {
     public class WifiSettingsPageViewModel
     {
-        public Command backCommand { get; set; }
+        public Command BackCommand { get; set; }
         
         public WifiSettingsPageViewModel()
         {
-            backCommand = new Command(onBackButtonClicked);
+            BackCommand = new Command(onBackButtonClicked);
         }
         
         private async void onBackButtonClicked()
         {
-            // await Shell.Current.Navigation.PopAsync();
             await Shell.Current.GoToAsync("///settings");
         }
     }

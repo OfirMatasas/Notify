@@ -9,6 +9,18 @@
     xmlns:views="clr-namespace:Notify.Views.Views;assembly=Notify">
     <StackLayout>
         
+        <Grid HorizontalOptions="Start" VerticalOptions="Start">
+            <Image
+                Aspect="AspectFit"
+                HeightRequest="100"
+                Source="back.png"
+                BackgroundColor="Black">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding BackCommand}" />
+                </Image.GestureRecognizers>
+            </Image>
+        </Grid>
+        
         <Grid Column="2"
               ColumnDefinitions="auto, *" 
               RowDefinitions="auto, auto">
@@ -19,8 +31,8 @@
         <Grid Column="2"
               ColumnDefinitions="auto, *" 
               RowDefinitions="auto, auto">
-            <Label Grid.Column="0" Text="Notification Info" TextColor="Black" VerticalOptions="Center" />
-            <Entry Grid.Column="1" Text="{Binding NotificationInfo}" />
+            <Label Grid.Column="0" Text="Notification Description" TextColor="Black" VerticalOptions="Center" />
+            <Entry Grid.Column="1" Text="{Binding NotificationDescription}" />
         </Grid>
         
         <Grid Column="2"

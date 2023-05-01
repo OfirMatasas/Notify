@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using Notify.Core;
 using Notify.HttpClient;
 using Xamarin.Forms;
 
@@ -11,53 +12,9 @@ namespace Notify.ViewModels
 {
     public class NotificationCreationViewModel : INotifyPropertyChanged
     {
-        public sealed class Friend : INotifyPropertyChanged
-        {
-            private string m_Name;
-            private bool m_IsSelected;
-
-            public string Name
-            {
-                get => m_Name;
-                set
-                {
-                    if (m_Name != value)
-                    {
-                        m_Name = value;
-                        OnPropertyChanged();
-                    }
-                }
-            }
-
-            public bool IsSelected
-            {
-                get => m_IsSelected;
-                set
-                {
-                    if (m_IsSelected != value)
-                    {
-                        m_IsSelected = value;
-                        OnPropertyChanged();
-                    }
-                }
-            }
-
-            public Friend(string name)
-            {
-                Name = name;
-                IsSelected = false;
-            }
-
-            public event PropertyChangedEventHandler PropertyChanged;
-
-            private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
     
+        public Command BackCommand { get; set; }
         public string NotificationName { get; set; }
     
         public List<string> NotificationTypes { get; set; } = new List<string> { "Location", "Time" };
@@ -86,11 +43,11 @@ namespace Notify.ViewModels
             set => m_SelectedLocationOption = value;
         }
         
-        private string m_NotificationInfo;
-        public string NotificationInfo
+        private string m_NotificationDescription;
+        public string NotificationDescription
         {
-            get => m_NotificationInfo;
-            set => m_NotificationInfo = value;
+            get => m_NotificationDescription;
+            set => m_NotificationDescription = value;
         }
     
         private static TimeSpan m_SelectedTimeOption = DateTime.Today.TimeOfDay;
@@ -119,6 +76,7 @@ namespace Notify.ViewModels
         public NotificationCreationViewModel()
         {
             CreateNotificationCommand = new Command(OnCreateNotification);
+            BackCommand = new Command(onBackClicked);
         }
 
         private async void OnCreateNotification()
@@ -134,7 +92,7 @@ namespace Notify.ViewModels
                 {
                     created = AzureHttpClient.Instance.CreateTimeNotification(
                         NotificationName,
-                        NotificationInfo,
+                        NotificationDescription,
                         SelectedNotificationType,
                         selectedDateTime,
                         selectedFriends);
@@ -143,7 +101,7 @@ namespace Notify.ViewModels
                 {
                     created = AzureHttpClient.Instance.CreateLocationNotification(
                         NotificationName,
-                        NotificationInfo,
+                        NotificationDescription,
                         SelectedNotificationType,
                         SelectedLocationOption,
                         selectedFriends);
@@ -206,6 +164,11 @@ namespace Notify.ViewModels
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        
+        private async void onBackClicked()
+        {
+            await Shell.Current.GoToAsync("///teams");
         }
     }
 }

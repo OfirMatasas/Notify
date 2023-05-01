@@ -58,6 +58,12 @@
     <Reference Include="Mono.Android">
       <HintPath>..\..\..\..\..\..\..\..\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\MonoAndroid\v13.0\Mono.Android.dll</HintPath>
     </Reference>
+    <Reference Include="Rg.Plugins.Popup">
+      <HintPath>..\..\..\..\..\..\.nuget\packages\rg.plugins.popup\2.1.0\lib\monoandroid10.0\Rg.Plugins.Popup.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.CommunityToolkit">
+      <HintPath>..\..\..\..\..\..\.nuget\packages\xamarin.communitytoolkit\2.0.5\lib\monoandroid10.0\Xamarin.CommunityToolkit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Views\RegistrationPage.xaml.cs">
@@ -68,9 +74,8 @@
       <DependentUpon>NotificationCreationPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Remove="ViewModels\PickerBehavior.cs" />
-    <Compile Update="Views\NotificationCreationPage.xaml.cs">
-      <DependentUpon>NotificationCreationPage.xaml</DependentUpon>
+    <Compile Update="Views\NotificationsPage.xaml.cs">
+      <DependentUpon>NotificationsPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
