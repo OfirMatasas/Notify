@@ -217,7 +217,8 @@ namespace Notify.ViewModels
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Failed to send to: {Telephone} the verification code: {ex.Message}");
+                Debug.WriteLine($"Failed to send to: {Telephone}.{Environment.NewLine}Error: {ex.Message}{Environment.NewLine}Please try again.");
+                displayError($"Failed to send to: {Telephone}.{Environment.NewLine}Error: {ex.Message}{Environment.NewLine}Please try again.");
             }
         }
 
