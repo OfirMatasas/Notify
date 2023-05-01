@@ -14,7 +14,8 @@ namespace Notify.HttpClient
     {
         // TODO:
         //      1. Set Constants
-        
+        //      2. Delete the statics and create m_HttpClient ad in Azure
+
         /* private static GoogleHttpClient m_Instance;
         private static readonly object r_LockInstanceCreation = new object();
         private static System.Net.Http.HttpClient m_HttpClient;
@@ -44,7 +45,7 @@ namespace Notify.HttpClient
                 return m_Instance;
             }
         }*/
-        
+
         private readonly System.Net.Http.HttpClient m_HttpClient;
         private static readonly string r_GoogleAPIkey = "AIzaSyCXUyen9sW3LhiELjOPJtUc0OqZlhLr-cg";
 
@@ -74,6 +75,7 @@ namespace Notify.HttpClient
             m_HttpClient.Timeout = TimeSpan.FromSeconds(30);
             return this;
         }
+
         public async Task<string> Execute()
         {
             var response = await m_HttpClient.GetAsync(m_HttpClient.BaseAddress);
@@ -81,23 +83,24 @@ namespace Notify.HttpClient
             var content = await response.Content.ReadAsStringAsync();
             return content;
         }
-        
-        public static async Task<List<String>> GetAddressSuggestions(string subAddress)  // TODO - delete 'static'?
+
+        public static async Task<List<String>> GetAddressSuggestions(string subAddress) // TODO - delete 'static'?
         {
-            var requestUrl = $"https://maps.googleapis.com/maps/api/place/autocomplete/json?input={subAddress}&types=address&key={r_GoogleAPIkey}";
-            var suggestions = new List<string>();
-            
+            string requestUrl =
+                $"https://maps.googleapis.com/maps/api/place/autocomplete/json?input={subAddress}&types=address&key={r_GoogleAPIkey}";
+            List<string> suggestions = new List<string>();
+
             try
             {
                 string stringContent = await GoogleHttpClient.Builder()
                     .Uri(requestUrl)
                     .Method(HttpMethod.Get)
                     .Execute();
-                var responseJson = JObject.Parse(stringContent);
-                var predictions = responseJson["predictions"];
-                foreach (var prediction in predictions)
+                JObject responseJson = JObject.Parse(stringContent);
+                JToken predictions = responseJson["predictions"];
+                foreach (JToken prediction in predictions)
                 {
-                    var address = prediction["description"].ToString();
+                    string address = prediction["description"].ToString();
                     suggestions.Add(address);
                     Debug.WriteLine(address);
                 }
@@ -106,80 +109,57 @@ namespace Notify.HttpClient
             {
                 Debug.WriteLine($"Error occured on GetAddressSuggestions: {Environment.NewLine}{ex.Message}");
             }
-            
+
             return suggestions;
-            
-            // string url = $"https://maps.googleapis.com/maps/api/place/autocomplete/json?input={input}&types=address&key={r_GoogleAPIkey}";
-            //
-            // try
-            // {
-            //     HttpResponseMessage response = await m_HttpClient.GetAsync(url);
-            //     string responseJson = await response.Content.ReadAsStringAsync();
-            //     response.EnsureSuccessStatusCode();
-            //     
-            //     JObject jsonObject = JObject.Parse(responseJson);
-            //     JArray predictions = (JArray)jsonObject["predictions"];
-            //
-            //     string[] addresses = new string[predictions.Count];
-            //
-            //     for (int i = 0; i < predictions.Count; i++)
-            //     {
-            //         addresses[i] = (string)predictions[i]["description"];
-            //     }
-            //     
-            //     return addresses;
-            // }
-            // catch (Exception ex)
-            // {
-            //     Debug.WriteLine($"Error occured on GetAddressSuggestions: {Environment.NewLine}{ex.Message}");
-            //     return null;
-            // }
         }
-        
-        
-        
-        public async Task<LatLng> GetLatLngFromAddress(string address)
+
+
+        public static async Task<LatLng> GetLatLngFromAddress(string address)
         {
-            string url = $"https://maps.googleapis.com/maps/api/geocode/json?address={WebUtility.UrlEncode(address)}&key={r_GoogleAPIkey}";
-            HttpResponseMessage response = await m_HttpClient.GetAsync(url);
-            response.EnsureSuccessStatusCode();
-            string responseBody = await response.Content.ReadAsStringAsync();
-            GeocodingResponse geocodingResponse = JsonConvert.DeserializeObject<GeocodingResponse>(responseBody);
-            if (geocodingResponse.Results.Count > 0)
+            string requestUrl =
+                $"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={r_GoogleAPIkey}";
+                // $"https://maps.googleapis.com/maps/api/geocode/json?address={WebUtility.UrlEncode(address)}&key={r_GoogleAPIkey}";
+            LatLng latLng = null;
+
+            try
             {
-                LatLng latLng = geocodingResponse.Results[0].Geometry.Location;
-                return latLng;
+                string stringContent = await GoogleHttpClient.Builder()
+                    .Uri(requestUrl)
+                    .Method(HttpMethod.Get)
+                    .Execute();
+                GeocodingResponse geocodingResponse = JsonConvert.DeserializeObject<GeocodingResponse>(stringContent);
+                if (geocodingResponse.Results.Count > 0)
+                {
+                    latLng = geocodingResponse.Results[0].Geometry.Location;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return null;
+                Debug.WriteLine($"Error occured on GetLatLngFromAddress: {Environment.NewLine}{ex.Message}");
             }
+
+            return latLng;
         }
-    }
-    
-    public class GeocodingResponse
-    {
-        [JsonProperty("results")]
-        public List<GeocodingResult> Results { get; set; }
-    }
+        
+        public class GeocodingResponse
+        {
+            [JsonProperty("results")] public List<GeocodingResult> Results { get; set; }
+        }
 
-    public class GeocodingResult
-    {
-        [JsonProperty("geometry")]
-        public GeocodingGeometry Geometry { get; set; }
-    }
+        public class GeocodingResult
+        {
+            [JsonProperty("geometry")] public GeocodingGeometry Geometry { get; set; }
+        }
 
-    public class GeocodingGeometry
-    {
-        [JsonProperty("location")]
-        public LatLng Location { get; set; }
-    }
+        public class GeocodingGeometry
+        {
+            [JsonProperty("location")] public LatLng Location { get; set; }
+        }
 
-    public class LatLng
-    {
-        [JsonProperty("lat")]
-        public double Lat { get; set; }
-        [JsonProperty("lng")]
-        public double Lng { get; set; }
+        public class LatLng
+        {
+            [JsonProperty("lat")] public double Lat { get; set; }
+            [JsonProperty("lng")] public double Lng { get; set; }
+        }
     }
 }

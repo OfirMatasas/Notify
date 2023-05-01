@@ -21,8 +21,11 @@ namespace Notify.ViewModels
         private List<string> m_DropBoxSuggestions;
         
         public Command BackCommand { get; set; }
+        private string m_SelectedItem;
+
         public Command UpdateLocationCommand { get; set; }
         public Command GetAddressSuggestionsCommand { get; set; }
+        public Command GetGeographicCoordinatesCommand { get; set; }
         
 
         public LocationSettingsPageViewModel()
@@ -30,6 +33,7 @@ namespace Notify.ViewModels
             BackCommand = new Command(onBackButtonClicked);
             UpdateLocationCommand = new Command(onUpdateHomeLocationButtonClicked);
             GetAddressSuggestionsCommand = new Command(onGetAddressSuggestionsButtonClicked);
+            GetGeographicCoordinatesCommand = new Command(onGetGeographicCoordinatesButtonClicked);
         }
         
         private async void onBackButtonClicked()
@@ -40,7 +44,12 @@ namespace Notify.ViewModels
         public string Destination
         {
             get => m_Destination;
-            set => SetProperty(ref m_Destination, value);
+            set
+            {
+                SetProperty(ref m_Destination, value); 
+                m_SelectedItem = value;
+                OnPropertyChanged(nameof(SelectedItem));
+            }
         }
         
         public string Longitude
@@ -53,6 +62,28 @@ namespace Notify.ViewModels
             get => m_Latitude;
             set => SetProperty(ref m_Latitude, value);
         }
+        public string SelectedItem
+        {
+            get { return m_SelectedItem; }
+            set
+            {
+                m_SelectedItem = value;
+                OnPropertyChanged(nameof(SelectedItem));
+            }
+        }
+        
+        public string SearchText
+        {
+            get => m_SearchText;
+            set => SetProperty(ref m_SearchText, value);
+        }
+        
+        public List<string> DropBoxOptions
+        {
+            get { return m_DropBoxSuggestions; }
+            set { m_DropBoxSuggestions = value; OnPropertyChanged(nameof(DropBoxOptions)); }
+        }
+        
         private async void onUpdateHomeLocationButtonClicked()
         {
             double longitude, latitude;
@@ -88,15 +119,30 @@ namespace Notify.ViewModels
             }
         }
         
-        public string SearchText
+        private async void onGetAddressSuggestionsButtonClicked()
         {
-            get => m_SearchText;
-            set => SetProperty(ref m_SearchText, value);
+            UpdateDropBoxOptions();
         }
-        public List<string> DropBoxOptions
+        
+        private async void onGetGeographicCoordinatesButtonClicked()
         {
-            get { return m_DropBoxSuggestions; }
-            set { m_DropBoxSuggestions = value; OnPropertyChanged(nameof(DropBoxOptions)); }
+            Debug.WriteLine($"Geographic Coordinates for: {SelectedItem}");
+            
+            if (string.IsNullOrEmpty(SelectedItem))
+            {
+                await App.Current.MainPage.DisplayAlert("Error", "Please choose address!", "OK");
+            }
+            else
+            {
+                GoogleHttpClient.LatLng latLng = await GoogleHttpClient.GetLatLngFromAddress(SelectedItem);   // TODO: change the place where we take the text from
+            
+                double Lng = latLng.Lat;
+                double Lat = latLng.Lng;
+                Debug.WriteLine($"Longitude: {Lng}    |     Latitude: {Lat}");
+                
+                Longitude = Lng.ToString();
+                Latitude = Lat.ToString();
+            }
         }
         
         public async void UpdateDropBoxOptions()
@@ -104,11 +150,6 @@ namespace Notify.ViewModels
             Debug.WriteLine($"Suggestions for: {m_SearchText}");
             
             DropBoxOptions = await GoogleHttpClient.GetAddressSuggestions(m_SearchText);
-        }
-
-        private async void onGetAddressSuggestionsButtonClicked()
-        {
-            UpdateDropBoxOptions();
         }
     }
 }

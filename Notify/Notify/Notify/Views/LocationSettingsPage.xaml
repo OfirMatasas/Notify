@@ -95,6 +95,13 @@
                 </Button>
                 <Button
                     BackgroundColor="#393E46"
+                    Command="{Binding GetGeographicCoordinatesCommand}"
+                    CornerRadius="30"
+                    Text="GET GEOGRAPHIC COORDINATES"
+                    TextColor="#EEEEEE">
+                </Button>
+                <Button
+                    BackgroundColor="#393E46"
                     Command="{Binding UpdateLocationCommand}"
                     CornerRadius="30"
                     Text="UPDATE LOCATION"
