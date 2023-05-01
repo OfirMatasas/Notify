@@ -1,51 +1,149 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Notify.Views.Views.NotificationDetailsPage">
-    
+<ContentPage
+    x:Class="Notify.Views.Views.NotificationDetailsPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
     <ContentPage.Content>
         <StackLayout>
             <Grid Column="1">
-                <Label Grid.Column="0" Text="Notification Details" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center" TextColor="Black"  />
-                <Image Grid.Column="0"
-                       Aspect="AspectFit"
-                       HeightRequest="50"
-                       HorizontalOptions="Start"
-                       Source="back.png"
-                       BackgroundColor="Black">
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="Large"
+                    Grid.Column="0"
+                    HorizontalTextAlignment="Center"
+                    Text="Notification Details"
+                    TextColor="Black" />
+                <Image
+                    Aspect="AspectFit"
+                    BackgroundColor="Black"
+                    Grid.Column="0"
+                    HeightRequest="50"
+                    HorizontalOptions="Start"
+                    Source="back.png">
                     <Image.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding BackCommand}" />
                     </Image.GestureRecognizers>
                 </Image>
             </Grid>
-            
-            <Grid Column="2" ColumnDefinitions="auto, auto" RowDefinitions="auto" >
-                <Label Grid.Row="0" Grid.Column="0" Text="Notification name:" FontSize="Medium" FontAttributes="Bold" TextColor="Black"></Label>
-                <Label Grid.Row="0" Grid.Column="1" Text="{Binding Name}" FontSize="Medium" />
-            
-                <Label Grid.Row="1" Grid.Column="0" Text="Description:" FontSize="Medium" FontAttributes="Bold" TextColor="Black"></Label>
-                <Label Grid.Row="1" Grid.Column="1" Text="{Binding Description}" FontSize="Medium" />
-            
-                <Label Grid.Row="2" Grid.Column="0" Text="Status:" FontSize="Medium" FontAttributes="Bold" TextColor="Black"/>
-                <Label Grid.Row="2" Grid.Column="1" Text="{Binding Status}" FontSize="Medium" />
-                
-                <Label Grid.Row="3" Grid.Column="0" Text="Creator:" FontSize="Medium" FontAttributes="Bold" TextColor="Black"/>
-                <Label Grid.Row="3" Grid.Column="1" Text="{Binding Creator}" FontSize="Medium" />
-                
-                <Label Grid.Row="4" Grid.Column="0" Text="Creation date:" FontSize="Medium" FontAttributes="Bold" TextColor="Black"/>
-                <Label Grid.Row="4" Grid.Column="1" Text="{Binding CreationDateTime}" FontSize="Medium" />
-                
-                <Label Grid.Row="5" Grid.Column="0" Text="Type:" FontSize="Medium" FontAttributes="Bold" TextColor="Black"/>
-                <Label Grid.Row="5" Grid.Column="1" Text="{Binding Type}" FontSize="Medium" />
-                
-                <Label Grid.Row="6" Grid.Column="0" Text="Type info:" FontSize="Medium" FontAttributes="Bold" TextColor="Black"/>
-                <Label Grid.Row="6" Grid.Column="1" Text="{Binding TypeInfo}" FontSize="Medium" />
-                
-                <Label Grid.Row="7" Grid.Column="0" Text="Target user:" FontSize="Medium" FontAttributes="Bold" TextColor="Black"/>
-                <Label Grid.Row="7" Grid.Column="1" Text="{Binding Target}" FontSize="Medium" />
+
+            <Grid
+                Column="2"
+                ColumnDefinitions="auto, auto"
+                RowDefinitions="auto">
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="Medium"
+                    Grid.Column="0"
+                    Grid.Row="0"
+                    Text="Notification name:"
+                    TextColor="Black" />
+                <Label
+                    FontSize="Medium"
+                    Grid.Column="1"
+                    Grid.Row="0"
+                    Text="{Binding Name}"
+                    TextColor="Black" />
+
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="Medium"
+                    Grid.Column="0"
+                    Grid.Row="1"
+                    Text="Description:"
+                    TextColor="Black" />
+                <Label
+                    FontSize="Medium"
+                    Grid.Column="1"
+                    Grid.Row="1"
+                    Text="{Binding Description}"
+                    TextColor="Black" />
+
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="Medium"
+                    Grid.Column="0"
+                    Grid.Row="2"
+                    Text="Status:"
+                    TextColor="Black" />
+                <Label
+                    FontSize="Medium"
+                    Grid.Column="1"
+                    Grid.Row="2"
+                    Text="{Binding Status}" />
+
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="Medium"
+                    Grid.Column="0"
+                    Grid.Row="3"
+                    Text="Creator:"
+                    TextColor="Black" />
+                <Label
+                    FontSize="Medium"
+                    Grid.Column="1"
+                    Grid.Row="3"
+                    Text="{Binding Creator}"
+                    TextColor="Black" />
+
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="Medium"
+                    Grid.Column="0"
+                    Grid.Row="4"
+                    Text="Creation date:"
+                    TextColor="Black" />
+                <Label
+                    FontSize="Medium"
+                    Grid.Column="1"
+                    Grid.Row="4"
+                    Text="{Binding CreationDateTime}"
+                    TextColor="Black" />
+
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="Medium"
+                    Grid.Column="0"
+                    Grid.Row="5"
+                    Text="Type:"
+                    TextColor="Black" />
+                <Label
+                    FontSize="Medium"
+                    Grid.Column="1"
+                    Grid.Row="5"
+                    Text="{Binding Type}"
+                    TextColor="Black" />
+
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="Medium"
+                    Grid.Column="0"
+                    Grid.Row="6"
+                    Text="Type info:"
+                    TextColor="Black" />
+                <Label
+                    FontSize="Medium"
+                    Grid.Column="1"
+                    Grid.Row="6"
+                    Text="{Binding TypeInfo}"
+                    TextColor="Black" />
+
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="Medium"
+                    Grid.Column="0"
+                    Grid.Row="7"
+                    Text="Target user:"
+                    TextColor="Black" />
+                <Label
+                    FontSize="Medium"
+                    Grid.Column="1"
+                    Grid.Row="7"
+                    Text="{Binding Target}"
+                    TextColor="Black" />
             </Grid>
-            
+
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
