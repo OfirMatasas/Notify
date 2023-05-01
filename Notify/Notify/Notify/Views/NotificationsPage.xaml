@@ -4,9 +4,7 @@
     Title="Notification Creation"
     x:Class="Notify.Views.NotificationsPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:views="clr-namespace:Notify.Views.Views;assembly=Notify"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:xct="http://xamarin.com/schemas/2020/toolkit">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <StackLayout>
         <Label
