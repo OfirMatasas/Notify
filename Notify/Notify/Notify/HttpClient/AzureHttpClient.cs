@@ -248,5 +248,34 @@ namespace Notify.HttpClient
             HttpResponseMessage response = await m_HttpClient.GetAsync(requestUri).ConfigureAwait(false);
             return response;
         }
+
+        public bool CheckIfCredentialsAreValid(string userName, string password)
+        {
+            bool validCredentials;
+            dynamic request = new JObject();
+            string json;
+            HttpResponseMessage response;
+
+            try
+            {
+                request.userName = userName;
+                request.password = password;
+                Debug.WriteLine($"request: {request}");
+
+                json = JsonConvert.SerializeObject(request);
+                response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_LOGIN, createJsonStringContent(json)).Result;
+                response.EnsureSuccessStatusCode();
+                Debug.WriteLine($"Successful status code from Azure Function from CheckIfCredentialsAreValid!");
+
+                validCredentials = true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error occured on CheckIfCredentialsAreValid: {ex.Message}");
+                validCredentials = false;
+            }
+
+            return validCredentials;
+        }
     }
 }
