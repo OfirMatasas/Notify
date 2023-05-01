@@ -66,43 +66,50 @@ namespace Notify.ViewModels
 
         private void validateName()
         {
-            bool isValid = !string.IsNullOrEmpty(Name) && Regex.IsMatch(Name, @"^[a-zA-Z ]+$");
-
-            if (isValid)
-            {
-                NameBorderColor = Constants.VALID_COLOR;
-            }
-            else
+            if (string.IsNullOrEmpty(Name))
             {
                 NameBorderColor = Constants.INVALID_COLOR;
-                displayError("Please enter a valid name consisting only of letters.");
-            }
-        }
-
-        private void validatePassword()
-        {
-            bool isValid = !string.IsNullOrEmpty(Password) && 
-                           Regex.IsMatch(Password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$") &&
-                           Password == ConfirmPassword;
-
-            if (isValid)
-            {
-                PasswordBorderColor = ConfirmPasswordBorderColor = Constants.VALID_COLOR;
+                displayError("Please fill in your name.");
             }
             else
             {
-                PasswordBorderColor = ConfirmPasswordBorderColor = Constants.INVALID_COLOR;
+                bool isValid = Regex.IsMatch(Name, @"^[a-zA-Z ]+$");
 
-                if (string.IsNullOrEmpty(Password))
+                if (isValid)
                 {
-                    displayError("Please enter a password.");
-                }
-                else if (Password != ConfirmPassword)
-                {
-                    displayError("Passwords do not match.");
+                    NameBorderColor = Constants.VALID_COLOR;
                 }
                 else
                 {
+                    NameBorderColor = Constants.INVALID_COLOR;
+                    displayError("Please enter a valid name consisting only of letters.");
+                }
+            }
+        }
+        
+        private void validatePassword()
+        {
+            if (string.IsNullOrEmpty(Password))
+            {
+                PasswordBorderColor = ConfirmPasswordBorderColor = Constants.INVALID_COLOR;
+                displayError("Please fill in your password.");
+            }
+            else if (Password != ConfirmPassword)
+            {
+                PasswordBorderColor = ConfirmPasswordBorderColor = Constants.INVALID_COLOR;
+                displayError("Passwords do not match.");
+            }
+            else
+            {
+                bool isValid = Regex.IsMatch(Password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$");
+
+                if (isValid)
+                {
+                    PasswordBorderColor = ConfirmPasswordBorderColor = Constants.VALID_COLOR;
+                }
+                else
+                {
+                    PasswordBorderColor = ConfirmPasswordBorderColor = Constants.INVALID_COLOR;
                     displayError("Please enter a password containing at least 8 characters, with at least one uppercase letter, one lowercase letter, one number, and one special character.");
                 }
             }
@@ -110,40 +117,48 @@ namespace Notify.ViewModels
         
         private void validateUserName()
         {
-            bool isValid = !string.IsNullOrEmpty(UserName) && Regex.IsMatch(UserName, @"^[a-zA-Z0-9]+$");
-    
-            if (isValid)
+            if (string.IsNullOrEmpty(UserName))
             {
-                UserNameBorderColor = Constants.VALID_COLOR;
+                UserNameBorderColor = Constants.INVALID_COLOR;
+                displayError("Please fill in your username.");
             }
             else
             {
-                UserNameBorderColor = Constants.INVALID_COLOR;
-                displayError("Please enter a valid username consisting only of letters and numbers.");
+                bool isValid = Regex.IsMatch(UserName, @"^[a-zA-Z0-9]+$");
+
+                if (isValid)
+                {
+                    UserNameBorderColor = Constants.VALID_COLOR;
+                }
+                else
+                {
+                    UserNameBorderColor = Constants.INVALID_COLOR;
+                    displayError("Please enter a valid username consisting only of letters and numbers.");
+                }
             }
         }
         
         private void validateTelephone()
         {
-            bool isValid = false;
-
-            if (!string.IsNullOrEmpty(Telephone))
+            if (string.IsNullOrEmpty(Telephone))
             {
-                if (Regex.IsMatch(Telephone, @"^05\d{8}$"))
-                {
-                    isValid = true;
-                }
-                else
-                {
-                    displayError("Please enter a valid 10-digit telephone number starting with '05'.");
-                }
+                TelephoneBorderColor = Constants.INVALID_COLOR;
+                displayError("Please fill in your telephone number.");
             }
             else
             {
-                displayError("Please enter a telephone number.");
-            }
+                bool isValid = Regex.IsMatch(Telephone, @"^05\d{8}$");
 
-            TelephoneBorderColor = isValid ? Constants.VALID_COLOR : Constants.INVALID_COLOR;
+                if (isValid)
+                {
+                    TelephoneBorderColor = Constants.VALID_COLOR;
+                }
+                else
+                {
+                    TelephoneBorderColor = Constants.INVALID_COLOR;
+                    displayError("Please enter a valid 10-digit telephone number starting with '05'.");
+                }
+            }
         }
         
         private void displayError(string message)
@@ -153,11 +168,7 @@ namespace Notify.ViewModels
 
         private async void onSignUpClicked()
         {
-            if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(Password) ||
-                string.IsNullOrEmpty(ConfirmPassword) || string.IsNullOrEmpty(Telephone))
-            {
-                displayError("Please fill in all required fields.");
-            }
+            ErrorMessages.Clear();
 
             validateName();
             validateUserName();
@@ -169,7 +180,6 @@ namespace Notify.ViewModels
                 string completeErrorMessage = string.Join(Environment.NewLine,
                     ErrorMessages.Select(errorMessage => $"- {errorMessage}"));
                 await Application.Current.MainPage.DisplayAlert("Invalid sign up", completeErrorMessage, "OK");
-                ErrorMessages.Clear();
                 return;
             }
 
