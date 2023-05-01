@@ -187,6 +187,9 @@
     <AndroidAsset Include="Assets\AboutAssets.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\..\..\..\..\..\Desktop\LinProfilePhoto.png">
+      <Link>Resources\drawable\LinProfilePhoto.png</Link>
+    </Content>
     <Content Include="AboutResources.txt" />
     <Content Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
