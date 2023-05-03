@@ -2,9 +2,8 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Notify.Helpers;
+using Notify.HttpClient;
 using Notify.Services.Location;
-using Plugin.Geolocator;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -49,6 +48,7 @@ namespace Notify.ViewModels
         {
             LogInCommand = new Command(onLoginClicked);
             SignUpCommand = new Command(onSignUpClicked);
+            
             initialize();
         }
 
@@ -56,15 +56,7 @@ namespace Notify.ViewModels
         {
             locationService = new LocationService();
 
-            VersionTracking.Track();
-            if (VersionTracking.IsFirstLaunchEver)
-            {
-                await Shell.Current.GoToAsync("///login");
-            }
-            else
-            {
-                await Shell.Current.GoToAsync("///login");
-            }
+            await Shell.Current.GoToAsync("///login");
 
             locationService.SubscribeToLocationMessaging();
         }
@@ -109,7 +101,7 @@ namespace Notify.ViewModels
 
         private bool areCredentialsValid()
         {
-            return UserName.Equals(Constants.USERNAME) && Password.Equals(Constants.PASSWORD);
+            return AzureHttpClient.Instance.CheckIfCredentialsAreValid(UserName, Password);
         }
 
         private async void onSignUpClicked()
