@@ -6,12 +6,72 @@
     x:Class="Notify.Views.FriendsPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
-    <ContentPage.Content>
-        <StackLayout>
+    
+    <StackLayout>
             <Label
-                HorizontalOptions="CenterAndExpand"
-                Text="Hello, world!"
-                VerticalOptions="CenterAndExpand" />
-        </StackLayout>
-    </ContentPage.Content>
+                FontAttributes="Bold"
+                FontSize="25"
+                HorizontalOptions="Center"
+                Margin="10"
+                Text="Friends"
+                TextColor="Black"
+                VerticalOptions="Start" />
+
+            <Grid Column="3" ColumnDefinitions="auto, *, auto">
+                <Image
+                    Aspect="AspectFit"
+                    Grid.Column="0"
+                    HeightRequest="50"
+                    HorizontalOptions="Start"
+                    Margin="10"
+                    Source="refresh_icon.png">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding RefreshFriendsCommand}" />
+                    </Image.GestureRecognizers>
+                </Image>
+
+                <Image
+                    Aspect="AspectFit"
+                    Grid.Column="2"
+                    HeightRequest="50"
+                    HorizontalOptions="End"
+                    Margin="10"
+                    Source="add_icon.png">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ShowFriendRequestsCommand}" />
+                    </Image.GestureRecognizers>
+                </Image>
+            </Grid>
+            
+  <ScrollView>
+            <CollectionView
+                ItemsSource="{Binding Friends}"
+                SelectedItem="{Binding SelectedFriend}"
+                SelectionChangedCommand="{Binding SelectedFriendCommand}"
+                SelectionMode="Single">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid
+                            Column="3"
+                            ColumnDefinitions="*, *, *, *"
+                            HorizontalOptions="Center"
+                            RowDefinitions="auto">
+                            <Label
+                                FontSize="15"
+                                Grid.Column="0"
+                                HorizontalOptions="Center"
+                                Text="{Binding Image}"
+                                TextColor="Black" />
+                            <Label
+                                FontSize="15"
+                                Grid.Column="1"
+                                HorizontalOptions="Center"
+                                Text="{Binding Name}"
+                                TextColor="Black" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </ScrollView>
+    </StackLayout>
 </ContentPage>
