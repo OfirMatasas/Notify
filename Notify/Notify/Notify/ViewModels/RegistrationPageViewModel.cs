@@ -11,14 +11,12 @@ using System.Threading.Tasks;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
-using Xamarin.Essentials;
 
 namespace Notify.ViewModels
 {
     public sealed class RegistrationPageViewModel : INotifyPropertyChanged
     {
         private string m_Telephone;
-        private bool m_IsFormValid;
 
         public RegistrationPageViewModel()
         {
@@ -52,7 +50,7 @@ namespace Notify.ViewModels
 
         public string VerificationCode { get; set; }
 
-        public List<string> ErrorMessages { get; set; } = new List<string>();
+        public List<string> ErrorMessages { get; } = new List<string>();
         
         public string Telephone
         {
@@ -183,10 +181,10 @@ namespace Notify.ViewModels
                 return;
             }
 
-            sendSMSVerificationCode();
+            await sendSMSVerificationCode();
         }
 
-        private async void sendSMSVerificationCode()
+        private async Task sendSMSVerificationCode()
         {
             if (string.IsNullOrEmpty(VerificationCode))
             {
@@ -194,10 +192,11 @@ namespace Notify.ViewModels
             }
 
             string IsraelPhoneNumber = convertToIsraelPhoneNumber(Telephone);
-            string accountSid = "AC69d9dfdd4925966544c7fe354872f852";
-            string authToken = "74188da6cd7b6c9ebab0dba30e369ac9";
-            string fromPhoneNumber = "+16812068707";
 
+            var accountSid = "AC69d9dfdd4925966544c7fe354872f852";
+            var authToken = "74188da6cd7b6c9ebab0dba30e369ac9";
+            var fromPhoneNumber = "+16812068707";
+            
             TwilioClient.Init(accountSid, authToken);
 
             CreateMessageOptions messageOptions = new CreateMessageOptions(new PhoneNumber(IsraelPhoneNumber))
@@ -217,11 +216,11 @@ namespace Notify.ViewModels
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Failed to send to: {Telephone}.{Environment.NewLine}Error: {ex.Message}{Environment.NewLine}Please try again.");
-                displayError($"Failed to send to: {Telephone}.{Environment.NewLine}Error: {ex.Message}{Environment.NewLine}Please try again.");
+                Debug.WriteLine($"Failed to send SMS message. {ex.Message}");
+                displayError($"Failed to send SMS message. {ex.Message}");
             }
         }
-
+        
         private async Task verifyCode()
         {
             string userEnteredCode;

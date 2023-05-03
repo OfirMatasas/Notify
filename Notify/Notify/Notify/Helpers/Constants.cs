@@ -85,6 +85,12 @@ namespace Notify.Helpers
 
         #endregion
 
+        #region Vault
+
+        public static readonly string AZURE_KEY_VAULT = "https://notify-keys-vault.vault.azure.net/";
+        
+        #endregion
+
         #region Values
 
         public static readonly int DESTINATION_MAXMIMUM_DISTANCE = 50;

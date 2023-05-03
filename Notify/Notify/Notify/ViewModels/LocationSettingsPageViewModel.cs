@@ -1,7 +1,7 @@
-﻿using Notify.HttpClient;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 using System.Diagnostics;
 using System;
+using Notify.Azure.HttpClient;
 
 namespace Notify.ViewModels
 {

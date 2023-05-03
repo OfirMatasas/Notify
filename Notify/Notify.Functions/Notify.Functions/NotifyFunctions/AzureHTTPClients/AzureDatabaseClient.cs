@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Azure.Security.KeyVault.Secrets;
 using MongoDB.Driver;
@@ -15,7 +16,7 @@ namespace Notify.Functions.NotifyFunctions.AzureHTTPClients
         
         private AzureDatabaseClient()
         {
-            MongoClientSettings settings = MongoClientSettings.FromUrl(new MongoUrl(GetDatabaseConnectionString().Result));
+            MongoClientSettings settings = MongoClientSettings.FromUrl(new MongoUrl(getDatabaseConnectionString().Result));
             m_MongoClient = new MongoClient(settings);
         }
 
@@ -47,11 +48,12 @@ namespace Notify.Functions.NotifyFunctions.AzureHTTPClients
         {
             return GetDatabase(databaseName).GetCollection<T>(collectionName);
         }
-        
-        public static async Task<string> GetDatabaseConnectionString()
+
+        private async Task<string> getDatabaseConnectionString()
         {
-            SecretClient client = new SecretClient(new Uri("https://Notify-keys-vault .vault.azure.net/"), new DefaultAzureCredential());
-            KeyVaultSecret secret = await client.GetSecretAsync("MONGO-CONNECTION-STRING");
+            SecretClient client = new SecretClient(new Uri(Constants.AZURE_KEY_VAULT), new DefaultAzureCredential());
+            KeyVaultSecret secret = await client.GetSecretAsync("TWILIO-ACCOUNT-SID");
+            Console.WriteLine(secret.Value);
             return secret.Value;
         }
     }

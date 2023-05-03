@@ -6,10 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Notify.Helpers;
 using Notify.Core;
+using Notify.Helpers;
 
-namespace Notify.HttpClient
+namespace Notify.Azure.HttpClient
 {
     public class AzureHttpClient
     {
