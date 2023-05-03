@@ -62,7 +62,6 @@
         <ShellContent ContentTemplate="{DataTemplate Views:BluetoothSettingsPage}" />
     </ShellItem>
 
-
     <TabBar Route="main">
         <Tab
             Icon="profile.png"
@@ -74,12 +73,12 @@
             Icon="friends.png"
             Route="schedule"
             Title="Schedule">
-            <ShellContent ContentTemplate="{DataTemplate TabViews:ScheduleView}" />
+            <ShellContent ContentTemplate="{DataTemplate Views:FriendsPage}" />
         </Tab>
         <Tab
             Icon="groups.png"
             Route="drivers"
-            Title="Drivers">
+            Title="Friends">
             <ShellContent ContentTemplate="{DataTemplate TabViews:DriversView}" />
         </Tab>
         <Tab

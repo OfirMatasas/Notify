@@ -4,6 +4,7 @@ using Notify.Services.Ergast;
 using Notify.Services.Information;
 using Notify.ViewModels.Popups;
 using Notify.ViewModels.TabViews;
+using Notify.Views;
 
 namespace Notify.ViewModels
 {
@@ -30,6 +31,7 @@ namespace Notify.ViewModels
         public BluetoothSettingsPageViewModel BluetoothSettingsPage => new BluetoothSettingsPageViewModel();
         public NotificationCreationViewModel NotificationCreationPage => new NotificationCreationViewModel();
         public NotificationsPageViewModel NotificationPage => new NotificationsPageViewModel();
+        public FriendsPageViewModel FriendsPage => new FriendsPageViewModel();
 
         public HomeViewModel HomeView => new HomeViewModel(ergastService.Value);
         public ScheduleViewModel ScheduleView => new ScheduleViewModel(ergastService.Value);
