@@ -81,6 +81,39 @@ namespace Notify.Azure.HttpClient
             return isSuccess;
         }
         
+        public bool SendSMSVerificationCode(string telephoneNumber, string verificationCode)
+        {
+            dynamic data = new JObject();
+            string json;
+            HttpResponseMessage response;
+            bool isSuccess;
+
+            try
+            {
+                data.telephone = telephoneNumber;
+                data.verificationCode = verificationCode;
+                
+                json = JsonConvert.SerializeObject(data);
+                Debug.WriteLine($"request:{Environment.NewLine}{data}");
+
+                response = postAsync(
+                    requestUri: Constants.AZURE_FUNCTIONS_PATTERN_SEND_SMS,
+                    content: createJsonStringContent(json)
+                ).Result;
+
+                response.EnsureSuccessStatusCode();
+                Debug.WriteLine($"Successful status code from Azure Function from sendSMSVerificationCode, telephone: {telephoneNumber}, verificationCode: {verificationCode}");
+                isSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error occured on sendSMSVerificationCode: {Environment.NewLine}{ex.Message}");
+                isSuccess = false;
+            }
+
+            return isSuccess;
+        }
+        
         public bool CheckIfArrivedDestination(Location location)
         {
             dynamic request = new JObject();

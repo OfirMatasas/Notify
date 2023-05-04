@@ -16,7 +16,7 @@ namespace Notify.Functions.NotifyFunctions.AzureHTTPClients
         
         private AzureDatabaseClient()
         {
-            MongoClientSettings settings = MongoClientSettings.FromUrl(new MongoUrl(getDatabaseConnectionString().Result));
+            MongoClientSettings settings = MongoClientSettings.FromUrl(new MongoUrl(AzureVault.AzureVault.GetSecretFromVault("DATABASE_CONNECTION_STRING").Result));
             m_MongoClient = new MongoClient(settings);
         }
 
@@ -47,14 +47,6 @@ namespace Notify.Functions.NotifyFunctions.AzureHTTPClients
         public IMongoCollection<T> GetCollection<T>(string databaseName, string collectionName)
         {
             return GetDatabase(databaseName).GetCollection<T>(collectionName);
-        }
-
-        private async Task<string> getDatabaseConnectionString()
-        {
-            SecretClient client = new SecretClient(new Uri(Constants.AZURE_KEY_VAULT), new DefaultAzureCredential());
-            KeyVaultSecret secret = await client.GetSecretAsync("TWILIO-ACCOUNT-SID");
-            Console.WriteLine(secret.Value);
-            return secret.Value;
         }
     }
 }

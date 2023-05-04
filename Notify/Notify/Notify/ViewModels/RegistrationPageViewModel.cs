@@ -8,6 +8,9 @@ using Notify.Helpers;
 using Xamarin.Forms;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
+using Notify.Azure.HttpClient;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
@@ -166,7 +169,8 @@ namespace Notify.ViewModels
 
         private async void onSignUpClicked()
         {
-            ErrorMessages.Clear();
+            string IsraeliPhoneNumber;
+            bool successfulSMSSend;
 
             validateName();
             validateUserName();
@@ -178,57 +182,39 @@ namespace Notify.ViewModels
                 string completeErrorMessage = string.Join(Environment.NewLine,
                     ErrorMessages.Select(errorMessage => $"- {errorMessage}"));
                 await Application.Current.MainPage.DisplayAlert("Invalid sign up", completeErrorMessage, "OK");
-                return;
             }
-
-            await sendSMSVerificationCode();
-        }
-
-        private async Task sendSMSVerificationCode()
-        {
-            if (string.IsNullOrEmpty(VerificationCode))
+            else
             {
-                VerificationCode = generateVerificationCode();
-            }
+                IsraeliPhoneNumber = convertToIsraelPhoneNumber(Telephone);
 
-            string IsraelPhoneNumber = convertToIsraelPhoneNumber(Telephone);
+                if (string.IsNullOrEmpty(VerificationCode))
+                {
+                    VerificationCode = generateVerificationCode();
+                }
 
-            var accountSid = "AC69d9dfdd4925966544c7fe354872f852";
-            var authToken = "74188da6cd7b6c9ebab0dba30e369ac9";
-            var fromPhoneNumber = "+16812068707";
-            
-            TwilioClient.Init(accountSid, authToken);
-
-            CreateMessageOptions messageOptions = new CreateMessageOptions(new PhoneNumber(IsraelPhoneNumber))
-            {
-                From = new PhoneNumber(fromPhoneNumber),
-                Body = $"Your Notify verification code: {VerificationCode}"
-            };
-
-            try
-            {
-                MessageResource message = await MessageResource.CreateAsync(messageOptions);
-
-                Debug.WriteLine(
-                    $"SMS sent successfully to {message.To}.{Environment.NewLine}Message content: {message.Body}");
-
-                await verifyCode();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Failed to send SMS message. {ex.Message}");
-                displayError($"Failed to send SMS message. {ex.Message}");
+                successfulSMSSend =
+                    AzureHttpClient.Instance.SendSMSVerificationCode(IsraeliPhoneNumber, VerificationCode);
+                if (successfulSMSSend)
+                {
+                    await validateVerificationCodeWithUser();
+                }
+                else
+                {
+                    Debug.WriteLine("Failed to send SMS message.");
+                    displayError($"Failed to send SMS message.");
+                }
             }
         }
-        
-        private async Task verifyCode()
+
+        private async Task validateVerificationCodeWithUser()
         {
             string userEnteredCode;
+            
             do
             {
                 userEnteredCode = await Application.Current.MainPage.DisplayPromptAsync(
                     "Verify Your Phone Number", $"Please enter the verification code sent to {Telephone}",
-                    maxLength: 6);
+                    maxLength: Constants.VERIFICATION_CODE_MAX_LENGTH);
 
                 if (userEnteredCode != VerificationCode)
                 {
