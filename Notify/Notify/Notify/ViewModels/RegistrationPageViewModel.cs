@@ -8,17 +8,18 @@ using Notify.Helpers;
 using Xamarin.Forms;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
+using Notify.Azure.HttpClient;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
-using Xamarin.Essentials;
 
 namespace Notify.ViewModels
 {
     public sealed class RegistrationPageViewModel : INotifyPropertyChanged
     {
         private string m_Telephone;
-        private bool m_IsFormValid;
 
         public RegistrationPageViewModel()
         {
@@ -52,7 +53,7 @@ namespace Notify.ViewModels
 
         public string VerificationCode { get; set; }
 
-        public List<string> ErrorMessages { get; set; } = new List<string>();
+        public List<string> ErrorMessages { get; } = new List<string>();
         
         public string Telephone
         {
@@ -168,8 +169,11 @@ namespace Notify.ViewModels
 
         private async void onSignUpClicked()
         {
+            string IsraeliPhoneNumber;
+            bool successfulSMSSent;
+            
             ErrorMessages.Clear();
-
+            
             validateName();
             validateUserName();
             validatePassword();
@@ -180,56 +184,40 @@ namespace Notify.ViewModels
                 string completeErrorMessage = string.Join(Environment.NewLine,
                     ErrorMessages.Select(errorMessage => $"- {errorMessage}"));
                 await Application.Current.MainPage.DisplayAlert("Invalid sign up", completeErrorMessage, "OK");
-                return;
             }
-
-            sendSMSVerificationCode();
-        }
-
-        private async void sendSMSVerificationCode()
-        {
-            if (string.IsNullOrEmpty(VerificationCode))
+            else
             {
-                VerificationCode = generateVerificationCode();
-            }
+                IsraeliPhoneNumber = convertToIsraelPhoneNumber(Telephone);
 
-            string IsraelPhoneNumber = convertToIsraelPhoneNumber(Telephone);
-            string accountSid = "AC69d9dfdd4925966544c7fe354872f852";
-            string authToken = "74188da6cd7b6c9ebab0dba30e369ac9";
-            string fromPhoneNumber = "+16812068707";
+                if (string.IsNullOrEmpty(VerificationCode))
+                {
+                    VerificationCode = generateVerificationCode();
+                }
 
-            TwilioClient.Init(accountSid, authToken);
-
-            CreateMessageOptions messageOptions = new CreateMessageOptions(new PhoneNumber(IsraelPhoneNumber))
-            {
-                From = new PhoneNumber(fromPhoneNumber),
-                Body = $"Your Notify verification code: {VerificationCode}"
-            };
-
-            try
-            {
-                MessageResource message = await MessageResource.CreateAsync(messageOptions);
-
-                Debug.WriteLine(
-                    $"SMS sent successfully to {message.To}.{Environment.NewLine}Message content: {message.Body}");
-
-                await verifyCode();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Failed to send to: {Telephone}.{Environment.NewLine}Error: {ex.Message}{Environment.NewLine}Please try again.");
-                displayError($"Failed to send to: {Telephone}.{Environment.NewLine}Error: {ex.Message}{Environment.NewLine}Please try again.");
+                successfulSMSSent =
+                    AzureHttpClient.Instance.SendSMSVerificationCode(IsraeliPhoneNumber, VerificationCode);
+                
+                if (successfulSMSSent)
+                {
+                    await validateVerificationCodeWithUser();
+                }
+                else
+                {
+                    Debug.WriteLine("Failed to send SMS message.");
+                    displayError($"Failed to send SMS message.");
+                }
             }
         }
 
-        private async Task verifyCode()
+        private async Task validateVerificationCodeWithUser()
         {
             string userEnteredCode;
+            
             do
             {
                 userEnteredCode = await Application.Current.MainPage.DisplayPromptAsync(
                     "Verify Your Phone Number", $"Please enter the verification code sent to {Telephone}",
-                    maxLength: 6);
+                    maxLength: Constants.VERIFICATION_CODE_MAX_LENGTH);
 
                 if (userEnteredCode != VerificationCode)
                 {
@@ -245,6 +233,8 @@ namespace Notify.ViewModels
 
             await Application.Current.MainPage.DisplayAlert("Registration Success",
                 "You have successfully registered to Notify.", "OK");
+            Debug.WriteLine($"User registered successfully.{Environment.NewLine}Name: {Name}, User Name: {UserName}, Telephone: {Telephone}, Password: {Password}");
+            
             await Shell.Current.GoToAsync("///login");
         }
 

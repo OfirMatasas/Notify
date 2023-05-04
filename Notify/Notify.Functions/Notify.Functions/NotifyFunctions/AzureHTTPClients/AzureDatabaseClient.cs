@@ -1,4 +1,9 @@
+using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using Azure.Security.KeyVault.Secrets;
 using MongoDB.Driver;
+using Azure.Identity;
 using Notify.Functions.Core;
 
 namespace Notify.Functions.NotifyFunctions.AzureHTTPClients
@@ -11,7 +16,7 @@ namespace Notify.Functions.NotifyFunctions.AzureHTTPClients
         
         private AzureDatabaseClient()
         {
-            MongoClientSettings settings = MongoClientSettings.FromUrl(new MongoUrl(Constants.CONNECTION_STRING));
+            MongoClientSettings settings = MongoClientSettings.FromUrl(new MongoUrl(AzureVault.AzureVault.GetSecretFromVault(Constants.DATABASE_CONNECTION_STRING).Result));
             m_MongoClient = new MongoClient(settings);
         }
 

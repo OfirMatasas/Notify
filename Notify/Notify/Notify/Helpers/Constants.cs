@@ -85,11 +85,20 @@ namespace Notify.Helpers
 
         #endregion
 
+        #region Vault
+
+        public static readonly string AZURE_KEY_VAULT = "https://notify-keys-vault.vault.azure.net/";
+        public static readonly string AZURE_FUNCTIONS_PATTERN_SEND_SMS = "SendSMS";
+        
+        #endregion
+        
         #region Values
 
         public static readonly int DESTINATION_MAXMIMUM_DISTANCE = 50;
         public static readonly int DISTANCE_UPDATE_THRESHOLD = 30;
         public static readonly int METERS_IN_KM = 1000;
+        public static readonly int VERIFICATION_CODE_MAX_LENGTH = 6;
+
         
         #endregion
 
