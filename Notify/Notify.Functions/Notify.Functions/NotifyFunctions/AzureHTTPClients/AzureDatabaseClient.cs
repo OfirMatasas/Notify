@@ -16,7 +16,7 @@ namespace Notify.Functions.NotifyFunctions.AzureHTTPClients
         
         private AzureDatabaseClient()
         {
-            MongoClientSettings settings = MongoClientSettings.FromUrl(new MongoUrl(AzureVault.AzureVault.GetSecretFromVault("DATABASE_CONNECTION_STRING").Result));
+            MongoClientSettings settings = MongoClientSettings.FromUrl(new MongoUrl(AzureVault.AzureVault.GetSecretFromVault(Constants.DATABASE_CONNECTION_STRING).Result));
             m_MongoClient = new MongoClient(settings);
         }
 

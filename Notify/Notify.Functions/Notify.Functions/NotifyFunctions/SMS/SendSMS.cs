@@ -9,6 +9,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Notify.Functions.Core;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
@@ -64,9 +65,9 @@ public static class SendSMS
         
         try
         {
-            accountSid = await AzureVault.AzureVault.GetSecretFromVault("TWILIO_ACCOUNT_SID");
-            authToken = await AzureVault.AzureVault.GetSecretFromVault("TWILIO_AUTH_TOKEN");
-            twilioPhoneNumber = await AzureVault.AzureVault.GetSecretFromVault("TWILIO_PHONE_NUMBER");
+            accountSid = await AzureVault.AzureVault.GetSecretFromVault(Constants.TWILIO_ACCOUNT_SID);
+            authToken = await AzureVault.AzureVault.GetSecretFromVault(Constants.TWILIO_AUTH_TOKEN);
+            twilioPhoneNumber = await AzureVault.AzureVault.GetSecretFromVault(Constants.TWILIO_PHONE_NUMBER);
 
             Debug.WriteLine($"Twilio Account SID: {accountSid}, Twilio Auth Token: {authToken}," +
                             $" Twilio Phone Number: {twilioPhoneNumber}");
