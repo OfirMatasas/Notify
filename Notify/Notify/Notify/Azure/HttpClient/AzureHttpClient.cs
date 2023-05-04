@@ -310,5 +310,37 @@ namespace Notify.Azure.HttpClient
 
             return validCredentials;
         }
+
+        public List<Friend> GetFriends()
+        {
+            List<Friend> friends = new List<Friend>();
+
+            Debug.WriteLine($"Getting friends");
+            try
+            {
+                HttpResponseMessage response = getAsync(Constants.AZURE_FUNCTIONS_PATTERN_FRIEND).Result;
+                response.EnsureSuccessStatusCode();
+                Debug.WriteLine($"Successful status code from Azure Function from GetFriends!");
+
+                dynamic returnedObject = DeserializeObjectFromResponseAsync(response).Result;
+                Debug.WriteLine($"Returned object from GetFriends:\n{returnedObject.ToString()}");
+                
+                foreach (dynamic item in returnedObject)
+                {
+                    Friend friend = new Friend(
+                        name: (string)item.notification.name,
+                        userName: (string)item.notification.userName,
+                        telephone: (string)item.notification.telephone);
+                    
+                    friends.Add(friend);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error occured on GetFriends: {ex.Message}");
+            }
+
+            return friends;
+        }
     }
 }

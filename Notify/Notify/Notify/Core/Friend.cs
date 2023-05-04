@@ -3,10 +3,30 @@ using System.Runtime.CompilerServices;
 
 namespace Notify.Core
 {
-    public sealed class Friend: INotifyPropertyChanged
+    public sealed class Friend : INotifyPropertyChanged
     {
+        #region Members
+        
         private string m_Name;
+        private string m_UserName;
+        private string m_Telephone;
         private bool m_IsSelected;
+        
+        #endregion
+
+        #region Constructor
+        
+        public Friend(string name, string userName, string telephone)
+        {
+            Name = name;
+            UserName = userName;
+            Telephone = telephone;
+            IsSelected = false;
+        }
+
+        #endregion
+
+        #region Properties
 
         public string Name
         {
@@ -16,6 +36,32 @@ namespace Notify.Core
                 if (m_Name != value)
                 {
                     m_Name = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        
+        public string UserName
+        {
+            get => m_UserName;
+            set
+            {
+                if (m_UserName != value)
+                {
+                    m_UserName = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        
+        public string Telephone
+        {
+            get => m_Telephone;
+            set
+            {
+                if (m_Telephone != value)
+                {
+                    m_Telephone = value;
                     OnPropertyChanged();
                 }
             }
@@ -34,11 +80,7 @@ namespace Notify.Core
             }
         }
 
-        public Friend(string name)
-        {
-            Name = name;
-            IsSelected = false;
-        }
+        #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
 
