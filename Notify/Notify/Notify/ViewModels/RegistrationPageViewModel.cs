@@ -170,7 +170,7 @@ namespace Notify.ViewModels
         private async void onSignUpClicked()
         {
             string IsraeliPhoneNumber;
-            bool successfulSMSSend;
+            bool successfulSMSSent;
             
             ErrorMessages.Clear();
             
@@ -194,10 +194,10 @@ namespace Notify.ViewModels
                     VerificationCode = generateVerificationCode();
                 }
 
-                successfulSMSSend =
+                successfulSMSSent =
                     AzureHttpClient.Instance.SendSMSVerificationCode(IsraeliPhoneNumber, VerificationCode);
                 
-                if (successfulSMSSend)
+                if (successfulSMSSent)
                 {
                     await validateVerificationCodeWithUser();
                 }

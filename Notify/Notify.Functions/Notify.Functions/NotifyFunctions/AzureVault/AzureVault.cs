@@ -12,6 +12,7 @@ public sealed class AzureVault
     {
         SecretClient client = new SecretClient(new Uri(Constants.AZURE_KEY_VAULT), new DefaultAzureCredential());
         KeyVaultSecret secret = await client.GetSecretAsync(secretName);
+        
         return secret.Value;
     }
 }

@@ -28,6 +28,7 @@ public static class SendSMS
         dynamic data;
         string telephoneNumber;
         string verificationCode;
+        ObjectResult result;
 
         log.LogInformation("Got client's HTTP request to send SMS");
 
@@ -44,16 +45,21 @@ public static class SendSMS
 
             if (successfulSMSSend)
             {
-                return new OkObjectResult($"SMS sent to {telephoneNumber}{Environment.NewLine}Verification code: {verificationCode}");
+                result = new OkObjectResult(
+                    $"SMS sent to {telephoneNumber}{Environment.NewLine}Verification code: {verificationCode}");
             }
-
-            return new BadRequestObjectResult($"Failed to send SMS message to {telephoneNumber}");
+            else
+            {
+                result = new BadRequestObjectResult($"Failed to send SMS message to {telephoneNumber}");
+            }
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"Failed to send SMS message. {ex.Message}");
-            return new BadRequestObjectResult("Failed to send SMS message");
+            result = new BadRequestObjectResult("Failed to send SMS message");
         }
+
+        return result;
     }
 
     private static async Task<bool> sendSMSVerificationCode(string telephoneNumber, string verificationCode)
