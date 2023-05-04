@@ -1,5 +1,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Xamarin.Forms;
+using Image = Xamarin.Forms.PlatformConfiguration.TizenSpecific.Image;
 
 namespace Notify.Core
 {
@@ -11,6 +13,7 @@ namespace Notify.Core
         private string m_UserName;
         private string m_Telephone;
         private bool m_IsSelected;
+        private ImageSource m_ProfileImage = ImageSource.FromFile(new FileImageSource() { File = "profile.png" });
         
         #endregion
 
@@ -75,6 +78,19 @@ namespace Notify.Core
                 if (m_IsSelected != value)
                 {
                     m_IsSelected = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        
+        public ImageSource ProfileImage
+        {
+            get => m_ProfileImage;
+            set
+            {
+                if (m_ProfileImage != value)
+                {
+                    m_ProfileImage = value;
                     OnPropertyChanged();
                 }
             }

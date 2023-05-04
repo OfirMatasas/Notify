@@ -6,44 +6,44 @@
     x:Class="Notify.Views.FriendsPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
-    
+
     <StackLayout>
-            <Label
-                FontAttributes="Bold"
-                FontSize="25"
-                HorizontalOptions="Center"
+        <Label
+            FontAttributes="Bold"
+            FontSize="25"
+            HorizontalOptions="Center"
+            Margin="10"
+            Text="Friends"
+            TextColor="Black"
+            VerticalOptions="Start" />
+
+        <Grid Column="3" ColumnDefinitions="auto, *, auto">
+            <Image
+                Aspect="AspectFit"
+                Grid.Column="0"
+                HeightRequest="50"
+                HorizontalOptions="Start"
                 Margin="10"
-                Text="Friends"
-                TextColor="Black"
-                VerticalOptions="Start" />
+                Source="refresh_icon.png">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding RefreshFriendsCommand}" />
+                </Image.GestureRecognizers>
+            </Image>
 
-            <Grid Column="3" ColumnDefinitions="auto, *, auto">
-                <Image
-                    Aspect="AspectFit"
-                    Grid.Column="0"
-                    HeightRequest="50"
-                    HorizontalOptions="Start"
-                    Margin="10"
-                    Source="refresh_icon.png">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding RefreshFriendsCommand}" />
-                    </Image.GestureRecognizers>
-                </Image>
+            <Image
+                Aspect="AspectFit"
+                Grid.Column="2"
+                HeightRequest="50"
+                HorizontalOptions="End"
+                Margin="10"
+                Source="add_icon.png">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ShowFriendRequestsCommand}" />
+                </Image.GestureRecognizers>
+            </Image>
+        </Grid>
 
-                <Image
-                    Aspect="AspectFit"
-                    Grid.Column="2"
-                    HeightRequest="50"
-                    HorizontalOptions="End"
-                    Margin="10"
-                    Source="add_icon.png">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding ShowFriendRequestsCommand}" />
-                    </Image.GestureRecognizers>
-                </Image>
-            </Grid>
-            
-  <ScrollView>
+        <ScrollView>
             <CollectionView
                 ItemsSource="{Binding Friends}"
                 SelectedItem="{Binding SelectedFriend}"
@@ -53,21 +53,22 @@
                     <DataTemplate>
                         <Grid
                             Column="3"
-                            ColumnDefinitions="*, *, *, *"
+                            ColumnDefinitions="*, *"
                             HorizontalOptions="Center"
                             RowDefinitions="auto">
-                            <Label
-                                FontSize="15"
+                            <Image
                                 Grid.Column="0"
+                                HeightRequest="30"
                                 HorizontalOptions="Center"
-                                Text="{Binding Image}"
-                                TextColor="Black" />
+                                Source="{Binding ProfileImage}"
+                                VerticalOptions="Center" />
                             <Label
                                 FontSize="15"
                                 Grid.Column="1"
-                                HorizontalOptions="Center"
+                                HorizontalOptions="Start"
                                 Text="{Binding Name}"
-                                TextColor="Black" />
+                                TextColor="Black"
+                                VerticalTextAlignment="Center" />
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

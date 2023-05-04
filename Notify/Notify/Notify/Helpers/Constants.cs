@@ -82,7 +82,8 @@ namespace Notify.Helpers
         public static readonly string AZURE_FUNCTIONS_PATTERN_NOTIFICATION_LOCATION = $"{AZURE_FUNCTIONS_PATTERN_NOTIFICATION}/location";
         public static readonly string AZURE_FUNCTIONS_PATTERN_DESTINATION_UPDATE = "destination/update";
         public static readonly string AZURE_FUNCTIONS_PATTERN_LOGIN = "login";
-        public static readonly string AZURE_FUNCTIONS_PATTERN_FRIEND = "friend";
+        public static readonly string AZURE_FUNCTIONS_PATTERN_FRIEND = "friends";
+        public static readonly string USER_NAME = "linkimos";
 
         #endregion
 
