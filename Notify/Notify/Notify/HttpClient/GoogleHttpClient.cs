@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Net;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -13,18 +11,22 @@ namespace Notify.HttpClient
     public class GoogleHttpClient
     {
         // TODO:
-        //      1. Set Constants
-        //      2. Delete the statics and create m_HttpClient ad in Azure
+        //      1. Delete the statics and create m_HttpClient ad in Azure
+        //      2. Insert google API key to vault
+        //      3. Make m_HttpClient singleton
+        //      4. Move to functions
 
-        /* private static GoogleHttpClient m_Instance;
+        /*private static GoogleHttpClient m_Instance;
         private static readonly object r_LockInstanceCreation = new object();
         private static System.Net.Http.HttpClient m_HttpClient;
-        
-        
+       
+       
         private GoogleHttpClient()
         {
-             m_HttpClient = new System.Net.Http.HttpClient();
-             m_HttpClient.BaseAddress = new Uri("https://maps.googleapis.com");
+            m_HttpClient = new System.Net.Http.HttpClient
+            {
+                BaseAddress = new Uri("https://maps.googleapis.com");
+            };
         }
        
         public static GoogleHttpClient Instance
@@ -41,7 +43,7 @@ namespace Notify.HttpClient
                         }
                     }
                 }
-        
+       
                 return m_Instance;
             }
         }*/
@@ -61,11 +63,12 @@ namespace Notify.HttpClient
 
         public GoogleHttpClient Uri(string uri)
         {
+            Debug.WriteLine($"In Uri function: {uri}");
             m_HttpClient.BaseAddress = new Uri(uri);
             return this;
         }
 
-        public GoogleHttpClient Method(HttpMethod method)
+        public GoogleHttpClient Method()
         {
             m_HttpClient.DefaultRequestHeaders.Accept.Clear();
             m_HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -84,7 +87,7 @@ namespace Notify.HttpClient
             return content;
         }
 
-        public static async Task<List<String>> GetAddressSuggestions(string subAddress) // TODO - delete 'static'?
+        public static async Task<List<String>> GetAddressSuggestions(string subAddress)
         {
             string requestUrl =
                 $"https://maps.googleapis.com/maps/api/place/autocomplete/json?input={subAddress}&types=address&key={r_GoogleAPIkey}";
@@ -94,7 +97,7 @@ namespace Notify.HttpClient
             {
                 string stringContent = await GoogleHttpClient.Builder()
                     .Uri(requestUrl)
-                    .Method(HttpMethod.Get)
+                    .Method()
                     .Execute();
                 JObject responseJson = JObject.Parse(stringContent);
                 JToken predictions = responseJson["predictions"];
@@ -118,19 +121,18 @@ namespace Notify.HttpClient
         {
             string requestUrl =
                 $"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={r_GoogleAPIkey}";
-                // $"https://maps.googleapis.com/maps/api/geocode/json?address={WebUtility.UrlEncode(address)}&key={r_GoogleAPIkey}";
-            LatLng latLng = null;
+            LatLng coordinates = null;
 
             try
             {
                 string stringContent = await GoogleHttpClient.Builder()
                     .Uri(requestUrl)
-                    .Method(HttpMethod.Get)
+                    .Method()
                     .Execute();
                 GeocodingResponse geocodingResponse = JsonConvert.DeserializeObject<GeocodingResponse>(stringContent);
                 if (geocodingResponse.Results.Count > 0)
                 {
-                    latLng = geocodingResponse.Results[0].Geometry.Location;
+                    coordinates = geocodingResponse.Results[0].Geometry.Location;
                 }
             }
             catch (Exception ex)
@@ -138,7 +140,7 @@ namespace Notify.HttpClient
                 Debug.WriteLine($"Error occured on GetLatLngFromAddress: {Environment.NewLine}{ex.Message}");
             }
 
-            return latLng;
+            return coordinates;
         }
         
         public class GeocodingResponse

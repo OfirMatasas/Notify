@@ -81,7 +81,7 @@
                     Placeholder="Suggestions"
                     FontSize="16"
                     Type="Filled"
-                    SelectedItem="{Binding Destination}">
+                    SelectedItem="{Binding SelectedAddress}">
                     <materialDesignControls1:MaterialPicker.ItemsSource>
                         <Binding Path="DropBoxOptions" />
                     </materialDesignControls1:MaterialPicker.ItemsSource>
@@ -98,6 +98,13 @@
                     Command="{Binding GetGeographicCoordinatesCommand}"
                     CornerRadius="30"
                     Text="GET GEOGRAPHIC COORDINATES"
+                    TextColor="#EEEEEE">
+                </Button>
+                <Button
+                    BackgroundColor="#393E46"
+                    Command="{Binding GetCurrentLocationGeographicCoordinatesCommand}"
+                    CornerRadius="30"
+                    Text="GET CURRENT LOCATION GEOGRAPHIC COORDINATES"
                     TextColor="#EEEEEE">
                 </Button>
                 <Button

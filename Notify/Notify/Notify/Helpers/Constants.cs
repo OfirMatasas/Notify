@@ -73,7 +73,7 @@ namespace Notify.Helpers
         public static readonly string USERNAME = "lin";
         public static readonly string PASSWORD = "123";
 
-        #region Http Client
+        #region Azure Http Client
 
         public static readonly string AZURE_FUNCTIONS_APP_BASE_URL = "https://notifymta.azurewebsites.net/api/";
         public static readonly string AZURE_FUNCTIONS_PATTERN_DISTANCE = "distance";
@@ -82,6 +82,14 @@ namespace Notify.Helpers
         public static readonly string AZURE_FUNCTIONS_PATTERN_NOTIFICATION_LOCATION = $"{AZURE_FUNCTIONS_PATTERN_NOTIFICATION}/location";
         public static readonly string AZURE_FUNCTIONS_PATTERN_DESTINATION_UPDATE = "destination/update";
         public static readonly string AZURE_FUNCTIONS_PATTERN_LOGIN = "login";
+
+        #endregion
+
+        #region Google Http Client
+
+        public static readonly string GOOGLE_BASE_URL = "https://maps.googleapis.com/maps/api/";
+        public static readonly string GOOGLE_PATTERN_PLACE_AUTOCOMPLETE = "place/autocomplete";
+        public static readonly string GOOGLE_PATTERN_GEOCODES = "geocode";
 
         #endregion
 
