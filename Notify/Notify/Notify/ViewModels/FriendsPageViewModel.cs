@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Notify.Core;
 using Notify.HttpClient;
+using Notify.Views.Views;
 using Xamarin.Forms;
 
 namespace Notify.ViewModels
@@ -47,18 +48,16 @@ namespace Notify.ViewModels
         }
         
         #endregion
-        private void onSelectedFriendClicked()
+        private async void onSelectedFriendClicked()
         {
-            //TODO: show friend details
+            await Shell.Current.Navigation.PushAsync(new FriendDetailsPage(SelectedFriend));
         }
 
         private void onShowFriendRequestsClicked()
         {
-            App.Current.MainPage.DisplayAlert("Show Friends Clicked", "Show Friends Clicked", "OK");
+            //TODO: Show friend requests
         }
-
         
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

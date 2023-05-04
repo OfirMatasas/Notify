@@ -5,12 +5,12 @@ using MongoDB.Bson.IO;
 
 namespace Notify.Functions.Utils
 {
-    public class ConversionUtils
+    public static class ConversionUtils
     {
         public static string ConvertBsonDocumentListToJson(List<BsonDocument> bsonDocumentList)
         {
             string json = bsonDocumentList.ToList()
-                .ToJson(new JsonWriterSettings { OutputMode = JsonOutputMode.Strict });
+                .ToJson(new JsonWriterSettings { OutputMode = JsonOutputMode.CanonicalExtendedJson });
             
             return json;
         }
