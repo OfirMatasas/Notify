@@ -48,7 +48,7 @@ namespace Notify.HttpClient
             }
         }*/
 
-        private readonly System.Net.Http.HttpClient m_HttpClient;
+        private readonly System.Net.Http.HttpClient r_HttpClient;
         private static readonly string r_GoogleAPIkey = "AIzaSyCXUyen9sW3LhiELjOPJtUc0OqZlhLr-cg";
 
         private GoogleHttpClient()
