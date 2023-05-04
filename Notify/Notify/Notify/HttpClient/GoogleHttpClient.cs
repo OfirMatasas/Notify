@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -53,7 +54,7 @@ namespace Notify.HttpClient
 
         private GoogleHttpClient()
         {
-            m_HttpClient = new System.Net.Http.HttpClient();
+            r_HttpClient = new System.Net.Http.HttpClient();
         }
 
         public static GoogleHttpClient Builder()
@@ -64,26 +65,36 @@ namespace Notify.HttpClient
         public GoogleHttpClient Uri(string uri)
         {
             Debug.WriteLine($"In Uri function: {uri}");
-            m_HttpClient.BaseAddress = new Uri(uri);
+            r_HttpClient.BaseAddress = new Uri(uri);
             return this;
         }
 
         public GoogleHttpClient Method()
         {
-            m_HttpClient.DefaultRequestHeaders.Accept.Clear();
-            m_HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            m_HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", r_GoogleAPIkey);
-            m_HttpClient.DefaultRequestHeaders.Add("User-Agent", "HttpClientFactory-Sample");
-            m_HttpClient.DefaultRequestHeaders.Add("Connection", "keep-alive");
-            m_HttpClient.Timeout = TimeSpan.FromSeconds(30);
+            r_HttpClient.DefaultRequestHeaders.Accept.Clear();
+            r_HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            r_HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", r_GoogleAPIkey);
+            r_HttpClient.DefaultRequestHeaders.Add("User-Agent", "HttpClientFactory-Sample");
+            r_HttpClient.DefaultRequestHeaders.Add("Connection", "keep-alive");
+            r_HttpClient.Timeout = TimeSpan.FromSeconds(30);
             return this;
         }
 
         public async Task<string> Execute()
         {
-            var response = await m_HttpClient.GetAsync(m_HttpClient.BaseAddress);
-            response.EnsureSuccessStatusCode();
-            var content = await response.Content.ReadAsStringAsync();
+            string content = null;
+
+            try
+            {
+                HttpResponseMessage response = await r_HttpClient.GetAsync(r_HttpClient.BaseAddress);
+                response.EnsureSuccessStatusCode();
+                content = await response.Content.ReadAsStringAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error occured on Execute: {Environment.NewLine}{ex.Message}");
+            }
+            
             return content;
         }
 
@@ -117,11 +128,11 @@ namespace Notify.HttpClient
         }
 
 
-        public static async Task<LatLng> GetLatLngFromAddress(string address)
+        public static async Task<Coordinates> GetCoordinatesFromAddress(string address)
         {
             string requestUrl =
                 $"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={r_GoogleAPIkey}";
-            LatLng coordinates = null;
+            Coordinates coordinates = null;
 
             try
             {
@@ -132,6 +143,7 @@ namespace Notify.HttpClient
                 GeocodingResponse geocodingResponse = JsonConvert.DeserializeObject<GeocodingResponse>(stringContent);
                 if (geocodingResponse.Results.Count > 0)
                 {
+                    Debug.WriteLine($"eocodingResponse.Results.Count: {geocodingResponse.Results.Count}");
                     coordinates = geocodingResponse.Results[0].Geometry.Location;
                 }
             }
@@ -155,10 +167,10 @@ namespace Notify.HttpClient
 
         public class GeocodingGeometry
         {
-            [JsonProperty("location")] public LatLng Location { get; set; }
+            [JsonProperty("location")] public Coordinates Location { get; set; }
         }
 
-        public class LatLng
+        public class Coordinates
         {
             [JsonProperty("lat")] public double Lat { get; set; }
             [JsonProperty("lng")] public double Lng { get; set; }

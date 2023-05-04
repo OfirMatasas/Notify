@@ -79,7 +79,11 @@ namespace Notify.ViewModels
         public List<string> DropBoxOptions
         {
             get { return m_DropBoxSuggestions; }
-            set { m_DropBoxSuggestions = value; OnPropertyChanged(nameof(DropBoxOptions)); }
+            set 
+            { 
+                m_DropBoxSuggestions = value;
+                OnPropertyChanged(nameof(DropBoxOptions));
+            }
         }
         
         private async void onUpdateHomeLocationButtonClicked()
@@ -127,11 +131,11 @@ namespace Notify.ViewModels
             }
             else
             {
-                GoogleHttpClient.LatLng coordinates = await GoogleHttpClient.GetLatLngFromAddress(SelectedAddress);
+                GoogleHttpClient.Coordinates coordinates = await GoogleHttpClient.GetCoordinatesFromAddress(SelectedAddress);
             
                 double longitude = coordinates.Lat;
                 double latitude = coordinates.Lng;
-                Debug.WriteLine($"Longitude: {longitude}    |     Latitude: {latitude}");
+                Debug.WriteLine($"Longitude: {longitude}, Latitude: {latitude}");
                 
                 Longitude = longitude.ToString();
                 Latitude = latitude.ToString();
@@ -148,12 +152,7 @@ namespace Notify.ViewModels
             Latitude = latitude.ToString();
         }
         
-        private async void onGetAddressSuggestionsButtonClicked()
-        {
-            UpdateDropBoxOptions();
-        }
-        
-        public async void UpdateDropBoxOptions()
+        public async void onGetAddressSuggestionsButtonClicked()
         {
             Debug.WriteLine($"Getting suggestions for: {m_SearchText}");
             
