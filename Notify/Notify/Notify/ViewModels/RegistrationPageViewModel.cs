@@ -171,7 +171,9 @@ namespace Notify.ViewModels
         {
             string IsraeliPhoneNumber;
             bool successfulSMSSend;
-
+            
+            ErrorMessages.Clear();
+            
             validateName();
             validateUserName();
             validatePassword();
@@ -194,6 +196,7 @@ namespace Notify.ViewModels
 
                 successfulSMSSend =
                     AzureHttpClient.Instance.SendSMSVerificationCode(IsraeliPhoneNumber, VerificationCode);
+                
                 if (successfulSMSSend)
                 {
                     await validateVerificationCodeWithUser();
@@ -230,6 +233,8 @@ namespace Notify.ViewModels
 
             await Application.Current.MainPage.DisplayAlert("Registration Success",
                 "You have successfully registered to Notify.", "OK");
+            Debug.WriteLine($"User registered successfully.{Environment.NewLine}Name: {Name}, User Name: {UserName}, Telephone: {Telephone}, Password: {Password}");
+            
             await Shell.Current.GoToAsync("///login");
         }
 
