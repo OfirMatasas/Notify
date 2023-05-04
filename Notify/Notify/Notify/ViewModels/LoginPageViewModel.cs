@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Notify.HttpClient;
+using Notify.Azure.HttpClient;
 using Notify.Services.Location;
 using Xamarin.Essentials;
 using Xamarin.Forms;

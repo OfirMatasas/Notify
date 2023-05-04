@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
+using Notify.Azure.HttpClient;
 using Notify.Helpers;
-using Notify.HttpClient;
 using Notify.Interfaces.Managers;
 using Notify.Notifications;
 using Notify.Views;

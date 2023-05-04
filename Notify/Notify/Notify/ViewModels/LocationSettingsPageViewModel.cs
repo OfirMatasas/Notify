@@ -1,11 +1,12 @@
-﻿using System.Threading.Tasks;
-using Notify.HttpClient;
 using Xamarin.Forms;
+using System.Threading.Tasks;
+using Notify.HttpClient;
 using Notify.HttpClient;
 using Xamarin.Essentials;
 using System.ComponentModel;
 using System.Diagnostics;
 using System;
+using Notify.Azure.HttpClient;
 using System.Collections.Generic;
 using Android.Print;
 
@@ -57,11 +58,13 @@ namespace Notify.ViewModels
             get => m_Longitude;
             set => SetProperty(ref m_Longitude, value);
         }
+        
         public string Latitude
         {
             get => m_Latitude;
             set => SetProperty(ref m_Latitude, value);
         }
+        
         public string SelectedItem
         {
             get { return m_SelectedItem; }

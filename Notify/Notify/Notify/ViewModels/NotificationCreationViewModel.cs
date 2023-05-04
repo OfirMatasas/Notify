@@ -4,8 +4,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using Notify.Azure.HttpClient;
 using Notify.Core;
-using Notify.HttpClient;
 using Xamarin.Forms;
 
 namespace Notify.ViewModels
