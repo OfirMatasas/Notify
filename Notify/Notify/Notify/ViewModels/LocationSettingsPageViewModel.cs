@@ -103,7 +103,7 @@ namespace Notify.ViewModels
                     if (latitude >= -90.0 && latitude <= 90.0 && longitude >= -180.0 && longitude <= 180.0)
                     {
                         Debug.WriteLine($"Both longitude and latitude are in the right range - updating location.{Environment.NewLine}"); 
-                        successfulUpdate = AzureHttpClient.Instance.updateDestination(m_Destination, new Core.Location(latitude, longitude));
+                        successfulUpdate = AzureHttpClient.Instance.UpdateDestination(m_Destination, new Core.Location(latitude, longitude));
                         
                         if (successfulUpdate)
                             await App.Current.MainPage.DisplayAlert("Location Updated", "Your location has been updated successfully", "OK");

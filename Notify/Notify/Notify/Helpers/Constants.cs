@@ -70,8 +70,16 @@ namespace Notify.Helpers
 
         #endregion
 
-        public static readonly string USERNAME = "lin";
-        public static readonly string PASSWORD = "123";
+        #region Location_Options
+
+        public static readonly List<string> LOCATIONS_LIST = new List<string>
+        {
+            "Home",
+            "Work",
+            "School"
+        };
+
+        #endregion
 
         #region Azure Http Client
 
