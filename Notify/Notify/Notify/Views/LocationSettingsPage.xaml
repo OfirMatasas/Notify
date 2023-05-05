@@ -48,33 +48,11 @@
                     BackgroundColor="White"
                     BorderColor="Transparent"
                     FontSize="16"
-                    MaxLength="16"
-                    Placeholder="Longitude"
-                    ReturnType="Next"
-                    TabIndex="1"
-                    Text="{Binding Longitude}"
-                    TextColor="Black"
-                    Type="Filled" />
-                <materialDesignControls1:MaterialEntry
-                    BackgroundColor="White"
-                    BorderColor="Transparent"
-                    FontSize="16"
-                    MaxLength="16"
-                    Placeholder="Latitude"
-                    ReturnType="Next"
-                    TabIndex="1"
-                    Text="{Binding Latitude}"
-                    TextColor="Black"
-                    Type="Filled" />
-                <materialDesignControls1:MaterialEntry
-                    BackgroundColor="White"
-                    BorderColor="Transparent"
-                    FontSize="16"
-                    MaxLength="16"
+                    MaxLength="50"
                     Placeholder="Enter Address"
                     ReturnType="Next"
                     TabIndex="1"
-                    Text="{Binding SearchText}"
+                    Text="{Binding SearchAddress}"
                     TextColor="Black"
                     Type="Filled" />
                 <materialDesignControls1:MaterialPicker 
@@ -102,9 +80,9 @@
                 </Button>
                 <Button
                     BackgroundColor="#393E46"
-                    Command="{Binding GetCurrentLocationGeographicCoordinatesCommand}"
+                    Command="{Binding GetCurrentLocationCommand}"
                     CornerRadius="30"
-                    Text="GET CURRENT LOCATION GEOGRAPHIC COORDINATES"
+                    Text="GET CURRENT LOCATION"
                     TextColor="#EEEEEE">
                 </Button>
                 <Button

@@ -13,7 +13,7 @@ namespace Notify.ViewModels
         private string m_Destination;
         private string m_Longitude;
         private string m_Latitude;
-        private string m_SearchText;
+        private string m_SearchAddress;
         private string m_SelectedAddress;
         private List<string> m_DropBoxSuggestions;
         
@@ -21,7 +21,7 @@ namespace Notify.ViewModels
         public Command UpdateLocationCommand { get; set; }
         public Command GetAddressSuggestionsCommand { get; set; }
         public Command GetGeographicCoordinatesCommand { get; set; }
-        public Command GetCurrentLocationGeographicCoordinatesCommand { get; set; }
+        public Command GetCurrentLocationCommand { get; set; }
         
 
         public LocationSettingsPageViewModel()
@@ -30,7 +30,7 @@ namespace Notify.ViewModels
             UpdateLocationCommand = new Command(onUpdateHomeLocationButtonClicked);
             GetAddressSuggestionsCommand = new Command(onGetAddressSuggestionsButtonClicked);
             GetGeographicCoordinatesCommand = new Command(onGetGeographicCoordinatesButtonClicked);
-            GetCurrentLocationGeographicCoordinatesCommand = new Command(onGetCurrentLocationGeographicCoordinatesButtonClicked);
+            GetCurrentLocationCommand = new Command(onGetCurrentLocationButtonClicked);
         }
         
         private async void onBackButtonClicked()
@@ -44,7 +44,6 @@ namespace Notify.ViewModels
             set
             {
                 SetProperty(ref m_Destination, value); 
-                m_Destination = value;
                 OnPropertyChanged(nameof(m_Destination));
             }
         }
@@ -66,23 +65,25 @@ namespace Notify.ViewModels
             get { return m_SelectedAddress; }
             set
             {
-                m_SelectedAddress = value;
+                SetProperty(ref m_SelectedAddress, value);
                 OnPropertyChanged(nameof(SelectedAddress));
+                onGetGeographicCoordinatesButtonClicked();
+                SearchAddress = SelectedAddress;
             }
         }
         
-        public string SearchText
+        public string SearchAddress
         {
-            get => m_SearchText;
-            set => SetProperty(ref m_SearchText, value);
+            get => m_SearchAddress;
+            set { SetProperty(ref m_SearchAddress, value); }
         }
-        
+
         public List<string> DropBoxOptions
         {
             get { return m_DropBoxSuggestions; }
             set 
             { 
-                m_DropBoxSuggestions = value;
+                SetProperty(ref m_DropBoxSuggestions, value);
                 OnPropertyChanged(nameof(DropBoxOptions));
             }
         }
@@ -134,41 +135,43 @@ namespace Notify.ViewModels
             {
                 GoogleHttpClient.Coordinates coordinates = await GoogleHttpClient.GetCoordinatesFromAddress(SelectedAddress);
             
-                double longitude = coordinates.Lat;
-                double latitude = coordinates.Lng;
-                Debug.WriteLine($"Longitude: {longitude}, Latitude: {latitude}");
+                double longitude = coordinates.Lng;
+                double latitude = coordinates.Lat;
+                Debug.WriteLine($"onGetGeographicCoordinatesButtonClicked - Longitude: {longitude}, Latitude: {latitude}");
                 
                 Longitude = longitude.ToString();
                 Latitude = latitude.ToString();
             }
         }
 
-        private async void onGetCurrentLocationGeographicCoordinatesButtonClicked()
-        {
-            GeolocationRequest request;
-            Location location;
-
-            try
-            {
-                request = new GeolocationRequest(GeolocationAccuracy.High);
-                location = await Geolocation.GetLocationAsync(request);
-                
-                double longitude = location.Longitude;
-                double latitude = location.Latitude;
-                Longitude = longitude.ToString();
-                Latitude = latitude.ToString();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error occured on onGetCurrentLocationGeographicCoordinatesButtonClicked: {Environment.NewLine}{ex.Message}");
-            }
-        }
+         private async void onGetCurrentLocationButtonClicked()
+         {
+             GeolocationRequest request;
+             Location location;
+        
+             try
+             {
+                 request = new GeolocationRequest(GeolocationAccuracy.High);
+                 location = await Geolocation.GetLocationAsync(request);
+                 
+                 double longitude = location.Longitude;
+                 double latitude = location.Latitude;
+        
+                 Debug.WriteLine($"onGetCurrentLocationButtonClicked - Current Longitude: {longitude.ToString()}, Latitude: {latitude.ToString()}" );
+                 SelectedAddress =  await GoogleHttpClient.GetAddressFromCoordinatesAsync(latitude, longitude);
+                 // SearchAddress = SelectedAddress;
+             }
+             catch (Exception ex)
+             {
+                 Debug.WriteLine($"Error occured on onGetCurrentLocationGeographicCoordinatesButtonClicked: {Environment.NewLine}{ex.Message}");
+             }
+         }
         
         public async void onGetAddressSuggestionsButtonClicked()
         {
-            Debug.WriteLine($"Getting suggestions for: {m_SearchText}");
+            Debug.WriteLine($"Getting suggestions for: {SearchAddress}");
             
-            DropBoxOptions = await GoogleHttpClient.GetAddressSuggestions(m_SearchText);
+            DropBoxOptions = await GoogleHttpClient.GetAddressSuggestions(SearchAddress);
         }
     }
 }

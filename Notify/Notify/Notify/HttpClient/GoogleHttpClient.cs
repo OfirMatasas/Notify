@@ -64,7 +64,6 @@ namespace Notify.HttpClient
 
         public GoogleHttpClient Uri(string uri)
         {
-            Debug.WriteLine($"In Uri function: {uri}");
             r_HttpClient.BaseAddress = new Uri(uri);
             return this;
         }
@@ -155,6 +154,42 @@ namespace Notify.HttpClient
             return coordinates;
         }
         
+        public static async Task<string> GetAddressFromCoordinatesAsync(double latitude, double longitude)
+        {
+            string requestUrl = $"https://maps.googleapis.com/maps/api/geocode/json?key={r_GoogleAPIkey}&latlng={latitude},{longitude}";
+            string address = null;
+    
+            try
+            {
+                HttpResponseMessage response = await Builder()
+                    .Uri(requestUrl)
+                    .Method()
+                    .r_HttpClient
+                    .GetAsync(requestUrl);
+                response.EnsureSuccessStatusCode();
+                string json = await response.Content.ReadAsStringAsync();
+                GoogleMapsApiResult result = JsonConvert.DeserializeObject<GoogleMapsApiResult>(json);
+
+                if (result == null || result.GoogleMapsResults.Length == 0)
+                {
+                    return "Unknown address";
+                }
+                else
+                {
+                    address = result.GoogleMapsResults[0].FormattedAddress;
+                    Debug.WriteLine($"Current address: {address}" );
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error occured on GetAddressFromCoordinatesAsync: {Environment.NewLine}{ex.Message}");
+            }
+
+            return address;
+        }
+
+        
         public class GeocodingResponse
         {
             [JsonProperty("results")] public List<GeocodingResult> Results { get; set; }
@@ -174,6 +209,18 @@ namespace Notify.HttpClient
         {
             [JsonProperty("lat")] public double Lat { get; set; }
             [JsonProperty("lng")] public double Lng { get; set; }
+        }
+        
+        private class GoogleMapsApiResult
+        {
+            [JsonProperty("results")]
+            public GoogleMapsApiResultItem[] GoogleMapsResults { get; set; }
+        }
+
+        private class GoogleMapsApiResultItem
+        {
+            [JsonProperty("formatted_address")]
+            public string FormattedAddress { get; set; }
         }
     }
 }
