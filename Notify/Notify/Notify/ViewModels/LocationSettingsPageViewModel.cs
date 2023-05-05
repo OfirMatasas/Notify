@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System;
 using System.Collections.Generic;
 using Notify.Azure.HttpClient;
+using Xamarin.Essentials;
 
 namespace Notify.ViewModels
 {
@@ -144,12 +145,23 @@ namespace Notify.ViewModels
 
         private async void onGetCurrentLocationGeographicCoordinatesButtonClicked()
         {
-            //TODO: This implementation is a place holder.
-            double longitude = 0;
-            double latitude = 0;
-            
-            Longitude = longitude.ToString();
-            Latitude = latitude.ToString();
+            GeolocationRequest request;
+            Location location;
+
+            try
+            {
+                request = new GeolocationRequest(GeolocationAccuracy.High);
+                location = await Geolocation.GetLocationAsync(request);
+                
+                double longitude = location.Longitude;
+                double latitude = location.Latitude;
+                Longitude = longitude.ToString();
+                Latitude = latitude.ToString();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error occured on onGetCurrentLocationGeographicCoordinatesButtonClicked: {Environment.NewLine}{ex.Message}");
+            }
         }
         
         public async void onGetAddressSuggestionsButtonClicked()
