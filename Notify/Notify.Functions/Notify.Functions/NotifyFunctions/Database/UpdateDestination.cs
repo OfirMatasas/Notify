@@ -12,6 +12,7 @@ using MongoDB.Bson;
 using Newtonsoft.Json;
 using Notify.Functions.Core;
 using Notify.Functions.NotifyFunctions.AzureHTTPClients;
+using static MongoDB.Driver.Builders<MongoDB.Bson.BsonDocument>;
 
 namespace Notify.Functions.NotifyFunctions.Database
 {
@@ -27,7 +28,7 @@ namespace Notify.Functions.NotifyFunctions.Database
             IMongoCollection<BsonDocument> collection;
             string requestBody;
             dynamic data;
-            string userName, location;
+            string userName, locationName;
             FilterDefinition<BsonDocument> filter;
             BsonDocument document;
             ObjectResult result;
@@ -47,10 +48,13 @@ namespace Notify.Functions.NotifyFunctions.Database
             try
             {
                 userName = Convert.ToString(data.user);
-                location = Convert.ToString(data.location.name);
-                filter = Builders<BsonDocument>.Filter
-                    .Where(doc => doc["user"].ToString().Equals(userName) && 
-                                  doc["location"].ToString().Equals(location));
+                locationName = Convert.ToString(data.location.name);
+                
+                log.LogInformation($"Searching for existing document in database by user {userName} and location {locationName}");
+                filter = Filter.And(
+                    Filter.Eq("user", userName), 
+                    Filter.Eq("location.name", locationName)
+                );
                 document = await collection.Find(filter).FirstOrDefaultAsync();
                 
                 if (document != null)
@@ -60,8 +64,8 @@ namespace Notify.Functions.NotifyFunctions.Database
                 }
                 else
                 {
-                    document = await createNewDocument(data, log, collection).Result;
-                    result = new CreatedResult("", document);
+                    document = await createNewDocument(data, log, collection);
+                    result = new CreatedResult("", document.ToJson());
                 }
             }
             catch (Exception ex)
@@ -75,20 +79,22 @@ namespace Notify.Functions.NotifyFunctions.Database
 
         private static async void updateExistedDocument(dynamic data, ILogger log, BsonDocument document, IMongoCollection<BsonDocument> collection, FilterDefinition<BsonDocument> filter) 
         {
-            log.LogInformation($"Found existing document for user {data.user}. Updating it");
+            string type = Convert.ToString(data.location.type);
             
-            if (data.location.type == "Location")
+            log.LogInformation($"Found existing document for user {data.user} and location {data.location.name}. Updating it");
+
+            if (type.Equals("Location"))
             {
-                document["latitude"] = Convert.ToDouble(data.location.latitude);
-                document["longitude"] = Convert.ToDouble(data.location.longitude);
+                document["location"].AsBsonDocument["latitude"] = Convert.ToDouble(data.location.latitude);
+                document["location"].AsBsonDocument["longitude"] = Convert.ToDouble(data.location.longitude);
             }
-            else if (data.location.type == "WiFi")
+            else if (type.Equals("WiFi"))
             {
-                document["ssid"] = Convert.ToString(data.location.ssid);
+                document["location"].AsBsonDocument["ssid"] = Convert.ToString(data.location.ssid);
             }
             else
             {
-                throw new ArgumentException($"Invalid location type: {data.locationType}");
+                throw new ArgumentException($"Invalid location type: {type}");
             }
             
             await collection.ReplaceOneAsync(filter, document);
@@ -98,27 +104,32 @@ namespace Notify.Functions.NotifyFunctions.Database
         private static async Task<BsonDocument> createNewDocument(dynamic data, ILogger log, IMongoCollection<BsonDocument> collection)
         {
             BsonDocument document;
-            
-            log.LogInformation($"No document found for user {data.user}. Creating a brand new one");
+            string type = Convert.ToString(data.location.type);
+
+            log.LogInformation($"No document found for user {data.user} and location {data.location.name}. Creating a brand new one");
 
             document = new BsonDocument
             {
                 { "user", Convert.ToString(data.user) },
-                { "location", Convert.ToString(data.location.name) }
+                { "location", new BsonDocument
+                    {
+                        { "name", Convert.ToString(data.location.name) }
+                    }
+                }
             };
 
-            if (data.locationType == "Location")
+            if (type.Equals("Location"))
             {
-                document.Add("latitude", Convert.ToDouble(data.location.latitude));
-                document.Add("longitude", Convert.ToDouble(data.location.longitude));
+                document["location"].AsBsonDocument.Add("latitude", Convert.ToDouble(data.location.latitude));
+                document["location"].AsBsonDocument.Add("longitude", Convert.ToDouble(data.location.longitude));
             }
-            else if (data.locationType == "WiFi")
+            else if (type.Equals("WiFi"))
             {
-                document.Add("ssid", Convert.ToString(data.location.ssid));
+                document["location"].AsBsonDocument.Add("ssid", Convert.ToString(data.location.ssid));
             }
             else
             {
-                throw new ArgumentException($"Invalid location type: {data.locationType}");
+                throw new ArgumentException($"Invalid location type: {type}");
             }
             
             log.LogInformation($"Created document:{Environment.NewLine}{document}");

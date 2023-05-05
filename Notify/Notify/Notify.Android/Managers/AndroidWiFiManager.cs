@@ -22,7 +22,7 @@ namespace Notify.Droid.Managers
 
             if (capabilities.HasTransport(TransportType.Wifi))
             {
-                var wifiManager = (WifiManager)Android.App.Application.Context.GetSystemService(Context.WifiService);
+                WifiManager wifiManager = (WifiManager)Android.App.Application.Context.GetSystemService(Context.WifiService);
                 string ssid = wifiManager.ConnectionInfo.SSID;
         
                 if (ssid == m_preDefineSsid)
@@ -43,11 +43,10 @@ namespace Notify.Droid.Managers
         public List<string> GetAvailableNetworks()
         {
             List<string> myListrow = new List<string>();
-            
-            var wifiMgr = (WifiManager)Android.App.Application.Context.GetSystemService(Context.WifiService);
-            var wifiList = wifiMgr.ScanResults;
+            WifiManager wifiMgr = (WifiManager)Android.App.Application.Context.GetSystemService(Context.WifiService);
+            IList<ScanResult> wifiList = wifiMgr.ScanResults;
 
-            foreach (var item in wifiList)
+            foreach (ScanResult item in wifiList)
             {
                 myListrow.Add(item.Ssid.ToString());
             }

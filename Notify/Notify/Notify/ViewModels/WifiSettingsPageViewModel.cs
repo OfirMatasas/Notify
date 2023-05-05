@@ -52,14 +52,24 @@ namespace Notify.ViewModels
         
         private async void onUpdateWifiSettingsClicked()
         {
+            bool successfulUpdate;
+            
             if(SelectedLocation.IsNullOrEmpty() || SelectedWiFiSSID.IsNullOrEmpty())
             {
                 await App.Current.MainPage.DisplayAlert("Error", "Please select a location and a WiFi network", "OK");
             }
             else
             {
-                AzureHttpClient.Instance.UpdateDestination(SelectedLocation, SelectedWiFiSSID);
-                App.Current.MainPage.DisplayAlert("Update", $"Updated {SelectedWiFiSSID} as your {SelectedLocation}", "OK");
+                successfulUpdate =  AzureHttpClient.Instance.UpdateDestination(SelectedLocation, SelectedWiFiSSID).Result;
+                
+                if (successfulUpdate)
+                {
+                    App.Current.MainPage.DisplayAlert("Update", $"Updated {SelectedWiFiSSID} as your {SelectedLocation}", "OK");
+                }
+                else
+                {
+                    App.Current.MainPage.DisplayAlert("Error", "Something went wrong", "OK");
+                }
             }
         }
 
