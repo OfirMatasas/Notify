@@ -163,6 +163,7 @@ namespace Notify.Azure.HttpClient
         private async Task<dynamic> DeserializeObjectFromResponseAsync(HttpResponseMessage response)
         {
             string responseJson = await response.Content.ReadAsStringAsync();
+            
             return JsonConvert.DeserializeObject(responseJson);
         }
 
@@ -237,6 +238,7 @@ namespace Notify.Azure.HttpClient
 
         public async Task<List<Notification>> GetNotifications()
         {
+            Notification notification;
             List<Notification> notifications = new List<Notification>();
             NotificationType notificationType;
             object notificationTypeValue;
@@ -248,14 +250,14 @@ namespace Notify.Azure.HttpClient
                 Debug.WriteLine($"Successful status code from Azure Function from GetNotifications!");
 
                 dynamic returnedObject = DeserializeObjectFromResponseAsync(response).Result;
-                Debug.WriteLine($"returnedObject:\n{returnedObject.ToString()}");
+                Debug.WriteLine($"returnedObject:{Environment.NewLine}{returnedObject.ToString()}");
                 
                 foreach (dynamic item in returnedObject)
                 {
                     notificationType = item.notification.location == null ? NotificationType.Time : NotificationType.Location;
                     notificationTypeValue = item.notification.location ?? DateTimeOffset.FromUnixTimeSeconds((long)item.notification.timestamp).LocalDateTime;
                     
-                    Notification notification = new Notification(
+                    notification = new Notification(
                         name: (string)item.notification.name,
                         description: (string)(item.description ?? item.info),
                         creationDateTime: DateTimeOffset.FromUnixTimeSeconds((long)item.creation_timestamp).LocalDateTime,
@@ -276,9 +278,11 @@ namespace Notify.Azure.HttpClient
             return notifications;
         }
         
-        private async Task<HttpResponseMessage> getAsync(string requestUri)
+        private async Task<HttpResponseMessage> getAsync(string requestUri, string query = "")
         {
-            HttpResponseMessage response = await m_HttpClient.GetAsync(requestUri).ConfigureAwait(false);
+            Debug.WriteLine($"Sending HTTP GET request to :{requestUri + query}");
+            HttpResponseMessage response = await m_HttpClient.GetAsync(requestUri + query).ConfigureAwait(false);
+            
             return response;
         }
 
@@ -309,6 +313,40 @@ namespace Notify.Azure.HttpClient
             }
 
             return validCredentials;
+        }
+
+        public async Task<List<Friend>> GetFriends()
+        {
+            List<Friend> friends = new List<Friend>();
+            string query = $"?username={Constants.USER_NAME}";
+            Friend friend;
+
+            Debug.WriteLine($"Getting friends");
+            try
+            {
+                HttpResponseMessage response = getAsync(Constants.AZURE_FUNCTIONS_PATTERN_FRIEND, query).Result;
+                response.EnsureSuccessStatusCode();
+                Debug.WriteLine($"Successful status code from Azure Function from GetFriends!");
+
+                dynamic returnedObject = DeserializeObjectFromResponseAsync(response).Result;
+                Debug.WriteLine($"Returned object from GetFriends:\n{returnedObject.ToString()}");
+                
+                foreach (dynamic item in returnedObject)
+                {
+                    friend = new Friend(
+                        name: (string)item.name,
+                        userName: (string)item.userName,
+                        telephone: (string)item.telephone);
+
+                    friends.Add(friend);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error occured on GetFriends: {ex.Message}");
+            }
+
+            return friends;
         }
     }
 }

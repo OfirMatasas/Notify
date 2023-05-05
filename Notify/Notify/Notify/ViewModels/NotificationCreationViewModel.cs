@@ -66,9 +66,9 @@ namespace Notify.ViewModels
 
         public List<Friend> Friends { get; set; } = new List<Friend> 
         {  
-            new Friend("Ofir"),
-            new Friend("Dekel"),
-            new Friend("Lin")
+            new Friend("Ofir", "MaTaSaS", "+972542001717"),
+            new Friend("Dekel", "DekelR", "+972525459229"),
+            new Friend("Lin", "Linkimos", "+972586555549")
         };
 
         public ICommand CreateNotificationCommand { get; set; }
