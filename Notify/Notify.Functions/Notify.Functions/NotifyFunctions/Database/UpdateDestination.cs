@@ -27,7 +27,10 @@ namespace Notify.Functions.NotifyFunctions.Database
             IMongoCollection<BsonDocument> collection;
             string requestBody;
             dynamic data;
-            BsonDocument newDocument;
+            string userName, location;
+            FilterDefinition<BsonDocument> filter;
+            BsonDocument document;
+            ObjectResult result;
             
             log.LogInformation($"Got client's updated destination location HTTP request");
 
@@ -41,27 +44,89 @@ namespace Notify.Functions.NotifyFunctions.Database
 
             log.LogInformation($"Data:{Environment.NewLine}{data}");
 
-            newDocument = new BsonDocument
-            {
-                { "user", Convert.ToString(data.user) },
-                { "location", Convert.ToString(data.location.name) },
-                { "latitude", Convert.ToDouble(data.location.latitude) },
-                { "longitude", Convert.ToDouble(data.location.longitude) }
-            };
-
-            log.LogInformation($"Created document:{Environment.NewLine}{newDocument}");
-
             try
             {
-                await collection.InsertOneAsync(newDocument);
-                log.LogInformation("Document inserted successfully");
-                return new OkResult();
+                userName = Convert.ToString(data.user);
+                location = Convert.ToString(data.location.name);
+                filter = Builders<BsonDocument>.Filter
+                    .Where(doc => doc["user"].ToString().Equals(userName) && 
+                                  doc["location"].ToString().Equals(location));
+                document = await collection.Find(filter).FirstOrDefaultAsync();
+                
+                if (document != null)
+                {
+                    updateExistedDocument(data, log, document, collection, filter);
+                    result = new OkObjectResult(document.ToJson());
+                }
+                else
+                {
+                    document = await createNewDocument(data, log, collection).Result;
+                    result = new CreatedResult("", document);
+                }
             }
             catch (Exception ex)
             {
                 log.LogError(ex.Message);
-                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+                result = new BadRequestObjectResult(ex.Message);
             }
+
+            return result;
+        }
+
+        private static async void updateExistedDocument(dynamic data, ILogger log, BsonDocument document, IMongoCollection<BsonDocument> collection, FilterDefinition<BsonDocument> filter) 
+        {
+            log.LogInformation($"Found existing document for user {data.user}. Updating it");
+            
+            if (data.location.type == "Location")
+            {
+                document["latitude"] = Convert.ToDouble(data.location.latitude);
+                document["longitude"] = Convert.ToDouble(data.location.longitude);
+            }
+            else if (data.location.type == "WiFi")
+            {
+                document["ssid"] = Convert.ToString(data.location.ssid);
+            }
+            else
+            {
+                throw new ArgumentException($"Invalid location type: {data.locationType}");
+            }
+            
+            await collection.ReplaceOneAsync(filter, document);
+            log.LogInformation("Document updated successfully");
+        }
+
+        private static async Task<BsonDocument> createNewDocument(dynamic data, ILogger log, IMongoCollection<BsonDocument> collection)
+        {
+            BsonDocument document;
+            
+            log.LogInformation($"No document found for user {data.user}. Creating a brand new one");
+
+            document = new BsonDocument
+            {
+                { "user", Convert.ToString(data.user) },
+                { "location", Convert.ToString(data.location.name) }
+            };
+
+            if (data.locationType == "Location")
+            {
+                document.Add("latitude", Convert.ToDouble(data.location.latitude));
+                document.Add("longitude", Convert.ToDouble(data.location.longitude));
+            }
+            else if (data.locationType == "WiFi")
+            {
+                document.Add("ssid", Convert.ToString(data.location.ssid));
+            }
+            else
+            {
+                throw new ArgumentException($"Invalid location type: {data.locationType}");
+            }
+            
+            log.LogInformation($"Created document:{Environment.NewLine}{document}");
+            
+            await collection.InsertOneAsync(document);
+            log.LogInformation("Document inserted successfully");
+
+            return document;
         }
     }
 }
