@@ -142,6 +142,8 @@ namespace Notify.Azure.HttpClient
                 Debug.WriteLine($"Error occured on Register: {ex.Message}");
                 registered = false;
             }
+            
+            //TODO: check if user already exists and (do that before the sms) and color the username background color in red
 
             return registered;
         }
