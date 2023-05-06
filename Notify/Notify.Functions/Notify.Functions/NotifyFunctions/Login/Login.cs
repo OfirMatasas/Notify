@@ -26,7 +26,8 @@ public static class Login
         IMongoCollection<BsonDocument> collection;
         string requestBody;
         dynamic data;
-
+        ObjectResult result;
+        
         log.LogInformation("Got client's HTTP request to login");
 
         try
@@ -49,22 +50,24 @@ public static class Login
             if (documents.Count == 0)
             {
                 log.LogInformation($"No user found with username {data.userName} and password {data.password}");
-                return new NotFoundResult();
+                result = new NotFoundObjectResult($"No user found with username {data.userName} and password {data.password}");
             }
             if (documents.Count > 1)
             {
                 log.LogInformation(
                     $"More than one user found with username {data.userName} and password {data.password}");
-                return new ConflictResult();
+                result = new ConflictObjectResult($"No user found with username {data.userName} and password {data.password}");
             }
 
             log.LogInformation($"Found user with username {data.userName} and password {data.password}");
-            return new OkObjectResult(requestBody);
+            result = new OkObjectResult(requestBody);
         }
         catch (Exception e)
         {
             log.LogError(e.Message);
-            return new BadRequestResult();
+            result = new BadRequestObjectResult($"Failed to login. Error: {e.Message}");
         }
+
+        return result;
     }
 }
