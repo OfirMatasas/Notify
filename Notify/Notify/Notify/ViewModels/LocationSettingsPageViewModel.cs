@@ -13,7 +13,7 @@ namespace Notify.ViewModels
         private string m_Destination;
         private string m_Longitude;
         private string m_Latitude;
-        private string m_SearchAddress;
+        private string m_SearchedAddress;
         private string m_SelectedAddress;
         private List<string> m_DropBoxSuggestions;
         
@@ -23,7 +23,6 @@ namespace Notify.ViewModels
         public Command GetGeographicCoordinatesCommand { get; set; }
         public Command GetCurrentLocationCommand { get; set; }
         
-
         public LocationSettingsPageViewModel()
         {
             BackCommand = new Command(onBackButtonClicked);
@@ -74,8 +73,8 @@ namespace Notify.ViewModels
         
         public string SearchAddress
         {
-            get => m_SearchAddress;
-            set { SetProperty(ref m_SearchAddress, value); }
+            get => m_SearchedAddress;
+            set { SetProperty(ref m_SearchedAddress, value); }
         }
 
         public List<string> DropBoxOptions
@@ -125,18 +124,21 @@ namespace Notify.ViewModels
 
         private async void onGetGeographicCoordinatesButtonClicked()
         {
+            GoogleHttpClient.Coordinates coordinates;
+            double longitude, latitude;
+            
             Debug.WriteLine($"Getting geographic coordinates for: {SelectedAddress}");
             
             if (string.IsNullOrEmpty(SelectedAddress))
             {
-                await App.Current.MainPage.DisplayAlert("Error", "Please choose an address!", "OK");
+                await App.Current.MainPage.DisplayAlert("Error", "Please choose an address.", "OK");
             }
             else
             {
-                GoogleHttpClient.Coordinates coordinates = await GoogleHttpClient.GetCoordinatesFromAddress(SelectedAddress);
+                coordinates = await GoogleHttpClient.GetCoordinatesFromAddress(SelectedAddress);
             
-                double longitude = coordinates.Lng;
-                double latitude = coordinates.Lat;
+                longitude = coordinates.Lng;
+                latitude = coordinates.Lat;
                 Debug.WriteLine($"onGetGeographicCoordinatesButtonClicked - Longitude: {longitude}, Latitude: {latitude}");
                 
                 Longitude = longitude.ToString();
@@ -148,18 +150,18 @@ namespace Notify.ViewModels
          {
              GeolocationRequest request;
              Location location;
+             double longitude, latitude;
         
              try
              {
                  request = new GeolocationRequest(GeolocationAccuracy.High);
                  location = await Geolocation.GetLocationAsync(request);
                  
-                 double longitude = location.Longitude;
-                 double latitude = location.Latitude;
+                 longitude = location.Longitude;
+                 latitude = location.Latitude;
         
                  Debug.WriteLine($"onGetCurrentLocationButtonClicked - Current Longitude: {longitude.ToString()}, Latitude: {latitude.ToString()}" );
                  SelectedAddress =  await GoogleHttpClient.GetAddressFromCoordinatesAsync(latitude, longitude);
-                 // SearchAddress = SelectedAddress;
              }
              catch (Exception ex)
              {

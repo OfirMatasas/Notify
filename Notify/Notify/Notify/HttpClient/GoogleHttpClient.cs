@@ -102,18 +102,21 @@ namespace Notify.HttpClient
             string requestUrl =
                 $"https://maps.googleapis.com/maps/api/place/autocomplete/json?input={subAddress}&types=address&key={r_GoogleAPIkey}";
             List<string> suggestions = new List<string>();
+            string response, address;
+            JObject responseJson;
+            JToken predictions;
 
             try
             {
-                string stringContent = await GoogleHttpClient.Builder()
+                response = await GoogleHttpClient.Builder()
                     .Uri(requestUrl)
                     .Method()
                     .Execute();
-                JObject responseJson = JObject.Parse(stringContent);
-                JToken predictions = responseJson["predictions"];
+                responseJson = JObject.Parse(response);
+                predictions = responseJson["predictions"];
                 foreach (JToken prediction in predictions)
                 {
-                    string address = prediction["description"].ToString();
+                    address = prediction["description"].ToString();
                     suggestions.Add(address);
                     Debug.WriteLine(address);
                 }
@@ -125,21 +128,22 @@ namespace Notify.HttpClient
 
             return suggestions;
         }
-
-
+        
         public static async Task<Coordinates> GetCoordinatesFromAddress(string address)
         {
             string requestUrl =
                 $"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={r_GoogleAPIkey}";
             Coordinates coordinates = null;
+            string response;
+            GeocodingResponse geocodingResponse;
 
             try
             {
-                string stringContent = await GoogleHttpClient.Builder()
+                response = await GoogleHttpClient.Builder()
                     .Uri(requestUrl)
                     .Method()
                     .Execute();
-                GeocodingResponse geocodingResponse = JsonConvert.DeserializeObject<GeocodingResponse>(stringContent);
+                geocodingResponse = JsonConvert.DeserializeObject<GeocodingResponse>(response);
                 if (geocodingResponse.Results.Count > 0)
                 {
                     Debug.WriteLine($"eocodingResponse.Results.Count: {geocodingResponse.Results.Count}");
@@ -158,27 +162,30 @@ namespace Notify.HttpClient
         {
             string requestUrl = $"https://maps.googleapis.com/maps/api/geocode/json?key={r_GoogleAPIkey}&latlng={latitude},{longitude}";
             string address = null;
+            HttpResponseMessage response;
+            string responseJson;
+            GoogleMapsApiResult result;
     
             try
             {
-                HttpResponseMessage response = await Builder()
+                response = await Builder()
                     .Uri(requestUrl)
                     .Method()
                     .r_HttpClient
                     .GetAsync(requestUrl);
                 response.EnsureSuccessStatusCode();
-                string json = await response.Content.ReadAsStringAsync();
-                GoogleMapsApiResult result = JsonConvert.DeserializeObject<GoogleMapsApiResult>(json);
+                responseJson = await response.Content.ReadAsStringAsync();
+                result = JsonConvert.DeserializeObject<GoogleMapsApiResult>(responseJson);
 
                 if (result == null || result.GoogleMapsResults.Length == 0)
                 {
-                    return "Unknown address";
+                    address = "Unknown address";
+                    Debug.WriteLine($"Unknown address");
                 }
                 else
                 {
                     address = result.GoogleMapsResults[0].FormattedAddress;
-                    Debug.WriteLine($"Current address: {address}" );
-
+                    Debug.WriteLine($"Current address: {address}");
                 }
             }
             catch (Exception ex)
@@ -189,7 +196,6 @@ namespace Notify.HttpClient
             return address;
         }
 
-        
         public class GeocodingResponse
         {
             [JsonProperty("results")] public List<GeocodingResult> Results { get; set; }
