@@ -114,6 +114,38 @@ namespace Notify.Azure.HttpClient
             return isSuccess;
         }
         
+        public bool RegisterUser(string name, string userName, string password, string telephone)
+        {
+            dynamic data = new JObject();
+            string json;
+            HttpResponseMessage response;
+            bool registered;
+            
+            try
+            {
+                data.name = name;
+                data.userName = userName;
+                data.password = password;
+                data.telephone = telephone;
+
+                json = JsonConvert.SerializeObject(data);
+                Debug.WriteLine($"request:{Environment.NewLine}{data}");
+
+                response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_REGISTER, createJsonStringContent(json)).Result;
+                response.EnsureSuccessStatusCode();
+                Debug.WriteLine($"Successful status code from Azure Function from Register, name: {name}, userName: {userName}, password: {password}, telephone: {telephone}!");
+
+                registered = true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error occured on Register: {ex.Message}");
+                registered = false;
+            }
+
+            return registered;
+        }
+        
         public bool CheckIfArrivedDestination(Location location)
         {
             dynamic request = new JObject();
@@ -314,7 +346,7 @@ namespace Notify.Azure.HttpClient
 
             return validCredentials;
         }
-
+        
         public async Task<List<Friend>> GetFriends()
         {
             List<Friend> friends = new List<Friend>();

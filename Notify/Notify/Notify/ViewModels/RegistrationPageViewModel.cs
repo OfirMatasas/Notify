@@ -171,9 +171,10 @@ namespace Notify.ViewModels
         {
             string IsraeliPhoneNumber;
             bool successfulSMSSent;
-            
+            bool validationSuccessful;
+
             ErrorMessages.Clear();
-            
+
             validateName();
             validateUserName();
             validatePassword();
@@ -196,10 +197,22 @@ namespace Notify.ViewModels
 
                 successfulSMSSent =
                     AzureHttpClient.Instance.SendSMSVerificationCode(IsraeliPhoneNumber, VerificationCode);
-                
+
                 if (successfulSMSSent)
                 {
-                    await validateVerificationCodeWithUser();
+                    validationSuccessful = await validateVerificationCodeWithUser();
+                    if (validationSuccessful)
+                    {
+                        AzureHttpClient.Instance.RegisterUser(Name, UserName, Password, Telephone);
+                        await Application.Current.MainPage.DisplayAlert("Registration Success",
+                            "You have successfully registered to Notify.", "OK");
+                        await Shell.Current.GoToAsync("///login");
+                    }
+                    else
+                    {
+                        Debug.WriteLine("Failed to validate verification code.");
+                        displayError($"Failed to validate verification code.");
+                    }
                 }
                 else
                 {
@@ -209,10 +222,11 @@ namespace Notify.ViewModels
             }
         }
 
-        private async Task validateVerificationCodeWithUser()
+        private async Task<bool> validateVerificationCodeWithUser()
         {
             string userEnteredCode;
-            
+            bool isValidationSuccessful = false;
+
             do
             {
                 userEnteredCode = await Application.Current.MainPage.DisplayPromptAsync(
@@ -226,16 +240,17 @@ namespace Notify.ViewModels
 
                     if (!tryAgain)
                     {
-                        return;
+                        isValidationSuccessful = false;
+                        break;
                     }
                 }
-            } while (userEnteredCode != VerificationCode);
+                else
+                {
+                    isValidationSuccessful = true;
+                }
+            } while (!isValidationSuccessful);
 
-            await Application.Current.MainPage.DisplayAlert("Registration Success",
-                "You have successfully registered to Notify.", "OK");
-            Debug.WriteLine($"User registered successfully.{Environment.NewLine}Name: {Name}, User Name: {UserName}, Telephone: {Telephone}, Password: {Password}");
-            
-            await Shell.Current.GoToAsync("///login");
+            return isValidationSuccessful;
         }
 
         private string convertToIsraelPhoneNumber(string phoneNumber) => $"+972{phoneNumber.Substring(1)}";
