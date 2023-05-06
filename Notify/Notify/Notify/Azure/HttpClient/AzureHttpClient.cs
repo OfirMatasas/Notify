@@ -133,7 +133,7 @@ namespace Notify.Azure.HttpClient
 
                 response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_REGISTER, createJsonStringContent(json)).Result;
                 response.EnsureSuccessStatusCode();
-                Debug.WriteLine($"Successful status code from Azure Function from Register, name: {name}, userName: {userName}, password: {password}, telephone: {telephone}!");
+                Debug.WriteLine($"Successful status code from Azure Function from Register, name: {name}, userName: {userName}, password: {password}, telephone: {telephone}");
 
                 registered = true;
             }
