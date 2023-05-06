@@ -48,24 +48,43 @@
                     BackgroundColor="White"
                     BorderColor="Transparent"
                     FontSize="16"
-                    MaxLength="16"
-                    Placeholder="Longitude"
+                    MaxLength="100"
+                    Placeholder="Enter Address"
                     ReturnType="Next"
                     TabIndex="1"
-                    Text="{Binding Longitude}"
+                    Text="{Binding SearchAddress}"
                     TextColor="Black"
                     Type="Filled" />
-                <materialDesignControls1:MaterialEntry
-                    BackgroundColor="White"
-                    BorderColor="Transparent"
+                <materialDesignControls1:MaterialPicker 
+                    Placeholder="Suggestions"
                     FontSize="16"
-                    MaxLength="16"
-                    Placeholder="Latitude"
-                    ReturnType="Next"
-                    TabIndex="1"
-                    Text="{Binding Latitude}"
-                    TextColor="Black"
-                    Type="Filled" />
+                    Type="Filled"
+                    SelectedItem="{Binding SelectedAddress}">
+                    <materialDesignControls1:MaterialPicker.ItemsSource>
+                        <Binding Path="DropBoxOptions" />
+                    </materialDesignControls1:MaterialPicker.ItemsSource>
+                </materialDesignControls1:MaterialPicker>
+                <Button
+                    BackgroundColor="#393E46"
+                    Command="{Binding GetAddressSuggestionsCommand}"
+                    CornerRadius="30"
+                    Text="GET ADDRESS SUGGESTIONS"
+                    TextColor="#EEEEEE">
+                </Button>
+                <Button
+                    BackgroundColor="#393E46"
+                    Command="{Binding GetGeographicCoordinatesCommand}"
+                    CornerRadius="30"
+                    Text="GET GEOGRAPHIC COORDINATES"
+                    TextColor="#EEEEEE">
+                </Button>
+                <Button
+                    BackgroundColor="#393E46"
+                    Command="{Binding GetCurrentLocationCommand}"
+                    CornerRadius="30"
+                    Text="GET CURRENT LOCATION"
+                    TextColor="#EEEEEE">
+                </Button>
                 <Button
                     BackgroundColor="#393E46"
                     Command="{Binding UpdateLocationCommand}"
