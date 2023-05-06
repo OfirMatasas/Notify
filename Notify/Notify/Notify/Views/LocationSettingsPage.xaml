@@ -48,7 +48,7 @@
                     BackgroundColor="White"
                     BorderColor="Transparent"
                     FontSize="16"
-                    MaxLength="50"
+                    MaxLength="100"
                     Placeholder="Enter Address"
                     ReturnType="Next"
                     TabIndex="1"

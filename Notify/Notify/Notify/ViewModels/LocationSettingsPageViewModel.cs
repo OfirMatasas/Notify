@@ -67,7 +67,7 @@ namespace Notify.ViewModels
                 SetProperty(ref m_SelectedAddress, value);
                 OnPropertyChanged(nameof(SelectedAddress));
                 onGetGeographicCoordinatesButtonClicked();
-                SearchAddress = SelectedAddress;
+                SearchAddress = value;
             }
         }
         
