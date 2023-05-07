@@ -173,7 +173,6 @@ namespace Notify.ViewModels
             bool successfulSMSSent;
             bool validationSuccessful;
             bool userExists;
-            bool isRegistered;
 
             ErrorMessages.Clear();
 
@@ -212,9 +211,7 @@ namespace Notify.ViewModels
                     validationSuccessful = await validateVerificationCodeWithUser();
                     if (validationSuccessful)
                     {
-                        isRegistered = AzureHttpClient.Instance.RegisterUser(Name, UserName, Password, Telephone);
-
-                        if (isRegistered)
+                        if (AzureHttpClient.Instance.RegisterUser(Name, UserName, Password, Telephone))
                         {
                             await Application.Current.MainPage.DisplayAlert("Registration Success",
                                 "You have successfully registered to Notify.", "OK");

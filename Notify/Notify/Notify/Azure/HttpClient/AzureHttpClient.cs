@@ -154,7 +154,7 @@ namespace Notify.Azure.HttpClient
             
             return registered;
         }
-        
+
         public bool CheckUserExistence(string userName, string telephone)
         {
             dynamic data = new JObject();
@@ -170,16 +170,14 @@ namespace Notify.Azure.HttpClient
                 json = JsonConvert.SerializeObject(data);
                 Debug.WriteLine($"request:{Environment.NewLine}{data}");
 
-                response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_CHECK_USER_EXISTENCE, createJsonStringContent(json)).Result;
+                response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_CHECK_USER_EXISTENCE,
+                    createJsonStringContent(json)).Result;
 
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    Debug.WriteLine($"User with username {userName} or telephone {telephone} already exists");
-                    userExists = true;
-                }
-                else if (response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    userExists = false;
+                    string responseJson = response.Content.ReadAsStringAsync().Result;
+                    dynamic responseData = JsonConvert.DeserializeObject(responseJson);
+                    userExists = Convert.ToBoolean(responseData.userExists);
                 }
                 else
                 {
@@ -196,7 +194,6 @@ namespace Notify.Azure.HttpClient
             return userExists;
         }
 
-        
         public bool CheckIfArrivedDestination(Location location)
         {
             dynamic request = new JObject();

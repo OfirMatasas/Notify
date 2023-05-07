@@ -81,7 +81,6 @@ public static class CheckUserExistence
 
             result = new BadRequestObjectResult($"Failed to check user existence. Error: {ex.Message}");
         }
-
         
         return result;
     }
