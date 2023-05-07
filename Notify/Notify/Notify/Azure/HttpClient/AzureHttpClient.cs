@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -118,7 +119,7 @@ namespace Notify.Azure.HttpClient
         {
             dynamic data = new JObject();
             string json;
-            HttpResponseMessage response;
+            HttpResponseMessage response = null;
             bool registered;
             
             try
@@ -137,16 +138,64 @@ namespace Notify.Azure.HttpClient
 
                 registered = true;
             }
-            catch (Exception ex)
+            catch (HttpRequestException ex)
             {
-                Debug.WriteLine($"Error occured on Register: {ex.Message}");
+                if (response.StatusCode == HttpStatusCode.Conflict)
+                {
+                    Debug.WriteLine($"User with username {userName} or telephone {telephone} already exists");
+                }
+                else
+                {
+                    Debug.WriteLine($"Error occurred on Register: {ex.Message}");
+                }
+                
                 registered = false;
             }
             
-            //TODO: check if user already exists and (do that before the sms) and color the username background color in red
-
             return registered;
         }
+        
+        public bool CheckUserExistence(string userName, string telephone)
+        {
+            dynamic data = new JObject();
+            string json;
+            HttpResponseMessage response = null;
+            bool userExists;
+
+            try
+            {
+                data.userName = userName;
+                data.telephone = telephone;
+
+                json = JsonConvert.SerializeObject(data);
+                Debug.WriteLine($"request:{Environment.NewLine}{data}");
+
+                response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_CHECK_USER_EXISTENCE, createJsonStringContent(json)).Result;
+
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    Debug.WriteLine($"User with username {userName} or telephone {telephone} already exists");
+                    userExists = true;
+                }
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    userExists = false;
+                }
+                else
+                {
+                    Debug.WriteLine($"Error occurred while checking user existence: {response.StatusCode}");
+                    userExists = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error occurred while checking user existence: {ex.Message}");
+                userExists = false;
+            }
+
+            return userExists;
+        }
+
         
         public bool CheckIfArrivedDestination(Location location)
         {

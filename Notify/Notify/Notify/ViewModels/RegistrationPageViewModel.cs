@@ -172,6 +172,8 @@ namespace Notify.ViewModels
             string IsraeliPhoneNumber;
             bool successfulSMSSent;
             bool validationSuccessful;
+            bool userExists;
+            bool isRegistered;
 
             ErrorMessages.Clear();
 
@@ -188,6 +190,13 @@ namespace Notify.ViewModels
             }
             else
             {
+                userExists = AzureHttpClient.Instance.CheckUserExistence(UserName, Telephone);
+                if (userExists)
+                {
+                    displayError($"User with username {UserName} or telephone {Telephone} already exists.");
+                    return;
+                }
+
                 IsraeliPhoneNumber = convertToIsraelPhoneNumber(Telephone);
 
                 if (string.IsNullOrEmpty(VerificationCode))
@@ -203,10 +212,19 @@ namespace Notify.ViewModels
                     validationSuccessful = await validateVerificationCodeWithUser();
                     if (validationSuccessful)
                     {
-                        AzureHttpClient.Instance.RegisterUser(Name, UserName, Password, Telephone);
-                        await Application.Current.MainPage.DisplayAlert("Registration Success",
-                            "You have successfully registered to Notify.", "OK");
-                        await Shell.Current.GoToAsync("///login");
+                        isRegistered = AzureHttpClient.Instance.RegisterUser(Name, UserName, Password, Telephone);
+
+                        if (isRegistered)
+                        {
+                            await Application.Current.MainPage.DisplayAlert("Registration Success",
+                                "You have successfully registered to Notify.", "OK");
+                            await Shell.Current.GoToAsync("///login");
+                        }
+                        else
+                        {
+                            Debug.WriteLine("Failed to register user.");
+                            displayError($"Failed to register user.");
+                        }
                     }
                     else
                     {
@@ -221,7 +239,7 @@ namespace Notify.ViewModels
                 }
             }
         }
-
+        
         private async Task<bool> validateVerificationCodeWithUser()
         {
             string userEnteredCode;
