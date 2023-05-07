@@ -75,7 +75,7 @@ public static class CheckUserExistence
             }
             else
             {
-                log.LogInformation($"User with username {data.userName} and telephone {data.telephone} does not exist");
+                log.LogInformation($"User with username {data.userName} and telephone {data.telephone} does not exist in the database. continuing with registration");
 
                 result = new OkObjectResult(JsonConvert.SerializeObject(data));
             }

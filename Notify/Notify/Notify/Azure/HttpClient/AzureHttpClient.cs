@@ -180,14 +180,14 @@ namespace Notify.Azure.HttpClient
                 }
                 else
                 {
-                    Debug.WriteLine($"Error occurred while checking user existence: {response.StatusCode}");
-                    userExists = false;
+                    Debug.WriteLine($"Error occurred while checking user existence: The response status is: {response.StatusCode}");
+                    userExists = true;
                 }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"Error occurred while checking user existence: {ex.Message}");
-                userExists = false;
+                userExists = true;
             }
 
             return userExists;
