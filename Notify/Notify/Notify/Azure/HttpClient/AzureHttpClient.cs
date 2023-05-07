@@ -170,7 +170,8 @@ namespace Notify.Azure.HttpClient
                 json = JsonConvert.SerializeObject(data);
                 Debug.WriteLine($"request:{Environment.NewLine}{data}");
 
-                response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_CHECK_USER_EXISTENCE, createJsonStringContent(json)).Result;
+                response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_CHECK_USER_EXISTENCE,
+                    createJsonStringContent(json)).Result;
 
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
@@ -178,9 +179,38 @@ namespace Notify.Azure.HttpClient
                     dynamic responseData = JsonConvert.DeserializeObject(responseJson);
                     userExists = Convert.ToBoolean(responseData.userExists);
                 }
+                else if (response.StatusCode == HttpStatusCode.Conflict)
+                {
+                    string responseJson = response.Content.ReadAsStringAsync().Result;
+                    dynamic responseData = JsonConvert.DeserializeObject(responseJson);
+                    bool userNameExists = Convert.ToBoolean(responseData.userNameExists);
+                    bool telephoneExists = Convert.ToBoolean(responseData.telephoneExists);
+
+                    if (userNameExists && telephoneExists)
+                    {
+                        Debug.WriteLine($"User with username {userName} and telephone {telephone} already exists");
+                        userExists = true;
+                    }
+                    else if (userNameExists)
+                    {
+                        Debug.WriteLine($"User with username {userName} already exists");
+                        userExists = true;
+                    }
+                    else if (telephoneExists)
+                    {
+                        Debug.WriteLine($"User with telephone {telephone} already exists");
+                        userExists = true;
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"Unexpected response when checking user existence: {response.StatusCode}");
+                        userExists = true;
+                    }
+                }
                 else
                 {
-                    Debug.WriteLine($"Error occurred while checking user existence: The response status is: {response.StatusCode}");
+                    Debug.WriteLine(
+                        $"Error occurred while checking user existence: The response status is: {response.StatusCode}");
                     userExists = true;
                 }
             }
@@ -192,7 +222,8 @@ namespace Notify.Azure.HttpClient
 
             return userExists;
         }
-        
+
+
         public bool CheckIfArrivedDestination(Location location)
         {
             dynamic request = new JObject();

@@ -23,6 +23,7 @@ public static class CheckUserExistence
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "checkUserExistence")]
         HttpRequest req, ILogger log)
     {
+        req.HttpContext.Response.Headers.Add("Cache-Control", "no-cache");
         IMongoCollection<BsonDocument> collection;
         string requestBody;
         dynamic data = null;

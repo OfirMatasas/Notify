@@ -129,7 +129,17 @@ namespace Notify.ViewModels
 
                 if (isValid)
                 {
-                    UserNameBorderColor = Constants.VALID_COLOR;
+                    bool userExists = AzureHttpClient.Instance.CheckUserExistence(UserName, Telephone);
+
+                    if (userExists)
+                    {
+                        UserNameBorderColor = Constants.INVALID_COLOR;
+                        displayError($"User with username {UserName} already exists.");
+                    }
+                    else
+                    {
+                        UserNameBorderColor = Constants.VALID_COLOR;
+                    }
                 }
                 else
                 {
@@ -138,6 +148,7 @@ namespace Notify.ViewModels
                 }
             }
         }
+
         
         private void validateTelephone()
         {
@@ -152,7 +163,17 @@ namespace Notify.ViewModels
 
                 if (isValid)
                 {
-                    TelephoneBorderColor = Constants.VALID_COLOR;
+                    bool userExists = AzureHttpClient.Instance.CheckUserExistence("", Telephone);
+
+                    if (userExists)
+                    {
+                        TelephoneBorderColor = Constants.INVALID_COLOR;
+                        displayError($"User with telephone {Telephone} already exists.");
+                    }
+                    else
+                    {
+                        TelephoneBorderColor = Constants.VALID_COLOR;
+                    }
                 }
                 else
                 {
@@ -161,6 +182,7 @@ namespace Notify.ViewModels
                 }
             }
         }
+
         
         private void displayError(string message)
         {
