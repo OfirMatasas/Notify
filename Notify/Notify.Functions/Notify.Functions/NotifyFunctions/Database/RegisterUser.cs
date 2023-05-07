@@ -13,6 +13,7 @@ using MongoDB.Driver;
 using Newtonsoft.Json;
 using Notify.Functions.Core;
 using Notify.Functions.NotifyFunctions.AzureHTTPClients;
+using MongoUtils = Notify.Functions.Utils.MongoUtils;
 
 namespace Notify.Functions.NotifyFunctions.Database;
 
@@ -42,23 +43,24 @@ public static class RegisterUser
             data = JsonConvert.DeserializeObject(requestBody);
             log.LogInformation($"Data:{Environment.NewLine}{data}");
 
-            await Utils.MongoUtils.CreatePropertyIndex(collection, "userName");
-            
+            await MongoUtils.CreatePropertyIndexes(collection, "userName", "telephone");
+
             result = await handleUserRegistration(data, collection, log);
-            
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            log.LogError(e.Message);
-            result = new BadRequestObjectResult($"Failed to register. Error: {e.Message}");
+            log.LogError(ex.Message);
+            result = new BadRequestObjectResult($"Failed to register. Error: {ex.Message}");
         }
 
         return result;
     }
-    
+
     private static async Task<IActionResult> handleUserRegistration(dynamic data,
         IMongoCollection<BsonDocument> collection, ILogger log)
     {
+        ObjectResult result;
+
         BsonDocument userDocument = new BsonDocument
         {
             { "name", Convert.ToString(data.name) },
@@ -66,36 +68,31 @@ public static class RegisterUser
             { "password", Convert.ToString(data.password) },
             { "telephone", Convert.ToString(data.telephone) }
         };
-        
-        try
-        {
-            CreateIndexOptions indexOptions = new CreateIndexOptions
-            {
-                Unique = true
-            };
-            IndexKeysDefinition<BsonDocument> indexKeys = Builders<BsonDocument>.IndexKeys.Ascending("userName");
-
-            await collection.Indexes.CreateOneAsync(new CreateIndexModel<BsonDocument>(indexKeys, indexOptions));
-        }
-        catch (MongoCommandException ex)
-        {
-            log.LogWarning($"Failed to create unique index. Reason: {ex.Message}");
-        }
 
         try
         {
             await collection.InsertOneAsync(userDocument);
-            log.LogInformation($"Inserted user with username {data.userName} into database");
+            log.LogInformation(
+                $"Inserted user with username {data.userName} and telephone {data.telephone} into database");
 
-            return new OkObjectResult(JsonConvert.SerializeObject(data));
+            result = new OkObjectResult(JsonConvert.SerializeObject(data));
         }
-        catch (MongoWriteException ex)
+        catch (MongoWriteException ex) when (ex.WriteError.Category == ServerErrorCategory.DuplicateKey)
+        {
+            string duplicateField = ex.WriteError.Message.Split('\'')[1];
+            log.LogError($"Failed to insert user with duplicate {duplicateField}. Reason: {ex.Message}");
+
+            result = new ConflictObjectResult($"User with {duplicateField} '{data[duplicateField]}' already exists");
+        }
+        catch (Exception ex)
         {
             log.LogError($"Failed to insert user. Reason: {ex.Message}");
 
-            return new ConflictObjectResult($"User with username {data.userName} already exists");
+            result = new BadRequestObjectResult($"Failed to register. Error: {ex.Message}");
         }
-    }
 
+        return result;
+    }
 }
+
 
