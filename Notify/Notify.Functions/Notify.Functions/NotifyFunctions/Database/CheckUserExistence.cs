@@ -25,8 +25,8 @@ public static class CheckUserExistence
     {
         IMongoCollection<BsonDocument> collection;
         string requestBody;
-        dynamic data;
-        ObjectResult result;
+        dynamic data = null;
+        IActionResult result;
 
         log.LogInformation("Got client's HTTP request to check user existence");
 
@@ -42,6 +42,10 @@ public static class CheckUserExistence
             log.LogInformation($"Data:{Environment.NewLine}{data}");
 
             result = await handleUserExistenceCheck(data, collection, log);
+            if (result is ConflictObjectResult)
+            {
+                return new BadRequestObjectResult($"User with username {data.userName} or telephone {data.telephone} already exists.");
+            }
         }
         catch (Exception ex)
         {
@@ -49,8 +53,9 @@ public static class CheckUserExistence
             result = new BadRequestObjectResult($"Failed to check user existence. Error: {ex.Message}");
         }
 
-        return result;
+        return new OkObjectResult(JsonConvert.SerializeObject(data));
     }
+
 
     private static async Task<IActionResult> handleUserExistenceCheck(dynamic data,
         IMongoCollection<BsonDocument> collection, ILogger log)

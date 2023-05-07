@@ -170,8 +170,7 @@ namespace Notify.Azure.HttpClient
                 json = JsonConvert.SerializeObject(data);
                 Debug.WriteLine($"request:{Environment.NewLine}{data}");
 
-                response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_CHECK_USER_EXISTENCE,
-                    createJsonStringContent(json)).Result;
+                response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_CHECK_USER_EXISTENCE, createJsonStringContent(json)).Result;
 
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
@@ -193,7 +192,7 @@ namespace Notify.Azure.HttpClient
 
             return userExists;
         }
-
+        
         public bool CheckIfArrivedDestination(Location location)
         {
             dynamic request = new JObject();
