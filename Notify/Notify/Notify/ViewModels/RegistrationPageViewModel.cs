@@ -195,7 +195,6 @@ namespace Notify.ViewModels
             string IsraeliPhoneNumber;
             bool successfulSMSSent;
             bool validationSuccessful;
-            bool userExists;
 
             ErrorMessages.Clear();
 
@@ -212,13 +211,6 @@ namespace Notify.ViewModels
             }
             else
             {
-                userExists = AzureHttpClient.Instance.CheckUserExistence(UserName, Telephone);
-                if (userExists)
-                {
-                    displayError($"User with username {UserName} or telephone {Telephone} already exists.");
-                    return;
-                }
-
                 IsraeliPhoneNumber = convertToIsraelPhoneNumber(Telephone);
 
                 if (string.IsNullOrEmpty(VerificationCode))
@@ -234,7 +226,8 @@ namespace Notify.ViewModels
                     validationSuccessful = await validateVerificationCodeWithUser();
                     if (validationSuccessful)
                     {
-                        if (AzureHttpClient.Instance.RegisterUser(Name, UserName, Password, Telephone))
+                        bool registered = AzureHttpClient.Instance.RegisterUser(Name, UserName, Password, Telephone);
+                        if (registered)
                         {
                             await Application.Current.MainPage.DisplayAlert("Registration Success",
                                 "You have successfully registered to Notify.", "OK");
