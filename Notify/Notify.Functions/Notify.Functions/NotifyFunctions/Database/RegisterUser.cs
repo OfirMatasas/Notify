@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +10,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using Notify.Functions.Core;
@@ -61,13 +63,27 @@ namespace Notify.Functions.NotifyFunctions.Database
         {
             ObjectResult result;
 
-            var filter = Builders<BsonDocument>.Filter.Eq("userName", Convert.ToString(data.userName)) |
-                         Builders<BsonDocument>.Filter.Eq("telephone", Convert.ToString(data.telephone));
-            var count = await collection.CountDocumentsAsync(filter);
-            if (count > 0)
+            var filterUsername = Builders<BsonDocument>.Filter.Eq("userName", Convert.ToString(data.userName));
+            var filterTelephone = Builders<BsonDocument>.Filter.Eq("telephone", Convert.ToString(data.telephone));
+
+            var countUsername = await collection.CountDocumentsAsync(filterUsername);
+            var countTelephone = await collection.CountDocumentsAsync(filterTelephone);
+
+            if (countUsername > 0 && countTelephone > 0)
             {
-                result = new ConflictObjectResult($"User with {filter.RenderToJson()} already exists.");
-                
+                result = new ConflictObjectResult($"User with username '{data.userName}' and telephone '{data.telephone}' already exists.");
+                return result;
+            }
+
+            if (countUsername > 0)
+            {
+                result = new ConflictObjectResult($"User with username '{data.userName}' already exists.");
+                return result;
+            }
+
+            if (countTelephone > 0)
+            {
+                result = new ConflictObjectResult($"User with telephone '{data.telephone}' already exists.");
                 return result;
             }
 
@@ -92,7 +108,8 @@ namespace Notify.Functions.NotifyFunctions.Database
                 string duplicateField = ex.WriteError.Message.Split('\'')[1];
                 log.LogError($"Failed to insert user with duplicate {duplicateField}. Reason: {ex.Message}");
 
-                result = new ConflictObjectResult($"User with {duplicateField} '{data[duplicateField]}' already exists");
+                result = new ConflictObjectResult(
+                    $"User with {duplicateField} '{data[duplicateField]}' already exists");
             }
             catch (Exception ex)
             {
@@ -100,7 +117,7 @@ namespace Notify.Functions.NotifyFunctions.Database
 
                 result = new BadRequestObjectResult($"Failed to register. Error: {ex.Message}");
             }
-            
+
             return result;
         }
     }
