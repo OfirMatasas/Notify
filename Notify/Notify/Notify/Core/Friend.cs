@@ -1,7 +1,6 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Xamarin.Forms;
-using Image = Xamarin.Forms.PlatformConfiguration.TizenSpecific.Image;
 
 namespace Notify.Core
 {

@@ -12,13 +12,13 @@ namespace Notify.Droid.Notifications
 
         public Notification GetServiceStartedNotification()
         {
-            var intent = new Intent(context, typeof(MainActivity));
+            Intent intent = new Intent(context, typeof(MainActivity));
             intent.AddFlags(ActivityFlags.SingleTop);
             intent.PutExtra("Title", "Message");
 
-            var pendingIntent = PendingIntent.GetActivity(context, 0, intent, PendingIntentFlags.UpdateCurrent);
+            PendingIntent pendingIntent = PendingIntent.GetActivity(context, 0, intent, PendingIntentFlags.UpdateCurrent);
 
-            var notificationBuilder = new NotificationCompat.Builder(context, foregroundChannelId)
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, foregroundChannelId)
                 .SetContentTitle("Notify tracking location service")
                 .SetContentText("Your location is being tracked")
                 .SetOngoing(true)
@@ -33,7 +33,7 @@ namespace Notify.Droid.Notifications
                 notificationChannel.SetShowBadge(true);
                 notificationChannel.SetVibrationPattern(new long[] { 100, 200, 300 });
 
-                var notificationManager = context.GetSystemService(Context.NotificationService) as NotificationManager;
+                NotificationManager notificationManager = context.GetSystemService(Context.NotificationService) as NotificationManager;
                 if (notificationManager != null)
                 {
                     notificationBuilder.SetChannelId(foregroundChannelId);
