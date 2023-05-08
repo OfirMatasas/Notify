@@ -128,29 +128,18 @@ namespace Notify.ViewModels
             {
                 bool isValid = Regex.IsMatch(UserName, @"^[a-zA-Z0-9]+$");
 
-                if (isValid)
-                {
-                    bool userExists = AzureHttpClient.Instance.CheckUserExistence(UserName, Telephone);
-
-                    if (userExists)
-                    {
-                        UserNameBorderColor = Constants.INVALID_COLOR;
-                        displayError($"User with username {UserName} already exists.");
-                    }
-                    else
-                    {
-                        UserNameBorderColor = Constants.VALID_COLOR;
-                    }
-                }
-                else
+                if (!isValid)
                 {
                     UserNameBorderColor = Constants.INVALID_COLOR;
                     displayError("Please enter a valid username consisting only of letters and numbers.");
                 }
+                else
+                {
+                    UserNameBorderColor = Constants.VALID_COLOR;
+                }
             }
         }
 
-        
         private void validateTelephone()
         {
             if (string.IsNullOrEmpty(Telephone))
@@ -162,29 +151,18 @@ namespace Notify.ViewModels
             {
                 bool isValid = Regex.IsMatch(Telephone, @"^05\d{8}$");
 
-                if (isValid)
-                {
-                    bool userExists = AzureHttpClient.Instance.CheckUserExistence("", Telephone);
-
-                    if (userExists)
-                    {
-                        TelephoneBorderColor = Constants.INVALID_COLOR;
-                        displayError($"User with telephone {Telephone} already exists.");
-                    }
-                    else
-                    {
-                        TelephoneBorderColor = Constants.VALID_COLOR;
-                    }
-                }
-                else
+                if (!isValid)
                 {
                     TelephoneBorderColor = Constants.INVALID_COLOR;
                     displayError("Please enter a valid 10-digit telephone number starting with '05'.");
                 }
+                else
+                {
+                    TelephoneBorderColor = Constants.VALID_COLOR;
+                }
             }
         }
 
-        
         private void displayError(string message)
         {
             ErrorMessages.Add(message);
