@@ -88,6 +88,7 @@ namespace Notify.ViewModels
             }
         }
         
+        
         private void validatePassword()
         {
             if (string.IsNullOrEmpty(Password))
