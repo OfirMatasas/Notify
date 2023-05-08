@@ -105,7 +105,6 @@ namespace Notify.Helpers
 
         #region Vault
 
-        public static readonly string AZURE_KEY_VAULT = "https://notify-keys-vault.vault.azure.net/";
         public static readonly string AZURE_FUNCTIONS_PATTERN_SEND_SMS = "SendSMS";
         
         #endregion
@@ -116,8 +115,11 @@ namespace Notify.Helpers
         public static readonly int DISTANCE_UPDATE_THRESHOLD = 30;
         public static readonly int METERS_IN_KM = 1000;
         public static readonly int VERIFICATION_CODE_MAX_LENGTH = 6;
+        public static readonly int LATITUDE_MAX = 90;
+        public static readonly int LATITUDE_MIN = -90;
+        public static readonly int LONGITUDE_MAX = 180;
+        public static readonly int LONGITUDE_MIN = -180;
 
-        
         #endregion
 
         #region Colors

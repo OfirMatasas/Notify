@@ -1,49 +1,34 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<ContentPage 
-    xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:materialDesignControls1="clr-namespace:Plugin.MaterialDesignControls;assembly=Plugin.MaterialDesignControls"
-    x:Class="Notify.Views.LocationSettingsPage"
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
     BindingContext="{Binding AccountSettingsPage, Source={StaticResource ViewModelLocator}}"
-    NavigationPage.HasNavigationBar="False">
+    NavigationPage.HasNavigationBar="False"
+    x:Class="Notify.Views.LocationSettingsPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:materialDesignControls1="clr-namespace:Plugin.MaterialDesignControls;assembly=Plugin.MaterialDesignControls"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
     <ContentPage.Content>
-        <Grid
-            RowDefinitions="Auto, Auto, Auto, *"
-            BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor}, Dark={StaticResource DarkPageBackgroundColor}}">
-            <StackLayout
-                Grid.Row="0"
-                Margin="40">
+        <Grid BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor}, Dark={StaticResource DarkPageBackgroundColor}}" RowDefinitions="Auto, Auto, Auto, *">
+            <StackLayout Grid.Row="0" Margin="40">
                 <Label
-                    Text="Location Settings"
-                    Style="{StaticResource Body1FontSize_ExoBold}"
                     FontSize="Large"
-                    HorizontalTextAlignment="Center">
-                </Label>
+                    HorizontalTextAlignment="Center"
+                    Style="{StaticResource Body1FontSize_ExoBold}"
+                    Text="Location Settings" />
             </StackLayout>
-            <StackLayout 
-                Margin="0,30,350,0">
+            <StackLayout Margin="0,30,350,0">
                 <ImageButton
-                    Source="backButton.png"
-                    BackgroundColor="Transparent"
                     Aspect="AspectFit"
-                    Command="{Binding BackCommand}">
-                </ImageButton>
+                    BackgroundColor="Transparent"
+                    Command="{Binding BackCommand}"
+                    Source="backButton.png" />
             </StackLayout>
-            <StackLayout
-                Margin="20,200,20,0">
-                <materialDesignControls1:MaterialPicker 
-                    Placeholder="Select destination"
+            <StackLayout Margin="20,200,20,0">
+                <materialDesignControls1:MaterialPicker
                     FontSize="16"
-                    Type="Filled"
-                    SelectedItem="{Binding Destination}">
-                    <materialDesignControls1:MaterialPicker.ItemsSource>
-                        <x:Array Type="{x:Type x:String}">
-                            <x:String>Home</x:String>
-                            <x:String>Work</x:String>
-                            <x:String>School</x:String>
-                        </x:Array>
-                    </materialDesignControls1:MaterialPicker.ItemsSource>
-                </materialDesignControls1:MaterialPicker>
+                    ItemsSource="{Binding LocationSelectionList}"
+                    Placeholder="Select destination"
+                    SelectedItem="{Binding SelectedLocation}"
+                    Type="Filled" />
                 <materialDesignControls1:MaterialEntry
                     BackgroundColor="White"
                     BorderColor="Transparent"
@@ -90,8 +75,7 @@
                     Command="{Binding UpdateLocationCommand}"
                     CornerRadius="30"
                     Text="UPDATE LOCATION"
-                    TextColor="#EEEEEE">
-                </Button>
+                    TextColor="#EEEEEE" />
             </StackLayout>
         </Grid>
     </ContentPage.Content>
