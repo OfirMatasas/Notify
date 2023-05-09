@@ -37,7 +37,7 @@ namespace Notify.Functions.NotifyFunctions.Database
                     Constants.COLLECTION_USER);
                 log.LogInformation(
                     $"Got reference to {Constants.COLLECTION_USER} collection on {Constants.DATABASE_NOTIFY_MTA} database");
-                
+
                 await MongoUtils.CreatePropertyIndexes(collection, "userName", "telephone");
 
                 requestBody = await new StreamReader(req.Body).ReadToEndAsync();
@@ -53,17 +53,21 @@ namespace Notify.Functions.NotifyFunctions.Database
                 };
 
                 await collection.InsertOneAsync(userDocument);
-                log.LogInformation($"Inserted user with username {data.userName} and telephone {data.telephone} into database");
+                log.LogInformation(
+                    $"Inserted user with username {data.userName} and telephone {data.telephone} into database");
 
                 result = new OkObjectResult(JsonConvert.SerializeObject(data));
             }
             catch (MongoWriteException ex) when (ex.WriteError.Category == ServerErrorCategory.DuplicateKey)
             {
-                string duplicateField = ex.WriteError.Message.Split('\'')[1];
+                string[] messageParts = ex.WriteError.Message.Split('\'');
+                string duplicateField = messageParts.Length > 1 ? messageParts[1] : "<unknown>";
                 log.LogError($"Failed to insert user with duplicate {duplicateField}. Reason: {ex.Message}");
 
-                result = new ConflictObjectResult($"User with {duplicateField} '{data[duplicateField]}' already exists");
+                result = new ConflictObjectResult(
+                    $"User with {duplicateField} '{data[duplicateField]}' already exists");
             }
+
             catch (Exception ex)
             {
                 log.LogError($"Failed to insert user. Reason: {ex.Message}");
