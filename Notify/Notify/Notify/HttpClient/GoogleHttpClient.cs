@@ -195,6 +195,43 @@ namespace Notify.HttpClient
 
             return address;
         }
+        
+        public static async Task<List<Place>> SearchPlacesNearby(double latitude, double longitude, int radius, string type)
+        {
+            string requestUrl = $"https://maps.googleapis.com/maps/api/place/nearbysearch/json?key={r_GoogleAPIkey}&location={latitude},{longitude}&radius={radius}&type={type}";
+
+            List<Place> places = new List<Place>();
+            string response;
+            JObject responseJson;
+            JToken results;
+            Place place;
+
+            try
+            {
+                response = await GoogleHttpClient.Builder()
+                    .Uri(requestUrl)
+                    .Method()
+                    .Execute();
+                responseJson = JObject.Parse(response);
+                results = responseJson["results"];
+                
+                foreach (JToken result in results)
+                {
+                    place = new Place();
+                    place.Name = result["name"].ToString();
+                    place.PlaceId = result["place_id"].ToString();
+                    place.Latitude = result["geometry"]["location"]["lat"].ToObject<double>();
+                    place.Longitude = result["geometry"]["location"]["lng"].ToObject<double>();
+                    places.Add(place);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error occured on SearchPlacesNearby: {Environment.NewLine}{ex.Message}");
+            }
+
+            return places;
+        }
 
         public class GeocodingResponse
         {
@@ -228,5 +265,13 @@ namespace Notify.HttpClient
             [JsonProperty("formatted_address")]
             public string FormattedAddress { get; set; }
         }
+    }
+    
+    public class Place
+    {
+        public string Name { get; set; }
+        public string PlaceId { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
     }
 }
