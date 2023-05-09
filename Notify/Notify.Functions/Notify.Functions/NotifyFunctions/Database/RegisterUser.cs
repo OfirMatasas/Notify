@@ -26,7 +26,7 @@ namespace Notify.Functions.NotifyFunctions.Database
         {
             IMongoCollection<BsonDocument> collection;
             string requestBody;
-            dynamic data = null;
+            dynamic data;
             ObjectResult result;
 
             log.LogInformation("Got client's HTTP request to register");
@@ -56,13 +56,6 @@ namespace Notify.Functions.NotifyFunctions.Database
                 log.LogInformation($"Inserted user with username {data.userName} and telephone {data.telephone} into database");
 
                 result = new OkObjectResult(JsonConvert.SerializeObject(data));
-            }
-            catch (MongoWriteException ex) when (ex.WriteError.Category == ServerErrorCategory.DuplicateKey)
-            {
-                string duplicateField = ex.WriteError.Message.Split('\'')[1];
-                log.LogError($"Failed to insert user with duplicate {duplicateField}. Reason: {ex.Message}");
-
-                result = new ConflictObjectResult($"User with {duplicateField} '{data[duplicateField]}' already exists");
             }
             catch (Exception ex)
             {
