@@ -37,7 +37,7 @@ namespace Notify.Functions.NotifyFunctions.Database
                     Constants.COLLECTION_USER);
                 log.LogInformation(
                     $"Got reference to {Constants.COLLECTION_USER} collection on {Constants.DATABASE_NOTIFY_MTA} database");
-                
+
                 await MongoUtils.CreatePropertyIndexes(collection, "userName", "telephone");
 
                 requestBody = await new StreamReader(req.Body).ReadToEndAsync();
@@ -53,7 +53,8 @@ namespace Notify.Functions.NotifyFunctions.Database
                 };
 
                 await collection.InsertOneAsync(userDocument);
-                log.LogInformation($"Inserted user with username {data.userName} and telephone {data.telephone} into database");
+                log.LogInformation(
+                    $"Inserted user with username {data.userName} and telephone {data.telephone} into database");
 
                 result = new OkObjectResult(JsonConvert.SerializeObject(data));
             }
