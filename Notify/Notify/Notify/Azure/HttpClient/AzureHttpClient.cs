@@ -119,7 +119,7 @@ namespace Notify.Azure.HttpClient
         {
             dynamic data = new JObject();
             string json;
-            HttpResponseMessage response = null;
+            HttpResponseMessage response;
             bool registered;
 
             try
@@ -134,28 +134,59 @@ namespace Notify.Azure.HttpClient
 
                 response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_REGISTER, createJsonStringContent(json)).Result;
                 response.EnsureSuccessStatusCode();
-                Debug.WriteLine(
-                    $"Successful status code from Azure Function from Register, name: {name}, userName: {userName}, password: {password}, telephone: {telephone}");
+                Debug.WriteLine($"Successful status code from Azure Function from Register, name: {name}, userName: {userName}, password: {password}, telephone: {telephone}");
 
                 registered = true;
             }
             catch (HttpRequestException ex)
             {
-                if (response.StatusCode == HttpStatusCode.Conflict)
-                {
-                    Debug.WriteLine($"User with username {userName} or telephone {telephone} already exists");
-                    registered = false;
-                }
-                else
-                {
-                    Debug.WriteLine($"Error occurred on Register: {ex.Message}");
-                    registered = false;
-                }
+                Debug.WriteLine($"Error occurred on Register: {ex.Message}");
+                registered = false;
             }
 
             return registered;
         }
+        
+        public bool CheckUserExists(string userName, string telephone)
+        {
+            dynamic data = new JObject();
+            string json;
+            HttpResponseMessage response = null;
+            bool userExists;
+            string conflictMessage;
 
+            try
+            {
+                data.username = userName;
+                data.telephone = telephone;
+
+                json = JsonConvert.SerializeObject(data);
+                Debug.WriteLine($"request:{Environment.NewLine}{data}");
+
+                response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_CHECK_USER_EXISTS, createJsonStringContent(json)).Result;
+                response.EnsureSuccessStatusCode();
+                Debug.WriteLine($"Successful status code from Azure Function from CheckUserExists, username: {userName}, telephone: {telephone}");
+
+                userExists = false;
+            }
+            catch (HttpRequestException ex)
+            {
+                if (response.StatusCode == HttpStatusCode.Conflict)
+                {
+                    conflictMessage = response.Content.ReadAsStringAsync().Result;
+                    Debug.WriteLine(conflictMessage);
+                    userExists = true;
+                }
+                else
+                {
+                    Debug.WriteLine($"Error occurred on CheckUserExists: {ex.Message}");
+                    userExists = false;
+                }
+            }
+
+            return userExists;
+        }
+        
         public bool CheckIfArrivedDestination(Location location)
         {
             dynamic request = new JObject();
