@@ -78,6 +78,19 @@ namespace Notify.Helpers
             "Work",
             "School"
         };
+        
+        public static readonly List<string> LOCATIONS_TYPE_LIST = new List<string>
+        {
+            "atm",
+            "bank",
+            "pharmacy",
+            "supermarket"
+        };
+
+        public static readonly int HALF_KM = 500;
+        public static readonly int ONE_KM = 1000;
+        
+        
 
         #endregion
 
