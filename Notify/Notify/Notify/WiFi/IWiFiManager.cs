@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Xamarin.Essentials;
 
 namespace Notify.WiFi
@@ -5,5 +6,6 @@ namespace Notify.WiFi
     public interface IWiFiManager
     {
         void PrintConnectedWiFi(object sender, ConnectivityChangedEventArgs e);
+        List<string> GetAvailableNetworks();
     }
 }

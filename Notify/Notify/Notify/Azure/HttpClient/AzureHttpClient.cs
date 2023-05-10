@@ -45,7 +45,7 @@ namespace Notify.Azure.HttpClient
             }
         }
 
-        public bool updateDestination(string destinationName, Location location)
+        public async Task<bool> UpdateDestination<T>(string destinationName, T locationData)
         {
             dynamic data = new JObject();
             string json;
@@ -56,10 +56,23 @@ namespace Notify.Azure.HttpClient
             {
                 data.user = "Lin"; // TODO: get the user name from the logged in user
                 data.location = new JObject();
-
                 data.location.name = destinationName;
-                data.location.longitude = location.Longitude;
-                data.location.latitude = location.Latitude;
+
+                if (locationData is Location location)
+                {
+                    data.location.type = NotificationType.Location.ToString();
+                    data.location.longitude = location.Longitude;
+                    data.location.latitude = location.Latitude;
+                }
+                else if (locationData is string wifiSsid)
+                {
+                    data.location.type = NotificationType.WiFi.ToString();
+                    data.location.ssid = wifiSsid;
+                }
+                else
+                {
+                    throw new ArgumentException($"Invalid locationData type: {typeof(T).FullName}");
+                }
 
                 json = JsonConvert.SerializeObject(data);
                 Debug.WriteLine($"request:{Environment.NewLine}{data}");
@@ -70,18 +83,20 @@ namespace Notify.Azure.HttpClient
                 ).Result;
 
                 response.EnsureSuccessStatusCode();
-                Debug.WriteLine($"Successful status code from Azure Function from updateDestination, for location: {location}!");
+                string content = await response.Content.ReadAsStringAsync();
+                Debug.WriteLine(content);
+                Debug.WriteLine($"Successful status code from Azure Function from UpdateDestination for {destinationName}");
                 isSuccess = true;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error occured on updateDestination: {Environment.NewLine}{ex.Message}");
+                Debug.WriteLine($"Error occurred on UpdateDestination: {Environment.NewLine}{ex.Message}");
                 isSuccess = false;
             }
 
             return isSuccess;
         }
-        
+
         public bool SendSMSVerificationCode(string telephoneNumber, string verificationCode)
         {
             dynamic data = new JObject();

@@ -19,6 +19,7 @@
     </PackageReference>
     <PackageReference Include="FontAwesome" Version="4.7.0" />
     <PackageReference Include="GMO.Microsoft.Azure.Services.AppAuthentication.Config" Version="1.0.0" />
+    <PackageReference Include="GooglePlacesApi" Version="1.0.17" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />

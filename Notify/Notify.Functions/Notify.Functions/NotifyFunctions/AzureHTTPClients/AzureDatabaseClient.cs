@@ -1,9 +1,4 @@
-using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using Azure.Security.KeyVault.Secrets;
 using MongoDB.Driver;
-using Azure.Identity;
 using Notify.Functions.Core;
 
 namespace Notify.Functions.NotifyFunctions.AzureHTTPClients

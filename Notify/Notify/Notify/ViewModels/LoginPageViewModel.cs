@@ -63,7 +63,7 @@ namespace Notify.ViewModels
 
         private async void onLoginClicked()
         {
-            bool debugAutoLogin = true;
+            bool debugAutoLogin = false;
             IsBusy = true;
 
             if (debugAutoLogin)
