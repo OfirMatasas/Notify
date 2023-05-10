@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Bson.IO;
+using Newtonsoft.Json.Linq;
 
 namespace Notify.Functions.Utils
 {
@@ -9,10 +10,15 @@ namespace Notify.Functions.Utils
     {
         public static string ConvertBsonDocumentListToJson(List<BsonDocument> bsonDocumentList)
         {
-            string json = bsonDocumentList.ToList()
-                .ToJson(new JsonWriterSettings { OutputMode = JsonOutputMode.CanonicalExtendedJson });
-            
-            return json;
+            var jsonList = bsonDocumentList.Select(bsonDocument =>
+            {
+                var jsonSettings = new JsonWriterSettings { OutputMode = JsonOutputMode.Strict };
+                return bsonDocument.ToJson(jsonSettings);
+            }).ToList();
+
+            var jsonArrayString = $"[{string.Join(',', jsonList)}]";
+            var jsonArray = JArray.Parse(jsonArrayString);
+            return jsonArray.ToString();
         }
     }
 }
