@@ -168,7 +168,6 @@ namespace Notify.Azure.HttpClient
                 if (response.StatusCode == HttpStatusCode.Conflict)
                 {
                     errorMessage = response.Content.ReadAsStringAsync().Result;
-                    Debug.WriteLine(errorMessage);
                     userExists = true;
                 }
                 else
