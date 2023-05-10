@@ -163,6 +163,7 @@ namespace Notify.ViewModels
             }
         }
 
+
         private void displayError(string message)
         {
             ErrorMessages.Add(message);
@@ -170,9 +171,11 @@ namespace Notify.ViewModels
 
         private async void onSignUpClicked()
         {
-            string IsraeliPhoneNumber;
+            string israeliPhoneNumber;
             bool successfulSMSSent;
             bool validationSuccessful;
+            bool userExists;
+            string errorMessage;
 
             ErrorMessages.Clear();
 
@@ -181,72 +184,61 @@ namespace Notify.ViewModels
             validatePassword();
             validateTelephone();
 
-            bool userExists = AzureHttpClient.Instance.CheckUserExists(UserName, Telephone);
+            userExists = AzureHttpClient.Instance.CheckUserExists(UserName, Telephone, out errorMessage);
 
             if (userExists)
             {
-                if (UserNameBorderColor.Equals(Constants.INVALID_COLOR))
-                {
-                    UserNameBorderColor = Constants.VALID_COLOR;
-                }
+                Debug.WriteLine(errorMessage);
+                displayError(errorMessage);
+            }
 
-                if (TelephoneBorderColor.Equals(Constants.INVALID_COLOR))
-                {
-                    TelephoneBorderColor = Constants.VALID_COLOR;
-                }
-
-                displayError("Username or telephone number already exists.");
+            if (ErrorMessages.Count > 0)
+            {
+                string completeErrorMessage = string.Join(Environment.NewLine,
+                    ErrorMessages.Select(message => $"- {message}"));
+                await Application.Current.MainPage.DisplayAlert("Invalid sign up", completeErrorMessage, "OK");
             }
             else
             {
-                if (ErrorMessages.Count > 0)
+                israeliPhoneNumber = convertToIsraelPhoneNumber(Telephone);
+
+                if (string.IsNullOrEmpty(VerificationCode))
                 {
-                    string completeErrorMessage = string.Join(Environment.NewLine,
-                        ErrorMessages.Select(errorMessage => $"- {errorMessage}"));
-                    await Application.Current.MainPage.DisplayAlert("Invalid sign up", completeErrorMessage, "OK");
+                    VerificationCode = generateVerificationCode();
                 }
-                else
+
+                successfulSMSSent =
+                    AzureHttpClient.Instance.SendSMSVerificationCode(israeliPhoneNumber, VerificationCode);
+
+                if (successfulSMSSent)
                 {
-                    IsraeliPhoneNumber = convertToIsraelPhoneNumber(Telephone);
-
-                    if (string.IsNullOrEmpty(VerificationCode))
+                    validationSuccessful = await validateVerificationCodeWithUser();
+                    if (validationSuccessful)
                     {
-                        VerificationCode = generateVerificationCode();
-                    }
-
-                    successfulSMSSent =
-                        AzureHttpClient.Instance.SendSMSVerificationCode(IsraeliPhoneNumber, VerificationCode);
-
-                    if (successfulSMSSent)
-                    {
-                        validationSuccessful = await validateVerificationCodeWithUser();
-                        if (validationSuccessful)
+                        bool registered =
+                            AzureHttpClient.Instance.RegisterUser(Name, UserName, Password, Telephone);
+                        if (registered)
                         {
-                            bool registered =
-                                AzureHttpClient.Instance.RegisterUser(Name, UserName, Password, Telephone);
-                            if (registered)
-                            {
-                                await Application.Current.MainPage.DisplayAlert("Registration Success",
-                                    "You have successfully registered to Notify.", "OK");
-                                await Shell.Current.GoToAsync("///login");
-                            }
-                            else
-                            {
-                                Debug.WriteLine("Failed to register user.");
-                                displayError($"Failed to register user.");
-                            }
+                            await Application.Current.MainPage.DisplayAlert("Registration Success",
+                                "You have successfully registered to Notify.", "OK");
+                            await Shell.Current.GoToAsync("///login");
                         }
                         else
                         {
-                            Debug.WriteLine("Failed to validate verification code.");
-                            displayError($"Failed to validate verification code.");
+                            Debug.WriteLine("Failed to register user.");
+                            displayError($"Failed to register user.");
                         }
                     }
                     else
                     {
-                        Debug.WriteLine("Failed to send SMS message.");
-                        displayError($"Failed to send SMS message.");
+                        Debug.WriteLine("Failed to validate verification code.");
+                        displayError($"Failed to validate verification code.");
                     }
+                }
+                else
+                {
+                    Debug.WriteLine("Failed to send SMS message.");
+                    displayError($"Failed to send SMS message.");
                 }
             }
         }

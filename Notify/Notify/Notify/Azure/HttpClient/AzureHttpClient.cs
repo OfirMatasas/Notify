@@ -147,13 +147,13 @@ namespace Notify.Azure.HttpClient
             return registered;
         }
 
-        public bool CheckUserExists(string userName, string telephone)
+        public bool CheckUserExists(string userName, string telephone, out string errorMessage)
         {
             dynamic data = new JObject();
             string json;
-            HttpResponseMessage response = null;
-            bool userExists;
-            string conflictMessage;
+            HttpResponseMessage response;
+            bool userExists = false;
+            errorMessage = string.Empty;
 
             try
             {
@@ -167,27 +167,26 @@ namespace Notify.Azure.HttpClient
         
                 if (response.StatusCode == HttpStatusCode.Conflict)
                 {
-                    conflictMessage = response.Content.ReadAsStringAsync().Result;
-                    Debug.WriteLine(conflictMessage);
+                    errorMessage = response.Content.ReadAsStringAsync().Result;
+                    Debug.WriteLine(errorMessage);
                     userExists = true;
                 }
                 else
                 {
                     response.EnsureSuccessStatusCode();
-                    Debug.WriteLine($"Successful status code from Azure Function from CheckUserExists, username: {userName}, telephone: {telephone}");
-                    userExists = false;
+                    Debug.WriteLine($"Successful status code from Azure Function from CheckUserExists");
                 }
             }
             catch (HttpRequestException ex)
             {
                 Debug.WriteLine($"Error occurred on CheckUserExists: {ex.Message}");
-                userExists = false;
+                errorMessage = ex.Message;
+                userExists = true;
             }
 
             return userExists;
         }
-
-
+        
         public bool CheckIfArrivedDestination(Location location)
         {
             dynamic request = new JObject();
