@@ -49,6 +49,7 @@ namespace Notify.Functions.Friends
                 {
                     response = await getAllFriendsOfUser(userId);
                     log.LogInformation($"Retrieved {friendUsernames.Count} friends of user {userId}");
+                    log.LogInformation(response);
                     result = new OkObjectResult(response);
                 }
             }

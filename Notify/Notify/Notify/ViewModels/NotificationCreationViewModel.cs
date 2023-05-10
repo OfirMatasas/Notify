@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Notify.Azure.HttpClient;
 using Notify.Core;
+using Notify.Helpers;
 using Xamarin.Forms;
 
 namespace Notify.ViewModels
@@ -33,8 +34,8 @@ namespace Notify.ViewModels
     
         public bool IsLocationTypeSelected => SelectedNotificationType == "Location";
         public bool IsTimeTypeSelected => SelectedNotificationType == "Time";
-    
-        public List<string> LocationOptions { get; set; } = new List<string> { "Home", "Work" };
+
+        public List<string> LocationOptions { get; set; } = Constants.LOCATIONS_LIST;
     
         private string m_SelectedLocationOption;
         public string SelectedLocationOption

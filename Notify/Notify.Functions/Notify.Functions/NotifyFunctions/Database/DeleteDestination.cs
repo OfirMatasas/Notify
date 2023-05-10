@@ -43,7 +43,7 @@ namespace Notify.Functions.NotifyFunctions.Database
             log.LogInformation($"Data:{Environment.NewLine}{data}");
             
             filter = Builders<BsonDocument>.Filter.Eq("user", Convert.ToString(data.user)) & 
-                     Builders<BsonDocument>.Filter.Eq("location", Convert.ToString(data.location));
+                     Builders<BsonDocument>.Filter.Eq("location.name", Convert.ToString(data.location));
             
             result = collection.DeleteMany(filter);
             log.LogInformation($"Deleted {result.DeletedCount} documents");

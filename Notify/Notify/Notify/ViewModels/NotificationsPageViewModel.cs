@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Notify.Azure.HttpClient;
 using Notify.Core;
 using Notify.Views.Views;
@@ -17,9 +19,25 @@ namespace Notify.ViewModels
 
         public NotificationsPageViewModel()
         {
+            string notificationsJson;
+
             CreateNotificationCommand = new Command(onCreateNotificationClicked);
             RefreshNotificationsCommand = new Command(onNotificationsRefreshClicked);
             NotificationSelectedCommand = new Command(onNotificationSelected);
+
+            try
+            {
+                notificationsJson = Preferences.Get("Notifications", string.Empty);
+                if (!notificationsJson.Equals(string.Empty))
+                {
+                    Debug.WriteLine("Notifications found in preferences");
+                    Notifications = JsonConvert.DeserializeObject<List<Notification>>(notificationsJson);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
 
             onNotificationsRefreshClicked();
         }
@@ -44,13 +62,14 @@ namespace Notify.ViewModels
         private async void onNotificationsRefreshClicked()
         {
             await Task.Run(() => Notifications = AzureHttpClient.Instance.GetNotifications().Result);
+            Preferences.Set("Notifications", JsonConvert.SerializeObject(Notifications));
         }
 
         #endregion
 
         #region Notifications_List
 
-        public List<Notification> Notifications { get; set; } = new List<Notification>();
+        public List<Notification> Notifications { get; set; }
         public Command NotificationSelectedCommand { get; set; }
         
         public Notification SelectedNotification { get; set; }

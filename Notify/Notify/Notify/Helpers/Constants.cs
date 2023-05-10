@@ -70,10 +70,18 @@ namespace Notify.Helpers
 
         #endregion
 
-        public static readonly string USERNAME = "lin";
-        public static readonly string PASSWORD = "123";
+        #region Location_Options
 
-        #region Http Client
+        public static readonly List<string> LOCATIONS_LIST = new List<string>
+        {
+            "Home",
+            "Work",
+            "School"
+        };
+
+        #endregion
+
+        #region Azure Http Client
 
         public static readonly string AZURE_FUNCTIONS_APP_BASE_URL = "https://notifymta.azurewebsites.net/api/";
         public static readonly string AZURE_FUNCTIONS_PATTERN_DISTANCE = "distance";
@@ -89,9 +97,16 @@ namespace Notify.Helpers
 
         #endregion
 
+        #region Google Http Client
+
+        public static readonly string GOOGLE_BASE_URL = "https://maps.googleapis.com/maps/api/";
+        public static readonly string GOOGLE_PATTERN_PLACE_AUTOCOMPLETE = "place/autocomplete";
+        public static readonly string GOOGLE_PATTERN_GEOCODES = "geocode";
+
+        #endregion
+
         #region Vault
 
-        public static readonly string AZURE_KEY_VAULT = "https://notify-keys-vault.vault.azure.net/";
         public static readonly string AZURE_FUNCTIONS_PATTERN_SEND_SMS = "SendSMS";
         
         #endregion
@@ -102,8 +117,11 @@ namespace Notify.Helpers
         public static readonly int DISTANCE_UPDATE_THRESHOLD = 30;
         public static readonly int METERS_IN_KM = 1000;
         public static readonly int VERIFICATION_CODE_MAX_LENGTH = 6;
+        public static readonly int LATITUDE_MAX = 90;
+        public static readonly int LATITUDE_MIN = -90;
+        public static readonly int LONGITUDE_MAX = 180;
+        public static readonly int LONGITUDE_MIN = -180;
 
-        
         #endregion
 
         #region Colors

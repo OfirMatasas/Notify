@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using Android.Content;
 using Android.Net;
 using Android.Net.Wifi;
+using Java.Util;
 using Notify.WiFi;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -20,7 +22,7 @@ namespace Notify.Droid.Managers
 
             if (capabilities.HasTransport(TransportType.Wifi))
             {
-                var wifiManager = (WifiManager)Android.App.Application.Context.GetSystemService(Context.WifiService);
+                WifiManager wifiManager = (WifiManager)Android.App.Application.Context.GetSystemService(Context.WifiService);
                 string ssid = wifiManager.ConnectionInfo.SSID;
         
                 if (ssid == m_preDefineSsid)
@@ -36,6 +38,20 @@ namespace Notify.Droid.Managers
             {
                 Debug.WriteLine("Disconnected from wifi network!");
             }
+        }
+
+        public List<string> GetAvailableNetworks()
+        {
+            List<string> myListrow = new List<string>();
+            WifiManager wifiMgr = (WifiManager)Android.App.Application.Context.GetSystemService(Context.WifiService);
+            IList<ScanResult> wifiList = wifiMgr.ScanResults;
+
+            foreach (ScanResult item in wifiList)
+            {
+                myListrow.Add(item.Ssid.ToString());
+            }
+            
+            return myListrow;
         }
     }
 }

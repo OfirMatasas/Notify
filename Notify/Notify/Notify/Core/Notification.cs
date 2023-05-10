@@ -5,7 +5,8 @@ namespace Notify.Core
     public enum NotificationType
     {
         Time,
-        Location
+        Location,
+        WiFi
     }
     
     public class Notification
