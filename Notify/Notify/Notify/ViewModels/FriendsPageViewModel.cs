@@ -1,10 +1,14 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Notify.Azure.HttpClient;
 using Notify.Core;
 using Notify.Views.Views;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Notify.ViewModels
@@ -20,7 +24,7 @@ namespace Notify.ViewModels
 
         #region Members
 
-        public List<Friend> Friends { get; set; } = new List<Friend>();
+        public List<Friend> Friends { get; set; }
         public Friend SelectedFriend { get; set; }
 
         #endregion
@@ -29,10 +33,26 @@ namespace Notify.ViewModels
 
         public FriendsPageViewModel()
         {
+            string friendsJson;
+            
             RefreshFriendsCommand = new Command(onRefreshFriendsClicked);
             ShowFriendRequestsCommand = new Command(onShowFriendRequestsClicked);
             SelectedFriendCommand = new Command(onSelectedFriendClicked);
-            
+
+            try
+            {
+                friendsJson = Preferences.Get("Friends", string.Empty);
+                if(!friendsJson.Equals(string.Empty))
+                {
+                    Debug.WriteLine("Friends found in preferences");
+                    Friends = JsonConvert.DeserializeObject<List<Friend>>(friendsJson);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+
             onRefreshFriendsClicked();
         }
 
@@ -45,6 +65,7 @@ namespace Notify.ViewModels
         private async void onRefreshFriendsClicked()
         {
             await Task.Run(() => Friends = AzureHttpClient.Instance.GetFriends().Result);
+            Preferences.Set("Friends", JsonConvert.SerializeObject(Friends));
         }
         
         #endregion
