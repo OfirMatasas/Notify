@@ -73,7 +73,7 @@ namespace Notify.Functions.NotifyFunctions.Database
             catch (Exception ex)
             {
                 log.LogError(ex.Message);
-                result = new BadRequestObjectResult($"Failed to check if user exists. Error: {ex.Message}");
+                result = new BadRequestObjectResult($"Failed to check if user exists.{Environment.NewLine}Error: {ex.Message}");
             }
 
             return result;

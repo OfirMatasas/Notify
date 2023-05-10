@@ -50,13 +50,13 @@ public static class Login
             if (documents.Count == 0)
             {
                 log.LogInformation($"No user found with username {data.userName} and password {data.password}");
-                result = new NotFoundObjectResult($"No user found with username {data.userName} and password {data.password}");
+                result = new NotFoundObjectResult("Invalid username or password");
             }
             if (documents.Count > 1)
             {
                 log.LogInformation(
                     $"More than one user found with username {data.userName} and password {data.password}");
-                result = new ConflictObjectResult($"No user found with username {data.userName} and password {data.password}");
+                result = new ConflictObjectResult("Invalid username or password");
             }
 
             log.LogInformation($"Found user with username {data.userName} and password {data.password}");
@@ -66,6 +66,7 @@ public static class Login
         {
             log.LogError(e.Message);
             result = new BadRequestObjectResult($"Failed to login. Error: {e.Message}");
+            
         }
 
         return result;

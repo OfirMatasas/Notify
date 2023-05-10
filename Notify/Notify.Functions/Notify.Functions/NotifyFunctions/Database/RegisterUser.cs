@@ -62,7 +62,7 @@ namespace Notify.Functions.NotifyFunctions.Database
             {
                 log.LogError($"Failed to insert user. Reason: {ex.Message}");
 
-                result = new BadRequestObjectResult($"Failed to register. Error: {ex.Message}");
+                result = new ObjectResult($"Failed to register.{Environment.NewLine}Error: {ex.Message}");
             }
 
             return result;
