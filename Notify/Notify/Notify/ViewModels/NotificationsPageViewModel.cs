@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Notify.Azure.HttpClient;
 using Notify.Core;
+using Notify.Helpers;
 using Notify.Views.Views;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -27,7 +28,7 @@ namespace Notify.ViewModels
 
             try
             {
-                notificationsJson = Preferences.Get("Notifications", string.Empty);
+                notificationsJson = Preferences.Get(Constants.PREFRENCES_NOTIFICATIONS, string.Empty);
                 if (!notificationsJson.Equals(string.Empty))
                 {
                     Debug.WriteLine("Notifications found in preferences");
@@ -62,7 +63,7 @@ namespace Notify.ViewModels
         private async void onNotificationsRefreshClicked()
         {
             await Task.Run(() => Notifications = AzureHttpClient.Instance.GetNotifications().Result);
-            Preferences.Set("Notifications", JsonConvert.SerializeObject(Notifications));
+            Preferences.Set(Constants.PREFRENCES_NOTIFICATIONS, JsonConvert.SerializeObject(Notifications));
         }
 
         #endregion

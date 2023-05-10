@@ -7,5 +7,6 @@ namespace Notify.WiFi
     {
         void PrintConnectedWiFi(object sender, ConnectivityChangedEventArgs e);
         List<string> GetAvailableNetworks();
+        void SendNotifications(object sender, ConnectivityChangedEventArgs connectivityChangedEventArgs);
     }
 }

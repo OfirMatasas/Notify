@@ -8,6 +8,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Notify.Core;
 using Notify.Helpers;
+using Xamarin.Essentials;
+using Location = Notify.Core.Location;
 
 namespace Notify.Azure.HttpClient
 {
@@ -172,6 +174,7 @@ namespace Notify.Azure.HttpClient
         private async Task<HttpResponseMessage> postAsync(string requestUri, StringContent content)
         {
             HttpResponseMessage response = await m_HttpClient.PostAsync(requestUri, content).ConfigureAwait(false);
+            
             return response;
         }
 
@@ -218,7 +221,7 @@ namespace Notify.Azure.HttpClient
                 response = postAsync(uri, createJsonStringContent(json)).Result;
 
                 response.EnsureSuccessStatusCode();
-                Debug.WriteLine($"Successful status code from Azure Function from createNotification!");
+                Debug.WriteLine($"Successful status code from Azure Function from createNotification");
                 created = true;
             }
             catch (Exception ex)
@@ -235,7 +238,7 @@ namespace Notify.Azure.HttpClient
         {
             dynamic request = new JObject
             {
-                { "creator", "Ofir" /* TODO: Get username from current logged in user */ },
+                { "creator", Constants.USER_NAME /* TODO: Get username from current logged in user */ },
                 { "description", description?.Trim() },
                 {
                     "notification", new JObject
@@ -251,51 +254,9 @@ namespace Notify.Azure.HttpClient
             return JsonConvert.SerializeObject(request);
         }
 
-        public async Task<List<Notification>> GetNotifications()
-        {
-            Notification notification;
-            List<Notification> notifications = new List<Notification>();
-            NotificationType notificationType;
-            object notificationTypeValue;
-
-            try
-            {
-                HttpResponseMessage response = getAsync(Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION).Result;
-                response.EnsureSuccessStatusCode();
-                Debug.WriteLine($"Successful status code from Azure Function from GetNotifications!");
-
-                dynamic returnedObject = DeserializeObjectFromResponseAsync(response).Result;
-                Debug.WriteLine($"returnedObject:{Environment.NewLine}{returnedObject.ToString()}");
-                
-                foreach (dynamic item in returnedObject)
-                {
-                    notificationType = item.notification.location == null ? NotificationType.Time : NotificationType.Location;
-                    notificationTypeValue = item.notification.location ?? DateTimeOffset.FromUnixTimeSeconds((long)item.notification.timestamp).LocalDateTime;
-                    
-                    notification = new Notification(
-                        name: (string)item.notification.name,
-                        description: (string)(item.description ?? item.info),
-                        creationDateTime: DateTimeOffset.FromUnixTimeSeconds((long)item.creation_timestamp).LocalDateTime,
-                        status: (string)item.status,
-                        creator: (string)item.creator,
-                        type: notificationType,
-                        typeInfo: notificationTypeValue,
-                        target: (string)item.user);
-
-                    notifications.Add(notification);
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error occured on GetNotifications: {ex.Message}");
-            }
-
-            return notifications;
-        }
-        
         private async Task<HttpResponseMessage> getAsync(string requestUri, string query = "")
         {
-            Debug.WriteLine($"Sending HTTP GET request to :{requestUri + query}");
+            Debug.WriteLine($"Sending HTTP GET request to {requestUri + query} endpoint");
             HttpResponseMessage response = await m_HttpClient.GetAsync(requestUri + query).ConfigureAwait(false);
             
             return response;
@@ -317,7 +278,7 @@ namespace Notify.Azure.HttpClient
                 json = JsonConvert.SerializeObject(request);
                 response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_LOGIN, createJsonStringContent(json)).Result;
                 response.EnsureSuccessStatusCode();
-                Debug.WriteLine($"Successful status code from Azure Function from CheckIfCredentialsAreValid!");
+                Debug.WriteLine($"Successful status code from Azure Function from CheckIfCredentialsAreValid");
 
                 validCredentials = true;
             }
@@ -330,38 +291,80 @@ namespace Notify.Azure.HttpClient
             return validCredentials;
         }
 
-        public async Task<List<Friend>> GetFriends()
+        private async Task<List<T>> GetData<T>(string endpoint, string preferencesKey, Func<dynamic, T> converter)
         {
-            List<Friend> friends = new List<Friend>();
             string query = $"?username={Constants.USER_NAME}";
-            Friend friend;
+            HttpResponseMessage response;
+            dynamic returnedObject;
+            List<T> data = new List<T>();
+                    
+            Debug.WriteLine($"Getting data from endpoint {endpoint}");
 
-            Debug.WriteLine($"Getting friends");
             try
             {
-                HttpResponseMessage response = getAsync(Constants.AZURE_FUNCTIONS_PATTERN_FRIEND, query).Result;
+                response = await getAsync(endpoint, query);
                 response.EnsureSuccessStatusCode();
-                Debug.WriteLine($"Successful status code from Azure Function from GetFriends!");
+                Debug.WriteLine($"Successful status code from Azure Function from {endpoint}!");
 
-                dynamic returnedObject = DeserializeObjectFromResponseAsync(response).Result;
-                Debug.WriteLine($"Returned object from GetFriends:\n{returnedObject.ToString()}");
-                
+                returnedObject = await DeserializeObjectFromResponseAsync(response);
+                Debug.WriteLine($"Returned object from {endpoint}:\n{returnedObject.ToString()}");
+
                 foreach (dynamic item in returnedObject)
                 {
-                    friend = new Friend(
-                        name: (string)item.name,
-                        userName: (string)item.userName,
-                        telephone: (string)item.telephone);
-
-                    friends.Add(friend);
+                    T itemConverted = converter(item);
+                    data.Add(itemConverted);
                 }
+
+                Preferences.Set(preferencesKey, JsonConvert.SerializeObject(data));
+                Debug.WriteLine($"{preferencesKey} from {endpoint} was saved in preferences");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error occured on GetFriends: {ex.Message}");
+                Debug.WriteLine($"Error occurred on {endpoint}: {ex.Message}");
             }
 
-            return friends;
+            return data;
+        }
+
+        public async Task<List<Notification>> GetNotifications()
+        {
+            return await GetData(Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION, Constants.PREFRENCES_NOTIFICATIONS, item => {
+                NotificationType notificationType = item.notification.location == null ? NotificationType.Time : NotificationType.Location;
+                object notificationTypeValue = item.notification.location ?? DateTimeOffset.FromUnixTimeSeconds((long)item.notification.timestamp).LocalDateTime;
+
+                return new Notification(
+                    name: (string)item.notification.name,
+                    description: (string)(item.description ?? item.info),
+                    creationDateTime: DateTimeOffset.FromUnixTimeSeconds((long)item.creation_timestamp).LocalDateTime,
+                    status: (string)item.status,
+                    creator: (string)item.creator,
+                    type: notificationType,
+                    typeInfo: notificationTypeValue,
+                    target: (string)item.user);
+            });
+        }
+
+        public async Task<List<Friend>> GetFriends()
+        {
+            return await GetData(Constants.AZURE_FUNCTIONS_PATTERN_FRIEND, Constants.PREFRENCES_FRIENDS, item => new Friend(
+                name: (string)item.name,
+                userName: (string)item.userName,
+                telephone: (string)item.telephone));
+        }
+
+        public async Task<List<Destination>> GetDestinations()
+        {
+            return await GetData(Constants.AZURE_FUNCTIONS_PATTERN_DESTINATIONS, Constants.PREFRENCES_DESTINATIONS,
+                item => 
+                {
+                    Destination destination = new Destination(item.name)
+                    {
+                        Location = new Location((double)(item.latitude ?? 0), (double)(item.longitude ?? 0)),
+                        SSID = item.ssid ?? "",
+                        Bluetooth = item.bluetooth ?? ""
+                    };
+                    return destination;
+                });
         }
     }
 }

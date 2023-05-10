@@ -91,6 +91,7 @@ namespace Notify.Helpers
         public static readonly string AZURE_FUNCTIONS_PATTERN_DESTINATION_UPDATE = "destination/update";
         public static readonly string AZURE_FUNCTIONS_PATTERN_LOGIN = "login";
         public static readonly string AZURE_FUNCTIONS_PATTERN_FRIEND = "friends";
+        public static readonly string AZURE_FUNCTIONS_PATTERN_DESTINATIONS = "destination";
         public static readonly string USER_NAME = "linkimos";
 
         #endregion
@@ -119,6 +120,14 @@ namespace Notify.Helpers
         public static readonly int LATITUDE_MIN = -90;
         public static readonly int LONGITUDE_MAX = 180;
         public static readonly int LONGITUDE_MIN = -180;
+
+        #endregion
+
+        #region Prefrences_Keys
+
+        public static readonly string PREFRENCES_NOTIFICATIONS = "Notifications";
+        public static readonly string PREFRENCES_DESTINATIONS = "Destinations";
+        public static readonly string PREFRENCES_FRIENDS = "Friends";
 
         #endregion
 

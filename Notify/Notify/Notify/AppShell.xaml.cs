@@ -1,6 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Notify.Azure.HttpClient;
+using Notify.Core;
 using Notify.Helpers;
 using Notify.Interfaces.Managers;
 using Notify.Notifications;
@@ -39,6 +43,7 @@ namespace Notify
             }
 
             getBluetoothDevices();
+            retriveDestinations();
         }
 
         private void getBluetoothDevices()
@@ -49,6 +54,7 @@ namespace Notify
         private void internetConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
         {
             m_WiFiManager.PrintConnectedWiFi(sender, e);
+            m_WiFiManager.SendNotifications(sender, e);
         }
 
         private void registerRoutes()
@@ -67,7 +73,15 @@ namespace Notify
             setMessagingCenterLocationErrorMessageSubscription();
             setMessagingCenterLocationArrivedMessageSubscription();
         }
-        
+
+        private async void retriveDestinations()
+        {
+            await Task.Run(() =>
+            {
+                List<Destination> destinations = AzureHttpClient.Instance.GetDestinations().Result;
+            });
+        }
+
         private void setMessagingCenterLocationArrivedMessageSubscription()
         {
             MessagingCenter.Subscribe<LocationArrivedMessage>(this, "LocationArrived", message =>

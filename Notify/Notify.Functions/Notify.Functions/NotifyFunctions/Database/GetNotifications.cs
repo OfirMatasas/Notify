@@ -1,19 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Bson.IO;
 using MongoDB.Driver;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Notify.Functions.Core;
 using Notify.Functions.NotifyFunctions.AzureHTTPClients;
 
@@ -59,6 +55,5 @@ public static class GetNotifications
             log.LogError(ex, "Error getting notifications");
             return new BadRequestObjectResult(ex);
         }
-
     }
 }

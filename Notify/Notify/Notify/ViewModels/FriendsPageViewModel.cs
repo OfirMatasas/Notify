@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Notify.Azure.HttpClient;
 using Notify.Core;
+using Notify.Helpers;
 using Notify.Views.Views;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -41,7 +42,7 @@ namespace Notify.ViewModels
 
             try
             {
-                friendsJson = Preferences.Get("Friends", string.Empty);
+                friendsJson = Preferences.Get(Constants.PREFRENCES_FRIENDS, string.Empty);
                 if(!friendsJson.Equals(string.Empty))
                 {
                     Debug.WriteLine("Friends found in preferences");
@@ -64,8 +65,8 @@ namespace Notify.ViewModels
 
         private async void onRefreshFriendsClicked()
         {
-            await Task.Run(() => Friends = AzureHttpClient.Instance.GetFriends().Result);
-            Preferences.Set("Friends", JsonConvert.SerializeObject(Friends));
+            await Task.Run(() => Friends = AzureHttpClient.Instance
+                .GetFriends().Result);
         }
         
         #endregion
