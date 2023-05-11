@@ -3,23 +3,25 @@ using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace Notify.Functions.Utils;
-
-public static class MongoUtils
+namespace Notify.Functions.Utils
 {
-    public static async Task CreatePropertyIndexes(IMongoCollection<BsonDocument> collection,
-        params string[] propertiesToIndex)
+    public static class MongoUtils
     {
-        foreach (string propertyToIndex in propertiesToIndex)
+        public static async Task CreatePropertyIndexes(IMongoCollection<BsonDocument> collection,
+            params string[] propertiesToIndex)
         {
-            CreateIndexOptions indexOptions = new CreateIndexOptions
+            foreach (string propertyToIndex in propertiesToIndex)
             {
-                Unique = true
-            };
-            IndexKeysDefinition<BsonDocument> indexKeys = Builders<BsonDocument>.IndexKeys.Ascending(propertyToIndex);
-            await collection.Indexes.CreateOneAsync(new CreateIndexModel<BsonDocument>(indexKeys, indexOptions));
-            Debug.WriteLine(
-                $"Index created for property '{propertyToIndex}' in collection '{collection.CollectionNamespace.CollectionName}'");
+                CreateIndexOptions indexOptions = new CreateIndexOptions
+                {
+                    Unique = true
+                };
+                IndexKeysDefinition<BsonDocument> indexKeys =
+                    Builders<BsonDocument>.IndexKeys.Ascending(propertyToIndex);
+                await collection.Indexes.CreateOneAsync(new CreateIndexModel<BsonDocument>(indexKeys, indexOptions));
+                Debug.WriteLine(
+                    $"Index created for property '{propertyToIndex}' in collection '{collection.CollectionNamespace.CollectionName}'");
+            }
         }
     }
 }

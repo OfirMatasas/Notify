@@ -12,9 +12,8 @@ using MongoDB.Driver;
 using Newtonsoft.Json;
 using Notify.Functions.Core;
 using Notify.Functions.NotifyFunctions.AzureHTTPClients;
-using MongoUtils = Notify.Functions.Utils.MongoUtils;
 
-namespace Notify.Functions.NotifyFunctions.Database
+namespace Notify.Functions.NotifyFunctions.Login
 {
     public static class CheckUserExists
     {
@@ -28,10 +27,8 @@ namespace Notify.Functions.NotifyFunctions.Database
             string requestBody;
             dynamic data;
             ObjectResult result;
-            dynamic filterUsername;
-            dynamic filterTelephone;
-            dynamic countUsername;
-            dynamic countTelephone;
+            FilterDefinition<BsonDocument> filterUsername, filterTelephone;
+            long countUsername, countTelephone;
 
             log.LogInformation("Got client's HTTP request to check if user exists");
 
@@ -73,7 +70,7 @@ namespace Notify.Functions.NotifyFunctions.Database
             catch (Exception ex)
             {
                 log.LogError(ex.Message);
-                result = new BadRequestObjectResult($"Failed to check if user exists.{Environment.NewLine}Error: {ex.Message}");
+                result = new BadRequestObjectResult($"Failed to check if user exists: {ex.Message}");
             }
 
             return result;

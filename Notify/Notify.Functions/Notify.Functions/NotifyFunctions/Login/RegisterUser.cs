@@ -14,7 +14,7 @@ using Notify.Functions.Core;
 using Notify.Functions.NotifyFunctions.AzureHTTPClients;
 using MongoUtils = Notify.Functions.Utils.MongoUtils;
 
-namespace Notify.Functions.NotifyFunctions.Database
+namespace Notify.Functions.NotifyFunctions.Login
 {
     public static class UserRegistration
     {
@@ -61,7 +61,6 @@ namespace Notify.Functions.NotifyFunctions.Database
             catch (Exception ex)
             {
                 log.LogError($"Failed to insert user. Reason: {ex.Message}");
-
                 result = new ObjectResult($"Failed to register.{Environment.NewLine}Error: {ex.Message}");
             }
 
