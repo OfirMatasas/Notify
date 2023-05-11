@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -16,20 +15,22 @@ using Notify.Functions.NotifyFunctions.AzureHTTPClients;
 
 namespace Notify.Functions.NotifyFunctions.Login
 {
-    public static class Login
+    public static class CheckUserExists
     {
-        [FunctionName("Login")]
+        [FunctionName("CheckUserExists")]
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "login")]
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "checkUserExists")]
             HttpRequest req, ILogger log)
         {
             IMongoCollection<BsonDocument> collection;
             string requestBody;
             dynamic data;
             ObjectResult result;
+            FilterDefinition<BsonDocument> filterUsername, filterTelephone;
+            long countUsername, countTelephone;
 
-            log.LogInformation("Got client's HTTP request to login");
+            log.LogInformation("Got client's HTTP request to check if user exists");
 
             try
             {
@@ -41,34 +42,35 @@ namespace Notify.Functions.NotifyFunctions.Login
                 requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 data = JsonConvert.DeserializeObject(requestBody);
                 log.LogInformation($"Data:{Environment.NewLine}{data}");
+                
+                filterUsername = Builders<BsonDocument>.Filter.Eq("userName", Convert.ToString(data.username));
+                filterTelephone = Builders<BsonDocument>.Filter.Eq("telephone", Convert.ToString(data.telephone));
 
-                FilterDefinition<BsonDocument> filter = Builders<BsonDocument>.Filter.And(
-                    Builders<BsonDocument>.Filter.Eq("userName", data.userName.ToString()),
-                    Builders<BsonDocument>.Filter.Eq("password", data.password.ToString())
-                );
+                countUsername = await collection.CountDocumentsAsync(filterUsername);
+                countTelephone = await collection.CountDocumentsAsync(filterTelephone);
 
-                List<BsonDocument> documents = collection.Find(filter).ToList();
-                if (documents.Count.Equals(0))
+                if (countUsername > 0 && countTelephone > 0)
                 {
-                    log.LogInformation($"No user found with username {data.userName} and password {data.password}");
-                    result = new NotFoundObjectResult("Invalid username or password");
+                    result = new ConflictObjectResult(
+                        $"User with username '{data.username}' and telephone '{data.telephone}' already exists.");
                 }
-                else if (documents.Count > 1)
+                else if (countUsername > 0)
                 {
-                    log.LogInformation(
-                        $"More than one user found with username {data.userName} and password {data.password}");
-                    result = new ConflictObjectResult("Invalid username or password");
+                    result = new ConflictObjectResult($"User with username '{data.username}' already exists.");
+                }
+                else if (countTelephone > 0)
+                {
+                    result = new ConflictObjectResult($"User with telephone '{data.telephone}' already exists.");
                 }
                 else
                 {
-                    log.LogInformation($"Found one user with username {data.userName} and password {data.password}");
-                    result = new OkObjectResult(requestBody);
+                    result = new OkObjectResult(JsonConvert.SerializeObject(data));
                 }
             }
             catch (Exception ex)
             {
                 log.LogError(ex.Message);
-                result = new BadRequestObjectResult($"Failed to login: {ex.Message}");
+                result = new BadRequestObjectResult($"Failed to check if user exists: {ex.Message}");
             }
 
             return result;
