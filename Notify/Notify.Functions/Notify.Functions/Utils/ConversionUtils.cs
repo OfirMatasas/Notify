@@ -10,14 +10,25 @@ namespace Notify.Functions.Utils
     {
         public static string ConvertBsonDocumentListToJson(List<BsonDocument> bsonDocumentList)
         {
-            var jsonList = bsonDocumentList.Select(bsonDocument =>
+            JsonWriterSettings jsonSettings = new JsonWriterSettings { OutputMode = JsonOutputMode.Strict };
+            string jsonArrayString, id;
+            JArray jsonArray;
+
+            List<string> jsonList = bsonDocumentList.Select(bsonDocument =>
             {
-                var jsonSettings = new JsonWriterSettings { OutputMode = JsonOutputMode.Strict };
+                if (bsonDocument.Contains("_id"))
+                {
+                    id = bsonDocument.GetValue("_id").AsObjectId.ToString();
+                    bsonDocument.Remove("_id");
+                    bsonDocument.Add("id", id);
+                }
+
                 return bsonDocument.ToJson(jsonSettings);
             }).ToList();
 
-            var jsonArrayString = $"[{string.Join(',', jsonList)}]";
-            var jsonArray = JArray.Parse(jsonArrayString);
+            jsonArrayString = $"[{string.Join(',', jsonList)}]";
+            jsonArray = JArray.Parse(jsonArrayString);
+            
             return jsonArray.ToString();
         }
     }

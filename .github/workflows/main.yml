@@ -6,7 +6,7 @@ name: Build and deploy dotnet core app to Azure Function App - NotifyMTA
 on:
   push:
     branches:
-      - master
+      - infra/*
   workflow_dispatch:
 
 env:

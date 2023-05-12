@@ -11,6 +11,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using Notify.Functions.Core;
 using Notify.Functions.NotifyFunctions.AzureHTTPClients;
+using Notify.Functions.Utils;
 
 namespace Notify.Functions.Destinations
 {
@@ -27,7 +28,7 @@ namespace Notify.Functions.Destinations
 
             try
             {
-                if (!checkIfUserNameIsValid(req, log))
+                if (!ValidationUtils.ValidateUserName(req, log))
                 {
                     result = new BadRequestObjectResult("Invalid username provided");
                 }
@@ -47,22 +48,6 @@ namespace Notify.Functions.Destinations
             }
 
             return result;
-        }
-
-        private static bool checkIfUserNameIsValid(HttpRequest req, ILogger log)
-        {
-            bool valid = false;
-
-            if (string.IsNullOrEmpty(req.Query["username"]))
-            {
-                log.LogError("The 'userId' query parameter is required");
-            }
-            else
-            {
-                valid = true;
-            }
-
-            return valid;
         }
 
         private static async Task<string> GetAllUserDestinations(string userId, ILogger log)

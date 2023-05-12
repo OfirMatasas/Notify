@@ -8,52 +8,66 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
-using MongoDB.Bson.IO;
 using MongoDB.Driver;
 using Notify.Functions.Core;
 using Notify.Functions.NotifyFunctions.AzureHTTPClients;
+using Notify.Functions.Utils;
 
-namespace Notify.Functions.NotifyFunctions.Database;
-
-public static class GetNotifications
+namespace Notify.Functions.NotifyFunctions.Database
 {
-    [FunctionName("GetNotifications")]
-    [AllowAnonymous]
-    public static async Task<IActionResult> RunAsync(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "notification")] HttpRequest req, ILogger log)
+    public static class GetNotifications
     {
-        IMongoCollection<BsonDocument> collection;
-        List<BsonDocument> notifications;
-        List<BsonDocument> cleanedNotifications = new List<BsonDocument>();
-
-        log.LogInformation("Got client's HTTP request to get notifications");
-
-        try
+        [FunctionName("GetNotifications")]
+        [AllowAnonymous]
+        public static async Task<IActionResult> RunAsync(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "notification")]
+            HttpRequest req, ILogger log)
         {
-            collection = AzureDatabaseClient.Instance.GetCollection<BsonDocument>(Constants.DATABASE_NOTIFY_MTA, Constants.COLLECTION_NOTIFICATION);
-            log.LogInformation($"Got reference to {Constants.COLLECTION_NOTIFICATION} collection on {Constants.DATABASE_NOTIFY_MTA} database");
+            string userId, notifications;
+            ObjectResult result;
 
-            notifications = collection.Find("{}").ToList();
-
-            foreach (BsonDocument notification in notifications)
+            if (!ValidationUtils.ValidateUserName(req, log))
             {
-                notification.Remove("_id");
-                cleanedNotifications.Add(notification);
+                result = new BadRequestObjectResult("Invalid username provided");
+            }
+            else
+            {
+                userId = req.Query["username"].ToString().ToLower();
+                log.LogInformation($"Got client's HTTP request to get notifications of user {userId}");
+
+                try
+                {
+                    notifications = await GetAllUserNotifications(userId, log);
+                    result = new OkObjectResult(notifications);
+                }
+                catch (Exception ex)
+                {
+                    log.LogError(ex, "Error getting notifications");
+                    result = new BadRequestObjectResult(ex);
+                }
             }
 
-            if (cleanedNotifications.Count == 0)
-            {
-                throw new Exception("There are no notifications in the database");
-            }
-            
-            var json = cleanedNotifications.ToJson(new JsonWriterSettings { OutputMode = JsonOutputMode.Strict });
-            
-            return new OkObjectResult(json);
+            return result;
         }
-        catch (Exception ex)
+
+        private static async Task<string> GetAllUserNotifications(string userId, ILogger log)
         {
-            log.LogError(ex, "Error getting notifications");
-            return new BadRequestObjectResult(ex);
+            IMongoCollection<BsonDocument> collection;
+            FilterDefinition<BsonDocument> userFilter;
+            List<BsonDocument> notifications;
+            string response;
+
+            log.LogInformation($"Getting all notifications of user {userId}");
+
+            collection = AzureDatabaseClient.Instance.GetCollection<BsonDocument>(
+                databaseName: Constants.DATABASE_NOTIFY_MTA,
+                collectionName: Constants.COLLECTION_NOTIFICATION);
+            userFilter = Builders<BsonDocument>.Filter
+                .Where(doc => doc["user"].ToString().ToLower().Equals(userId));
+            notifications = await collection.Find(userFilter).ToListAsync();
+            response = ConversionUtils.ConvertBsonDocumentListToJson(notifications);
+
+            return response;
         }
     }
 }
