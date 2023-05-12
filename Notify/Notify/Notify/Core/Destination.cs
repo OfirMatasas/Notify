@@ -1,3 +1,7 @@
+using System.Diagnostics;
+using Geolocation;
+using Notify.Helpers;
+
 namespace Notify.Core
 {
     public class Destination
@@ -34,6 +38,17 @@ namespace Notify.Core
         {
             get => m_Bluetooth;
             set => m_Bluetooth = value;
+        }
+
+        public bool IsArrived(Location location)
+        {
+            Coordinate currentLocation = new Coordinate(location.Latitude, location.Longitude);
+            Coordinate destination = new Coordinate(Location.Latitude, Location.Longitude);
+            double distance = GeoCalculator.GetDistance(originCoordinate: currentLocation,
+                destinationCoordinate: destination, distanceUnit: DistanceUnit.Meters);
+            
+            Debug.WriteLine($"Distance to {Name} is {distance} meters");
+            return distance <= Constants.DESTINATION_MAXMIMUM_DISTANCE;
         }
     }
 }

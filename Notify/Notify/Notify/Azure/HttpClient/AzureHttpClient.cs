@@ -400,42 +400,48 @@ namespace Notify.Azure.HttpClient
 
         public async Task<List<Notification>> GetNotifications()
         {
-            return await GetData(Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION, Constants.PREFRENCES_NOTIFICATIONS, item => {
-                NotificationType notificationType = item.notification.location == null ? NotificationType.Time : NotificationType.Location;
-                object notificationTypeValue = item.notification.location ?? DateTimeOffset.FromUnixTimeSeconds((long)item.notification.timestamp).LocalDateTime;
-
-                return new Notification(
-                    name: (string)item.notification.name,
-                    description: (string)(item.description ?? item.info),
-                    creationDateTime: DateTimeOffset.FromUnixTimeSeconds((long)item.creation_timestamp).LocalDateTime,
-                    status: (string)item.status,
-                    creator: (string)item.creator,
-                    type: notificationType,
-                    typeInfo: notificationTypeValue,
-                    target: (string)item.user);
+            return await GetData(
+                endpoint: Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION,
+                preferencesKey: Constants.PREFRENCES_NOTIFICATIONS, 
+                converter:  notification => { 
+                    NotificationType notificationType = notification.notification.location == null ? NotificationType.Time : NotificationType.Location; 
+                    object notificationTypeValue = notification.notification.location ?? DateTimeOffset.FromUnixTimeSeconds((long)notification.notification.timestamp).LocalDateTime;
+                    
+                    return new Notification(
+                        name: (string)notification.notification.name, 
+                        description: (string)(notification.description ?? notification.info), 
+                        creationDateTime: DateTimeOffset.FromUnixTimeSeconds((long)notification.creation_timestamp).LocalDateTime, 
+                        status: (string)notification.status, 
+                        creator: (string)notification.creator, 
+                        type: notificationType, 
+                        typeInfo: notificationTypeValue, 
+                        target: (string)notification.user);
             });
         }
 
         public async Task<List<Friend>> GetFriends()
         {
-            return await GetData(Constants.AZURE_FUNCTIONS_PATTERN_FRIEND, Constants.PREFRENCES_FRIENDS, item => new Friend(
-                name: (string)item.name,
-                userName: (string)item.userName,
-                telephone: (string)item.telephone));
+            return await GetData(
+                endpoint: Constants.AZURE_FUNCTIONS_PATTERN_FRIEND, 
+                preferencesKey: Constants.PREFRENCES_FRIENDS, 
+                converter: friend => new Friend(
+                    name: (string)friend.name, 
+                    userName: (string)friend.userName, 
+                    telephone: (string)friend.telephone));
         }
 
         public async Task<List<Destination>> GetDestinations()
         {
-            return await GetData(Constants.AZURE_FUNCTIONS_PATTERN_DESTINATIONS, Constants.PREFRENCES_DESTINATIONS,
-                item => 
+            return await GetData( 
+                endpoint: Constants.AZURE_FUNCTIONS_PATTERN_DESTINATIONS, 
+                preferencesKey: Constants.PREFRENCES_DESTINATIONS,
+                converter: destination => new Destination((string)destination.location.name) 
                 {
-                    Destination destination = new Destination(item.name)
-                    {
-                        Location = new Location((double)(item.latitude ?? 0), (double)(item.longitude ?? 0)),
-                        SSID = item.ssid ?? "",
-                        Bluetooth = item.bluetooth ?? ""
-                    };
-                    return destination;
+                    Location = new Location(
+                        longitude: (double)(destination.location.longitude ?? 0), 
+                        latitude: (double)(destination.location.latitude ?? 0)),
+                    SSID = (string)(destination.location.ssid ?? ""),
+                    Bluetooth = (string)(destination.location.bluetooth ?? "")
                 });
         }
     }

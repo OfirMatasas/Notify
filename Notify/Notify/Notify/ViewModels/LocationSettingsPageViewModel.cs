@@ -200,7 +200,7 @@ namespace Notify.ViewModels
              try
              {
                  request = new GeolocationRequest(GeolocationAccuracy.High);
-                 location = await Geolocation.GetLocationAsync(request);
+                 location = await Xamarin.Essentials.Geolocation.GetLocationAsync(request);
                  
                  longitude = location.Longitude;
                  latitude = location.Latitude;
