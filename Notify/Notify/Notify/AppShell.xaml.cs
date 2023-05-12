@@ -171,14 +171,15 @@ namespace Notify
             
             notifications.ForEach(notification =>
             {
-                if (arrivedLocationNotifications.Any(arrivedNotification => arrivedNotification.Name == notification.Name))
+                if (arrivedLocationNotifications.Any(arrivedNotification => arrivedNotification.ID == notification.ID))
                 {
                     notification.Status = "Sent";
-                    Debug.WriteLine($"Updated status of notification {notification.Name} to Sent");
+                    Debug.WriteLine($"Updated status of notification {notification.ID} to 'Sent'");
                 }
             });
             
             Preferences.Set(Constants.PREFRENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
+            AzureHttpClient.Instance.UpdateNotificationsStatus(arrivedLocationNotifications, "Sent");
         }
 
         private List<string> getAllArrivedDestinations(Location location)
@@ -196,7 +197,8 @@ namespace Notify
                 }
             });
 
-            Debug.WriteLine($"Arrived to {destinationsArrived.Count} destinations of out {destinations.Count}");
+            Debug.WriteLine($"Arrived to {destinationsArrived.Count} destinations of out {destinations.Count}:");
+            Debug.WriteLine($"- {string.Join($"{Environment.NewLine}- ", destinationsArrived)}");
             return destinationsArrived;
         }
         

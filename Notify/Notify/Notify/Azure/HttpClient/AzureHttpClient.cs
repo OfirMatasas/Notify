@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -408,6 +409,7 @@ namespace Notify.Azure.HttpClient
                     object notificationTypeValue = notification.notification.location ?? DateTimeOffset.FromUnixTimeSeconds((long)notification.notification.timestamp).LocalDateTime;
                     
                     return new Notification(
+                        id: (string)notification.id,
                         name: (string)notification.notification.name, 
                         description: (string)(notification.description ?? notification.info), 
                         creationDateTime: DateTimeOffset.FromUnixTimeSeconds((long)notification.creation_timestamp).LocalDateTime, 
@@ -443,6 +445,35 @@ namespace Notify.Azure.HttpClient
                     SSID = (string)(destination.location.ssid ?? ""),
                     Bluetooth = (string)(destination.location.bluetooth ?? "")
                 });
+        }
+
+        public void UpdateNotificationsStatus(List<Notification> notifications, string sent)
+        {
+            List<string> notificationsIds = notifications.Select(notification => notification.ID).ToList();
+            dynamic request;
+            string json;
+            HttpResponseMessage response;
+            
+            try
+            {
+                request = new JObject
+                {
+                    { "notifications", JToken.FromObject(notificationsIds) },
+                    { "status", sent }
+                };
+                
+                json = JsonConvert.SerializeObject(request);
+                Debug.WriteLine($"request:{Environment.NewLine}{json}");
+
+                response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_UPDATE_STATUS, createJsonStringContent(json)).Result;
+
+                response.EnsureSuccessStatusCode();
+                Debug.WriteLine($"Successful status code from Azure Function from UpdateNotificationsStatus");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error occured on UpdateNotificationsStatus: {ex.Message}");
+            }
         }
     }
 }
