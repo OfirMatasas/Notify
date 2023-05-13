@@ -82,10 +82,11 @@ namespace Notify.HttpClient
         public async Task<string> Execute()
         {
             string content = null;
+            HttpResponseMessage response;
 
             try
             {
-                HttpResponseMessage response = await r_HttpClient.GetAsync(r_HttpClient.BaseAddress);
+                response = await r_HttpClient.GetAsync(r_HttpClient.BaseAddress);
                 response.EnsureSuccessStatusCode();
                 content = await response.Content.ReadAsStringAsync();
             }
