@@ -189,17 +189,6 @@ namespace Notify.ViewModels
                 Latitude = coordinates.Lat.ToString();
                 Debug.WriteLine($"onGetGeographicCoordinatesButtonClicked - Longitude: {Longitude}, Latitude: {Latitude}");
             }
-            
-            
-            // ONLY FOR DEBUGGING THE DYNAMIC LOCATION NOTIFICATION
-            List<Place> places;
-            places = await GoogleHttpClient.SearchPlacesNearby(Double.Parse(Latitude), Double.Parse(Longitude), Constants.ONE_KM, "supermarket");
-
-            Debug.WriteLine("Displaying all supermarkets within a radius of up to a kilometer:");
-            foreach (Place place in places)
-            {
-                Debug.WriteLine($"Name: {place.Name}, Place ID: {place.PlaceId}, Latitude: {Latitude}, Longitude: {Longitude}");
-            }
         }
 
          private async void onGetCurrentLocationButtonClicked()

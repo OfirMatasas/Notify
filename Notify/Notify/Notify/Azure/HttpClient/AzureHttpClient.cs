@@ -329,14 +329,16 @@ namespace Notify.Azure.HttpClient
             List<Notification> notifications = new List<Notification>();
             NotificationType notificationType;
             object notificationTypeValue;
+            HttpResponseMessage response;
+            dynamic returnedObject;
 
             try
             {
-                HttpResponseMessage response = getAsync(Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION).Result;
+                response = getAsync(Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION).Result;
                 response.EnsureSuccessStatusCode();
                 Debug.WriteLine($"Successful status code from Azure Function from GetNotifications!");
 
-                dynamic returnedObject = DeserializeObjectFromResponseAsync(response).Result;
+                returnedObject = DeserializeObjectFromResponseAsync(response).Result;
                 Debug.WriteLine($"returnedObject:{Environment.NewLine}{returnedObject.ToString()}");
                 
                 foreach (dynamic item in returnedObject)

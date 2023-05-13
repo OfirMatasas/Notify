@@ -79,7 +79,7 @@ namespace Notify.Helpers
             "School"
         };
         
-        public static readonly List<string> LOCATIONS_TYPE_LIST = new List<string>
+        public static readonly List<string> Place_TYPE_LIST = new List<string>
         {
             "atm",
             "bank",
@@ -89,9 +89,23 @@ namespace Notify.Helpers
 
         public static readonly int HALF_KM = 500;
         public static readonly int ONE_KM = 1000;
-        
-        
 
+        #endregion
+        
+        #region Notification
+
+        public static readonly string TIME = "Time";
+        public static readonly string LOCATION = "Location";
+        public static readonly string PLACE_TYPE = "Place Type";
+
+        
+        public static readonly List<string> NOTIFICATION_OPTIONS_LIST = new List<string>
+        {
+            TIME,
+            LOCATION,
+            PLACE_TYPE
+        };
+        
         #endregion
 
         #region Azure Http Client

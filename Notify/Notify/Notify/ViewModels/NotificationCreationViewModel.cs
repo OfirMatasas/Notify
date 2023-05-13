@@ -17,33 +17,29 @@ namespace Notify.ViewModels
     
         public Command BackCommand { get; set; }
         public string NotificationName { get; set; }
+
+        public List<string> NotificationOptions { get; set; } = Constants.NOTIFICATION_OPTIONS_LIST;
     
-        public List<string> NotificationTypes { get; set; } = new List<string> { "Location", "Time" };
-    
-        private string m_SelectedNotificationType;
-        public string SelectedNotificationType
+        private string m_SelectedNotificationOption;
+        public string SelectedNotificationOption
         {
-            get => m_SelectedNotificationType;
+            get => m_SelectedNotificationOption;
             set
             {
-                m_SelectedNotificationType = value;
-                OnPropertyChanged(nameof(IsLocationTypeSelected));
-                OnPropertyChanged(nameof(IsTimeTypeSelected));
+                m_SelectedNotificationOption = value;
+                OnPropertyChanged(nameof(IsTimeOptionSelected));
+                OnPropertyChanged(nameof(IsLocationOptionSelected));
+                OnPropertyChanged(nameof(IsPlaceTypeOptionSelected));
             }
         }
     
-        public bool IsLocationTypeSelected => SelectedNotificationType == "Location";
-        public bool IsTimeTypeSelected => SelectedNotificationType == "Time";
+        public bool IsTimeOptionSelected => SelectedNotificationOption == Constants.TIME;
+        public bool IsLocationOptionSelected => SelectedNotificationOption == Constants.LOCATION;
+        public bool IsPlaceTypeOptionSelected => SelectedNotificationOption == Constants.PLACE_TYPE;
 
         public List<string> LocationOptions { get; set; } = Constants.LOCATIONS_LIST;
-    
-        private string m_SelectedLocationOption;
-        public string SelectedLocationOption
-        {
-            get => m_SelectedLocationOption;
-            set => m_SelectedLocationOption = value;
-        }
-        
+        public List<string> PlaceTypeOptions { get; set; } = Constants.Place_TYPE_LIST;
+
         private string m_NotificationDescription;
         public string NotificationDescription
         {
@@ -63,6 +59,20 @@ namespace Notify.ViewModels
         {
             get => m_SelectedDateOption;
             set => m_SelectedDateOption = value;
+        }
+        
+        private string m_SelectedLocationOption;
+        public string SelectedLocationOption
+        {
+            get => m_SelectedLocationOption;
+            set => m_SelectedLocationOption = value;
+        }
+        
+        private string m_SelectedPlaceTypeOption;
+        public string SelectedPlaceTypeOption
+        {
+            get => m_SelectedPlaceTypeOption;
+            set => m_SelectedPlaceTypeOption = value;
         }
 
         public List<Friend> Friends { get; set; } = new List<Friend> 
@@ -85,35 +95,44 @@ namespace Notify.ViewModels
             List<string> selectedFriends, errorMessages;
             string completeErrorMessage;
             DateTime selectedDateTime = SelectedDateOption.Date.Add(SelectedTimeOption);
-            bool created;
+            bool isCreated;
 
             if (checkIfSelectionsAreValid(out selectedFriends, out errorMessages))
             {
-                if (IsTimeTypeSelected)
+                if (IsTimeOptionSelected)
                 {
-                    created = AzureHttpClient.Instance.CreateTimeNotification(
+                    isCreated = AzureHttpClient.Instance.CreateTimeNotification(
                         NotificationName,
                         NotificationDescription,
-                        SelectedNotificationType,
+                        SelectedNotificationOption,
                         selectedDateTime,
                         selectedFriends);
                 }
-                else if (IsLocationTypeSelected)
+                else if (IsLocationOptionSelected)
                 {
-                    created = AzureHttpClient.Instance.CreateLocationNotification(
+                    isCreated = AzureHttpClient.Instance.CreateLocationNotification(
                         NotificationName,
                         NotificationDescription,
-                        SelectedNotificationType,
+                        SelectedNotificationOption,
                         SelectedLocationOption,
+                        selectedFriends);
+                }
+                else if (IsPlaceTypeOptionSelected)
+                {
+                    isCreated = AzureHttpClient.Instance.CreateLocationNotification(
+                        NotificationName,
+                        NotificationDescription,
+                        SelectedNotificationOption,
+                        SelectedPlaceTypeOption,
                         selectedFriends);
                 }
                 else
                 {
                     await App.Current.MainPage.DisplayAlert("Invalid notification creation", "Something went wrong...", "OK");
-                    created = false;
+                    isCreated = false;
                 }
 
-                if (created)
+                if (isCreated)
                 {
                     await App.Current.MainPage.DisplayAlert("Notification created", $"Notification {NotificationName} created successfully!", "OK");
                 }
@@ -138,20 +157,24 @@ namespace Notify.ViewModels
                 errorMessages.Add("You must name the notification");
             }
 
-            if (string.IsNullOrEmpty(m_SelectedNotificationType))
+            if (string.IsNullOrEmpty(m_SelectedNotificationOption))
             {
                 errorMessages.Add("You must choose a notification type");
             }
-            else if (IsLocationTypeSelected && string.IsNullOrEmpty(m_SelectedLocationOption))
-            {
-                errorMessages.Add("You must choose a location");
-            }
-            else if (IsTimeTypeSelected)
+            else if (IsTimeOptionSelected)
             {
                 if (SelectedDateOption.Date.Add(SelectedTimeOption) < DateTime.Now)
                 {
                     errorMessages.Add("You must choose a time in the future");
                 }
+            }
+            else if (IsLocationOptionSelected && string.IsNullOrEmpty(m_SelectedLocationOption))
+            {
+                errorMessages.Add("You must choose a location");
+            }
+            else if (IsPlaceTypeOptionSelected && string.IsNullOrEmpty(m_SelectedPlaceTypeOption))
+            {
+                errorMessages.Add("You must choose a type of place");
             }
             
             if (selectedFriends == null || selectedFriends.Count == 0)
@@ -169,7 +192,7 @@ namespace Notify.ViewModels
         
         private async void onBackClicked()
         {
-            await Shell.Current.GoToAsync("///teams");
+            await Shell.Current.GoToAsync("///teams");  // TODO: change the name of the previews page
         }
     }
 }
