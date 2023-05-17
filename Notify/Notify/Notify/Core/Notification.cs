@@ -11,6 +11,7 @@ namespace Notify.Core
     
     public class Notification
     {
+        public string ID { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime CreationDateTime { get; set; }
@@ -20,8 +21,9 @@ namespace Notify.Core
         public object TypeInfo { get; set; }
         public string Target { get; set; }
 
-        public Notification(string name, string description, DateTime creationDateTime, string status, string creator, NotificationType type, object typeInfo, string target)
+        public Notification(string id, string name, string description, DateTime creationDateTime, string status, string creator, NotificationType type, object typeInfo, string target)
         {
+            ID = id;
             Name = name;
             Description = description;
             CreationDateTime = creationDateTime;

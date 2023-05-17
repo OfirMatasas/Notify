@@ -18,6 +18,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="FontAwesome" Version="4.7.0" />
+    <PackageReference Include="Geolocation" Version="1.2.1" />
     <PackageReference Include="GMO.Microsoft.Azure.Services.AppAuthentication.Config" Version="1.0.0" />
     <PackageReference Include="GooglePlacesApi" Version="1.0.17" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />

@@ -6,7 +6,6 @@ using Notify.Helpers;
 using Plugin.Geolocator;
 using Xamarin.Essentials;
 using Xamarin.Forms;
-using Location = Notify.Core.Location;
 
 namespace Notify.Services.Location
 {
@@ -29,7 +28,7 @@ namespace Notify.Services.Location
                         await Task.Delay(2000);
 
                         request = new GeolocationRequest(GeolocationAccuracy.High);
-                        location = await Geolocation.GetLocationAsync(request, token);
+                        location = await Xamarin.Essentials.Geolocation.GetLocationAsync(request, token);
                         
                         if (location != null)
                         {

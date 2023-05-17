@@ -1,12 +1,16 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Notify.Azure.HttpClient;
+using Notify.Core;
 using Notify.Helpers;
 using Notify.Interfaces.Managers;
 using Notify.Notifications;
 using Notify.Views;
 using Notify.WiFi;
-using Plugin.Geolocator.Abstractions;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -23,7 +27,6 @@ namespace Notify
         private readonly INotificationManager notificationManager = DependencyService.Get<INotificationManager>();
         private readonly IWiFiManager m_WiFiManager = DependencyService.Get<IWiFiManager>();
         private readonly IBluetoothManager m_BluetoothManager = DependencyService.Get<IBluetoothManager>();
-        private Location m_LastUpdatedLocation = null;
            
         public AppShell()
         {
@@ -39,6 +42,7 @@ namespace Notify
             }
 
             getBluetoothDevices();
+            retriveDestinations();
         }
 
         private void getBluetoothDevices()
@@ -49,6 +53,7 @@ namespace Notify
         private void internetConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
         {
             m_WiFiManager.PrintConnectedWiFi(sender, e);
+            m_WiFiManager.SendNotifications(sender, e);
         }
 
         private void registerRoutes()
@@ -67,7 +72,15 @@ namespace Notify
             setMessagingCenterLocationErrorMessageSubscription();
             setMessagingCenterLocationArrivedMessageSubscription();
         }
-        
+
+        private async void retriveDestinations()
+        {
+            await Task.Run(() =>
+            {
+                List<Destination> destinations = AzureHttpClient.Instance.GetDestinations().Result;
+            });
+        }
+
         private void setMessagingCenterLocationArrivedMessageSubscription()
         {
             MessagingCenter.Subscribe<LocationArrivedMessage>(this, "LocationArrived", message =>
@@ -126,60 +139,103 @@ namespace Notify
         {
             MessagingCenter.Subscribe<Location>(this, "Location", location =>
             {
-                bool arrived;
+                List<string> destinationsArrived = new List<string>();
+                List<Notification> arrivedLocationNotifications;
+                
+                destinationsArrived = getAllArrivedDestinations(location);
 
-                if (requiresLocationUpdate(location))
+                if (destinationsArrived.Count > 0)
                 {
-                    Debug.WriteLine($"{location}, {DateTime.Now.ToLongTimeString()}");
-                    arrived = AzureHttpClient.Instance.CheckIfArrivedDestination(location);
+                    arrivedLocationNotifications = getAllArrivedLocationNotifications(destinationsArrived);
                     
-                    if (arrived)
+                    Device.BeginInvokeOnMainThread(() =>
                     {
-                        Device.BeginInvokeOnMainThread(() =>
+                        try
                         {
-                            try
-                            {
-                                AnnounceDestinationArrival();
-                            }
-                            catch (Exception ex)
-                            {
-                                Debug.WriteLine($"Failed in MessagingCenter.Subscribe<Location>: {ex.Message}");
-                            }
-                        });
-                    }
-                    
-                    m_LastUpdatedLocation = location;
-                    Debug.WriteLine($"Updated last updated location: {m_LastUpdatedLocation}");
+                            AnnounceDestinationArrival(arrivedLocationNotifications);
+                            updateStatusOfSentNotifications(arrivedLocationNotifications);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine($"Failed in MessagingCenter.Subscribe<Location>: {ex.Message}");
+                        }
+                    });
                 }
             });
         }
-        
-        private bool requiresLocationUpdate(Location location)
+
+        private static void updateStatusOfSentNotifications(List<Notification> arrivedLocationNotifications)
         {
-            bool shouldUpdate;
-
-            if (m_LastUpdatedLocation == null)
-            {
-                shouldUpdate = true;
-            }
-            else
-            {
-                double distance = GeolocatorUtils.CalculateDistance(
-                    latitudeStart: location.Latitude, longitudeStart: location.Longitude,
-                    latitudeEnd: m_LastUpdatedLocation.Latitude, longitudeEnd: m_LastUpdatedLocation.Longitude,
-                    units: GeolocatorUtils.DistanceUnits.Kilometers) * Constants.METERS_IN_KM;
+            string json = Preferences.Get(Constants.PREFRENCES_NOTIFICATIONS, string.Empty);
+            List<Notification> notifications = JsonConvert.DeserializeObject<List<Notification>>(json);
             
-                Debug.WriteLine($"Distance from last updated location: {distance} meters");
-                shouldUpdate = distance > Constants.DISTANCE_UPDATE_THRESHOLD;
-            }
-
-            return shouldUpdate;
+            notifications.ForEach(notification =>
+            {
+                if (arrivedLocationNotifications.Any(arrivedNotification => arrivedNotification.ID == notification.ID))
+                {
+                    notification.Status = "Sent";
+                    Debug.WriteLine($"Updated status of notification {notification.ID} to 'Sent'");
+                }
+            });
+            
+            Preferences.Set(Constants.PREFRENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
+            AzureHttpClient.Instance.UpdateNotificationsStatus(arrivedLocationNotifications, "Sent");
         }
 
-        private void AnnounceDestinationArrival()
+        private List<string> getAllArrivedDestinations(Location location)
         {
-            notificationManager.SendNotification("Destination arrived!", "You've arrived at your destination");
-            Debug.WriteLine("You've arrived at your destination!");
+            string destinationsJson = Preferences.Get(Constants.PREFRENCES_DESTINATIONS, string.Empty);
+            List<Destination> destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationsJson);
+            List<string> destinationsArrived = new List<string>();
+                
+            destinations.ForEach(destination =>
+            {
+                if (destination.IsArrived(location))
+                {
+                    destinationsArrived.Add(destination.Name);
+                    Debug.WriteLine($"Added {destination.Name} to destinations arrived list");
+                }
+            });
+
+            Debug.WriteLine($"Arrived to {destinationsArrived.Count} destinations of out {destinations.Count}:");
+            Debug.WriteLine($"- {string.Join($"{Environment.NewLine}- ", destinationsArrived)}");
+            return destinationsArrived;
+        }
+        
+        private List<Notification> getAllArrivedLocationNotifications(List<string> destinationsArrived)
+        {
+            string notificationsJson = Preferences.Get(Constants.PREFRENCES_NOTIFICATIONS, string.Empty);
+            List<Notification> notifications = JsonConvert.DeserializeObject<List<Notification>>(notificationsJson);
+            List<Notification> arrivedLocationNotifications;
+
+            arrivedLocationNotifications = notifications
+                .FindAll(
+                    notification =>
+                    {
+                        bool isLocationNotification = notification.Type is NotificationType.Location;
+                        bool isArrivedLocationNotification = destinationsArrived.Contains(notification.TypeInfo.ToString());
+                        bool isNewNotification = notification.Status.ToLower().Equals("new");
+
+                        if (isLocationNotification && isArrivedLocationNotification && isNewNotification)
+                            Debug.WriteLine($"Found arrived location notification: {notification.Name}");
+                        
+                        return isLocationNotification && isArrivedLocationNotification && isNewNotification;
+                    });
+
+            Debug.WriteLine($"Found {arrivedLocationNotifications.Count} arrived location notifications");
+            return arrivedLocationNotifications;
+        }
+
+        private void AnnounceDestinationArrival(List<Notification> arrivedLocationNotifications)
+        {
+            arrivedLocationNotifications.ForEach(notification =>
+            {
+                notificationManager.SendNotification(
+                    title: notification.Name,
+                    message: $"{notification.Description}{Environment.NewLine}- {notification.Creator}");
+                Debug.WriteLine($"You've arrived at your {notification.TypeInfo} destination!");
+                Debug.WriteLine($"Notification: {notification.Name}, {notification.Description}, {notification.Creator}");
+            });
         }
 
         private void setNoficicationManagerNotificationReceived()
