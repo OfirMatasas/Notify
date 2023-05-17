@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -129,6 +130,77 @@ namespace Notify.Azure.HttpClient
             }
 
             return isSuccess;
+        }
+
+        public bool RegisterUser(string name, string userName, string password, string telephone)
+        {
+            dynamic data = new JObject();
+            string json;
+            HttpResponseMessage response;
+            bool registered;
+
+            try
+            {
+                data.name = name;
+                data.userName = userName;
+                data.password = password;
+                data.telephone = telephone;
+
+                json = JsonConvert.SerializeObject(data);
+                Debug.WriteLine($"request:{Environment.NewLine}{data}");
+
+                response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_REGISTER, createJsonStringContent(json)).Result;
+                response.EnsureSuccessStatusCode();
+                Debug.WriteLine($"Successful status code from Azure Function from RegisterUser, name: {name}, userName: {userName}, password: {password}, telephone: {telephone}");
+
+                registered = true;
+            }
+            catch (HttpRequestException ex)
+            {
+                Debug.WriteLine($"Error occurred on RegisterUser: {ex.Message}");
+                registered = false;
+            }
+
+            return registered;
+        }
+
+        public bool CheckUserExists(string userName, string telephone, out string errorMessage)
+        {
+            dynamic data = new JObject();
+            string json;
+            HttpResponseMessage response;
+            bool userExists = false;
+            errorMessage = string.Empty;
+
+            try
+            {
+                data.username = userName;
+                data.telephone = telephone;
+
+                json = JsonConvert.SerializeObject(data);
+                Debug.WriteLine($"request:{Environment.NewLine}{data}");
+
+                response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_CHECK_USER_EXISTS, createJsonStringContent(json)).Result;
+        
+                if (response.StatusCode == HttpStatusCode.Conflict)
+                {
+                    errorMessage = response.Content.ReadAsStringAsync().Result;
+                    userExists = true;
+                }
+                else
+                {
+                    response.EnsureSuccessStatusCode();
+                    Debug.WriteLine($"Successful status code from Azure Function from CheckUserExists");
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                Debug.WriteLine($"Error occurred on CheckUserExists: {ex.Message}");
+                errorMessage = ex.Message;
+                userExists = true;
+            }
+
+            return userExists;
         }
         
         public bool CheckIfArrivedDestination(Location location)

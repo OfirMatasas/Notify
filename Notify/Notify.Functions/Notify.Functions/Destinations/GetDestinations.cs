@@ -12,76 +12,78 @@ using MongoDB.Driver;
 using Notify.Functions.Core;
 using Notify.Functions.NotifyFunctions.AzureHTTPClients;
 
-namespace Notify.Functions.Destinations;
-
-public static class GetDestinations
+namespace Notify.Functions.Destinations
 {
-    [FunctionName("GetDestinations")]
-    [AllowAnonymous]
-    public static async Task<IActionResult> RunAsync(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "destination")] HttpRequest req, ILogger log)
+    public static class GetDestinations
     {
-        string userId, destinations;
-        ObjectResult result;
-        
-        try
+        [FunctionName("GetDestinations")]
+        [AllowAnonymous]
+        public static async Task<IActionResult> RunAsync(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "destination")]
+            HttpRequest req, ILogger log)
         {
-            if (!checkIfUserNameIsValid(req, log))
+            string userId, destinations;
+            ObjectResult result;
+
+            try
             {
-                result = new BadRequestObjectResult("Invalid username provided");
+                if (!checkIfUserNameIsValid(req, log))
+                {
+                    result = new BadRequestObjectResult("Invalid username provided");
+                }
+                else
+                {
+                    userId = req.Query["username"].ToString().ToLower();
+                    log.LogInformation($"Got client's HTTP request to get friends of user {userId}");
+
+                    destinations = await GetAllUserDestinations(userId, log);
+                    result = new OkObjectResult(destinations);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Error getting destinations");
+                result = new BadRequestObjectResult(ex);
+            }
+
+            return result;
+        }
+
+        private static bool checkIfUserNameIsValid(HttpRequest req, ILogger log)
+        {
+            bool valid = false;
+
+            if (string.IsNullOrEmpty(req.Query["username"]))
+            {
+                log.LogError("The 'userId' query parameter is required");
             }
             else
             {
-                userId = req.Query["username"].ToString().ToLower();
-                log.LogInformation($"Got client's HTTP request to get friends of user {userId}");
-                
-                destinations = await GetAllUserDestinations(userId, log);
-                result = new OkObjectResult(destinations);
+                valid = true;
             }
+
+            return valid;
         }
-        catch (Exception ex)
+
+        private static async Task<string> GetAllUserDestinations(string userId, ILogger log)
         {
-            log.LogError(ex, "Error getting destinations");
-            result = new BadRequestObjectResult(ex);
+            IMongoCollection<BsonDocument> collection;
+            FilterDefinition<BsonDocument> userFilter;
+            List<BsonDocument> destinations;
+            string response;
+
+            log.LogInformation($"Getting all destinations of user {userId}");
+
+            collection = AzureDatabaseClient.Instance.GetCollection<BsonDocument>(
+                databaseName: Constants.DATABASE_NOTIFY_MTA,
+                collectionName: Constants.COLLECTION_DESTINATION);
+            userFilter = Builders<BsonDocument>.Filter
+                .Where(doc => doc["user"].ToString().ToLower().Equals(userId));
+            destinations = await collection.Find(userFilter)
+                .Project(Builders<BsonDocument>.Projection.Exclude("_id")).ToListAsync();
+            response = Utils.ConversionUtils.ConvertBsonDocumentListToJson(destinations);
+
+            return response;
         }
-
-        return result;
-    }
-
-    private static bool checkIfUserNameIsValid(HttpRequest req, ILogger log)
-    {
-        bool valid = false;
-
-        if (string.IsNullOrEmpty(req.Query["username"]))
-        {
-            log.LogError("The 'userId' query parameter is required");
-        }
-        else
-        {
-            valid = true;
-        }
-        
-        return valid;
-    }
-
-    private static async Task<string> GetAllUserDestinations(string userId, ILogger log)
-    {
-        IMongoCollection<BsonDocument> collection;
-        FilterDefinition<BsonDocument> userFilter;
-        List<BsonDocument> destinations;
-        string response;
-        
-        log.LogInformation($"Getting all destinations of user {userId}");
-            
-        collection = AzureDatabaseClient.Instance.GetCollection<BsonDocument>(
-            databaseName: Constants.DATABASE_NOTIFY_MTA, 
-            collectionName: Constants.COLLECTION_DESTINATION);
-        userFilter = Builders<BsonDocument>.Filter
-            .Where(doc => doc["user"].ToString().ToLower().Equals(userId));
-        destinations = await collection.Find(userFilter)
-            .Project(Builders<BsonDocument>.Projection.Exclude("_id")).ToListAsync();
-        response = Utils.ConversionUtils.ConvertBsonDocumentListToJson(destinations);
-            
-        return response;
     }
 }

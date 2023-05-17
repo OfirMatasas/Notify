@@ -88,6 +88,7 @@ namespace Notify.ViewModels
             }
         }
         
+        
         private void validatePassword()
         {
             if (string.IsNullOrEmpty(Password))
@@ -127,18 +128,18 @@ namespace Notify.ViewModels
             {
                 bool isValid = Regex.IsMatch(UserName, @"^[a-zA-Z0-9]+$");
 
-                if (isValid)
-                {
-                    UserNameBorderColor = Constants.VALID_COLOR;
-                }
-                else
+                if (!isValid)
                 {
                     UserNameBorderColor = Constants.INVALID_COLOR;
                     displayError("Please enter a valid username consisting only of letters and numbers.");
                 }
+                else
+                {
+                    UserNameBorderColor = Constants.VALID_COLOR;
+                }
             }
         }
-        
+
         private void validateTelephone()
         {
             if (string.IsNullOrEmpty(Telephone))
@@ -150,18 +151,19 @@ namespace Notify.ViewModels
             {
                 bool isValid = Regex.IsMatch(Telephone, @"^05\d{8}$");
 
-                if (isValid)
-                {
-                    TelephoneBorderColor = Constants.VALID_COLOR;
-                }
-                else
+                if (!isValid)
                 {
                     TelephoneBorderColor = Constants.INVALID_COLOR;
                     displayError("Please enter a valid 10-digit telephone number starting with '05'.");
                 }
+                else
+                {
+                    TelephoneBorderColor = Constants.VALID_COLOR;
+                }
             }
         }
-        
+
+
         private void displayError(string message)
         {
             ErrorMessages.Add(message);
@@ -169,25 +171,36 @@ namespace Notify.ViewModels
 
         private async void onSignUpClicked()
         {
-            string IsraeliPhoneNumber;
+            string israeliPhoneNumber;
             bool successfulSMSSent;
-            
+            bool validationSuccessful;
+            bool userExists;
+            string errorMessage;
+
             ErrorMessages.Clear();
-            
+
             validateName();
             validateUserName();
             validatePassword();
             validateTelephone();
 
+            userExists = AzureHttpClient.Instance.CheckUserExists(UserName, Telephone, out errorMessage);
+
+            if (userExists)
+            {
+                Debug.WriteLine(errorMessage);
+                displayError(errorMessage);
+            }
+
             if (ErrorMessages.Count > 0)
             {
                 string completeErrorMessage = string.Join(Environment.NewLine,
-                    ErrorMessages.Select(errorMessage => $"- {errorMessage}"));
+                    ErrorMessages.Select(message => $"- {message}"));
                 await Application.Current.MainPage.DisplayAlert("Invalid sign up", completeErrorMessage, "OK");
             }
             else
             {
-                IsraeliPhoneNumber = convertToIsraelPhoneNumber(Telephone);
+                israeliPhoneNumber = convertToIsraelPhoneNumber(Telephone);
 
                 if (string.IsNullOrEmpty(VerificationCode))
                 {
@@ -195,11 +208,32 @@ namespace Notify.ViewModels
                 }
 
                 successfulSMSSent =
-                    AzureHttpClient.Instance.SendSMSVerificationCode(IsraeliPhoneNumber, VerificationCode);
-                
+                    AzureHttpClient.Instance.SendSMSVerificationCode(israeliPhoneNumber, VerificationCode);
+
                 if (successfulSMSSent)
                 {
-                    await validateVerificationCodeWithUser();
+                    validationSuccessful = await validateVerificationCodeWithUser();
+                    if (validationSuccessful)
+                    {
+                        bool registered =
+                            AzureHttpClient.Instance.RegisterUser(Name, UserName, Password, Telephone);
+                        if (registered)
+                        {
+                            await Application.Current.MainPage.DisplayAlert("Registration Success",
+                                "You have successfully registered to Notify.", "OK");
+                            await Shell.Current.GoToAsync("///login");
+                        }
+                        else
+                        {
+                            Debug.WriteLine("Failed to register user.");
+                            displayError($"Failed to register user.");
+                        }
+                    }
+                    else
+                    {
+                        Debug.WriteLine("Failed to validate verification code.");
+                        displayError($"Failed to validate verification code.");
+                    }
                 }
                 else
                 {
@@ -209,10 +243,11 @@ namespace Notify.ViewModels
             }
         }
 
-        private async Task validateVerificationCodeWithUser()
+        private async Task<bool> validateVerificationCodeWithUser()
         {
             string userEnteredCode;
-            
+            bool isValidationSuccessful = false;
+
             do
             {
                 userEnteredCode = await Application.Current.MainPage.DisplayPromptAsync(
@@ -226,16 +261,17 @@ namespace Notify.ViewModels
 
                     if (!tryAgain)
                     {
-                        return;
+                        isValidationSuccessful = false;
+                        break;
                     }
                 }
-            } while (userEnteredCode != VerificationCode);
+                else
+                {
+                    isValidationSuccessful = true;
+                }
+            } while (!isValidationSuccessful);
 
-            await Application.Current.MainPage.DisplayAlert("Registration Success",
-                "You have successfully registered to Notify.", "OK");
-            Debug.WriteLine($"User registered successfully.{Environment.NewLine}Name: {Name}, User Name: {UserName}, Telephone: {Telephone}, Password: {Password}");
-            
-            await Shell.Current.GoToAsync("///login");
+            return isValidationSuccessful;
         }
 
         private string convertToIsraelPhoneNumber(string phoneNumber) => $"+972{phoneNumber.Substring(1)}";
