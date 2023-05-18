@@ -29,16 +29,16 @@ namespace Notify.ViewModels
                 m_SelectedNotificationOption = value;
                 OnPropertyChanged(nameof(IsTimeOptionSelected));
                 OnPropertyChanged(nameof(IsLocationOptionSelected));
-                OnPropertyChanged(nameof(IsPlaceTypeOptionSelected));
+                OnPropertyChanged(nameof(IsDynamicOptionSelected));
             }
         }
-    
+        
         public bool IsTimeOptionSelected => SelectedNotificationOption == Constants.TIME;
         public bool IsLocationOptionSelected => SelectedNotificationOption == Constants.LOCATION;
-        public bool IsPlaceTypeOptionSelected => SelectedNotificationOption == Constants.PLACE_TYPE;
+        public bool IsDynamicOptionSelected => SelectedNotificationOption == Constants.DYNAMIC;
 
         public List<string> LocationOptions { get; set; } = Constants.LOCATIONS_LIST;
-        public List<string> PlaceTypeOptions { get; set; } = Constants.Place_TYPE_LIST;
+        public List<string> DynamicOptions { get; set; } = Constants.DYNAMIC_PLACE_LIST;
 
         private string m_NotificationDescription;
         public string NotificationDescription
@@ -68,11 +68,11 @@ namespace Notify.ViewModels
             set => m_SelectedLocationOption = value;
         }
         
-        private string m_SelectedPlaceTypeOption;
-        public string SelectedPlaceTypeOption
+        private string m_SelectedDynamicOption;
+        public string SelectedDynamicOption
         {
-            get => m_SelectedPlaceTypeOption;
-            set => m_SelectedPlaceTypeOption = value;
+            get => m_SelectedDynamicOption;
+            set => m_SelectedDynamicOption = value.ToLower();
         }
 
         public List<Friend> Friends { get; set; } = new List<Friend> 
@@ -117,13 +117,13 @@ namespace Notify.ViewModels
                         SelectedLocationOption,
                         selectedFriends);
                 }
-                else if (IsPlaceTypeOptionSelected)
+                else if (IsDynamicOptionSelected)
                 {
                     isCreated = AzureHttpClient.Instance.CreateLocationNotification(
                         NotificationName,
                         NotificationDescription,
                         SelectedNotificationOption,
-                        SelectedPlaceTypeOption,
+                        SelectedDynamicOption,
                         selectedFriends);
                 }
                 else
@@ -157,7 +157,7 @@ namespace Notify.ViewModels
                 errorMessages.Add("You must name the notification");
             }
 
-            if (string.IsNullOrEmpty(m_SelectedNotificationOption))
+            if (string.IsNullOrEmpty(SelectedNotificationOption))
             {
                 errorMessages.Add("You must choose a notification type");
             }
@@ -172,7 +172,7 @@ namespace Notify.ViewModels
             {
                 errorMessages.Add("You must choose a location");
             }
-            else if (IsPlaceTypeOptionSelected && string.IsNullOrEmpty(m_SelectedPlaceTypeOption))
+            else if (IsDynamicOptionSelected && string.IsNullOrEmpty(m_SelectedDynamicOption))
             {
                 errorMessages.Add("You must choose a type of place");
             }

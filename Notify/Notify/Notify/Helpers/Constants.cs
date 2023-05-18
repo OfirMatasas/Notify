@@ -79,12 +79,12 @@ namespace Notify.Helpers
             "School"
         };
         
-        public static readonly List<string> Place_TYPE_LIST = new List<string>
+        public static readonly List<string> DYNAMIC_PLACE_LIST = new List<string>
         {
-            "atm",
-            "bank",
-            "pharmacy",
-            "supermarket"
+            "ATM",
+            "Bank",
+            "Pharmacy",
+            "Supermarket"
         };
 
         public static readonly int HALF_KM = 500;
@@ -96,14 +96,14 @@ namespace Notify.Helpers
 
         public static readonly string TIME = "Time";
         public static readonly string LOCATION = "Location";
-        public static readonly string PLACE_TYPE = "Place Type";
+        public static readonly string DYNAMIC = "Dynamic";
 
         
         public static readonly List<string> NOTIFICATION_OPTIONS_LIST = new List<string>
         {
             TIME,
             LOCATION,
-            PLACE_TYPE
+            DYNAMIC
         };
         
         #endregion

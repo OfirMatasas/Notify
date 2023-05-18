@@ -161,7 +161,8 @@ namespace Notify.HttpClient
         
         public static async Task<string> GetAddressFromCoordinatesAsync(double latitude, double longitude)
         {
-            string requestUrl = $"https://maps.googleapis.com/maps/api/geocode/json?key={r_GoogleAPIkey}&latlng={latitude},{longitude}";
+            string requestUrl = 
+                $"https://maps.googleapis.com/maps/api/geocode/json?key={r_GoogleAPIkey}&latlng={latitude},{longitude}";
             string address = null;
             HttpResponseMessage response;
             string responseJson;
@@ -199,8 +200,8 @@ namespace Notify.HttpClient
         
         public static async Task<List<Place>> SearchPlacesNearby(double latitude, double longitude, int radius, string type)
         {
-            string requestUrl = $"https://maps.googleapis.com/maps/api/place/nearbysearch/json?key={r_GoogleAPIkey}&location={latitude},{longitude}&radius={radius}&type={type}";
-
+            string requestUrl = 
+                $"https://maps.googleapis.com/maps/api/place/nearbysearch/json?key={r_GoogleAPIkey}&location={latitude},{longitude}&radius={radius}&type={type}";
             List<Place> places = new List<Place>();
             string response;
             JObject responseJson;
