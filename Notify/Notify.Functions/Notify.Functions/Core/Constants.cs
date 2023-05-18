@@ -11,13 +11,14 @@ namespace Notify.Functions.Core
         public static readonly string COLLECTION_GROUP = "Group";
 
         
-        #region AzureSecrets
+        #region AzureSecretsAndKeys
         
         public static readonly string AZURE_KEY_VAULT = "https://notify-keys-vault.vault.azure.net/";
         public static readonly string DATABASE_CONNECTION_STRING = "MONGO-CONNECTION-STRING";
         public static readonly string TWILIO_ACCOUNT_SID = "TWILIO-ACCOUNT-SID";
         public static readonly string TWILIO_AUTH_TOKEN = "TWILIO-AUTH-TOKEN";
         public static readonly string TWILIO_PHONE_NUMBER = "TWILIO-PHONE-NUMBER";
+        public static readonly string PASSWORD_ENCRYPTION_KEY = "NotifyPasswordEncryptionKey";
         
         #endregion
     }

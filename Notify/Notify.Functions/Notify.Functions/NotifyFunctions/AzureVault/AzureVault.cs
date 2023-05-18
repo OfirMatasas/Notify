@@ -6,7 +6,7 @@ using Notify.Functions.Core;
 
 namespace Notify.Functions.NotifyFunctions.AzureVault;
 
-public sealed class AzureVault
+public static class AzureVault
 {
     public static async Task<string> GetSecretFromVault(string secretName)
     {
