@@ -28,7 +28,7 @@ namespace Notify.ViewModels
 
             try
             {
-                notificationsJson = Preferences.Get(Constants.PREFRENCES_NOTIFICATIONS, string.Empty);
+                notificationsJson = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
                 if (!notificationsJson.Equals(string.Empty))
                 {
                     Debug.WriteLine("Notifications found in preferences");
@@ -63,7 +63,7 @@ namespace Notify.ViewModels
         private async void onNotificationsRefreshClicked()
         {
             await Task.Run(() => Notifications = AzureHttpClient.Instance.GetNotifications().Result);
-            Preferences.Set(Constants.PREFRENCES_NOTIFICATIONS, JsonConvert.SerializeObject(Notifications));
+            Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(Notifications));
         }
 
         #endregion

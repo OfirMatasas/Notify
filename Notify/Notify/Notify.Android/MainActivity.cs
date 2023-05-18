@@ -5,6 +5,7 @@ using Android.Runtime;
 using Android.OS;
 using Android.Content;
 using Notify.Droid.Notifications;
+using Notify.Helpers;
 using Notify.Notifications;
 using Xamarin.Forms;
 using Xamarin.Essentials;
@@ -40,10 +41,10 @@ namespace Notify.Droid
 
             App app = new App();
             
-            if (Preferences.ContainsKey("NotifyUserName") && Preferences.ContainsKey("NotifyPassword"))
+            if (Preferences.ContainsKey(Constants.PREFERENCES_USERNAME) && Preferences.ContainsKey(Constants.PREFERENCES_PASSWORD))
             {
-                Debug.WriteLine($"Logging in with credentials from preferences.{Environment.NewLine}UserName: {Preferences.Get("NotifyUserName", string.Empty)}" +
-                                $" and Password: {Preferences.Get("NotifyPassword", string.Empty)}");
+                Debug.WriteLine($"Logging in with credentials from preferences.{Environment.NewLine}UserName: {Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty)}" +
+                                $" and Password: {Preferences.Get(Constants.PREFERENCES_PASSWORD, string.Empty)}");
                 //TODO implement the actual login upon database creation
                 Shell.Current.GoToAsync("//home");
                 app.MainPage = Shell.Current;

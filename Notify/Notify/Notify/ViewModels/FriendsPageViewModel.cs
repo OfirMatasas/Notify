@@ -42,7 +42,7 @@ namespace Notify.ViewModels
 
             try
             {
-                friendsJson = Preferences.Get(Constants.PREFRENCES_FRIENDS, string.Empty);
+                friendsJson = Preferences.Get(Constants.PREFERENCES_FRIENDS, string.Empty);
                 if(!friendsJson.Equals(string.Empty))
                 {
                     Debug.WriteLine("Friends found in preferences");

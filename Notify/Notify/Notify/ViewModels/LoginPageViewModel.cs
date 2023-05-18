@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Notify.Azure.HttpClient;
+using Notify.Helpers;
 using Notify.Services.Location;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -63,40 +64,33 @@ namespace Notify.ViewModels
 
         private async void onLoginClicked()
         {
-            bool debugAutoLogin = false;
             IsBusy = true;
 
-            if (debugAutoLogin)
+            if (string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(Password))
             {
-                try
-                {
-                    if (areCredentialsValid())
-                    {
-                        if (RememberMe)
-                        {
-                            storeUserCredentialsInPreferences(UserName, Password);
-                        }
-
-                        await locationService.ManageLocationTracking();
-                        await Shell.Current.GoToAsync("///main");
-                    }
-                    else
-                    {
-                        await App.Current.MainPage.DisplayAlert("Error", "Invalid credentials", "OK");
-                    }
-                }
-                catch (Exception)
-                {
-                    await App.Current.MainPage.DisplayAlert("Error", "Empty credentials", "OK");
-                }
-
-                IsBusy = false;
+                await App.Current.MainPage.DisplayAlert("Error", "Empty credentials", "OK");
             }
-            else
+            else if (areCredentialsValid())
             {
+                Debug.WriteLine("User credentials are valid");
+
+                Preferences.Set(Constants.PREFERENCES_USERNAME, UserName);
+
+                if (RememberMe)
+                {
+                    Preferences.Set(Constants.PREFERENCES_PASSWORD, Password);
+                    Debug.WriteLine("User credentials are saved in preferences");
+                }
+
                 await locationService.ManageLocationTracking();
                 await Shell.Current.GoToAsync("///main");
             }
+            else
+            {
+                await App.Current.MainPage.DisplayAlert("Error", "Invalid credentials", "OK");
+            }
+
+            IsBusy = false;
         }
 
         private bool areCredentialsValid()
@@ -112,14 +106,6 @@ namespace Notify.ViewModels
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void storeUserCredentialsInPreferences(string userName, string password)
-        {
-            Preferences.Set("NotifyUserName", userName);
-            Preferences.Set("NotifyPassword", password);
-            
-            Debug.WriteLine("User credentials saved in preferences");
         }
     }
 }

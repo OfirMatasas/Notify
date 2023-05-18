@@ -95,7 +95,6 @@ namespace Notify.Helpers
         public static readonly string AZURE_FUNCTIONS_PATTERN_FRIEND = "friends";
         public static readonly string AZURE_FUNCTIONS_PATTERN_DESTINATIONS = "destination";
         public static readonly string AZURE_FUNCTIONS_PATTERN_CHECK_USER_EXISTS = "checkUserExists";
-        public static readonly string USER_NAME = "linkimos";
 
         #endregion
 
@@ -128,9 +127,11 @@ namespace Notify.Helpers
 
         #region Prefrences_Keys
 
-        public static readonly string PREFRENCES_NOTIFICATIONS = "Notifications";
-        public static readonly string PREFRENCES_DESTINATIONS = "Destinations";
-        public static readonly string PREFRENCES_FRIENDS = "Friends";
+        public static readonly string PREFERENCES_NOTIFICATIONS = "Notifications";
+        public static readonly string PREFERENCES_DESTINATIONS = "Destinations";
+        public static readonly string PREFERENCES_FRIENDS = "Friends";
+        public static readonly string PREFERENCES_USERNAME = "NotifyUserName";
+        public static readonly string PREFERENCES_PASSWORD = "NotifyPassword";
 
         #endregion
 
