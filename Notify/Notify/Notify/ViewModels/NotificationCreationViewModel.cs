@@ -72,7 +72,7 @@ namespace Notify.ViewModels
         public string SelectedDynamicOption
         {
             get => m_SelectedDynamicOption;
-            set => m_SelectedDynamicOption = value.ToLower();
+            set => m_SelectedDynamicOption = value;
         }
 
         public List<Friend> Friends { get; set; } = new List<Friend> 
@@ -123,7 +123,7 @@ namespace Notify.ViewModels
                         NotificationName,
                         NotificationDescription,
                         SelectedNotificationOption,
-                        SelectedDynamicOption,
+                        SelectedDynamicOption.ToLower(),
                         selectedFriends);
                 }
                 else
