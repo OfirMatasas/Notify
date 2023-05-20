@@ -201,7 +201,7 @@ namespace Notify.HttpClient
         public static async Task<List<Place>> SearchPlacesNearby(double latitude, double longitude, int radius, string type)
         {
             string requestUrl = 
-                $"https://maps.googleapis.com/maps/api/place/nearbysearch/json?key={r_GoogleAPIkey}&location={latitude},{longitude}&radius={radius}&type={type}";
+                $"https://maps.googleapis.com/maps/api/place/nearbysearch/json?key={r_GoogleAPIkey}&location={latitude},{longitude}&radius={radius}&type={type.ToLower()}";
             List<Place> places = new List<Place>();
             string response;
             JObject responseJson;

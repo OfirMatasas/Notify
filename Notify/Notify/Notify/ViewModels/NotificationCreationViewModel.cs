@@ -119,11 +119,11 @@ namespace Notify.ViewModels
                 }
                 else if (IsDynamicOptionSelected)
                 {
-                    isCreated = AzureHttpClient.Instance.CreateLocationNotification(
+                    isCreated = AzureHttpClient.Instance.CreateDynamicNotification(
                         NotificationName,
                         NotificationDescription,
                         SelectedNotificationOption,
-                        SelectedDynamicOption.ToLower(),
+                        SelectedDynamicOption,
                         selectedFriends);
                 }
                 else
