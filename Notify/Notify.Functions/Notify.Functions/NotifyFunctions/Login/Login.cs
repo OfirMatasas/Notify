@@ -13,6 +13,8 @@ using MongoDB.Driver;
 using Newtonsoft.Json;
 using Notify.Functions.Core;
 using Notify.Functions.NotifyFunctions.AzureHTTPClients;
+using Notify.Functions.NotifyFunctions.AzureVault;
+using Notify.Functions.Utils;
 
 namespace Notify.Functions.NotifyFunctions.Login
 {
@@ -42,28 +44,34 @@ namespace Notify.Functions.NotifyFunctions.Login
                 data = JsonConvert.DeserializeObject(requestBody);
                 log.LogInformation($"Data:{Environment.NewLine}{data}");
 
-                FilterDefinition<BsonDocument> filter = Builders<BsonDocument>.Filter.And(
-                    Builders<BsonDocument>.Filter.Eq("userName", data.userName.ToString()),
-                    Builders<BsonDocument>.Filter.Eq("password", data.password.ToString())
-                );
+                FilterDefinition<BsonDocument> filter =
+                    Builders<BsonDocument>.Filter.Eq("userName", data.userName.ToString());
+                BsonDocument user = await collection.Find(filter).FirstOrDefaultAsync();
 
-                List<BsonDocument> documents = collection.Find(filter).ToList();
-                if (documents.Count.Equals(0))
+                if (user == null)
                 {
-                    log.LogInformation($"No user found with username {data.userName} and password {data.password}");
+                    log.LogInformation($"No user found with username {data.userName}");
                     result = new NotFoundObjectResult("Invalid username or password");
-                }
-                else if (documents.Count > 1)
-                {
-                    log.LogInformation(
-                        $"More than one user found with username {data.userName} and password {data.password}");
-                    result = new ConflictObjectResult("Invalid username or password");
                 }
                 else
                 {
-                    log.LogInformation($"Found one user with username {data.userName} and password {data.password}");
-                    result = new OkObjectResult(requestBody);
+                    string storedEncryptedPassword = user.GetValue("password").ToString();
+
+                    // Decrypt the stored encrypted password
+                    string decryptedPassword = await AzureVault.AzureVault.DecryptPasswordWithKeyVault(storedEncryptedPassword, Constants.PASSWORD_ENCRYPTION_KEY);
+
+                    if (decryptedPassword == data.password.ToString())
+                    {
+                        log.LogInformation($"User logged in successfully: {data.userName}");
+                        result = new OkObjectResult(requestBody);
+                    }
+                    else
+                    {
+                        log.LogInformation($"Invalid password for username {data.userName}");
+                        result = new UnauthorizedObjectResult("Invalid username or password");
+                    }
                 }
+
             }
             catch (Exception ex)
             {

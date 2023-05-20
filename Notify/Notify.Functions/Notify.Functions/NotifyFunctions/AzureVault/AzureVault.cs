@@ -3,42 +3,52 @@ using System.Text;
 using System.Threading.Tasks;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
-using Notify.Functions.Core;
 using Azure.Security.KeyVault.Keys;
 using Azure.Security.KeyVault.Keys.Cryptography;
-using Microsoft.Azure.Cosmos.Linq;
+using Notify.Functions.Core;
 
-namespace Notify.Functions.NotifyFunctions.AzureVault;
-
-public static class AzureVault
+namespace Notify.Functions.NotifyFunctions.AzureVault
 {
-    public static async Task<string> GetSecretFromVault(string secretName)
+    public static class AzureVault
     {
-        SecretClient client = new SecretClient(new Uri(Constants.AZURE_KEY_VAULT), new DefaultAzureCredential());
-        KeyVaultSecret secret = await client.GetSecretAsync(secretName);
+        public static async Task<string> GetSecretFromVault(string secretName)
+        {
+            SecretClient client = new SecretClient(new Uri(Constants.AZURE_KEY_VAULT), new DefaultAzureCredential());
+            KeyVaultSecret secret = await client.GetSecretAsync(secretName);
 
-        return secret.Value;
-    }
-    
-    public static async Task<string> EncryptPasswordWithKeyVault(string unencryptedPassword, string keyName)
-    {
-        // Create a Uri for the Azure Key Vault
-        Uri keyVaultUri = new Uri(Constants.AZURE_KEY_VAULT);
+            return secret.Value;
+        }
 
-        // Get a reference to the key in the key vault
-        KeyClient keyClient = new KeyClient(keyVaultUri, new DefaultAzureCredential());
-        KeyVaultKey keyVaultKey = await keyClient.GetKeyAsync(keyName);
+        public static async Task<string> EncryptPasswordWithKeyVault(string unencryptedPassword, string keyName)
+        {
+            Uri keyVaultUri = new Uri(Constants.AZURE_KEY_VAULT);
 
-        // Create a cryptographic client that will use the key from the key vault
-        CryptographyClient cryptographyClient = new CryptographyClient(keyVaultKey.Id, new DefaultAzureCredential());
+            KeyClient keyClient = new KeyClient(keyVaultUri, new DefaultAzureCredential());
+            KeyVaultKey keyVaultKey = await keyClient.GetKeyAsync(keyName);
 
-        // Convert the unencrypted password to bytes
-        byte[] unencryptedBytes = Encoding.UTF8.GetBytes(unencryptedPassword);
+            CryptographyClient cryptographyClient = new CryptographyClient(keyVaultKey.Id, new DefaultAzureCredential());
 
-        // Encrypt the data using the cryptographic client
-        EncryptResult encryptResult = await cryptographyClient.EncryptAsync(EncryptionAlgorithm.RsaOaep, unencryptedBytes);
+            byte[] unencryptedBytes = Encoding.UTF8.GetBytes(unencryptedPassword);
 
-        // Convert the encrypted data to a string so it can be returned
-        return Convert.ToBase64String(encryptResult.Ciphertext);
+            EncryptResult encryptResult = await cryptographyClient.EncryptAsync(EncryptionAlgorithm.RsaOaep, unencryptedBytes);
+
+            return Convert.ToBase64String(encryptResult.Ciphertext);
+        }
+
+        public static async Task<string> DecryptPasswordWithKeyVault(string encryptedPassword, string keyName)
+        {
+            Uri keyVaultUri = new Uri(Constants.AZURE_KEY_VAULT);
+
+            KeyClient keyClient = new KeyClient(keyVaultUri, new DefaultAzureCredential());
+            KeyVaultKey keyVaultKey = await keyClient.GetKeyAsync(keyName);
+
+            CryptographyClient cryptographyClient = new CryptographyClient(keyVaultKey.Id, new DefaultAzureCredential());
+
+            byte[] encryptedBytes = Convert.FromBase64String(encryptedPassword);
+
+            DecryptResult decryptResult = await cryptographyClient.DecryptAsync(EncryptionAlgorithm.RsaOaep, encryptedBytes);
+
+            return Encoding.UTF8.GetString(decryptResult.Plaintext);
+        }
     }
 }
