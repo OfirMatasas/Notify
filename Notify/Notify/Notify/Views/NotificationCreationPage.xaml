@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8" ?>
-
 <ContentPage
     BindingContext="{Binding NotificationCreationPage, Source={StaticResource ViewModelLocator}}"
     Title="Notification Creation"
@@ -63,33 +62,15 @@
             <Picker
                 Grid.Column="1"
                 ItemDisplayBinding="{Binding .}"
-                ItemsSource="{Binding NotificationTypes}"
-                SelectedItem="{Binding SelectedNotificationType}"
+                ItemsSource="{Binding NotificationOptions}"
+                SelectedItem="{Binding SelectedNotificationOption}"
                 TextColor="Black" />
-        </Grid>
-
-        <Grid
-            Column="2"
-            ColumnDefinitions="auto, *"
-            IsVisible="{Binding IsLocationTypeSelected}"
-            RowDefinitions="auto, auto">
-            <Label
-                Grid.Column="0"
-                Text="Location Option"
-                TextColor="Black"
-                VerticalOptions="Center" />
-            <Picker
-                Grid.Column="1"
-                ItemsSource="{Binding LocationOptions}"
-                SelectedItem="{Binding SelectedLocationOption}"
-                TextColor="Black" />
-
         </Grid>
 
         <Grid
             Column="3"
             ColumnDefinitions="auto, *, *"
-            IsVisible="{Binding IsTimeTypeSelected}"
+            IsVisible="{Binding IsTimeOptionSelected}"
             RowDefinitions="auto, auto, auto">
             <Label
                 Grid.Column="0"
@@ -110,6 +91,42 @@
                 Grid.Column="2"
                 TextColor="Black"
                 x:Name="DatePicker" />
+        </Grid>
+        
+        <Grid
+            Column="2"
+            ColumnDefinitions="auto, *"
+            IsVisible="{Binding IsLocationOptionSelected}"
+            RowDefinitions="auto, auto">
+            <Label
+                Grid.Column="0"
+                Text="Location Option"
+                TextColor="Black"
+                VerticalOptions="Center" />
+            <Picker
+                Grid.Column="1"
+                ItemsSource="{Binding LocationOptions}"
+                SelectedItem="{Binding SelectedLocationOption}"
+                TextColor="Black" />
+
+        </Grid>
+        
+        <Grid
+            Column="2"
+            ColumnDefinitions="auto, *"
+            IsVisible="{Binding IsDynamicOptionSelected}"
+            RowDefinitions="auto, auto">
+            <Label
+                Grid.Column="0"
+                Text="Place Type Option"
+                TextColor="Black"
+                VerticalOptions="Center" />
+            <Picker
+                Grid.Column="1"
+                ItemsSource="{Binding DynamicOptions}"
+                SelectedItem="{Binding SelectedDynamicOption}"
+                TextColor="Black" />
+
         </Grid>
 
         <Label Text="Friends" TextColor="Black" />

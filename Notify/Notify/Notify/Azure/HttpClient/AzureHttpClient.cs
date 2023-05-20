@@ -279,6 +279,13 @@ namespace Notify.Azure.HttpClient
                 Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_LOCATION);
         }
 
+        public bool CreateDynamicNotification(string notificationName, string description, string notificationType, 
+            string dynamicLocation, List<string> users)
+        {
+            return createNotification(notificationName, description, notificationType, "location", dynamicLocation, users, 
+                Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_DYNAMIC);
+        }
+
         private bool createNotification(string notificationName, string description, string notificationType, 
             string key, JToken value, List<string> users, string uri)
         {

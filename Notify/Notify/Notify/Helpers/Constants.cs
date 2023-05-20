@@ -78,7 +78,34 @@ namespace Notify.Helpers
             "Work",
             "School"
         };
+        
+        public static readonly List<string> DYNAMIC_PLACE_LIST = new List<string>
+        {
+            "ATM",
+            "Bank",
+            "Pharmacy",
+            "Supermarket"
+        };
 
+        public static readonly int HALF_KM = 500;
+        public static readonly int ONE_KM = 1000;
+
+        #endregion
+        
+        #region Notification
+
+        public static readonly string TIME = "Time";
+        public static readonly string LOCATION = "Location";
+        public static readonly string DYNAMIC = "Dynamic";
+
+        
+        public static readonly List<string> NOTIFICATION_OPTIONS_LIST = new List<string>
+        {
+            TIME,
+            LOCATION,
+            DYNAMIC
+        };
+        
         #endregion
 
         #region Azure Http Client
@@ -88,6 +115,7 @@ namespace Notify.Helpers
         public static readonly string AZURE_FUNCTIONS_PATTERN_NOTIFICATION = "notification";
         public static readonly string AZURE_FUNCTIONS_PATTERN_NOTIFICATION_TIME = $"{AZURE_FUNCTIONS_PATTERN_NOTIFICATION}/time";
         public static readonly string AZURE_FUNCTIONS_PATTERN_NOTIFICATION_LOCATION = $"{AZURE_FUNCTIONS_PATTERN_NOTIFICATION}/location";
+        public static readonly string AZURE_FUNCTIONS_PATTERN_NOTIFICATION_DYNAMIC = $"{AZURE_FUNCTIONS_PATTERN_NOTIFICATION}/dynamic";
         public static readonly string AZURE_FUNCTIONS_PATTERN_NOTIFICATION_UPDATE_STATUS = $"{AZURE_FUNCTIONS_PATTERN_NOTIFICATION}/update/status";
         public static readonly string AZURE_FUNCTIONS_PATTERN_DESTINATION_UPDATE = "destination/update";
         public static readonly string AZURE_FUNCTIONS_PATTERN_LOGIN = "login";

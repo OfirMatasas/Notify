@@ -100,7 +100,9 @@ namespace Notify.Functions.NotifyFunctions.Database
 
         private static void setExtraElementBaseOnType(string type, JToken json, out BsonElement extraElement)
         {
-            if (type.Equals("location"))
+            string lowerCasedType = type.ToLower();
+            
+            if (lowerCasedType.Equals("location") || lowerCasedType.Equals("dynamic"))
             {
                 extraElement = new BsonElement("location", json["notification"]["location"].ToString());
             }
