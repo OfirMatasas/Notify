@@ -43,7 +43,8 @@ namespace Notify.Functions.NotifyFunctions.Login
                 data = JsonConvert.DeserializeObject(requestBody);
                 log.LogInformation($"Data:{Environment.NewLine}{data}");
                 
-                filterUsername = Builders<BsonDocument>.Filter.Eq("userName", Convert.ToString(data.username));
+                filterUsername = Builders<BsonDocument>.Filter.Regex("userName",
+                    new BsonRegularExpression(Convert.ToString(data.username), "i"));
                 filterTelephone = Builders<BsonDocument>.Filter.Eq("telephone", Convert.ToString(data.telephone));
 
                 countUsername = await collection.CountDocumentsAsync(filterUsername);
