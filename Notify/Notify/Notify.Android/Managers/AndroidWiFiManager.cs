@@ -74,8 +74,8 @@ namespace Notify.Droid.Managers
                 ssid = wifiManager.ConnectionInfo.SSID.Trim('"');
                 
                 retrieveDestinations();
-                notificationsJson = Preferences.Get(Constants.PREFRENCES_NOTIFICATIONS, string.Empty);
-                destinationJson = Preferences.Get(Constants.PREFRENCES_DESTINATIONS, string.Empty);
+                notificationsJson = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
+                destinationJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, string.Empty);
                 
                 if (!notificationsJson.Equals(string.Empty) && !destinationJson.Equals(string.Empty))
                 {

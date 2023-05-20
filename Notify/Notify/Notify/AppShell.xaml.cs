@@ -166,7 +166,7 @@ namespace Notify
 
         private static void updateStatusOfSentNotifications(List<Notification> arrivedLocationNotifications)
         {
-            string json = Preferences.Get(Constants.PREFRENCES_NOTIFICATIONS, string.Empty);
+            string json = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
             List<Notification> notifications = JsonConvert.DeserializeObject<List<Notification>>(json);
             
             notifications.ForEach(notification =>
@@ -178,13 +178,13 @@ namespace Notify
                 }
             });
             
-            Preferences.Set(Constants.PREFRENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
+            Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
             AzureHttpClient.Instance.UpdateNotificationsStatus(arrivedLocationNotifications, "Sent");
         }
 
         private List<string> getAllArrivedDestinations(Location location)
         {
-            string destinationsJson = Preferences.Get(Constants.PREFRENCES_DESTINATIONS, string.Empty);
+            string destinationsJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, string.Empty);
             List<Destination> destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationsJson);
             List<string> destinationsArrived = new List<string>();
                 
@@ -204,7 +204,7 @@ namespace Notify
         
         private List<Notification> getAllArrivedLocationNotifications(List<string> destinationsArrived)
         {
-            string notificationsJson = Preferences.Get(Constants.PREFRENCES_NOTIFICATIONS, string.Empty);
+            string notificationsJson = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
             List<Notification> notifications = JsonConvert.DeserializeObject<List<Notification>>(notificationsJson);
             List<Notification> arrivedLocationNotifications;
 

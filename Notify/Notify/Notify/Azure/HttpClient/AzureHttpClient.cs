@@ -309,9 +309,10 @@ namespace Notify.Azure.HttpClient
         private string createJsonOfNotificationRequest(string notificationName, string description, string notificationType,
             string key, JToken value, List<string> users)
         {
+            string userName = Preferences.Get(Constants.PREFERENCES_USERNAME, "");
             dynamic request = new JObject
             {
-                { "creator", Constants.USER_NAME /* TODO: Get username from current logged in user */ },
+                { "creator", userName },
                 { "description", description?.Trim() },
                 {
                     "notification", new JObject
@@ -366,7 +367,8 @@ namespace Notify.Azure.HttpClient
 
         private async Task<List<T>> GetData<T>(string endpoint, string preferencesKey, Func<dynamic, T> converter)
         {
-            string query = $"?username={Constants.USER_NAME}";
+            string userName = Preferences.Get(Constants.PREFERENCES_USERNAME, "");
+            string query = $"?username={userName}";
             HttpResponseMessage response;
             dynamic returnedObject;
             List<T> data = new List<T>();
@@ -403,7 +405,7 @@ namespace Notify.Azure.HttpClient
         {
             return await GetData(
                 endpoint: Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION,
-                preferencesKey: Constants.PREFRENCES_NOTIFICATIONS, 
+                preferencesKey: Constants.PREFERENCES_NOTIFICATIONS, 
                 converter:  notification => { 
                     NotificationType notificationType = notification.notification.location == null ? NotificationType.Time : NotificationType.Location; 
                     object notificationTypeValue = notification.notification.location ?? DateTimeOffset.FromUnixTimeSeconds((long)notification.notification.timestamp).LocalDateTime;
@@ -425,7 +427,7 @@ namespace Notify.Azure.HttpClient
         {
             return await GetData(
                 endpoint: Constants.AZURE_FUNCTIONS_PATTERN_FRIEND, 
-                preferencesKey: Constants.PREFRENCES_FRIENDS, 
+                preferencesKey: Constants.PREFERENCES_FRIENDS, 
                 converter: friend => new Friend(
                     name: (string)friend.name, 
                     userName: (string)friend.userName, 
@@ -436,7 +438,7 @@ namespace Notify.Azure.HttpClient
         {
             return await GetData( 
                 endpoint: Constants.AZURE_FUNCTIONS_PATTERN_DESTINATIONS, 
-                preferencesKey: Constants.PREFRENCES_DESTINATIONS,
+                preferencesKey: Constants.PREFERENCES_DESTINATIONS,
                 converter: destination => new Destination((string)destination.location.name) 
                 {
                     Location = new Location(
