@@ -4,6 +4,7 @@
         <AzureFunctionsVersion>V4</AzureFunctionsVersion>
     </PropertyGroup>
     <ItemGroup>
+        <PackageReference Include="Azure.Security.KeyVault.Keys" Version="4.5.0" />
         <PackageReference Include="GMO.Microsoft.Azure.Services.AppAuthentication.Config" Version="1.0.0" />
         <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.CosmosDB" Version="4.2.0" />
         <PackageReference Include="Azure.Identity" Version="1.9.0" />
