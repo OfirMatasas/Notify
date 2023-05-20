@@ -27,6 +27,8 @@ namespace Notify.Functions.NotifyFunctions.Login
             IMongoCollection<BsonDocument> collection;
             string requestBody;
             dynamic data;
+            FilterDefinition<BsonDocument> filter;
+            List<BsonDocument> documents;
             ObjectResult result;
 
             log.LogInformation("Got client's HTTP request to login");
@@ -42,12 +44,13 @@ namespace Notify.Functions.NotifyFunctions.Login
                 data = JsonConvert.DeserializeObject(requestBody);
                 log.LogInformation($"Data:{Environment.NewLine}{data}");
 
-                FilterDefinition<BsonDocument> filter = Builders<BsonDocument>.Filter.And(
-                    Builders<BsonDocument>.Filter.Eq("userName", data.userName.ToString()),
+                filter = Builders<BsonDocument>.Filter.And(
+                    Builders<BsonDocument>.Filter.Regex("userName",
+                        new BsonRegularExpression(Convert.ToString(data.userName), "i")),
                     Builders<BsonDocument>.Filter.Eq("password", data.password.ToString())
                 );
 
-                List<BsonDocument> documents = collection.Find(filter).ToList();
+                documents = collection.Find(filter).ToList();
                 if (documents.Count.Equals(0))
                 {
                     log.LogInformation($"No user found with username {data.userName} and password {data.password}");

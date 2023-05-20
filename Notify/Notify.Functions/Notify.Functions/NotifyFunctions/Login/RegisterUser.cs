@@ -27,6 +27,8 @@ namespace Notify.Functions.NotifyFunctions.Login
             IMongoCollection<BsonDocument> collection;
             string requestBody;
             dynamic data;
+            FilterDefinition<BsonDocument> filter;
+            long usersCount;
             ObjectResult result;
 
             log.LogInformation("Got client's HTTP request to register");
@@ -43,27 +45,39 @@ namespace Notify.Functions.NotifyFunctions.Login
                 requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 data = JsonConvert.DeserializeObject(requestBody);
                 log.LogInformation($"Data:{Environment.NewLine}{data}");
+                
+                filter = Builders<BsonDocument>.Filter.Regex("userName",
+                    new BsonRegularExpression(Convert.ToString(data.userName), "i"));
 
-                BsonDocument userDocument = new BsonDocument
+                usersCount = await collection.CountDocumentsAsync(filter);
+                if (usersCount > 0)
                 {
-                    { "name", Convert.ToString(data.name) },
-                    { "userName", Convert.ToString(data.userName) },
-                    { "password", Convert.ToString(data.password) },
-                    { "telephone", Convert.ToString(data.telephone) }
-                };
+                    log.LogInformation($"Username '{data.userName}' already exists");
+                    result = new ConflictObjectResult($"Username '{data.userName}' already exists");
+                }
+                else
+                {
+                    BsonDocument userDocument = new BsonDocument
+                    {
+                        { "name", Convert.ToString(data.name) },
+                        { "userName", Convert.ToString(data.userName) },
+                        { "password", Convert.ToString(data.password) },
+                        { "telephone", Convert.ToString(data.telephone) }
+                    };
 
-                await collection.InsertOneAsync(userDocument);
-                log.LogInformation(
-                    $"Inserted user with username {data.userName} and telephone {data.telephone} into database");
+                    await collection.InsertOneAsync(userDocument);
+                    log.LogInformation(
+                        $"Inserted user with username {data.userName} and telephone {data.telephone} into database");
 
-                result = new OkObjectResult(JsonConvert.SerializeObject(data));
+                    result = new OkObjectResult(JsonConvert.SerializeObject(data));
+                }
             }
             catch (Exception ex)
             {
                 log.LogError($"Failed to insert user. Reason: {ex.Message}");
                 result = new ObjectResult($"Failed to register.{Environment.NewLine}Error: {ex.Message}");
             }
-
+            
             return result;
         }
     }
