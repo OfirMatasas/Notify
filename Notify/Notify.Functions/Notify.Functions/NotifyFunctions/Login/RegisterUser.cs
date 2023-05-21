@@ -46,7 +46,7 @@ namespace Notify.Functions.NotifyFunctions.Login
                 requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 data = JsonConvert.DeserializeObject(requestBody);
                 log.LogInformation($"Data:{Environment.NewLine}{data}");
-                
+
                 filter = Builders<BsonDocument>.Filter.Regex("userName",
                     new BsonRegularExpression(Convert.ToString(data.userName), "i"));
 
@@ -58,14 +58,15 @@ namespace Notify.Functions.NotifyFunctions.Login
                 }
                 else
                 {
-                    encryptedPassword = AzureVault.AzureVault.EncryptPasswordWithKeyVault(data.password.ToString(),
-                        Constants.PASSWORD_ENCRYPTION_KEY);
+                    data.password =
+                        await AzureVault.AzureVault.EncryptPasswordWithKeyVault(Convert.ToString(data.password),
+                            Constants.PASSWORD_ENCRYPTION_KEY);
 
                     BsonDocument userDocument = new BsonDocument
                     {
                         { "name", Convert.ToString(data.name) },
                         { "userName", Convert.ToString(data.userName) },
-                        { "password", Convert.ToString(encryptedPassword) },
+                        { "password", Convert.ToString(data.password) },
                         { "telephone", Convert.ToString(data.telephone) }
                     };
 
@@ -81,7 +82,7 @@ namespace Notify.Functions.NotifyFunctions.Login
                 log.LogError($"Failed to insert user. Reason: {ex.Message}");
                 result = new ObjectResult($"Failed to register.{Environment.NewLine}Error: {ex.Message}");
             }
-            
+
             return result;
         }
     }
