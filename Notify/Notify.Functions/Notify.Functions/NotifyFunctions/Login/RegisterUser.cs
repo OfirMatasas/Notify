@@ -30,6 +30,7 @@ namespace Notify.Functions.NotifyFunctions.Login
             FilterDefinition<BsonDocument> filter;
             long usersCount;
             ObjectResult result;
+            string encryptedPassword;
 
             log.LogInformation("Got client's HTTP request to register");
 
@@ -57,11 +58,14 @@ namespace Notify.Functions.NotifyFunctions.Login
                 }
                 else
                 {
+                    encryptedPassword = AzureVault.AzureVault.EncryptPasswordWithKeyVault(data.password.ToString(),
+                        Constants.PASSWORD_ENCRYPTION_KEY);
+
                     BsonDocument userDocument = new BsonDocument
                     {
                         { "name", Convert.ToString(data.name) },
                         { "userName", Convert.ToString(data.userName) },
-                        { "password", Convert.ToString(data.password) },
+                        { "password", Convert.ToString(encryptedPassword) },
                         { "telephone", Convert.ToString(data.telephone) }
                     };
 

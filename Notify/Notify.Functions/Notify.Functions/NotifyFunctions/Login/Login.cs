@@ -47,7 +47,9 @@ namespace Notify.Functions.NotifyFunctions.Login
                 filter = Builders<BsonDocument>.Filter.And(
                     Builders<BsonDocument>.Filter.Regex("userName",
                         new BsonRegularExpression(Convert.ToString(data.userName), "i")),
-                    Builders<BsonDocument>.Filter.Eq("password", data.password.ToString())
+                    Builders<BsonDocument>.Filter.Eq("password",
+                        AzureVault.AzureVault.DecryptPasswordWithKeyVault(data.password.ToString(),
+                            Constants.PASSWORD_ENCRYPTION_KEY))
                 );
 
                 documents = collection.Find(filter).ToList();
