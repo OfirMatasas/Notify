@@ -59,8 +59,8 @@ namespace Notify.Functions.NotifyFunctions.Login
                 else
                 {
                     data.password =
-                        await AzureVault.AzureVault.EncryptPasswordWithKeyVault(Convert.ToString(data.password),
-                            Constants.PASSWORD_ENCRYPTION_KEY);
+                        await AzureVault.AzureVault.ProcessPasswordWithKeyVault(Convert.ToString(data.password),
+                            Constants.PASSWORD_ENCRYPTION_KEY, "encrypt");
 
                     BsonDocument userDocument = new BsonDocument
                     {

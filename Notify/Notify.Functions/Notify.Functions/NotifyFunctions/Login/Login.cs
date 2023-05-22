@@ -62,8 +62,8 @@ namespace Notify.Functions.NotifyFunctions.Login
                 else
                 {
                     storedEncryptedPassword = user.GetValue("password").ToString();
-                    decryptedPassword = await AzureVault.AzureVault.DecryptPasswordWithKeyVault(storedEncryptedPassword,
-                        Constants.PASSWORD_ENCRYPTION_KEY);
+                    decryptedPassword = await AzureVault.AzureVault.ProcessPasswordWithKeyVault(storedEncryptedPassword,
+                        Constants.PASSWORD_ENCRYPTION_KEY, "decrypt");
 
                     if (decryptedPassword.Equals(data.password.ToString()))
                     {

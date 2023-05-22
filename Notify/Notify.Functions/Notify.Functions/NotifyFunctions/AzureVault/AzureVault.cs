@@ -19,8 +19,10 @@ public static class AzureVault
         return secret.Value;
     }
 
-    public static async Task<string> EncryptPasswordWithKeyVault(string unencryptedPassword, string keyName)
+    public static async Task<string> ProcessPasswordWithKeyVault(string password, string keyName, string operation)
     {
+        string processedPassword;
+        
         Uri keyVaultUri = new Uri(Constants.AZURE_KEY_VAULT);
 
         KeyClient keyClient = new KeyClient(keyVaultUri, new DefaultAzureCredential());
@@ -28,28 +30,25 @@ public static class AzureVault
 
         CryptographyClient cryptographyClient = new CryptographyClient(keyVaultKey.Id, new DefaultAzureCredential());
 
-        byte[] unencryptedBytes = Encoding.UTF8.GetBytes(unencryptedPassword);
+        if (operation.Equals(Constants.ENCRYPT_OPERATION))
+        {
+            byte[] unencryptedBytes = Encoding.UTF8.GetBytes(password);
 
-        EncryptResult encryptResult =
-            await cryptographyClient.EncryptAsync(EncryptionAlgorithm.RsaOaep, unencryptedBytes);
+            EncryptResult encryptResult =
+                await cryptographyClient.EncryptAsync(EncryptionAlgorithm.RsaOaep, unencryptedBytes);
 
-        return Convert.ToBase64String(encryptResult.Ciphertext);
-    }
+            processedPassword = Convert.ToBase64String(encryptResult.Ciphertext);
+        }
+        else
+        {
+            byte[] encryptedBytes = Convert.FromBase64String(password);
 
-    public static async Task<string> DecryptPasswordWithKeyVault(string encryptedPassword, string keyName)
-    {
-        Uri keyVaultUri = new Uri(Constants.AZURE_KEY_VAULT);
+            DecryptResult decryptResult =
+                await cryptographyClient.DecryptAsync(EncryptionAlgorithm.RsaOaep, encryptedBytes);
 
-        KeyClient keyClient = new KeyClient(keyVaultUri, new DefaultAzureCredential());
-        KeyVaultKey keyVaultKey = await keyClient.GetKeyAsync(keyName);
-
-        CryptographyClient cryptographyClient = new CryptographyClient(keyVaultKey.Id, new DefaultAzureCredential());
-
-        byte[] encryptedBytes = Convert.FromBase64String(encryptedPassword);
-
-        DecryptResult decryptResult =
-            await cryptographyClient.DecryptAsync(EncryptionAlgorithm.RsaOaep, encryptedBytes);
-
-        return Encoding.UTF8.GetString(decryptResult.Plaintext);
+            processedPassword = Encoding.UTF8.GetString(decryptResult.Plaintext);
+        }
+        
+        return processedPassword;
     }
 }
