@@ -54,7 +54,7 @@ namespace Notify.Functions.NotifyFunctions.Login
 
                 user = await collection.Find(filter).FirstOrDefaultAsync();
 
-                if (user == null)
+                if (user.IsBsonNull)
                 {
                     log.LogInformation($"No user found with username {data.userName}");
                     result = new NotFoundObjectResult("Invalid username or password");
@@ -65,7 +65,7 @@ namespace Notify.Functions.NotifyFunctions.Login
                     decryptedPassword = await AzureVault.AzureVault.DecryptPasswordWithKeyVault(storedEncryptedPassword,
                         Constants.PASSWORD_ENCRYPTION_KEY);
 
-                    if (decryptedPassword == data.password.ToString())
+                    if (decryptedPassword.Equals(data.password.ToString()))
                     {
                         log.LogInformation($"User logged in successfully: {data.userName}");
                         result = new OkObjectResult(requestBody);
