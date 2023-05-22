@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,33 +23,34 @@ namespace Notify.Functions.Friends
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "friends")]
             HttpRequest req, ILogger log)
         {
-            string userId, response;
+            string lowerCasedUsername, response;
             List<BsonDocument> friendshipDocuments;
             List<string> friendUsernames;
             ObjectResult result;
 
             if (string.IsNullOrEmpty(req.Query["username"]))
             {
-                log.LogError("The 'userId' query parameter is required");
-                result = new BadRequestObjectResult("The 'userId' query parameter is required.");
+                log.LogError("The 'username' query parameter is required");
+                result = new BadRequestObjectResult("The 'username' query parameter is required.");
             }
             else
             {
-                userId = req.Query["username"].ToString().ToLower();
-                log.LogInformation($"Got client's HTTP request to get friends of user {userId}");
+                lowerCasedUsername = req.Query["username"].ToString().ToLower();
+                log.LogInformation($"Got client's HTTP request to get friends of user {lowerCasedUsername}");
 
-                friendshipDocuments = await GetFriendshipOfSelectedUsernameDocuments(userId);
-                friendUsernames = GetFriendUsernames(friendshipDocuments, userId);
+                friendshipDocuments = await GetFriendshipOfSelectedUsernameDocuments(lowerCasedUsername);
+                friendUsernames = GetFriendUsernames(friendshipDocuments, lowerCasedUsername);
 
                 if (friendUsernames.Count.Equals(0))
                 {
-                    log.LogInformation($"No friends found for user {userId}");
-                    result = new NotFoundObjectResult($"No friends found for user {userId}");
+                    log.LogInformation($"No friends found for user {lowerCasedUsername}");
+                    result = new NotFoundObjectResult($"No friends found for user {lowerCasedUsername}");
                 }
                 else
                 {
-                    response = await getAllFriendsOfUser(userId);
-                    log.LogInformation($"Retrieved {friendUsernames.Count} friends of user {userId}");
+                    response = await getAllFriendsOfUser(friendUsernames);
+                    log.LogInformation($"Retrieved {friendUsernames.Count} friends of user {lowerCasedUsername}:");
+                    log.LogInformation(string.Join(Environment.NewLine, friendUsernames.Select(username => $"- {username}")));
                     log.LogInformation(response);
                     result = new OkObjectResult(response);
                 }
@@ -56,49 +58,56 @@ namespace Notify.Functions.Friends
             
             return result;
         }
+        
+        private static async Task<List<BsonDocument>> GetFriendshipOfSelectedUsernameDocuments(string lowerCasedUsername)
+        {
+            IMongoCollection<BsonDocument> friendshipCollection;
+            FilterDefinition<BsonDocument> friendshipFilter;
+            List<BsonDocument> friendshipsList;
 
-        private static async Task<string> getAllFriendsOfUser(string userId)
+            friendshipCollection = AzureDatabaseClient.Instance
+                .GetCollection<BsonDocument>(
+                    databaseName: Constants.DATABASE_NOTIFY_MTA, 
+                    collectionName: Constants.COLLECTION_FRIEND);
+
+            friendshipFilter = Builders<BsonDocument>.Filter.Regex(
+                                   "userName1", 
+                                   new BsonRegularExpression(lowerCasedUsername, "i")) |
+                               Builders<BsonDocument>.Filter.Regex(
+                                   "userName2", 
+                                   new BsonRegularExpression(lowerCasedUsername, "i"));
+
+            friendshipsList = await friendshipCollection.Find(friendshipFilter).ToListAsync();
+
+            return friendshipsList;
+        }
+        
+        private static List<string> GetFriendUsernames(List<BsonDocument> friendshipDocuments, string lowerCasedUsername)
+        {
+            List<string> friendsUsernamesList = friendshipDocuments
+                .SelectMany(doc => new[] { doc["userName1"].ToString(), doc["userName2"].ToString() })
+                .Distinct()
+                .Where(username => !username.ToLower().Equals(lowerCasedUsername))
+                .ToList();
+
+            return friendsUsernamesList;
+        }
+
+        private static async Task<string> getAllFriendsOfUser(List<string> friendUsernames)
         {
             IMongoCollection<BsonDocument> userCollection;
             FilterDefinition<BsonDocument> userFilter;
             List<BsonDocument> userDocuments;
-            string response;
-            
+    
             userCollection = AzureDatabaseClient.Instance.GetCollection<BsonDocument>(
                 databaseName: Constants.DATABASE_NOTIFY_MTA, 
                 collectionName: Constants.COLLECTION_USER);
-            userFilter = Builders<BsonDocument>.Filter
-                .Where(doc => !doc["userName"].ToString().ToLower().Equals(userId));
+            userFilter = Builders<BsonDocument>.Filter.In("userName", friendUsernames);
             userDocuments = await userCollection.Find(userFilter)
-                .Project(Builders<BsonDocument>.Projection.Exclude("_id").Exclude("password")).ToListAsync();
-            response = Utils.ConversionUtils.ConvertBsonDocumentListToJson(userDocuments);
+                .Project(Builders<BsonDocument>.Projection.Exclude("_id").Exclude("password"))
+                .ToListAsync();
             
-            return response;
-        }
-
-        private static async Task<List<BsonDocument>> GetFriendshipOfSelectedUsernameDocuments(string userId)
-        {
-            IMongoCollection<BsonDocument> friendshipCollection = AzureDatabaseClient.Instance
-                .GetCollection<BsonDocument>(
-                    databaseName: Constants.DATABASE_NOTIFY_MTA, 
-                    collectionName: Constants.COLLECTION_FRIEND);
-            FilterDefinition<BsonDocument> friendshipFilter = Builders<BsonDocument>.Filter
-                .Where(doc => doc["userName1"].ToString().ToLower().Equals(userId) || 
-                              doc["userName2"].ToString().ToLower().Equals(userId));
-            List<BsonDocument> friendshipsList = await friendshipCollection.Find(friendshipFilter).ToListAsync();
-            
-            return friendshipsList;
-        }
-
-        private static List<string> GetFriendUsernames(List<BsonDocument> friendshipDocuments, string userId)
-        {
-            List<string> friendsUsernamesList = friendshipDocuments
-                .SelectMany(doc => new[] { doc["userName1"].ToString().ToLower(), doc["userName2"].ToString().ToLower() })
-                .Distinct()
-                .Where(username => username != userId)
-                .ToList();
-
-            return friendsUsernamesList;
+            return Utils.ConversionUtils.ConvertBsonDocumentListToJson(userDocuments);
         }
     }
 }

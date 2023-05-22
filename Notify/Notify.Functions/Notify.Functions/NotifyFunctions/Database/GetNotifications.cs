@@ -23,7 +23,7 @@ namespace Notify.Functions.NotifyFunctions.Database
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "notification")]
             HttpRequest req, ILogger log)
         {
-            string userId, notifications;
+            string username, notifications;
             ObjectResult result;
 
             if (!ValidationUtils.ValidateUserName(req, log))
@@ -32,12 +32,12 @@ namespace Notify.Functions.NotifyFunctions.Database
             }
             else
             {
-                userId = req.Query["username"].ToString().ToLower();
-                log.LogInformation($"Got client's HTTP request to get notifications of user {userId}");
+                username = req.Query["username"].ToString().ToLower();
+                log.LogInformation($"Got client's HTTP request to get notifications of user {username}");
 
                 try
                 {
-                    notifications = await GetAllUserNotifications(userId, log);
+                    notifications = await GetAllUserNotifications(username, log);
                     result = new OkObjectResult(notifications);
                 }
                 catch (Exception ex)
@@ -50,20 +50,20 @@ namespace Notify.Functions.NotifyFunctions.Database
             return result;
         }
 
-        private static async Task<string> GetAllUserNotifications(string userId, ILogger log)
+        private static async Task<string> GetAllUserNotifications(string username, ILogger log)
         {
             IMongoCollection<BsonDocument> collection;
             FilterDefinition<BsonDocument> userFilter;
             List<BsonDocument> notifications;
             string response;
 
-            log.LogInformation($"Getting all notifications of user {userId}");
+            log.LogInformation($"Getting all notifications of user {username}");
 
             collection = AzureDatabaseClient.Instance.GetCollection<BsonDocument>(
                 databaseName: Constants.DATABASE_NOTIFY_MTA,
                 collectionName: Constants.COLLECTION_NOTIFICATION);
             userFilter = Builders<BsonDocument>.Filter
-                .Where(doc => doc["user"].ToString().ToLower().Equals(userId));
+                .Where(doc => doc["user"].ToString().ToLower().Equals(username));
             notifications = await collection.Find(userFilter).ToListAsync();
             response = ConversionUtils.ConvertBsonDocumentListToJson(notifications);
 

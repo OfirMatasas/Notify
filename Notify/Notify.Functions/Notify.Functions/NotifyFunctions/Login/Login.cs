@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -68,13 +69,14 @@ namespace Notify.Functions.NotifyFunctions.Login
                     if (decryptedPassword.Equals(data.password.ToString()))
                     {
                         log.LogInformation($"User logged in successfully: {data.userName}");
-                        result = new OkObjectResult(requestBody);
+                        result = new OkObjectResult(documents.First()["userName"].ToString());
                     }
                     else
                     {
                         log.LogInformation($"Invalid password for username {data.userName}");
                         result = new UnauthorizedObjectResult("Invalid username or password");
                     }
+                    result = new OkObjectResult(documents.First()["userName"].ToString());
                 }
             }
             catch (Exception ex)

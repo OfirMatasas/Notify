@@ -66,7 +66,7 @@
                                 FontSize="15"
                                 Grid.Column="1"
                                 HorizontalOptions="Start"
-                                Text="{Binding Name}"
+                                Text="{Binding UserName}"
                                 TextColor="Black"
                                 VerticalTextAlignment="Center" />
                         </Grid>

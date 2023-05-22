@@ -360,7 +360,10 @@ namespace Notify.Azure.HttpClient
                 response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_LOGIN, createJsonStringContent(json)).Result;
                 response.EnsureSuccessStatusCode();
                 Debug.WriteLine($"Successful status code from Azure Function from CheckIfCredentialsAreValid");
-
+                
+                userName = response.Content.ToString();
+                Preferences.Set(Constants.PREFERENCES_USERNAME, userName);
+                
                 validCredentials = true;
             }
             catch (Exception ex)
