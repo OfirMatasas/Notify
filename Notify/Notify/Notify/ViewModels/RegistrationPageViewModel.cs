@@ -10,10 +10,14 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
+using GooglePlacesApi.Loggers;
+using Microsoft.Identity.Client;
 using Notify.Azure.HttpClient;
+using Serilog;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
+using Xamarin.Forms.Internals;
 
 namespace Notify.ViewModels
 {
@@ -171,6 +175,18 @@ namespace Notify.ViewModels
 
         private async void onSignUpClicked()
         {
+            Serilog.Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Debug(outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+                .CreateLogger();
+            
+            Serilog.Log.Verbose("Verbose log message");
+            Serilog.Log.Debug("Debug log message");
+            Serilog.Log.Information("Information log message");
+            Serilog.Log.Warning("Warning log message");
+            Serilog.Log.Error("Error log message");
+            Serilog.Log.Fatal("Fatal log message");
+
             string israeliPhoneNumber;
             bool successfulSMSSent;
             bool validationSuccessful;
