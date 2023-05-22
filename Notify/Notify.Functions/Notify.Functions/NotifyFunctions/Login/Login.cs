@@ -69,14 +69,13 @@ namespace Notify.Functions.NotifyFunctions.Login
                     if (decryptedPassword.Equals(data.password.ToString()))
                     {
                         log.LogInformation($"User logged in successfully: {data.userName}");
-                        result = new OkObjectResult(documents.First()["userName"].ToString());
+                        result = new OkObjectResult(user["userName"].ToString());
                     }
                     else
                     {
                         log.LogInformation($"Invalid password for username {data.userName}");
                         result = new UnauthorizedObjectResult("Invalid username or password");
                     }
-                    result = new OkObjectResult(documents.First()["userName"].ToString());
                 }
             }
             catch (Exception ex)

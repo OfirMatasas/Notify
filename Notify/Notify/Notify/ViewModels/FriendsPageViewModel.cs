@@ -34,8 +34,6 @@ namespace Notify.ViewModels
 
         public FriendsPageViewModel()
         {
-            string friendsJson;
-            
             RefreshFriendsCommand = new Command(onRefreshFriendsClicked);
             ShowFriendRequestsCommand = new Command(onShowFriendRequestsClicked);
             SelectedFriendCommand = new Command(onSelectedFriendClicked);

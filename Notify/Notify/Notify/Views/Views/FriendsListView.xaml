@@ -9,6 +9,5 @@
         Grid.Row="0"
         Style="{StaticResource CaptionFontSize_ExoRegular}"
         Text="{Binding UserName}"
-        TextColor="{StaticResource DarkTabBarBackgroundColor}"
         VerticalOptions="Center" />
 </Grid>

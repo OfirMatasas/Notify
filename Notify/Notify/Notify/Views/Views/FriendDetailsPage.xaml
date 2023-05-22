@@ -6,7 +6,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <ContentPage.Content>
-        <StackLayout>
+        <StackLayout BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor}, Dark={StaticResource DarkPageBackgroundColor}}">
             <Grid Column="1">
                 <Label
                     FontAttributes="Bold"
@@ -14,10 +14,10 @@
                     Grid.Column="0"
                     HorizontalTextAlignment="Center"
                     Text="Friend Details"
-                    TextColor="Black" />
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Image
                     Aspect="AspectFit"
-                    BackgroundColor="Black"
                     Grid.Column="0"
                     HeightRequest="50"
                     HorizontalOptions="Start"
@@ -31,49 +31,58 @@
             <Grid
                 Column="3"
                 ColumnDefinitions="auto, auto, *"
-                RowDefinitions="auto">
+                RowDefinitions="auto, auto, auto">
                 <Label
                     FontAttributes="Bold"
                     FontSize="Medium"
                     Grid.Column="0"
                     Grid.Row="0"
+                    Margin="0,10,0,0"
                     Text="Name:"
-                    TextColor="Black" />
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontSize="Medium"
                     Grid.Column="1"
                     Grid.Row="0"
+                    Margin="0,10,0,0"
                     Text="{Binding Name}"
-                    TextColor="Black" />
-
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontAttributes="Bold"
                     FontSize="Medium"
                     Grid.Column="0"
                     Grid.Row="1"
+                    Margin="0,10,0,0"
                     Text="Username:"
-                    TextColor="Black" />
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontSize="Medium"
                     Grid.Column="1"
                     Grid.Row="1"
+                    Margin="0,10,0,0"
                     Text="{Binding UserName}"
-                    TextColor="Black" />
-
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontAttributes="Bold"
                     FontSize="Medium"
                     Grid.Column="0"
                     Grid.Row="2"
+                    Margin="0,10,0,0"
                     Text="Telephone:"
-                    TextColor="Black" />
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontSize="Medium"
                     Grid.Column="1"
                     Grid.Row="2"
+                    Margin="0,10,0,0"
                     Text="{Binding Telephone}"
-                    TextColor="Black" />
-
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Image
                     Grid.Column="2"
                     Grid.Row="0"

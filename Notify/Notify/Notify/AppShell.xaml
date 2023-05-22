@@ -42,10 +42,6 @@
         <ShellContent ContentTemplate="{DataTemplate views:NotificationDetailsPage}" />
     </ShellItem>
 
-    <ShellItem Route="settings">
-        <ShellContent ContentTemplate="{DataTemplate Views:SettingsPage}" />
-    </ShellItem>
-
     <ShellItem Route="location_settings">
         <ShellContent ContentTemplate="{DataTemplate Views:LocationSettingsPage}" />
     </ShellItem>
@@ -75,12 +71,12 @@
             Title="Schedule">
             <ShellContent ContentTemplate="{DataTemplate Views:FriendsPage}" />
         </Tab>
-        <Tab
-            Icon="groups.png"
-            Route="drivers"
-            Title="Friends">
-            <ShellContent ContentTemplate="{DataTemplate TabViews:DriversView}" />
-        </Tab>
+        <!--  <Tab  -->
+        <!--  Icon="groups.png"  -->
+        <!--  Route="drivers"  -->
+        <!--  Title="Friends">  -->
+        <!--     <ShellContent ContentTemplate="{DataTemplate TabViews:DriversView}" /> -->
+        <!-- </Tab> -->
         <Tab
             Icon="notification.png"
             Route="teams"
@@ -89,9 +85,9 @@
         </Tab>
         <Tab
             Icon="settings.png"
-            Route="history"
-            Title="History">
-            <ShellContent ContentTemplate="{DataTemplate TabViews:HistoryView}" />
+            Route="settings"
+            Title="Settings">
+            <ShellContent ContentTemplate="{DataTemplate Views:SettingsPage}" />
         </Tab>
     </TabBar>
 </Shell>
