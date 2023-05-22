@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using Newtonsoft.Json;
 using Notify.Azure.HttpClient;
 using Notify.Core;
 using Notify.Helpers;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Notify.ViewModels
@@ -75,12 +77,16 @@ namespace Notify.ViewModels
             set => m_SelectedDynamicOption = value;
         }
 
-        public List<Friend> Friends { get; set; } = new List<Friend> 
-        {  
-            new Friend("Ofir", "MaTaSaS", "+972542001717"),
-            new Friend("Dekel", "DekelR", "+972525459229"),
-            new Friend("Lin", "Linkimos", "+972586555549")
-        };
+        private List<Friend> m_Friends;
+        public List<Friend> Friends 
+        { 
+            get => m_Friends;
+            set
+            {
+                m_Friends = value;
+                OnPropertyChanged(nameof(Friends));
+            }
+        }
 
         public ICommand CreateNotificationCommand { get; set; }
     
@@ -88,6 +94,26 @@ namespace Notify.ViewModels
         {
             CreateNotificationCommand = new Command(OnCreateNotification);
             BackCommand = new Command(onBackClicked);
+            
+            RefreshFriendsList();
+        }
+
+        public void RefreshFriendsList()
+        {
+            string friendsJson = Preferences.Get(Constants.PREFERENCES_FRIENDS, string.Empty);
+            string myUsername = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
+            
+            if (friendsJson.Equals(string.Empty))
+            {
+                Friends = AzureHttpClient.Instance.GetFriends().Result;
+            }
+            else
+            {
+                Friends = JsonConvert.DeserializeObject<List<Friend>>(friendsJson);
+            }
+
+            Friends.Add(new Friend(string.Empty, myUsername, string.Empty));
+            Friends.Sort((friend1, friend2) => string.Compare(friend1.Name, friend2.Name, StringComparison.Ordinal));
         }
 
         private async void OnCreateNotification()
@@ -149,7 +175,7 @@ namespace Notify.ViewModels
             errorMessages = new List<string>();
             selectedFriends = Friends
                 .Where(friends => friends.IsSelected)
-                .Select(friend => friend.Name)
+                .Select(friend => friend.UserName)
                 .ToList();
 
             if (string.IsNullOrEmpty(NotificationName))

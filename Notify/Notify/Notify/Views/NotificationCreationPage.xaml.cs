@@ -12,10 +12,13 @@ namespace Notify.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class NotificationCreationPage : ContentPage
     {
+        private NotificationCreationViewModel m_NotificationCreationViewModel;
+        
         public NotificationCreationPage()
         {
             InitializeComponent();
-            BindingContext = new NotificationCreationViewModel();
+            m_NotificationCreationViewModel = new NotificationCreationViewModel();
+            BindingContext = m_NotificationCreationViewModel;
         }
 
         private void SelectableItemsView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -25,6 +28,13 @@ namespace Notify.Views
 
             removedItems.ToList().ForEach(item => ((Friend)item).IsSelected = false);
             addedItems.ToList().ForEach(item => ((Friend)item).IsSelected = true);
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            m_NotificationCreationViewModel.RefreshFriendsList();
         }
 
         private void DatePicker_OnDateSelected(object sender, DateChangedEventArgs e)

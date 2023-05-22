@@ -361,6 +361,9 @@ namespace Notify.Azure.HttpClient
                 response.EnsureSuccessStatusCode();
                 Debug.WriteLine($"Successful status code from Azure Function from CheckIfCredentialsAreValid");
 
+                userName = response.Content.ReadAsStringAsync().Result;
+                Preferences.Set(Constants.PREFERENCES_USERNAME, userName);
+                
                 validCredentials = true;
             }
             catch (Exception ex)

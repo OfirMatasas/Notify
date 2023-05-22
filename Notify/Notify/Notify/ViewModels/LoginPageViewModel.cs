@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -72,10 +71,6 @@ namespace Notify.ViewModels
             }
             else if (areCredentialsValid())
             {
-                Debug.WriteLine("User credentials are valid");
-
-                Preferences.Set(Constants.PREFERENCES_USERNAME, UserName);
-
                 if (RememberMe)
                 {
                     Preferences.Set(Constants.PREFERENCES_PASSWORD, Password);

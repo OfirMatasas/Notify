@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Grid
-    xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Padding="0,5"
+    RowSpacing="0"
     x:Class="Notify.Views.Views.FriendsListView"
-    Padding="0, 5"
-    RowSpacing="0">
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
     <Label
         Grid.Row="0"
-        Text="{Binding Name}"
         Style="{StaticResource CaptionFontSize_ExoRegular}"
-        TextColor="{StaticResource DarkTabBarBackgroundColor}"
-        VerticalOptions="Center">
-    </Label>
+        Text="{Binding UserName}"
+        VerticalOptions="Center" />
 </Grid>

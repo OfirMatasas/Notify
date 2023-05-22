@@ -34,16 +34,23 @@ namespace Notify.ViewModels
 
         public FriendsPageViewModel()
         {
-            string friendsJson;
-            
             RefreshFriendsCommand = new Command(onRefreshFriendsClicked);
             ShowFriendRequestsCommand = new Command(onShowFriendRequestsClicked);
             SelectedFriendCommand = new Command(onSelectedFriendClicked);
 
+            RefreshFriendsList();
+            onRefreshFriendsClicked();
+        }
+
+        private void RefreshFriendsList()
+        {
+            string friendsJson;
+            
             try
             {
                 friendsJson = Preferences.Get(Constants.PREFERENCES_FRIENDS, string.Empty);
-                if(!friendsJson.Equals(string.Empty))
+                
+                if (!friendsJson.Equals(string.Empty))
                 {
                     Debug.WriteLine("Friends found in preferences");
                     Friends = JsonConvert.DeserializeObject<List<Friend>>(friendsJson);
@@ -53,8 +60,6 @@ namespace Notify.ViewModels
             {
                 Debug.WriteLine(ex.Message);
             }
-
-            onRefreshFriendsClicked();
         }
 
         #endregion

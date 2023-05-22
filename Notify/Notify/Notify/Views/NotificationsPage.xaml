@@ -6,14 +6,14 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <StackLayout>
+    <StackLayout BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor}, Dark={StaticResource DarkPageBackgroundColor}}">
         <Label
             FontAttributes="Bold"
             FontSize="25"
             HorizontalOptions="Center"
             Margin="10"
+            Style="{StaticResource Body1FontSize_ExoBold}"
             Text="Notifications"
-            TextColor="Black"
             VerticalOptions="Start" />
 
         <Grid Column="3" ColumnDefinitions="auto, *, auto">
@@ -55,29 +55,29 @@
                             FontSize="18"
                             Grid.Column="0"
                             HorizontalOptions="CenterAndExpand"
-                            Text="Name"
-                            TextColor="Black" />
+                            Style="{StaticResource Body1FontSize_ExoBold}"
+                            Text="Name" />
                         <Label
                             FontAttributes="Bold"
                             FontSize="18"
                             Grid.Column="1"
                             HorizontalOptions="CenterAndExpand"
-                            Text="Description"
-                            TextColor="Black" />
+                            Style="{StaticResource Body1FontSize_ExoBold}"
+                            Text="Description" />
                         <Label
                             FontAttributes="Bold"
                             FontSize="18"
                             Grid.Column="2"
                             HorizontalOptions="CenterAndExpand"
-                            Text="Status"
-                            TextColor="Black" />
+                            Style="{StaticResource Body1FontSize_ExoBold}"
+                            Text="Status" />
                         <Label
                             FontAttributes="Bold"
                             FontSize="18"
                             Grid.Column="3"
                             HorizontalOptions="CenterAndExpand"
-                            Text="Type"
-                            TextColor="Black" />
+                            Style="{StaticResource Body1FontSize_ExoBold}"
+                            Text="Type" />
                     </Grid>
                 </CollectionView.Header>
                 <CollectionView.ItemTemplate>
@@ -91,26 +91,26 @@
                                 FontSize="15"
                                 Grid.Column="0"
                                 HorizontalOptions="Center"
-                                Text="{Binding Name}"
-                                TextColor="Black" />
+                                Style="{StaticResource Body1FontSize_ExoBold}"
+                                Text="{Binding Name}" />
                             <Label
                                 FontSize="15"
                                 Grid.Column="1"
                                 HorizontalOptions="Center"
-                                Text="{Binding Description}"
-                                TextColor="Black" />
+                                Style="{StaticResource Body1FontSize_ExoBold}"
+                                Text="{Binding Description}" />
                             <Label
                                 FontSize="15"
                                 Grid.Column="2"
                                 HorizontalOptions="Center"
-                                Text="{Binding Status}"
-                                TextColor="Black" />
+                                Style="{StaticResource Body1FontSize_ExoBold}"
+                                Text="{Binding Status}" />
                             <Label
                                 FontSize="15"
                                 Grid.Column="3"
                                 HorizontalOptions="Center"
-                                Text="{Binding Type}"
-                                TextColor="Black" />
+                                Style="{StaticResource Body1FontSize_ExoBold}"
+                                Text="{Binding Type}" />
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

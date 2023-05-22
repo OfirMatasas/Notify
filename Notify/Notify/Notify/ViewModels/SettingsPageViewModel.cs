@@ -9,7 +9,6 @@ namespace Notify.ViewModels
 {
     public class SettingsPageViewModel
     {
-        public Command BackCommand { get; set; }
         public Command GoLocationSettingsPageCommand { get; set; }
         public Command GoNotificationSettingsPageCommand { get; set; }
         public Command GoWifiSettingsPageCommand { get; set; }
@@ -21,7 +20,6 @@ namespace Notify.ViewModels
 
         public SettingsPageViewModel()
         {
-            BackCommand = new Command(onBackButtonClicked);
             GoLocationSettingsPageCommand = new Command(onLocationSettingsButtonClicked);
             GoNotificationSettingsPageCommand = new Command(onNotificationSettingsButtonClicked);
             GoWifiSettingsPageCommand = new Command(onWifiSettingsButtonClicked);
@@ -37,11 +35,6 @@ namespace Notify.ViewModels
             return Task.CompletedTask;
         }
 
-        private async void onBackButtonClicked()
-        {
-            await Shell.Current.GoToAsync("///home");
-        }
-        
         private async void onLocationSettingsButtonClicked()
         {
             await Shell.Current.GoToAsync("///location_settings");

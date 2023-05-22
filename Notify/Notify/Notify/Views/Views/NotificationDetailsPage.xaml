@@ -6,18 +6,18 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <ContentPage.Content>
-        <StackLayout>
-            <Grid Column="1">
+        <StackLayout BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor}, Dark={StaticResource DarkPageBackgroundColor}}">
+            <Grid BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor}, Dark={StaticResource DarkPageBackgroundColor}}" Column="1">
                 <Label
                     FontAttributes="Bold"
                     FontSize="Large"
                     Grid.Column="0"
                     HorizontalTextAlignment="Center"
                     Text="Notification Details"
-                    TextColor="Black" />
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Image
                     Aspect="AspectFit"
-                    BackgroundColor="Black"
                     Grid.Column="0"
                     HeightRequest="50"
                     HorizontalOptions="Start"
@@ -38,40 +38,45 @@
                     Grid.Column="0"
                     Grid.Row="0"
                     Text="Notification name:"
-                    TextColor="Black" />
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontSize="Medium"
                     Grid.Column="1"
                     Grid.Row="0"
                     Text="{Binding Name}"
-                    TextColor="Black" />
-
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontAttributes="Bold"
                     FontSize="Medium"
                     Grid.Column="0"
                     Grid.Row="1"
                     Text="Description:"
-                    TextColor="Black" />
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontSize="Medium"
                     Grid.Column="1"
                     Grid.Row="1"
                     Text="{Binding Description}"
-                    TextColor="Black" />
-
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontAttributes="Bold"
                     FontSize="Medium"
                     Grid.Column="0"
                     Grid.Row="2"
                     Text="Status:"
-                    TextColor="Black" />
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontSize="Medium"
                     Grid.Column="1"
                     Grid.Row="2"
-                    Text="{Binding Status}" />
+                    Text="{Binding Status}"
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
 
                 <Label
                     FontAttributes="Bold"
@@ -79,69 +84,75 @@
                     Grid.Column="0"
                     Grid.Row="3"
                     Text="Creator:"
-                    TextColor="Black" />
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontSize="Medium"
                     Grid.Column="1"
                     Grid.Row="3"
                     Text="{Binding Creator}"
-                    TextColor="Black" />
-
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontAttributes="Bold"
                     FontSize="Medium"
                     Grid.Column="0"
                     Grid.Row="4"
                     Text="Creation date:"
-                    TextColor="Black" />
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontSize="Medium"
                     Grid.Column="1"
                     Grid.Row="4"
                     Text="{Binding CreationDateTime}"
-                    TextColor="Black" />
-
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontAttributes="Bold"
                     FontSize="Medium"
                     Grid.Column="0"
                     Grid.Row="5"
                     Text="Type:"
-                    TextColor="Black" />
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontSize="Medium"
                     Grid.Column="1"
                     Grid.Row="5"
                     Text="{Binding Type}"
-                    TextColor="Black" />
-
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontAttributes="Bold"
                     FontSize="Medium"
                     Grid.Column="0"
                     Grid.Row="6"
                     Text="Type info:"
-                    TextColor="Black" />
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontSize="Medium"
                     Grid.Column="1"
                     Grid.Row="6"
                     Text="{Binding TypeInfo}"
-                    TextColor="Black" />
-
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontAttributes="Bold"
                     FontSize="Medium"
                     Grid.Column="0"
                     Grid.Row="7"
                     Text="Target user:"
-                    TextColor="Black" />
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontSize="Medium"
                     Grid.Column="1"
                     Grid.Row="7"
                     Text="{Binding Target}"
-                    TextColor="Black" />
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
             </Grid>
 
         </StackLayout>

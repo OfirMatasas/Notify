@@ -7,14 +7,14 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <StackLayout>
+    <StackLayout BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor}, Dark={StaticResource DarkPageBackgroundColor}}">
         <Label
             FontAttributes="Bold"
             FontSize="25"
             HorizontalOptions="Center"
             Margin="10"
+            Style="{StaticResource Body1FontSize_ExoBold}"
             Text="Friends"
-            TextColor="Black"
             VerticalOptions="Start" />
 
         <Grid Column="3" ColumnDefinitions="auto, *, auto">
@@ -66,8 +66,8 @@
                                 FontSize="15"
                                 Grid.Column="1"
                                 HorizontalOptions="Start"
-                                Text="{Binding Name}"
-                                TextColor="Black"
+                                Style="{StaticResource Body1FontSize_ExoBold}"
+                                Text="{Binding UserName}"
                                 VerticalTextAlignment="Center" />
                         </Grid>
                     </DataTemplate>

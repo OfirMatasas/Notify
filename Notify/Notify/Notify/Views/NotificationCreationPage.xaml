@@ -6,145 +6,167 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:views="clr-namespace:Notify.Views.Views;assembly=Notify"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
-    <StackLayout>
+    <StackLayout BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor}, Dark={StaticResource DarkPageBackgroundColor}}">
+        <Grid
+            Column="3"
+            ColumnDefinitions="50, auto, *, *"
+            Row="6"
+            RowDefinitions="auto, auto, auto, auto, auto, auto">
 
-        <Grid HorizontalOptions="Start" VerticalOptions="Start">
             <Image
                 Aspect="AspectFit"
-                BackgroundColor="Black"
-                HeightRequest="100"
-                Source="back.png">
+                Grid.Column="0"
+                Grid.Row="0"
+                HeightRequest="50"
+                Margin="20,0,0,0"
+                Source="back.png"
+                VerticalOptions="Start">
                 <Image.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding BackCommand}" />
                 </Image.GestureRecognizers>
             </Image>
-        </Grid>
 
-        <Grid
-            Column="2"
-            ColumnDefinitions="auto, *"
-            RowDefinitions="auto, auto">
             <Label
                 Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Grid.Row="1"
+                Style="{StaticResource Body1FontSize_ExoBold}"
                 Text="Notification Name"
-                TextColor="Black"
                 VerticalOptions="Center" />
             <Entry
-                Grid.Column="1"
-                Text="{Binding NotificationName}"
-                TextColor="Black" />
-        </Grid>
+                Grid.Column="2"
+                Grid.ColumnSpan="2"
+                Grid.Row="1"
+                Placeholder="Notification Name"
+                PlaceholderColor="{AppThemeBinding Light={StaticResource LightPlaceholderTextColor},
+                                                   Dark={StaticResource DarkPlaceholderTextColor}}"
+                Style="{StaticResource Body1FontSize_ExoBold}"
+                Text="{Binding NotificationName}" />
 
-        <Grid
-            Column="2"
-            ColumnDefinitions="auto, *"
-            RowDefinitions="auto, auto">
             <Label
                 Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Grid.Row="2"
+                Style="{StaticResource Body1FontSize_ExoBold}"
                 Text="Notification Description"
-                TextColor="Black"
                 VerticalOptions="Center" />
             <Entry
-                Grid.Column="1"
-                Text="{Binding NotificationDescription}"
-                TextColor="Black" />
-        </Grid>
+                Grid.Column="2"
+                Grid.ColumnSpan="2"
+                Grid.Row="2"
+                Placeholder="Notification Description"
+                PlaceholderColor="{AppThemeBinding Light={StaticResource LightPlaceholderTextColor},
+                                                   Dark={StaticResource DarkPlaceholderTextColor}}"
+                Style="{StaticResource Body1FontSize_ExoBold}"
+                Text="{Binding NotificationDescription}" />
 
-        <Grid
-            Column="2"
-            ColumnDefinitions="auto, *"
-            RowDefinitions="auto, auto">
             <Label
                 Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Grid.Row="3"
+                Style="{StaticResource Body1FontSize_ExoBold}"
                 Text="Notification Type"
-                TextColor="Black"
                 VerticalOptions="Center" />
             <Picker
-                Grid.Column="1"
-                ItemDisplayBinding="{Binding .}"
+                Grid.Column="2"
+                Grid.ColumnSpan="2"
+                Grid.Row="3"
                 ItemsSource="{Binding NotificationOptions}"
                 SelectedItem="{Binding SelectedNotificationOption}"
-                TextColor="Black" />
-        </Grid>
+                Style="{StaticResource Body1FontSize_ExoBold}" />
 
-        <Grid
-            Column="3"
-            ColumnDefinitions="auto, *, *"
-            IsVisible="{Binding IsTimeOptionSelected}"
-            RowDefinitions="auto, auto, auto">
             <Label
                 Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Grid.Row="4"
+                IsVisible="{Binding IsTimeOptionSelected}"
+                Style="{StaticResource Body1FontSize_ExoBold}"
                 Text="Time Option"
-                TextColor="Black"
                 VerticalOptions="Center" />
             <TimePicker
                 Format="hh:mm tt"
-                Grid.Column="1"
+                Grid.Column="2"
+                Grid.Row="4"
+                IsVisible="{Binding IsTimeOptionSelected}"
                 PropertyChanged="TimePicker_OnPropertyChanged"
-                TextColor="Black"
+                Style="{StaticResource Body1FontSize_ExoBold}"
                 Time="{Binding SelectedTimeOption}"
                 x:Name="TimePicker" />
             <DatePicker
                 Date="{Binding SelectedDateOption}"
                 DateSelected="DatePicker_OnDateSelected"
                 Format="dd/MM/yyyy"
-                Grid.Column="2"
-                TextColor="Black"
+                Grid.Column="3"
+                Grid.Row="4"
+                IsVisible="{Binding IsTimeOptionSelected}"
+                Style="{StaticResource Body1FontSize_ExoBold}"
                 x:Name="DatePicker" />
-        </Grid>
-        
-        <Grid
-            Column="2"
-            ColumnDefinitions="auto, *"
-            IsVisible="{Binding IsLocationOptionSelected}"
-            RowDefinitions="auto, auto">
+
             <Label
                 Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Grid.Row="4"
+                IsVisible="{Binding IsLocationOptionSelected}"
+                Style="{StaticResource Body1FontSize_ExoBold}"
                 Text="Location Option"
-                TextColor="Black"
                 VerticalOptions="Center" />
             <Picker
-                Grid.Column="1"
+                Grid.Column="2"
+                Grid.ColumnSpan="2"
+                Grid.Row="4"
+                IsVisible="{Binding IsLocationOptionSelected}"
                 ItemsSource="{Binding LocationOptions}"
                 SelectedItem="{Binding SelectedLocationOption}"
-                TextColor="Black" />
+                Style="{StaticResource Body1FontSize_ExoBold}" />
 
-        </Grid>
-        
-        <Grid
-            Column="2"
-            ColumnDefinitions="auto, *"
-            IsVisible="{Binding IsDynamicOptionSelected}"
-            RowDefinitions="auto, auto">
             <Label
                 Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Grid.Row="4"
+                IsVisible="{Binding IsDynamicOptionSelected}"
+                Style="{StaticResource Body1FontSize_ExoBold}"
                 Text="Place Type Option"
-                TextColor="Black"
                 VerticalOptions="Center" />
             <Picker
-                Grid.Column="1"
+                Grid.Column="2"
+                Grid.ColumnSpan="2"
+                Grid.Row="4"
+                IsVisible="{Binding IsDynamicOptionSelected}"
                 ItemsSource="{Binding DynamicOptions}"
                 SelectedItem="{Binding SelectedDynamicOption}"
-                TextColor="Black" />
+                Style="{StaticResource Body1FontSize_ExoBold}" />
+
+            <Label
+                Grid.Column="0"
+                Grid.ColumnSpan="4"
+                Grid.Row="5"
+                Style="{StaticResource Body1FontSize_ExoBold}"
+                Text="Friends" />
+            <CollectionView
+                Grid.Column="0"
+                Grid.ColumnSpan="4"
+                Grid.Row="6"
+                ItemsSource="{Binding Friends}"
+                SelectionChanged="SelectableItemsView_OnSelectionChanged"
+                SelectionMode="Multiple">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <views:FriendsListView />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
         </Grid>
 
-        <Label Text="Friends" TextColor="Black" />
-        <CollectionView
-            ItemsSource="{Binding Friends}"
-            SelectionChanged="SelectableItemsView_OnSelectionChanged"
-            SelectionMode="Multiple">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <views:FriendsListView />
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-
         <Button
+            BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
+                                              Dark={StaticResource DarkButtonColor}}"
             Command="{Binding CreateNotificationCommand}"
+            Style="{StaticResource Button_ExoRegular}"
             Text="Create"
-            x:Name="CreateNotificationButton" />
+            TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
+                                        Dark={StaticResource DarkButtonTextColor}}"
+            VerticalOptions="End" />
 
     </StackLayout>
 </ContentPage>
