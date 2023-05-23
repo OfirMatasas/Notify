@@ -197,21 +197,8 @@ namespace Notify.ViewModels
          {
              GeolocationRequest request;
              Xamarin.Essentials.Location location;
-        
+             double longitude, latitude;
              
-             m_logger.LogInformation("Logger Information test!");
-             m_logger.LogWarning("Logger Warning test!");
-             try
-             {
-                 throw new Exception("This is a dummy exception for testing purposes.");
-             }
-             catch (Exception ex)
-             {
-                 m_logger.LogError("Logger Warning test!", ex);
-             }
-             
-
-
              try
              {
                  request = new GeolocationRequest(GeolocationAccuracy.High);

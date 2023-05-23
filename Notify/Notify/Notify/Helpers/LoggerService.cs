@@ -34,11 +34,19 @@ namespace Notify.Helpers
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
                 .WriteTo.File("/data/data/com.notify.notify/files/log.txt")
-                .WriteTo.Sink(new LogcatSink()) // Use your custom LogcatSink
+                .WriteTo.Sink(new LogcatSink())
                 .WriteTo.Debug(outputTemplate: "{Timestamp:dd-MM-yyy HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
                 .CreateLogger();
         }
         
+        public void LogVerbose(string message)
+        {
+            Log.Verbose(message);
+        }
+        public void LogDebug(string message)
+        {
+            Log.Debug(message);
+        }
         public void LogInformation(string message)
         {
             Log.Information(message);
@@ -52,6 +60,11 @@ namespace Notify.Helpers
         public void LogError(string message, Exception ex)
         {
             Log.Error(ex, message);
+        }
+        
+        public void LogFatal(string message, Exception ex)
+        {
+            Log.Fatal(ex, message);
         }
     }
 }
