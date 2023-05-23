@@ -29,7 +29,7 @@ namespace Notify.iOS
 
             /*UIApplication.SharedApplication.BeginBackgroundTask(() =>
             {
-                Debug.WriteLine("Started iOS background task");
+                 r_logger.LogDebug("Started iOS background task");
                 
                 var position = Geolocation.GetLocationAsync().Result;
                 //
@@ -38,7 +38,7 @@ namespace Notify.iOS
                 MessagingCenter.Send(location, "Location");
                 m_NotificationManager.SendNotification("Location changed", "From Background task");
                 
-                Debug.WriteLine("Finished iOS background task");
+                 r_logger.LogDebug("Finished iOS background task");
             });*/
             
             return base.FinishedLaunching(app, options);

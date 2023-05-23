@@ -20,14 +20,14 @@ namespace Notify.Droid.Managers
 {
     public class AndroidWiFiManager : IWiFiManager
     {
+        private readonly LoggerService r_logger = LoggerService.Instance;
         private readonly string m_AndroidWiFi = "\"AndroidWifi\"";
         private static readonly object m_NotificationsLock = new object();
 
         public AndroidWiFiManager()
         {
             retrieveDestinations();
-        }
-        
+        }        
         public void PrintConnectedWiFi(object sender, ConnectivityChangedEventArgs e)
         {
             ConnectivityManager connectivityManager = (ConnectivityManager)Application.Context.GetSystemService(Context.ConnectivityService);
@@ -40,16 +40,16 @@ namespace Notify.Droid.Managers
         
                 if (ssid == m_AndroidWiFi)
                 {
-                    Debug.WriteLine($"You have just connected to your wifi network: {ssid}!");
+                    r_logger.LogDebug($"You have just connected to your wifi network: {ssid}!");
                 }
                 else
                 {
-                    Debug.WriteLine($"Error with ssid: SSID: {ssid} \nPre define SSID: {m_AndroidWiFi}");
+                    r_logger.LogDebug($"Error with ssid: SSID: {ssid} \nPre define SSID: {m_AndroidWiFi}");
                 }
             }
             else
             {
-                Debug.WriteLine("Disconnected from wifi network!");
+                r_logger.LogDebug("Disconnected from wifi network!");
             }
         }
 
@@ -87,7 +87,7 @@ namespace Notify.Droid.Managers
                     notifications = JsonConvert.DeserializeObject<List<Notification>>(notificationsJson);
                     destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationJson);
                     
-                    sendAllRelevantWiFiNotifications(destinations, ssid, notifications);
+                    sendAllRelevantWiFiNotifications(destinations, ssid, notifications, r_logger);
                 }
             }
         }
@@ -102,7 +102,7 @@ namespace Notify.Droid.Managers
             });
         }
 
-        private static void sendAllRelevantWiFiNotifications(List<Destination> destinations, string ssid, List<Notification> notifications)
+        private static void sendAllRelevantWiFiNotifications(List<Destination> destinations, string ssid, List<Notification> notifications, LoggerService i_logger)
         {
             lock (m_NotificationsLock)
             {
@@ -112,7 +112,7 @@ namespace Notify.Droid.Managers
                 {
                     if (destination.SSID.Equals(ssid))
                     {
-                        Debug.WriteLine($"Found a destination with SSID of {ssid}");
+                        i_logger.LogDebug($"Found a destination with SSID of {ssid}");
 
                         foreach (Notification notification in notifications)
                         {
@@ -121,8 +121,7 @@ namespace Notify.Droid.Managers
                                 notification.Status.ToLower().Equals("new"))
                             {
                                 notification.Status = "Sent";
-                                Debug.WriteLine(
-                                    $"Sending notification with name: {notification.Name} and description: {notification.Description}");
+                                i_logger.LogDebug($"Sending notification with name: {notification.Name} and description: {notification.Description}");
                                 DependencyService.Get<INotificationManager>()
                                     .SendNotification(notification.Name, notification.Description);
 
@@ -131,7 +130,7 @@ namespace Notify.Droid.Managers
                     }
                 }
 
-                Debug.WriteLine("Finished sending notifications");
+                i_logger.LogDebug("Finished sending notifications");
                 Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
             }
         }
@@ -146,7 +145,7 @@ namespace Notify.Droid.Managers
                 connectivityManager.GetNetworkCapabilities(connectivityManager.ActiveNetwork);
             
             isConnectedToWiFi = capabilities.HasTransport(TransportType.Wifi);
-            Debug.WriteLine($"Connected to Wi-Fi: {isConnectedToWiFi}");
+            r_logger.LogDebug($"Connected to wifi: {isConnectedToWiFi}");
             
             return isConnectedToWiFi;
         }

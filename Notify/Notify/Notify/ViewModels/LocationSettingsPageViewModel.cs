@@ -13,7 +13,7 @@ namespace Notify.ViewModels
 {
     public class LocationSettingsPageViewModel : BaseViewModel
     {
-        LoggerService m_logger = LoggerService.Instance;
+        private readonly LoggerService r_logger = LoggerService.Instance;
 
         #region Constructor
         
@@ -118,7 +118,7 @@ namespace Notify.ViewModels
             Location location = new Location(latitude: latitude, longitude: longitude);
             bool successfulUpdate;
             
-            Debug.WriteLine($"Longitude and latitude are in the right range - updating location");
+            r_logger.LogDebug("Longitude and latitude are in the right range - updating location");
             successfulUpdate = AzureHttpClient.Instance.UpdateDestination(SelectedLocation, location).Result;
 
             if (successfulUpdate)
@@ -178,7 +178,7 @@ namespace Notify.ViewModels
         {
             GoogleHttpClient.Coordinates coordinates;
             
-            Debug.WriteLine($"Getting geographic coordinates for: {SelectedAddress}");
+            r_logger.LogDebug($"Getting geographic coordinates for: {SelectedAddress}");
             
             if (string.IsNullOrEmpty(SelectedAddress))
             {
@@ -186,10 +186,10 @@ namespace Notify.ViewModels
             }
             else
             {
-                coordinates = await GoogleHttpClient.GetCoordinatesFromAddress(SelectedAddress);
+                coordinates = await GoogleHttpClient.GetCoordinatesFromAddress(SelectedAddress, r_logger);
                 Longitude = coordinates.Lng.ToString();
                 Latitude = coordinates.Lat.ToString();
-                Debug.WriteLine($"onGetGeographicCoordinatesButtonClicked - Longitude: {Longitude}, Latitude: {Latitude}");
+                r_logger.LogDebug($"onGetGeographicCoordinatesButtonClicked - Longitude: {Longitude}, Latitude: {Latitude}");
             }
         }
 
@@ -206,24 +206,24 @@ namespace Notify.ViewModels
                  
                  Longitude = location.Longitude.ToString();
                  Latitude = location.Latitude.ToString();
-                 Debug.WriteLine($"onGetCurrentLocationButtonClicked - Longitude: {Longitude}, Latitude: {Latitude}");
+                 r_logger.LogDebug($"onGetCurrentLocationButtonClicked - Longitude: {Longitude}, Latitude: {Latitude}");
 
                  SelectedAddress =  await GoogleHttpClient.GetAddressFromCoordinatesAsync(
                      latitude: location.Latitude, 
                      longitude: location.Longitude);
-                 Debug.WriteLine($"onGetCurrentLocationButtonClicked - SelectedAddress: {SelectedAddress}");
+                 r_logger.LogDebug($"onGetCurrentLocationButtonClicked - SelectedAddress: {SelectedAddress}");
              }
              catch (Exception ex)
              {
-                 Debug.WriteLine($"Error occured on onGetCurrentLocationButtonClicked:{Environment.NewLine}{ex.Message}");
+                 r_logger.LogError($"onGetCurrentLocationButtonClicked: {ex.Message}");
              }
          }
         
         public async void onGetAddressSuggestionsButtonClicked()
         {
-            Debug.WriteLine($"Getting suggestions for {SearchAddress}");
-            
-            DropBoxOptions = await GoogleHttpClient.GetAddressSuggestions(SearchAddress);
+            r_logger.LogDebug($"Getting suggestions for {SearchAddress}");
+
+            DropBoxOptions = await GoogleHttpClient.GetAddressSuggestions(SearchAddress,  r_logger);
         }
     }
 }
