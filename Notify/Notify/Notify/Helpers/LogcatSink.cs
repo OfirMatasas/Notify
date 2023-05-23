@@ -8,11 +8,11 @@ namespace Notify.Helpers
     {
         public void Emit(LogEvent logEvent)
         {
-            LogPriority m_LogLevel = ConvertToLogLevel(logEvent.Level);
-            string m_Tag = "notify_logger";
-            string n_Message = logEvent.RenderMessage();
+            LogPriority logLevel = ConvertToLogLevel(logEvent.Level);
+            string tag = "notify_logger";
+            string message = logEvent.RenderMessage();
 
-            Log.WriteLine(m_LogLevel, m_Tag, n_Message);
+            Log.WriteLine(logLevel, tag, message);
         }
 
         private LogPriority ConvertToLogLevel(LogEventLevel logEventLevel)

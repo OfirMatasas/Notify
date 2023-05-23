@@ -19,6 +19,7 @@ namespace Notify.ViewModels
 {
     public sealed class RegistrationPageViewModel : INotifyPropertyChanged
     {
+        private readonly LoggerService r_logger = LoggerService.Instance;
         private string m_Telephone;
 
         public RegistrationPageViewModel()
@@ -188,7 +189,7 @@ namespace Notify.ViewModels
 
             if (userExists)
             {
-                Debug.WriteLine(errorMessage);
+                r_logger.LogDebug(errorMessage);
                 displayError(errorMessage);
             }
 
@@ -225,19 +226,19 @@ namespace Notify.ViewModels
                         }
                         else
                         {
-                            Debug.WriteLine("Failed to register user.");
+                            r_logger.LogDebug("Failed to register user.");
                             displayError($"Failed to register user.");
                         }
                     }
                     else
                     {
-                        Debug.WriteLine("Failed to validate verification code.");
+                        r_logger.LogDebug("Failed to validate verification code.");
                         displayError($"Failed to validate verification code.");
                     }
                 }
                 else
                 {
-                    Debug.WriteLine("Failed to send SMS message.");
+                    r_logger.LogDebug("Failed to send SMS message.");
                     displayError($"Failed to send SMS message.");
                 }
             }

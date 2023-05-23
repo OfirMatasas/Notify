@@ -13,6 +13,7 @@ namespace Notify.Services.Ergast
 {
     public class ErgastService : IErgastService
     {
+        private readonly LoggerService r_logger = LoggerService.Instance;
         private readonly HttpClientFactory _httpClientFactory;
 
         public ErgastService(HttpClientFactory httpClientFactory)
@@ -49,7 +50,7 @@ namespace Notify.Services.Ergast
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                r_logger.LogDebug(ex.Message);
                 return null;
             }
         }
@@ -77,7 +78,7 @@ namespace Notify.Services.Ergast
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                r_logger.LogDebug(ex.Message);
                 return null;
             }
         }
@@ -117,7 +118,7 @@ namespace Notify.Services.Ergast
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                r_logger.LogDebug(ex.Message);
                 return null;
             }
         }
@@ -149,7 +150,7 @@ namespace Notify.Services.Ergast
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                r_logger.LogDebug(ex.Message);
                 return null;
             }
         }
@@ -177,7 +178,7 @@ namespace Notify.Services.Ergast
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                r_logger.LogDebug(ex.Message);
                 return null;
             }
         }
@@ -202,7 +203,7 @@ namespace Notify.Services.Ergast
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                r_logger.LogDebug(ex.Message);
                 return null;
             }
         }
@@ -284,7 +285,7 @@ namespace Notify.Services.Ergast
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                r_logger.LogDebug(ex.Message);
                 return null;
             }
         }
@@ -313,7 +314,7 @@ namespace Notify.Services.Ergast
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                r_logger.LogDebug(ex.Message);
                 return null;
             }
         }
@@ -342,7 +343,7 @@ namespace Notify.Services.Ergast
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                r_logger.LogDebug(ex.Message);
                 return null;
             }
         }
@@ -376,7 +377,7 @@ namespace Notify.Services.Ergast
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                r_logger.LogDebug(ex.Message);
                 return null;
             }
         }

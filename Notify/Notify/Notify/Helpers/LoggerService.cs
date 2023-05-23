@@ -32,10 +32,10 @@ namespace Notify.Helpers
         private void InitializeLogger()
         {
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Information()
-                .WriteTo.File("/data/data/com.notify.notify/files/log.txt")
+                .MinimumLevel.Debug()
                 .WriteTo.Sink(new LogcatSink())
-                .WriteTo.Debug(outputTemplate: "{Timestamp:dd-MM-yyy HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+                //.WriteTo.File("/data/data/com.notify.notify/files/log.txt")
+                //.WriteTo.Debug(outputTemplate: "{Timestamp:dd-MM-yyy HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
                 .CreateLogger();
         }
         
@@ -57,14 +57,14 @@ namespace Notify.Helpers
             Log.Warning(message);
         }
 
-        public void LogError(string message, Exception ex)
+        public void LogError(string message)
         {
-            Log.Error(ex, message);
+            Log.Error(message);
         }
         
-        public void LogFatal(string message, Exception ex)
+        public void LogFatal(string message)
         {
-            Log.Fatal(ex, message);
+            Log.Fatal(message);
         }
     }
 }
