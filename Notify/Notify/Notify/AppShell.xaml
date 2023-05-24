@@ -79,7 +79,7 @@
         <!-- </Tab> -->
         <Tab
             Icon="notification.png"
-            Route="teams"
+            Route="notifications"
             Title="Notifications">
             <ShellContent ContentTemplate="{DataTemplate Views:NotificationsPage}" />
         </Tab>

@@ -218,7 +218,7 @@ namespace Notify.ViewModels
         
         private async void onBackClicked()
         {
-            await Shell.Current.GoToAsync("///teams");  // TODO: change the name of the previews page
+            await Shell.Current.GoToAsync("///notifications");
         }
     }
 }

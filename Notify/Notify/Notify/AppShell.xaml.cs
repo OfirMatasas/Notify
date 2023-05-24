@@ -44,7 +44,6 @@ namespace Notify
                 if (!m_IsInitialized)
                 {
                     m_IsInitialized = true;
-                    registerRoutes();
                     Connectivity.ConnectivityChanged += internetConnectivityChanged;
                     setNoficicationManagerNotificationReceived();
                     setMessagingCenterSubscriptions();
@@ -71,15 +70,6 @@ namespace Notify
             m_WiFiManager.SendNotifications(sender, e);
         }
 
-        private void registerRoutes()
-        {
-            Routing.RegisterRoute("profile", typeof(ProfilePage));
-            Routing.RegisterRoute("schedule/details", typeof(CircuitDetailsPage));
-            Routing.RegisterRoute("schedule/details/laps", typeof(CircuitLapsPage));
-            Routing.RegisterRoute("drivers/details", typeof(DriverDetailsPage));
-            Routing.RegisterRoute("teams/details", typeof(TeamDetailsPage));
-        }
-        
         private void setMessagingCenterSubscriptions()
         {
             setMessagingCenterLocationSubscription();
