@@ -32,8 +32,7 @@ namespace Notify.Helpers
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .WriteTo.Sink(new LogcatSink())
-                .WriteTo.File("/data/data/com.notify.notify/files/log.txt")
+                .WriteTo.File("/data/data/com.notify.notify/files/logsFile.txt")
                 .WriteTo.Debug(outputTemplate: "{Timestamp:dd-MM-yyy HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
                 .CreateLogger();
         }
