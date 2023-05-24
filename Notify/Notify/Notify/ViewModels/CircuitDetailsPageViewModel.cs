@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using Notify.Models;
-using Notify.Services.Ergast;
 using Notify.Services.Information;
 using Notify.Views.Popups;
 using Xamarin.CommunityToolkit.Extensions;
@@ -17,7 +15,6 @@ namespace Notify.ViewModels
     {
         #region Fields
 
-        private readonly IErgastService _ergastService;
         private readonly IInformationService _informationsService;
 
         #endregion
@@ -45,11 +42,8 @@ namespace Notify.ViewModels
 
         #region Constructors
 
-        public CircuitDetailsPageViewModel(
-            IErgastService ergastService,
-            IInformationService informationsService)
+        public CircuitDetailsPageViewModel(IInformationService informationsService)
         {
-            _ergastService = ergastService;
             _informationsService = informationsService;
 
             BackCommand = new Command(BackCommandHandler);
@@ -105,7 +99,7 @@ namespace Notify.ViewModels
 
         private async Task GetRaceEvent(int round)
         {
-            var res = await _ergastService.GetRaceEventInformations("current", round);
+            RaceEventModel res = null;
             if (res != null)
             {
                 RaceEvent = res;
@@ -120,28 +114,14 @@ namespace Notify.ViewModels
 
         private async Task GetResults()
         {
-            var res = await _ergastService.GetResults("current", RaceEvent.Round.ToString(), ConvertNameToRaceType(SelectedRaceType));
-            if (res != null)
+            Results = null;
+            if (SelectedRaceType == "Sprint")
             {
-                Results = new RaceEventResultsModel()
-                {
-                    RaceResults = res.First().Results != null ? new ObservableCollection<RaceResultModel>(res.First().Results) : null,
-                    QualifyingResults = res.First().QualifyingResults != null ? new ObservableCollection<QualifyingResultModel>(res.First().QualifyingResults) : null,
-                    SprintResults = res.First().SprintResults != null ? new ObservableCollection<RaceResultModel>(res.First().SprintResults) : null,
-                };
-                ResultsState = LayoutState.None;
+                ResultsState = LayoutState.Success;
             }
             else
             {
-                Results = null;
-                if(SelectedRaceType == "Sprint")
-                {
-                    ResultsState = LayoutState.Success;
-                }
-                else
-                {
-                    ResultsState = LayoutState.Empty;
-                }
+                ResultsState = LayoutState.Empty;
             }
         }
 

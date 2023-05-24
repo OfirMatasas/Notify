@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Notify.Models;
-using Notify.Services.Ergast;
 using Notify.Services.Information;
 using Notify.Views.Popups;
 using Xamarin.CommunityToolkit.Extensions;
@@ -16,7 +15,6 @@ namespace Notify.ViewModels
     {
         #region Fields
 
-        private readonly IErgastService _ergastService;
         private readonly IInformationService _informationsService;
 
         #endregion
@@ -42,11 +40,8 @@ namespace Notify.ViewModels
 
         #region Constructors
 
-        public DriverDetailsPageViewModel(
-            IErgastService ergastService,
-            IInformationService informationsService)
+        public DriverDetailsPageViewModel(IInformationService informationsService)
         {
-            _ergastService = ergastService;
             _informationsService = informationsService;
 
             BackCommand = new Command(BackCommandHandler);
@@ -94,33 +89,13 @@ namespace Notify.ViewModels
 
         private async Task GetDriver(string driver)
         {
-            var res = await _ergastService.GetDriverInformations(driver);
-            if (res != null)
-            {
-                Driver = res;
-                SelectedSeason = "Current Season";
-                MainState = LayoutState.None;
-                ResultsState = LayoutState.Loading;
-                InformationsState = LayoutState.Loading;
-                await GetResults();
-                await GetInformations();
-            }
+            
         }
 
         private async Task GetResults()
-        {
-            var season = SelectedSeason == "Current Season" ? "current" : SelectedSeason;
-            var res = await _ergastService.GetResultsByDriver(season, Driver.DriverId);
-            if (res != null)
-            {
-                RaceResults = new ObservableCollection<RaceEventModel>(res);
-                ResultsState = LayoutState.None;
-            }
-            else
-            {
-                RaceResults = null;
-                ResultsState = LayoutState.Empty;
-            }
+        { 
+            RaceResults = null;
+            ResultsState = LayoutState.Empty;
         }
 
         private async Task GetInformations()

@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Notify.Models;
-using Notify.Services.Ergast;
 using Xamarin.CommunityToolkit.UI.Views;
 using Xamarin.Forms;
 
@@ -11,7 +10,6 @@ namespace Notify.ViewModels.TabViews
     {
         #region Fields
 
-        private readonly IErgastService _ergastService;
 
         #endregion
 
@@ -31,11 +29,9 @@ namespace Notify.ViewModels.TabViews
 
         #region Constructors
 
-        public DriversViewModel(
-            IErgastService ergastService)
+        public DriversViewModel()
         {
             Title = "Driver";
-            _ergastService = ergastService;
 
             DriverDetailsCommand = new Command<DriverStadingsModel>(DriverDetailsCommandHandler);
 
@@ -58,8 +54,6 @@ namespace Notify.ViewModels.TabViews
         private async Task Initialize()
         {
             MainState = LayoutState.Loading;
-            var res = await _ergastService.GetDriverStadings("current");
-            DriversList = new ObservableCollection<DriverStadingsModel>(res);
             MainState = LayoutState.None;
         }
 

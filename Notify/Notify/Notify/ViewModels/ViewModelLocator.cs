@@ -1,6 +1,5 @@
 ﻿using System;
 using Notify.Core;
-using Notify.Services.Ergast;
 using Notify.Services.Information;
 using Notify.ViewModels.Popups;
 using Notify.ViewModels.TabViews;
@@ -11,13 +10,11 @@ namespace Notify.ViewModels
     public class ViewModelLocator
     {
         private readonly Lazy<HttpClientFactory> httpClientFactory;
-        private readonly Lazy<IErgastService> ergastService;
         private readonly Lazy<IInformationService> informationService;
 
         public ViewModelLocator()
         {
             httpClientFactory = new Lazy<HttpClientFactory>(() => new HttpClientFactory());
-            ergastService = new Lazy<IErgastService>(() => new ErgastService(httpClientFactory.Value));
             informationService = new Lazy<IInformationService>(() => new InformationService(httpClientFactory.Value));
         }
 
@@ -33,16 +30,16 @@ namespace Notify.ViewModels
         public NotificationsPageViewModel NotificationPage => new NotificationsPageViewModel();
         public FriendsPageViewModel FriendsPage => new FriendsPageViewModel();
 
-        public HomeViewModel HomeView => new HomeViewModel(ergastService.Value);
-        public ScheduleViewModel ScheduleView => new ScheduleViewModel(ergastService.Value);
-        public DriversViewModel DriversView => new DriversViewModel(ergastService.Value);
-        public TeamsViewModel TeamsView => new TeamsViewModel(ergastService.Value);
-        public HistoryViewModel HistoryView => new HistoryViewModel(ergastService.Value);
+        public HomeViewModel HomeView => new HomeViewModel();
+        public ScheduleViewModel ScheduleView => new ScheduleViewModel();
+        public DriversViewModel DriversView => new DriversViewModel();
+        public TeamsViewModel TeamsView => new TeamsViewModel();
+        public HistoryViewModel HistoryView => new HistoryViewModel();
         
-        public DriverDetailsPageViewModel DriverDetailsPage => new DriverDetailsPageViewModel(ergastService.Value, informationService.Value);
-        public CircuitDetailsPageViewModel CircuitDetailsPage => new CircuitDetailsPageViewModel(ergastService.Value, informationService.Value);
-        public CircuitLapsPageViewModel CircuitLapsPage => new CircuitLapsPageViewModel(ergastService.Value);
-        public TeamDetailsPageViewModel TeamDetailsPage => new TeamDetailsPageViewModel(ergastService.Value, informationService.Value);
+        public DriverDetailsPageViewModel DriverDetailsPage => new DriverDetailsPageViewModel(informationService.Value);
+        public CircuitDetailsPageViewModel CircuitDetailsPage => new CircuitDetailsPageViewModel(informationService.Value);
+        public CircuitLapsPageViewModel CircuitLapsPage => new CircuitLapsPageViewModel();
+        public TeamDetailsPageViewModel TeamDetailsPage => new TeamDetailsPageViewModel(informationService.Value);
         
         public SeasonPopupPageViewModel SeasonPopupPage => new SeasonPopupPageViewModel();
         public RaceTypePopupPageViewModel RaceTypePopupPage => new RaceTypePopupPageViewModel();
