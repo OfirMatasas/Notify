@@ -1,18 +1,13 @@
-﻿using System;
-using Notify.Core;
-using Notify.ViewModels.Popups;
+﻿using Notify.ViewModels.Popups;
 using Notify.ViewModels.TabViews;
-using Notify.Views;
 
 namespace Notify.ViewModels
 {
     public class ViewModelLocator
     {
-        private readonly Lazy<HttpClientFactory> httpClientFactory;
-
         public ViewModelLocator()
         {
-            httpClientFactory = new Lazy<HttpClientFactory>(() => new HttpClientFactory());
+            //httpClientFactory = new Lazy<HttpClientFactory>(() => new HttpClientFactory());
         }
 
         public LoginPageViewModel LoginPage => new LoginPageViewModel();
