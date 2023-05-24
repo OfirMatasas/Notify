@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    BindingContext="{Binding AccountSettingsPage, Source={StaticResource ViewModelLocator}}"
     NavigationPage.HasNavigationBar="False"
     x:Class="Notify.Views.LocationSettingsPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
@@ -40,11 +39,11 @@
                     Text="{Binding SearchAddress}"
                     TextColor="Black"
                     Type="Filled" />
-                <materialDesignControls1:MaterialPicker 
-                    Placeholder="Suggestions"
+                <materialDesignControls1:MaterialPicker
                     FontSize="16"
-                    Type="Filled"
-                    SelectedItem="{Binding SelectedAddress}">
+                    Placeholder="Suggestions"
+                    SelectedItem="{Binding SelectedAddress}"
+                    Type="Filled">
                     <materialDesignControls1:MaterialPicker.ItemsSource>
                         <Binding Path="DropBoxOptions" />
                     </materialDesignControls1:MaterialPicker.ItemsSource>
@@ -54,22 +53,19 @@
                     Command="{Binding GetAddressSuggestionsCommand}"
                     CornerRadius="30"
                     Text="GET ADDRESS SUGGESTIONS"
-                    TextColor="#EEEEEE">
-                </Button>
+                    TextColor="#EEEEEE" />
                 <Button
                     BackgroundColor="#393E46"
                     Command="{Binding GetGeographicCoordinatesCommand}"
                     CornerRadius="30"
                     Text="GET GEOGRAPHIC COORDINATES"
-                    TextColor="#EEEEEE">
-                </Button>
+                    TextColor="#EEEEEE" />
                 <Button
                     BackgroundColor="#393E46"
                     Command="{Binding GetCurrentLocationCommand}"
                     CornerRadius="30"
                     Text="GET CURRENT LOCATION"
-                    TextColor="#EEEEEE">
-                </Button>
+                    TextColor="#EEEEEE" />
                 <Button
                     BackgroundColor="#393E46"
                     Command="{Binding UpdateLocationCommand}"

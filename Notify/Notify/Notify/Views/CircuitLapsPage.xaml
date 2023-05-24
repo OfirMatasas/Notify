@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    BindingContext="{Binding CircuitLapsPage, Source={StaticResource ViewModelLocator}}"
     x:Class="Notify.Views.CircuitLapsPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:views="clr-namespace:Notify.Views.Views;assembly=Notify"

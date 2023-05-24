@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    BindingContext="{Binding CircuitDetailsPage, Source={StaticResource ViewModelLocator}}"
     NavigationPage.HasNavigationBar="False"
     x:Class="Notify.Views.CircuitDetailsPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
