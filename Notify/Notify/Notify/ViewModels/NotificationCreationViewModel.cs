@@ -98,14 +98,14 @@ namespace Notify.ViewModels
             RefreshFriendsList();
         }
 
-        public void RefreshFriendsList()
+        public async void RefreshFriendsList()
         {
             string friendsJson = Preferences.Get(Constants.PREFERENCES_FRIENDS, string.Empty);
             string myUsername = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
             
             if (friendsJson.Equals(string.Empty))
             {
-                Friends = AzureHttpClient.Instance.GetFriends().Result;
+                Friends = await AzureHttpClient.Instance.GetFriends();
             }
             else
             {

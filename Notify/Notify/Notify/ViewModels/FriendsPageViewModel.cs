@@ -70,8 +70,7 @@ namespace Notify.ViewModels
 
         private async void onRefreshFriendsClicked()
         {
-            await Task.Run(() => Friends = AzureHttpClient.Instance
-                .GetFriends().Result);
+            await Task.Run(() => Friends = AzureHttpClient.Instance.GetFriends().Result);
         }
         
         #endregion

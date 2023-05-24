@@ -65,6 +65,7 @@ namespace Notify.ViewModels
                 if (successfulUpdate)
                 {
                     App.Current.MainPage.DisplayAlert("Update", $"Updated {SelectedWiFiSSID} as your {SelectedLocation}", "OK");
+                    await AzureHttpClient.Instance.GetDestinations();
                 }
                 else
                 {

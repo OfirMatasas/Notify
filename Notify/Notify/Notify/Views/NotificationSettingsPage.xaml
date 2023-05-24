@@ -12,8 +12,7 @@
                     FontSize="Large"
                     HorizontalTextAlignment="Center"
                     Style="{StaticResource Body1FontSize_ExoBold}"
-                    Text="Notification Settings"
-                    TextColor="Black" />
+                    Text="Notification Settings" />
             </StackLayout>
             <StackLayout Margin="0,30,350,0">
                 <ImageButton

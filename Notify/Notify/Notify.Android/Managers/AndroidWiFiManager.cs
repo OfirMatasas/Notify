@@ -20,7 +20,13 @@ namespace Notify.Droid.Managers
 {
     public class AndroidWiFiManager : IWiFiManager
     {
-        private readonly string m_preDefineSsid = "\"AndroidWifi\"";
+        private readonly string m_AndroidWiFi = "\"AndroidWifi\"";
+        private static readonly object m_NotificationsLock = new object();
+
+        public AndroidWiFiManager()
+        {
+            retrieveDestinations();
+        }
         
         public void PrintConnectedWiFi(object sender, ConnectivityChangedEventArgs e)
         {
@@ -32,13 +38,13 @@ namespace Notify.Droid.Managers
                 WifiManager wifiManager = (WifiManager)Application.Context.GetSystemService(Context.WifiService);
                 string ssid = wifiManager.ConnectionInfo.SSID;
         
-                if (ssid == m_preDefineSsid)
+                if (ssid == m_AndroidWiFi)
                 {
                     Debug.WriteLine($"You have just connected to your wifi network: {ssid}!");
                 }
                 else
                 {
-                    Debug.WriteLine($"Error with ssid: SSID: {ssid} \nPre define SSID: {m_preDefineSsid}");
+                    Debug.WriteLine($"Error with ssid: SSID: {ssid} \nPre define SSID: {m_AndroidWiFi}");
                 }
             }
             else
@@ -73,7 +79,6 @@ namespace Notify.Droid.Managers
                 wifiManager = (WifiManager)Application.Context.GetSystemService(Context.WifiService);
                 ssid = wifiManager.ConnectionInfo.SSID.Trim('"');
                 
-                retrieveDestinations();
                 notificationsJson = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
                 destinationJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, string.Empty);
                 
@@ -99,25 +104,35 @@ namespace Notify.Droid.Managers
 
         private static void sendAllRelevantWiFiNotifications(List<Destination> destinations, string ssid, List<Notification> notifications)
         {
-            Debug.WriteLine("Sending notifications");
-
-            foreach (Destination destination in destinations)
+            lock (m_NotificationsLock)
             {
-                if (destination.SSID.Equals(ssid))
+                Debug.WriteLine("Sending notifications");
+
+                foreach (Destination destination in destinations)
                 {
-                    Debug.WriteLine($"Found a destination with SSID of {ssid}");
-                    
-                    foreach (Notification notification in notifications)
+                    if (destination.SSID.Equals(ssid))
                     {
-                        if (notification.Type.Equals(NotificationType.Location) &&
-                            notification.TypeInfo.Equals(destination.Name))
+                        Debug.WriteLine($"Found a destination with SSID of {ssid}");
+
+                        foreach (Notification notification in notifications)
                         {
-                            Debug.WriteLine($"Sending notification with name: {notification.Name} and description: {notification.Description}");
-                            DependencyService.Get<INotificationManager>()
-                                .SendNotification(notification.Name, notification.Description);
+                            if (notification.Type.Equals(NotificationType.Location) &&
+                                notification.TypeInfo.Equals(destination.Name) &&
+                                notification.Status.ToLower().Equals("new"))
+                            {
+                                notification.Status = "Sent";
+                                Debug.WriteLine(
+                                    $"Sending notification with name: {notification.Name} and description: {notification.Description}");
+                                DependencyService.Get<INotificationManager>()
+                                    .SendNotification(notification.Name, notification.Description);
+
+                            }
                         }
                     }
                 }
+
+                Debug.WriteLine("Finished sending notifications");
+                Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
             }
         }
 
@@ -131,7 +146,7 @@ namespace Notify.Droid.Managers
                 connectivityManager.GetNetworkCapabilities(connectivityManager.ActiveNetwork);
             
             isConnectedToWiFi = capabilities.HasTransport(TransportType.Wifi);
-            Debug.WriteLine($"Connected to wifi: {isConnectedToWiFi}");
+            Debug.WriteLine($"Connected to Wi-Fi: {isConnectedToWiFi}");
             
             return isConnectedToWiFi;
         }

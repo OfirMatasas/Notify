@@ -45,7 +45,6 @@ namespace Notify.Droid
             {
                 Debug.WriteLine($"Logging in with credentials from preferences.{Environment.NewLine}UserName: {Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty)}" +
                                 $" and Password: {Preferences.Get(Constants.PREFERENCES_PASSWORD, string.Empty)}");
-                //TODO implement the actual login upon database creation
                 Shell.Current.GoToAsync("//home");
                 app.MainPage = Shell.Current;
             }
@@ -57,7 +56,7 @@ namespace Notify.Droid
             LoadApplication(app);
         }
         
-        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
         {
             Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);

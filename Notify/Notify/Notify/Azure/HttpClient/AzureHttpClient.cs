@@ -57,7 +57,7 @@ namespace Notify.Azure.HttpClient
 
             try
             {
-                data.user = "Lin"; // TODO: get the user name from the logged in user
+                data.user = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
                 data.location = new JObject();
                 data.location.name = destinationName;
 

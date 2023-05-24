@@ -23,7 +23,7 @@ namespace Notify.Functions.Destinations
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "destination")]
             HttpRequest req, ILogger log)
         {
-            string username, destinations;
+            string lowerCasedUsername, destinations;
             ObjectResult result;
 
             try
@@ -34,10 +34,10 @@ namespace Notify.Functions.Destinations
                 }
                 else
                 {
-                    username = req.Query["username"].ToString().ToLower();
-                    log.LogInformation($"Got client's HTTP request to get friends of user {username}");
+                    lowerCasedUsername = req.Query["username"].ToString().ToLower();
+                    log.LogInformation($"Got client's HTTP request to get friends of user {lowerCasedUsername}");
 
-                    destinations = await GetAllUserDestinations(username, log);
+                    destinations = await GetAllUserDestinations(lowerCasedUsername, log);
                     result = new OkObjectResult(destinations);
                 }
             }
@@ -50,20 +50,20 @@ namespace Notify.Functions.Destinations
             return result;
         }
 
-        private static async Task<string> GetAllUserDestinations(string username, ILogger log)
+        private static async Task<string> GetAllUserDestinations(string lowerCasedUsername, ILogger log)
         {
             IMongoCollection<BsonDocument> collection;
             FilterDefinition<BsonDocument> userFilter;
             List<BsonDocument> destinations;
             string response;
 
-            log.LogInformation($"Getting all destinations of user {username}");
+            log.LogInformation($"Getting all destinations of user {lowerCasedUsername}");
 
             collection = AzureDatabaseClient.Instance.GetCollection<BsonDocument>(
                 databaseName: Constants.DATABASE_NOTIFY_MTA,
                 collectionName: Constants.COLLECTION_DESTINATION);
             userFilter = Builders<BsonDocument>.Filter
-                .Where(doc => doc["user"].ToString().ToLower().Equals(username));
+                .Where(doc => doc["user"].ToString().ToLower().Equals(lowerCasedUsername));
             destinations = await collection.Find(userFilter)
                 .Project(Builders<BsonDocument>.Projection.Exclude("_id")).ToListAsync();
             response = Utils.ConversionUtils.ConvertBsonDocumentListToJson(destinations);

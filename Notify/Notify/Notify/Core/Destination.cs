@@ -42,8 +42,12 @@ namespace Notify.Core
 
         public bool IsArrived(Location location)
         {
-            Coordinate currentLocation = new Coordinate(location.Latitude, location.Longitude);
-            Coordinate destination = new Coordinate(Location.Latitude, Location.Longitude);
+            Coordinate currentLocation = new Coordinate(
+                latitude: location.Latitude, 
+                longitude: location.Longitude);
+            Coordinate destination = new Coordinate(
+                latitude: Location.Latitude, 
+                longitude: Location.Longitude);
             double distance = GeoCalculator.GetDistance(
                 originCoordinate: currentLocation,
                 destinationCoordinate: destination, 
