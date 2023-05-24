@@ -1,34 +1,41 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using GooglePlacesApi;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Notify.Core;
+using Xamarin.Forms.Internals;
+using Constants = Notify.Helpers.Constants;
 using Notify.Helpers;
 
 namespace Notify.HttpClient
 {
     public class GoogleHttpClient
-    {
-        // TODO:
-        //      1. Delete the statics and create m_HttpClient ad in Azure
-        //      2. Insert google API key to vault
-        //      3. Make m_HttpClient singleton
-        //      4. Move to functions
-
-        /*private static GoogleHttpClient m_Instance;
+    { 
+        private static GoogleHttpClient m_Instance;
         private static readonly object r_LockInstanceCreation = new object();
         private static System.Net.Http.HttpClient m_HttpClient;
-       
-       
+        private static readonly string r_GoogleAPIkey = "AIzaSyCXUyen9sW3LhiELjOPJtUc0OqZlhLr-cg";
+
         private GoogleHttpClient()
         {
             m_HttpClient = new System.Net.Http.HttpClient
             {
-                BaseAddress = new Uri("https://maps.googleapis.com");
+                BaseAddress = new Uri(Constants.GOOGLE_BASE_URL),
+                DefaultRequestHeaders =
+                {
+                    Accept = { new MediaTypeWithQualityHeaderValue("application/json")},
+                    Authorization = new AuthenticationHeaderValue("Bearer", r_GoogleAPIkey)
+                },
+                Timeout = TimeSpan.FromSeconds(30)
             };
+            
+            m_HttpClient.DefaultRequestHeaders.Add("User-Agent", "HttpClientFactory-Sample");
+            m_HttpClient.DefaultRequestHeaders.Add("Connection", "keep-alive");
         }
        
         public static GoogleHttpClient Instance
@@ -53,76 +60,47 @@ namespace Notify.HttpClient
         private static readonly LoggerService r_Logger = LoggerService.Instance;
         private readonly System.Net.Http.HttpClient r_HttpClient;
         private static readonly string r_GoogleAPIkey = "AIzaSyCXUyen9sW3LhiELjOPJtUc0OqZlhLr-cg";
-
-        private GoogleHttpClient()
-        {
-            r_HttpClient = new System.Net.Http.HttpClient();
-        }
-
-        public static GoogleHttpClient Builder()
-        {
-            return new GoogleHttpClient();
         }
 
         public GoogleHttpClient Uri(string uri)
         {
-            r_HttpClient.BaseAddress = new Uri(uri);
+            m_HttpClient.BaseAddress = new Uri(uri);
             return this;
         }
 
-        public GoogleHttpClient Method()
-        {
-            r_HttpClient.DefaultRequestHeaders.Accept.Clear();
-            r_HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            r_HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", r_GoogleAPIkey);
-            r_HttpClient.DefaultRequestHeaders.Add("User-Agent", "HttpClientFactory-Sample");
-            r_HttpClient.DefaultRequestHeaders.Add("Connection", "keep-alive");
-            r_HttpClient.Timeout = TimeSpan.FromSeconds(30);
-            return this;
-        }
-
-        public async Task<string> Execute()
+        public async Task<string> GetAsync(string uri)
         {
             string content = null;
             HttpResponseMessage response;
 
             try
             {
-                response = await r_HttpClient.GetAsync(r_HttpClient.BaseAddress);
+                response = await m_HttpClient.GetAsync(uri);
                 response.EnsureSuccessStatusCode();
                 content = await response.Content.ReadAsStringAsync();
             }
             catch (Exception ex)
             {
-                r_Logger.LogError($"Error occured on Execute: {Environment.NewLine}{ex.Message}");
+                Debug.WriteLine($"Error occured on GetAsync: {Environment.NewLine}{ex.Message}");
             }
             
             return content;
         }
 
-        public static async Task<List<String>> GetAddressSuggestions(string subAddress)
+        public async Task<List<String>> GetAddressSuggestions(string addressProvided)
         {
-            string requestUrl =
-                $"https://maps.googleapis.com/maps/api/place/autocomplete/json?input={subAddress}&types=address&key={r_GoogleAPIkey}";
+            string requestUri = $"place/autocomplete/json?input={addressProvided}&types=address&key={r_GoogleAPIkey}";
             List<string> suggestions = new List<string>();
-            string response, address;
+            string response;
             JObject responseJson;
             JToken predictions;
 
             try
             {
-                response = await GoogleHttpClient.Builder()
-                    .Uri(requestUrl)
-                    .Method()
-                    .Execute();
+                response = await GetAsync(requestUri);
                 responseJson = JObject.Parse(response);
                 predictions = responseJson["predictions"];
-                foreach (JToken prediction in predictions)
-                {
-                    address = prediction["description"].ToString();
-                    suggestions.Add(address);
-                    r_Logger.LogDebug(address);
-                }
+                predictions.ForEach(prediction => suggestions.Add(prediction["description"].ToString()));
             }
             catch (Exception ex)
             {
@@ -132,25 +110,23 @@ namespace Notify.HttpClient
             return suggestions;
         }
         
-        public static async Task<Coordinates> GetCoordinatesFromAddress(string address)
+        public async Task<Coordinates> GetCoordinatesFromAddress(string addressProvided)
         {
-            string requestUrl =
-                $"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={r_GoogleAPIkey}";
+            string requestUri = $"geocode/json?address={addressProvided}&key={r_GoogleAPIkey}";
             Coordinates coordinates = null;
             string response;
             GeocodingResponse geocodingResponse;
 
             try
             {
-                response = await GoogleHttpClient.Builder()
-                    .Uri(requestUrl)
-                    .Method()
-                    .Execute();
+                response = await GetAsync(requestUri);
                 geocodingResponse = JsonConvert.DeserializeObject<GeocodingResponse>(response);
+                
                 if (geocodingResponse.Results.Count > 0)
                 {
                     r_Logger.LogDebug($"eocodingResponse.Results.Count: {geocodingResponse.Results.Count}");
                     coordinates = geocodingResponse.Results[0].Geometry.Location;
+                    Debug.WriteLine($"Coordinates from address provided: latitude: {coordinates.Lat}, longitude: {coordinates.Lng}");
                 }
             }
             catch (Exception ex)
@@ -161,25 +137,18 @@ namespace Notify.HttpClient
             return coordinates;
         }
         
-        public static async Task<string> GetAddressFromCoordinatesAsync(double latitude, double longitude)
+        public async Task<string> GetAddressFromCoordinatesAsync(double latitude, double longitude)
         {
-            string requestUrl = 
-                $"https://maps.googleapis.com/maps/api/geocode/json?key={r_GoogleAPIkey}&latlng={latitude},{longitude}";
+            string requestUri = $"geocode/json?key={r_GoogleAPIkey}&latlng={latitude},{longitude}";
             string address = null;
-            HttpResponseMessage response;
+            string response;
             string responseJson;
             GoogleMapsApiResult result;
     
             try
             {
-                response = await Builder()
-                    .Uri(requestUrl)
-                    .Method()
-                    .r_HttpClient
-                    .GetAsync(requestUrl);
-                response.EnsureSuccessStatusCode();
-                responseJson = await response.Content.ReadAsStringAsync();
-                result = JsonConvert.DeserializeObject<GoogleMapsApiResult>(responseJson);
+                response = await GetAsync(requestUri);
+                result = JsonConvert.DeserializeObject<GoogleMapsApiResult>(response);
 
                 if (result == null || result.GoogleMapsResults.Length == 0)
                 {
@@ -191,6 +160,8 @@ namespace Notify.HttpClient
                     address = result.GoogleMapsResults[0].FormattedAddress;
                     r_Logger.LogDebug($"Current address: {address}");
                 }
+                
+                Debug.WriteLine($"Address from coordinates provided: {address}");
             }
             catch (Exception ex)
             {
@@ -200,10 +171,9 @@ namespace Notify.HttpClient
             return address;
         }
         
-        public static async Task<List<Place>> SearchPlacesNearby(double latitude, double longitude, int radius, string type)
+        public async Task<List<Place>> SearchPlacesNearby(double latitude, double longitude, int radius, string type)
         {
-            string requestUrl = 
-                $"https://maps.googleapis.com/maps/api/place/nearbysearch/json?key={r_GoogleAPIkey}&location={latitude},{longitude}&radius={radius}&type={type.ToLower()}";
+            string requestUri = $"place/nearbysearch/json?key={r_GoogleAPIkey}&location={latitude},{longitude}&radius={radius}&type={type.ToLower()}";
             List<Place> places = new List<Place>();
             string response;
             JObject responseJson;
@@ -212,10 +182,7 @@ namespace Notify.HttpClient
 
             try
             {
-                response = await GoogleHttpClient.Builder()
-                    .Uri(requestUrl)
-                    .Method()
-                    .Execute();
+                response = await GetAsync(requestUri);
                 responseJson = JObject.Parse(response);
                 results = responseJson["results"];
                 
@@ -269,13 +236,5 @@ namespace Notify.HttpClient
             [JsonProperty("formatted_address")]
             public string FormattedAddress { get; set; }
         }
-    }
-    
-    public class Place
-    {
-        public string Name { get; set; }
-        public string PlaceId { get; set; }
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
     }
 }

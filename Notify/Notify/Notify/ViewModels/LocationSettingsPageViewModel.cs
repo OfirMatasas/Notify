@@ -186,7 +186,7 @@ namespace Notify.ViewModels
             }
             else
             {
-                coordinates = await GoogleHttpClient.GetCoordinatesFromAddress(SelectedAddress);
+                coordinates = await GoogleHttpClient.Instance.GetCoordinatesFromAddress(SelectedAddress);
                 Longitude = coordinates.Lng.ToString();
                 Latitude = coordinates.Lat.ToString();
                 r_Logger.LogDebug($"onGetGeographicCoordinatesButtonClicked - Longitude: {Longitude}, Latitude: {Latitude}");
