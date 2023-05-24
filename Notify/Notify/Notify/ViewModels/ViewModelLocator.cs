@@ -1,6 +1,5 @@
 ﻿using System;
 using Notify.Core;
-using Notify.Services.Information;
 using Notify.ViewModels.Popups;
 using Notify.ViewModels.TabViews;
 using Notify.Views;
@@ -10,12 +9,10 @@ namespace Notify.ViewModels
     public class ViewModelLocator
     {
         private readonly Lazy<HttpClientFactory> httpClientFactory;
-        private readonly Lazy<IInformationService> informationService;
 
         public ViewModelLocator()
         {
             httpClientFactory = new Lazy<HttpClientFactory>(() => new HttpClientFactory());
-            informationService = new Lazy<IInformationService>(() => new InformationService(httpClientFactory.Value));
         }
 
         public LoginPageViewModel LoginPage => new LoginPageViewModel();
@@ -36,10 +33,10 @@ namespace Notify.ViewModels
         public TeamsViewModel TeamsView => new TeamsViewModel();
         public HistoryViewModel HistoryView => new HistoryViewModel();
         
-        public DriverDetailsPageViewModel DriverDetailsPage => new DriverDetailsPageViewModel(informationService.Value);
-        public CircuitDetailsPageViewModel CircuitDetailsPage => new CircuitDetailsPageViewModel(informationService.Value);
+        public DriverDetailsPageViewModel DriverDetailsPage => new DriverDetailsPageViewModel();
+        public CircuitDetailsPageViewModel CircuitDetailsPage => new CircuitDetailsPageViewModel();
         public CircuitLapsPageViewModel CircuitLapsPage => new CircuitLapsPageViewModel();
-        public TeamDetailsPageViewModel TeamDetailsPage => new TeamDetailsPageViewModel(informationService.Value);
+        public TeamDetailsPageViewModel TeamDetailsPage => new TeamDetailsPageViewModel();
         
         public SeasonPopupPageViewModel SeasonPopupPage => new SeasonPopupPageViewModel();
         public RaceTypePopupPageViewModel RaceTypePopupPage => new RaceTypePopupPageViewModel();

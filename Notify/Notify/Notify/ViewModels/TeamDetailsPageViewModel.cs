@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Notify.Models;
-using Notify.Services.Information;
 using Notify.Views.Popups;
 using Xamarin.CommunityToolkit.Extensions;
 using Xamarin.CommunityToolkit.UI.Views;
@@ -14,9 +13,7 @@ namespace Notify.ViewModels
     public class TeamDetailsPageViewModel : BaseViewModel, IQueryAttributable
     {
         #region Fields
-
-        private readonly IInformationService _informationsService;
-
+        
         #endregion
 
         #region Properties
@@ -40,10 +37,8 @@ namespace Notify.ViewModels
 
         #region Constructors
 
-        public TeamDetailsPageViewModel(IInformationService informationsService)
+        public TeamDetailsPageViewModel()
         {
-            _informationsService = informationsService;
-
             BackCommand = new Command(BackCommandHandler);
             SelectSeasonCommand = new Command(SelectSeasonCommandHandler);
         }
@@ -98,17 +93,8 @@ namespace Notify.ViewModels
 
         private async Task GetInformations()
         {
-            var res = await _informationsService.GetTeamInformation(Constructor.ConstructorId);
-            if (res != null)
-            {
-                ConstructorInformations = res;
-                InformationsState = LayoutState.None;
-            }
-            else
-            {
-                ConstructorInformations = null;
-                InformationsState = LayoutState.Empty;
-            }
+            ConstructorInformations = null;
+            InformationsState = LayoutState.Empty;
         }
 
         #endregion

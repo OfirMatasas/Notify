@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Notify.Models;
-using Notify.Services.Information;
 using Notify.Views.Popups;
 using Xamarin.CommunityToolkit.Extensions;
 using Xamarin.CommunityToolkit.UI.Views;
@@ -14,9 +12,7 @@ namespace Notify.ViewModels
     public class CircuitDetailsPageViewModel : BaseViewModel, IQueryAttributable
     {
         #region Fields
-
-        private readonly IInformationService _informationsService;
-
+        
         #endregion
 
         #region Properties
@@ -42,10 +38,8 @@ namespace Notify.ViewModels
 
         #region Constructors
 
-        public CircuitDetailsPageViewModel(IInformationService informationsService)
+        public CircuitDetailsPageViewModel()
         {
-            _informationsService = informationsService;
-
             BackCommand = new Command(BackCommandHandler);
             SelectRaceTypeCommand = new Command(SelectRaceTypeCommandHandler);
             ViewLapByLapCommand = new Command<RaceResultModel>(ViewLapByLapCommandHandler);
@@ -126,18 +120,9 @@ namespace Notify.ViewModels
         }
 
         private async Task GetInformations()
-        {
-            var res = await _informationsService.GetCircuitInformation(RaceEvent.Circuit.Location.Country);
-            if (res != null)
-            {
-                CircuitInformations = res;
-                InformationsState = LayoutState.None;
-            }
-            else
-            {
-                CircuitInformations = null;
-                InformationsState = LayoutState.Empty;
-            }
+        { 
+            CircuitInformations = null;
+            InformationsState = LayoutState.Empty;
         }
 
         private string ConvertNameToRaceType(string name)
