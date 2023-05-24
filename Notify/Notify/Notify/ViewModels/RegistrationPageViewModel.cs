@@ -8,12 +8,7 @@ using Notify.Helpers;
 using Xamarin.Forms;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using Azure.Identity;
-using Azure.Security.KeyVault.Secrets;
 using Notify.Azure.HttpClient;
-using Twilio;
-using Twilio.Rest.Api.V2010.Account;
-using Twilio.Types;
 
 namespace Notify.ViewModels
 {
@@ -67,14 +62,16 @@ namespace Notify.ViewModels
 
         private void validateName()
         {
+            bool isValid;
+            
             if (string.IsNullOrEmpty(Name))
             {
                 NameBorderColor = Constants.INVALID_COLOR;
-                displayError("Please fill in your name.");
+                addErrorMessage("Please fill in your name.");
             }
             else
             {
-                bool isValid = Regex.IsMatch(Name, @"^[a-zA-Z ]+$");
+                isValid = Regex.IsMatch(Name, @"^[a-zA-Z ]+$");
 
                 if (isValid)
                 {
@@ -83,27 +80,28 @@ namespace Notify.ViewModels
                 else
                 {
                     NameBorderColor = Constants.INVALID_COLOR;
-                    displayError("Please enter a valid name consisting only of letters.");
+                    addErrorMessage("Please enter a valid name consisting only of letters.");
                 }
             }
         }
         
-        
         private void validatePassword()
         {
+            bool isValid;
+            
             if (string.IsNullOrEmpty(Password))
             {
                 PasswordBorderColor = ConfirmPasswordBorderColor = Constants.INVALID_COLOR;
-                displayError("Please fill in your password.");
+                addErrorMessage("Please fill in your password.");
             }
             else if (Password != ConfirmPassword)
             {
                 PasswordBorderColor = ConfirmPasswordBorderColor = Constants.INVALID_COLOR;
-                displayError("Passwords do not match.");
+                addErrorMessage("Passwords do not match.");
             }
             else
             {
-                bool isValid = Regex.IsMatch(Password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$");
+                isValid = Regex.IsMatch(Password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$");
 
                 if (isValid)
                 {
@@ -112,26 +110,28 @@ namespace Notify.ViewModels
                 else
                 {
                     PasswordBorderColor = ConfirmPasswordBorderColor = Constants.INVALID_COLOR;
-                    displayError("Please enter a password containing at least 8 characters, with at least one uppercase letter, one lowercase letter, one number, and one special character.");
+                    addErrorMessage("Please enter a password containing at least 8 characters, with at least one uppercase letter, one lowercase letter, one number, and one special character.");
                 }
             }
         }
         
         private void validateUserName()
         {
+            bool isValid;
+
             if (string.IsNullOrEmpty(UserName))
             {
                 UserNameBorderColor = Constants.INVALID_COLOR;
-                displayError("Please fill in your username.");
+                addErrorMessage("Please fill in your username.");
             }
             else
             {
-                bool isValid = Regex.IsMatch(UserName, @"^[a-zA-Z0-9]+$");
+                isValid = Regex.IsMatch(UserName, @"^[a-zA-Z0-9]+$");
 
                 if (!isValid)
                 {
                     UserNameBorderColor = Constants.INVALID_COLOR;
-                    displayError("Please enter a valid username consisting only of letters and numbers.");
+                    addErrorMessage("Please enter a valid username consisting only of letters and numbers.");
                 }
                 else
                 {
@@ -142,19 +142,21 @@ namespace Notify.ViewModels
 
         private void validateTelephone()
         {
+            bool isValid;
+
             if (string.IsNullOrEmpty(Telephone))
             {
                 TelephoneBorderColor = Constants.INVALID_COLOR;
-                displayError("Please fill in your telephone number.");
+                addErrorMessage("Please fill in your telephone number.");
             }
             else
             {
-                bool isValid = Regex.IsMatch(Telephone, @"^05\d{8}$");
+                isValid = Regex.IsMatch(Telephone, @"^05\d{8}$");
 
                 if (!isValid)
                 {
                     TelephoneBorderColor = Constants.INVALID_COLOR;
-                    displayError("Please enter a valid 10-digit telephone number starting with '05'.");
+                    addErrorMessage("Please enter a valid 10-digit telephone number starting with '05'.");
                 }
                 else
                 {
@@ -163,19 +165,15 @@ namespace Notify.ViewModels
             }
         }
 
-
-        private void displayError(string message)
+        private void addErrorMessage(string message)
         {
             ErrorMessages.Add(message);
         }
 
         private async void onSignUpClicked()
         {
-            string israeliPhoneNumber;
-            bool successfulSMSSent;
-            bool validationSuccessful;
-            bool userExists;
-            string errorMessage;
+            string israeliPhoneNumber, errorMessage, completeErrorMessage;
+            bool successfulSMSSent, validationSuccessful, userExists, successfulRegister;
 
             ErrorMessages.Clear();
 
@@ -184,17 +182,20 @@ namespace Notify.ViewModels
             validatePassword();
             validateTelephone();
 
-            userExists = AzureHttpClient.Instance.CheckUserExists(UserName, Telephone, out errorMessage);
-
-            if (userExists)
+            if (!string.IsNullOrEmpty(Telephone) && !string.IsNullOrEmpty(UserName))
             {
-                Debug.WriteLine(errorMessage);
-                displayError(errorMessage);
+                userExists = AzureHttpClient.Instance.CheckUserExists(UserName, Telephone, out errorMessage);
+                
+                if (userExists)
+                {
+                    Debug.WriteLine(errorMessage);
+                    addErrorMessage(errorMessage);
+                }
             }
-
+            
             if (ErrorMessages.Count > 0)
             {
-                string completeErrorMessage = string.Join(Environment.NewLine,
+                completeErrorMessage = string.Join(Environment.NewLine,
                     ErrorMessages.Select(message => $"- {message}"));
                 await Application.Current.MainPage.DisplayAlert("Invalid sign up", completeErrorMessage, "OK");
             }
@@ -213,11 +214,12 @@ namespace Notify.ViewModels
                 if (successfulSMSSent)
                 {
                     validationSuccessful = await validateVerificationCodeWithUser();
+                    
                     if (validationSuccessful)
                     {
-                        bool registered =
-                            AzureHttpClient.Instance.RegisterUser(Name, UserName, Password, Telephone);
-                        if (registered)
+                        successfulRegister = AzureHttpClient.Instance.RegisterUser(Name, UserName, Password, Telephone);
+                        
+                        if (successfulRegister)
                         {
                             await Application.Current.MainPage.DisplayAlert("Registration Success",
                                 "You have successfully registered to Notify.", "OK");
@@ -226,19 +228,19 @@ namespace Notify.ViewModels
                         else
                         {
                             Debug.WriteLine("Failed to register user.");
-                            displayError($"Failed to register user.");
+                            addErrorMessage($"Failed to register user.");
                         }
                     }
                     else
                     {
                         Debug.WriteLine("Failed to validate verification code.");
-                        displayError($"Failed to validate verification code.");
+                        addErrorMessage($"Failed to validate verification code.");
                     }
                 }
                 else
                 {
                     Debug.WriteLine("Failed to send SMS message.");
-                    displayError($"Failed to send SMS message.");
+                    addErrorMessage($"Failed to send SMS message.");
                 }
             }
         }
@@ -247,6 +249,7 @@ namespace Notify.ViewModels
         {
             string userEnteredCode;
             bool isValidationSuccessful = false;
+            bool tryAgain;
 
             do
             {
@@ -256,12 +259,11 @@ namespace Notify.ViewModels
 
                 if (userEnteredCode != VerificationCode)
                 {
-                    bool tryAgain = await Application.Current.MainPage.DisplayAlert("Verification Error",
+                    tryAgain = await Application.Current.MainPage.DisplayAlert("Verification Error",
                         "The verification code you entered is invalid. Do you want to try again?", "Yes", "No");
 
                     if (!tryAgain)
                     {
-                        isValidationSuccessful = false;
                         break;
                     }
                 }

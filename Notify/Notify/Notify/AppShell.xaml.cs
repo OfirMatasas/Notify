@@ -41,7 +41,6 @@ namespace Notify
         {
             lock (m_InitializeLock)
             {
-
                 if (!m_IsInitialized)
                 {
                     m_IsInitialized = true;
