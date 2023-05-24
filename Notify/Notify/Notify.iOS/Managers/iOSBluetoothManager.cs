@@ -19,7 +19,7 @@ namespace Notify.iOS.Managers
 
             foreach (CBPeripheral peripheral in connectedPeripheralIds)
             {
-                r_logger.LogDebug($"Name: {peripheral.Name}, UUID: {peripheral.Identifier}");
+                r_logger.LogInformation($"Name: {peripheral.Name}, UUID: {peripheral.Identifier}");
             }
         }
     }

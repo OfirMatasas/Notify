@@ -126,7 +126,7 @@ namespace Notify.HttpClient
             }
             catch (Exception ex)
             {
-                i_logger.LogDebug($"Error occured on GetAddressSuggestions: {ex.Message}");
+                i_logger.LogError($"Error occured on GetAddressSuggestions: {ex.Message}");
             }
 
             return suggestions;
@@ -155,7 +155,7 @@ namespace Notify.HttpClient
             }
             catch (Exception ex)
             {
-                i_logger.LogDebug($"Error occured on GetLatLngFromAddress: {ex.Message}");
+                i_logger.LogError($"Error occured on GetLatLngFromAddress: {ex.Message}");
             }
 
             return coordinates;
@@ -194,7 +194,7 @@ namespace Notify.HttpClient
             }
             catch (Exception ex)
             {
-                i_logger.LogDebug($"Error occured on GetAddressFromCoordinatesAsync: {Environment.NewLine}{ex.Message}");
+                i_logger.LogError($"Error occured on GetAddressFromCoordinatesAsync: {Environment.NewLine}{ex.Message}");
             }
 
             return address;

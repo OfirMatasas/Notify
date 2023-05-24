@@ -226,19 +226,19 @@ namespace Notify.ViewModels
                         }
                         else
                         {
-                            r_logger.LogDebug("Failed to register user.");
+                            r_logger.LogWarning("Failed to register user.");
                             displayError($"Failed to register user.");
                         }
                     }
                     else
                     {
-                        r_logger.LogDebug("Failed to validate verification code.");
+                        r_logger.LogWarning("Failed to validate verification code.");
                         displayError($"Failed to validate verification code.");
                     }
                 }
                 else
                 {
-                    r_logger.LogDebug("Failed to send SMS message.");
+                    r_logger.LogWarning("Failed to send SMS message.");
                     displayError($"Failed to send SMS message.");
                 }
             }

@@ -60,7 +60,7 @@ namespace Notify.ViewModels
             }
             catch (Exception ex)
             {
-                r_logger.LogDebug(ex.Message);
+                r_logger.LogError(ex.Message);
             }
         }
 

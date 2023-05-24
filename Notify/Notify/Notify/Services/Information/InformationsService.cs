@@ -56,7 +56,7 @@ namespace Notify.Services.Information
             }
             catch(Exception ex)
             {
-                r_logger.LogDebug(ex.Message);
+                r_logger.LogError(ex.Message);
                 return null;
             }
         }
@@ -77,7 +77,7 @@ namespace Notify.Services.Information
             }
             catch(Exception ex)
             {
-                r_logger.LogDebug(ex.Message);
+                r_logger.LogError(ex.Message);
                 return null;
             }
         }
