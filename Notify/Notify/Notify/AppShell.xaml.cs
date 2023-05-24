@@ -95,7 +95,7 @@ namespace Notify
                 {
                     try
                     {
-                        r_logger.LogDebug("You've arrived at your destination!");
+                        r_logger.LogInformation("You've arrived at your destination!");
                     }
                     catch (Exception ex)
                     {
@@ -113,7 +113,7 @@ namespace Notify
                 {
                     try
                     {
-                        r_logger.LogDebug("There was an error updating location!");
+                        r_logger.LogWarning("There was an error updating location!");
                     }
                     catch (Exception ex)
                     {
@@ -297,7 +297,7 @@ namespace Notify
 
         private void showNotification(string title, string message)
         {
-            r_logger.LogDebug($"title: {title}, message: {message}");
+            r_logger.LogInformation($"title: {title}, message: {message}");
         }
     }
 }

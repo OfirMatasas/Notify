@@ -1,5 +1,4 @@
 ﻿using Serilog;
-using System;
 
 namespace Notify.Helpers
 {
@@ -34,8 +33,8 @@ namespace Notify.Helpers
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .WriteTo.Sink(new LogcatSink())
-                //.WriteTo.File("/data/data/com.notify.notify/files/log.txt")
-                //.WriteTo.Debug(outputTemplate: "{Timestamp:dd-MM-yyy HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+                .WriteTo.File("/data/data/com.notify.notify/files/log.txt")
+                .WriteTo.Debug(outputTemplate: "{Timestamp:dd-MM-yyy HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
                 .CreateLogger();
         }
         

@@ -17,23 +17,23 @@ namespace Notify.Droid.Managers
             
             if (adapter == null)
             {
-                r_logger.LogDebug("No Bluetooth adapter found.");
+                r_logger.LogInformation("No Bluetooth adapter found.");
             }
             
             if (!adapter!.IsEnabled)
             {
-                r_logger.LogDebug("Bluetooth adapter is not enabled.");
+                r_logger.LogInformation("Bluetooth adapter is not enabled.");
             }
             
             if (adapter.BondedDevices?.Count == 0)
             {
-                r_logger.LogDebug("No Bluetooth devices found.");
+                r_logger.LogInformation("No Bluetooth devices found.");
             }
             else
             {
                 foreach (var device in adapter.BondedDevices!)
                 {
-                    r_logger.LogDebug($"Found Bluetooth device: {device.Name}, address: {device.Address}");
+                    r_logger.LogInformation($"Found Bluetooth device: {device.Name}, address: {device.Address}");
                 }
             }
         }

@@ -40,16 +40,16 @@ namespace Notify.Droid.Managers
         
                 if (ssid == m_AndroidWiFi)
                 {
-                    r_logger.LogDebug($"You have just connected to your wifi network: {ssid}!");
+                    r_logger.LogInformation($"You have just connected to your wifi network: {ssid}!");
                 }
                 else
                 {
-                    r_logger.LogDebug($"Error with ssid: SSID: {ssid} \nPre define SSID: {m_AndroidWiFi}");
+                    r_logger.LogInformation($"Error with ssid: SSID: {ssid} \nPre define SSID: {m_AndroidWiFi}");
                 }
             }
             else
             {
-                r_logger.LogDebug("Disconnected from wifi network!");
+                r_logger.LogInformation("Disconnected from wifi network!");
             }
         }
 
@@ -106,7 +106,7 @@ namespace Notify.Droid.Managers
         {
             lock (m_NotificationsLock)
             {
-                Debug.WriteLine("Sending notifications");
+                i_logger.LogDebug("Sending notifications");
 
                 foreach (Destination destination in destinations)
                 {
@@ -145,7 +145,7 @@ namespace Notify.Droid.Managers
                 connectivityManager.GetNetworkCapabilities(connectivityManager.ActiveNetwork);
             
             isConnectedToWiFi = capabilities.HasTransport(TransportType.Wifi);
-            r_logger.LogDebug($"Connected to wifi: {isConnectedToWiFi}");
+            r_logger.LogInformation($"Connected to wifi: {isConnectedToWiFi}");
             
             return isConnectedToWiFi;
         }

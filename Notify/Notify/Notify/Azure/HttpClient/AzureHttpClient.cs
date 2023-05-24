@@ -89,7 +89,7 @@ namespace Notify.Azure.HttpClient
                 response.EnsureSuccessStatusCode();
                 string content = await response.Content.ReadAsStringAsync();
                 r_logger.LogDebug(content);
-                r_logger.LogDebug($"Successful status code from Azure Function from UpdateDestination for {destinationName}");
+                r_logger.LogInformation($"Successful status code from Azure Function from UpdateDestination for {destinationName}");
                 isSuccess = true;
             }
             catch (Exception ex)
@@ -122,7 +122,7 @@ namespace Notify.Azure.HttpClient
                 ).Result;
 
                 response.EnsureSuccessStatusCode();
-                r_logger.LogDebug($"Successful status code from Azure Function from sendSMSVerificationCode, telephone: {telephoneNumber}, verificationCode: {verificationCode}");
+                r_logger.LogInformation($"Successful status code from Azure Function from sendSMSVerificationCode, telephone: {telephoneNumber}, verificationCode: {verificationCode}");
                 isSuccess = true;
             }
             catch (Exception ex)
@@ -153,7 +153,7 @@ namespace Notify.Azure.HttpClient
 
                 response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_REGISTER, createJsonStringContent(json)).Result;
                 response.EnsureSuccessStatusCode();
-                r_logger.LogDebug($"Successful status code from Azure Function from RegisterUser, name: {name}, userName: {userName}, password: {password}, telephone: {telephone}");
+                r_logger.LogInformation($"Successful status code from Azure Function from RegisterUser, name: {name}, userName: {userName}, password: {password}, telephone: {telephone}");
 
                 registered = true;
             }
@@ -228,7 +228,7 @@ namespace Notify.Azure.HttpClient
                     ).Result;
 
                 response.EnsureSuccessStatusCode();
-                r_logger.LogDebug($"Successful status code from Azure Function from GetDistanceToDestinationFromCurrentLocation, location: {location}!");
+                r_logger.LogInformation($"Successful status code from Azure Function from GetDistanceToDestinationFromCurrentLocation, location: {location}!");
 
                 returnedObject = DeserializeObjectFromResponseAsync(response).Result;
                 distance = Convert.ToDouble(returnedObject.distance);
@@ -402,7 +402,7 @@ namespace Notify.Azure.HttpClient
                 }
 
                 Preferences.Set(preferencesKey, JsonConvert.SerializeObject(data));
-                r_logger.LogDebug($"{preferencesKey} from {endpoint} was saved in preferences");
+                r_logger.LogInformation($"{preferencesKey} from {endpoint} was saved in preferences");
             }
             catch (Exception ex)
             {
