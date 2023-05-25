@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using Android.App;
 using Serilog;
 
 namespace Notify.Helpers
