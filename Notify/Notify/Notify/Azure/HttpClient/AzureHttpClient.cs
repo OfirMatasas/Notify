@@ -17,7 +17,7 @@ namespace Notify.Azure.HttpClient
 {
     public class AzureHttpClient
     {
-        private readonly LoggerService r_logger = LoggerService.Instance;
+        private readonly LoggerService r_Logger = LoggerService.Instance;
         private static AzureHttpClient m_Instance;
         private static readonly object r_LockInstanceCreation = new object();
         private static System.Net.Http.HttpClient m_HttpClient;
@@ -79,7 +79,7 @@ namespace Notify.Azure.HttpClient
                 }
 
                 json = JsonConvert.SerializeObject(data);
-                r_logger.LogDebug($"request:{Environment.NewLine}{data}");
+                r_Logger.LogDebug($"request:{Environment.NewLine}{data}");
 
                 response = postAsync(
                     requestUri: Constants.AZURE_FUNCTIONS_PATTERN_DESTINATION_UPDATE,
@@ -88,13 +88,13 @@ namespace Notify.Azure.HttpClient
 
                 response.EnsureSuccessStatusCode();
                 string content = await response.Content.ReadAsStringAsync();
-                r_logger.LogDebug(content);
-                r_logger.LogInformation($"Successful status code from Azure Function from UpdateDestination for {destinationName}");
+                r_Logger.LogDebug(content);
+                r_Logger.LogInformation($"Successful status code from Azure Function from UpdateDestination for {destinationName}");
                 isSuccess = true;
             }
             catch (Exception ex)
             {
-                r_logger.LogError($"Error occurred on UpdateDestination: {Environment.NewLine}{ex.Message}");
+                r_Logger.LogError($"Error occurred on UpdateDestination: {Environment.NewLine}{ex.Message}");
                 isSuccess = false;
             }
 
@@ -114,7 +114,7 @@ namespace Notify.Azure.HttpClient
                 data.verificationCode = verificationCode;
                 
                 json = JsonConvert.SerializeObject(data);
-                r_logger.LogDebug($"request:{Environment.NewLine}{data}");
+                r_Logger.LogDebug($"request:{Environment.NewLine}{data}");
 
                 response = postAsync(
                     requestUri: Constants.AZURE_FUNCTIONS_PATTERN_SEND_SMS,
@@ -122,12 +122,12 @@ namespace Notify.Azure.HttpClient
                 ).Result;
 
                 response.EnsureSuccessStatusCode();
-                r_logger.LogInformation($"Successful status code from Azure Function from sendSMSVerificationCode, telephone: {telephoneNumber}, verificationCode: {verificationCode}");
+                r_Logger.LogInformation($"Successful status code from Azure Function from sendSMSVerificationCode, telephone: {telephoneNumber}, verificationCode: {verificationCode}");
                 isSuccess = true;
             }
             catch (Exception ex)
             {
-                r_logger.LogError($"Error occured on sendSMSVerificationCode: {Environment.NewLine}{ex.Message}");
+                r_Logger.LogError($"Error occured on sendSMSVerificationCode: {Environment.NewLine}{ex.Message}");
                 isSuccess = false;
             }
 
@@ -149,17 +149,17 @@ namespace Notify.Azure.HttpClient
                 data.telephone = telephone;
 
                 json = JsonConvert.SerializeObject(data);
-                r_logger.LogDebug($"request:{Environment.NewLine}{data}");
+                r_Logger.LogDebug($"request:{Environment.NewLine}{data}");
 
                 response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_REGISTER, createJsonStringContent(json)).Result;
                 response.EnsureSuccessStatusCode();
-                r_logger.LogInformation($"Successful status code from Azure Function from RegisterUser, name: {name}, userName: {userName}, password: {password}, telephone: {telephone}");
+                r_Logger.LogInformation($"Successful status code from Azure Function from RegisterUser, name: {name}, userName: {userName}, password: {password}, telephone: {telephone}");
 
                 registered = true;
             }
             catch (HttpRequestException ex)
             {
-                r_logger.LogError($"Error occurred on RegisterUser: {ex.Message}");
+                r_Logger.LogError($"Error occurred on RegisterUser: {ex.Message}");
                 registered = false;
             }
 
@@ -180,7 +180,7 @@ namespace Notify.Azure.HttpClient
                 data.telephone = telephone;
 
                 json = JsonConvert.SerializeObject(data);
-                r_logger.LogDebug($"request:{Environment.NewLine}{data}");
+                r_Logger.LogDebug($"request:{Environment.NewLine}{data}");
 
                 response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_CHECK_USER_EXISTS, createJsonStringContent(json)).Result;
         
@@ -192,12 +192,12 @@ namespace Notify.Azure.HttpClient
                 else
                 {
                     response.EnsureSuccessStatusCode();
-                    r_logger.LogDebug($"Successful status code from Azure Function from CheckUserExists");
+                    r_Logger.LogDebug($"Successful status code from Azure Function from CheckUserExists");
                 }
             }
             catch (HttpRequestException ex)
             {
-                r_logger.LogError($"Error occurred on CheckUserExists: {ex.Message}");
+                r_Logger.LogError($"Error occurred on CheckUserExists: {ex.Message}");
                 errorMessage = ex.Message;
                 userExists = true;
             }
@@ -220,7 +220,7 @@ namespace Notify.Azure.HttpClient
                 request.location.latitude = location.Latitude;
                 request.location.longitude = location.Longitude;
                 json = JsonConvert.SerializeObject(request);
-                r_logger.LogDebug($"request:{Environment.NewLine}{request}");
+                r_Logger.LogDebug($"request:{Environment.NewLine}{request}");
 
                 response = postAsync(
                     requestUri: Constants.AZURE_FUNCTIONS_PATTERN_DISTANCE, 
@@ -228,17 +228,17 @@ namespace Notify.Azure.HttpClient
                     ).Result;
 
                 response.EnsureSuccessStatusCode();
-                r_logger.LogInformation($"Successful status code from Azure Function from GetDistanceToDestinationFromCurrentLocation, location: {location}!");
+                r_Logger.LogInformation($"Successful status code from Azure Function from GetDistanceToDestinationFromCurrentLocation, location: {location}!");
 
                 returnedObject = DeserializeObjectFromResponseAsync(response).Result;
                 distance = Convert.ToDouble(returnedObject.distance);
-                r_logger.LogDebug($"distance: {distance}");
+                r_Logger.LogDebug($"distance: {distance}");
 
                 arrived = distance <= Constants.DESTINATION_MAXMIMUM_DISTANCE;
             }
             catch (Exception ex)
             {
-                r_logger.LogError($"Error occured on GetDistanceToDestinationFromCurrentLocation, {location}:{Environment.NewLine}{ex.Message}");
+                r_Logger.LogError($"Error occured on GetDistanceToDestinationFromCurrentLocation, {location}:{Environment.NewLine}{ex.Message}");
                 arrived = false;
             }
 
@@ -297,17 +297,17 @@ namespace Notify.Azure.HttpClient
             try
             {
                 json = createJsonOfNotificationRequest(notificationName, description, notificationType, key, value , users);
-                r_logger.LogDebug($"request:{Environment.NewLine}{json}");
+                r_Logger.LogDebug($"request:{Environment.NewLine}{json}");
 
                 response = postAsync(uri, createJsonStringContent(json)).Result;
 
                 response.EnsureSuccessStatusCode();
-                r_logger.LogDebug($"Successful status code from Azure Function from createNotification");
+                r_Logger.LogDebug($"Successful status code from Azure Function from createNotification");
                 created = true;
             }
             catch (Exception ex)
             {
-                r_logger.LogError($"Error occured on createNotification: {ex.Message}");
+                r_Logger.LogError($"Error occured on createNotification: {ex.Message}");
                 created = false;
             }
 
@@ -338,7 +338,7 @@ namespace Notify.Azure.HttpClient
 
         private async Task<HttpResponseMessage> getAsync(string requestUri, string query = "")
         {
-            r_logger.LogDebug($"Sending HTTP GET request to {requestUri + query} endpoint");
+            r_Logger.LogDebug($"Sending HTTP GET request to {requestUri + query} endpoint");
             HttpResponseMessage response = await m_HttpClient.GetAsync(requestUri + query).ConfigureAwait(false);
             
             return response;
@@ -355,12 +355,12 @@ namespace Notify.Azure.HttpClient
             {
                 request.userName = userName;
                 request.password = password;
-                r_logger.LogDebug($"request: {request}");
+                r_Logger.LogDebug($"request: {request}");
 
                 json = JsonConvert.SerializeObject(request);
                 response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_LOGIN, createJsonStringContent(json)).Result;
                 response.EnsureSuccessStatusCode();
-                r_logger.LogDebug($"Successful status code from Azure Function from CheckIfCredentialsAreValid");
+                r_Logger.LogDebug($"Successful status code from Azure Function from CheckIfCredentialsAreValid");
 
                 userName = response.Content.ReadAsStringAsync().Result;
                 Preferences.Set(Constants.PREFERENCES_USERNAME, userName);
@@ -369,7 +369,7 @@ namespace Notify.Azure.HttpClient
             }
             catch (Exception ex)
             {
-                r_logger.LogError($"Error occured on CheckIfCredentialsAreValid: {ex.Message}");
+                r_Logger.LogError($"Error occured on CheckIfCredentialsAreValid: {ex.Message}");
                 validCredentials = false;
             }
 
@@ -384,16 +384,16 @@ namespace Notify.Azure.HttpClient
             dynamic returnedObject;
             List<T> data = new List<T>();
                     
-            r_logger.LogDebug($"Getting data from endpoint {endpoint}");
+            r_Logger.LogDebug($"Getting data from endpoint {endpoint}");
 
             try
             {
                 response = await getAsync(endpoint, query);
                 response.EnsureSuccessStatusCode();
-                r_logger.LogDebug($"Successful status code from Azure Function from {endpoint}!");
+                r_Logger.LogDebug($"Successful status code from Azure Function from {endpoint}!");
 
                 returnedObject = await DeserializeObjectFromResponseAsync(response);
-                r_logger.LogDebug($"Returned object from {endpoint}:\n{returnedObject.ToString()}");
+                r_Logger.LogDebug($"Returned object from {endpoint}:\n{returnedObject.ToString()}");
 
                 foreach (dynamic item in returnedObject)
                 {
@@ -402,11 +402,11 @@ namespace Notify.Azure.HttpClient
                 }
 
                 Preferences.Set(preferencesKey, JsonConvert.SerializeObject(data));
-                r_logger.LogInformation($"{preferencesKey} from {endpoint} was saved in preferences");
+                r_Logger.LogInformation($"{preferencesKey} from {endpoint} was saved in preferences");
             }
             catch (Exception ex)
             {
-                r_logger.LogError($"Error occurred on {endpoint}: {ex.Message}");
+                r_Logger.LogError($"Error occurred on {endpoint}: {ex.Message}");
             }
 
             return data;
@@ -476,16 +476,16 @@ namespace Notify.Azure.HttpClient
                 };
                 
                 json = JsonConvert.SerializeObject(request);
-                r_logger.LogDebug($"request:{Environment.NewLine}{json}");
+                r_Logger.LogDebug($"request:{Environment.NewLine}{json}");
 
                 response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_UPDATE_STATUS, createJsonStringContent(json)).Result;
 
                 response.EnsureSuccessStatusCode();
-                r_logger.LogDebug($"Successful status code from Azure Function from UpdateNotificationsStatus");
+                r_Logger.LogDebug($"Successful status code from Azure Function from UpdateNotificationsStatus");
             }
             catch (Exception ex)
             {
-                r_logger.LogError($"Error occured on UpdateNotificationsStatus: {ex.Message}");
+                r_Logger.LogError($"Error occured on UpdateNotificationsStatus: {ex.Message}");
             }
         }
     }

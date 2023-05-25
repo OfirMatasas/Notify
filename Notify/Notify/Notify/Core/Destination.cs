@@ -6,7 +6,7 @@ namespace Notify.Core
 {
     public class Destination
     {
-        private readonly LoggerService r_logger = LoggerService.Instance;
+        private readonly LoggerService r_Logger = LoggerService.Instance;
         private string m_Name;
         private Location m_Location;
         private string m_SSID;
@@ -50,7 +50,7 @@ namespace Notify.Core
                 destinationCoordinate: destination, 
                 distanceUnit: DistanceUnit.Meters);
 
-            r_logger.LogDebug($"Distance to {Name} is {distance} meters");
+            r_Logger.LogDebug($"Distance to {Name} is {distance} meters");
             return distance <= Constants.DESTINATION_MAXMIMUM_DISTANCE;
         }
     }

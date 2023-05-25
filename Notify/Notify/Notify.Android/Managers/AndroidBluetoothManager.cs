@@ -9,7 +9,7 @@ namespace Notify.Droid.Managers
 {
     public class AndroidBluetoothManager : IBluetoothManager
     {
-        private readonly LoggerService r_logger = LoggerService.Instance;
+        private readonly LoggerService r_Logger = LoggerService.Instance;
 
         public void PrintAllBondedBluetoothDevices()
         {
@@ -17,23 +17,23 @@ namespace Notify.Droid.Managers
             
             if (adapter == null)
             {
-                r_logger.LogInformation("No Bluetooth adapter found.");
+                r_Logger.LogInformation("No Bluetooth adapter found.");
             }
             
             if (!adapter!.IsEnabled)
             {
-                r_logger.LogInformation("Bluetooth adapter is not enabled.");
+                r_Logger.LogInformation("Bluetooth adapter is not enabled.");
             }
             
             if (adapter.BondedDevices?.Count == 0)
             {
-                r_logger.LogInformation("No Bluetooth devices found.");
+                r_Logger.LogInformation("No Bluetooth devices found.");
             }
             else
             {
                 foreach (var device in adapter.BondedDevices!)
                 {
-                    r_logger.LogInformation($"Found Bluetooth device: {device.Name}, address: {device.Address}");
+                    r_Logger.LogInformation($"Found Bluetooth device: {device.Name}, address: {device.Address}");
                 }
             }
         }

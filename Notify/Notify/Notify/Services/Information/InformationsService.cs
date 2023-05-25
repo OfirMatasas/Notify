@@ -11,7 +11,7 @@ namespace Notify.Services.Information
 {
     public class InformationService : IInformationService
     {
-        private readonly LoggerService r_logger = LoggerService.Instance;
+        private readonly LoggerService r_Logger = LoggerService.Instance;
         private readonly HttpClientFactory _httpClientFactory;
 
         public InformationService(HttpClientFactory httpClientFactory)
@@ -35,7 +35,7 @@ namespace Notify.Services.Information
             }
             catch(Exception ex)
             {
-                r_logger.LogError(ex.Message);
+                r_Logger.LogError(ex.Message);
                 return null;
             }
         }
@@ -56,7 +56,7 @@ namespace Notify.Services.Information
             }
             catch(Exception ex)
             {
-                r_logger.LogError(ex.Message);
+                r_Logger.LogError(ex.Message);
                 return null;
             }
         }
@@ -77,7 +77,7 @@ namespace Notify.Services.Information
             }
             catch(Exception ex)
             {
-                r_logger.LogError(ex.Message);
+                r_Logger.LogError(ex.Message);
                 return null;
             }
         }
