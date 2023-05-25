@@ -16,7 +16,7 @@ namespace Notify.ViewModels
 {
     public class FriendsPageViewModel : INotifyPropertyChanged
     {
-        private readonly LoggerService r_logger = LoggerService.Instance;
+        private readonly LoggerService r_Logger = LoggerService.Instance;
 
         #region Commands
         
@@ -54,13 +54,13 @@ namespace Notify.ViewModels
                 
                 if (!friendsJson.Equals(string.Empty))
                 {
-                    r_logger.LogDebug("Friends found in preferences");
+                    r_Logger.LogDebug("Friends found in preferences");
                     Friends = JsonConvert.DeserializeObject<List<Friend>>(friendsJson);
                 }
             }
             catch (Exception ex)
             {
-                r_logger.LogError(ex.Message);
+                r_Logger.LogError(ex.Message);
             }
         }
 

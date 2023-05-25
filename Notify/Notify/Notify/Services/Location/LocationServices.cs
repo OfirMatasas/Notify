@@ -11,7 +11,7 @@ namespace Notify.Services.Location
 {
     public class LocationService
     {
-        private readonly LoggerService r_logger = LoggerService.Instance;
+        private readonly LoggerService r_Logger = LoggerService.Instance;
         private bool m_Stopping = false;
 
         public async Task Run(CancellationToken token)
@@ -82,7 +82,7 @@ namespace Notify.Services.Location
                         longitude: args.Position.Longitude, 
                         latitude: args.Position.Latitude),
                         message: "Location");
-                    r_logger.LogDebug($"Current location: latitude: {args.Position.Latitude}, longitude: {args.Position.Longitude}");
+                    r_Logger.LogDebug($"Current location: latitude: {args.Position.Latitude}, longitude: {args.Position.Longitude}");
                 };
             }
             
@@ -105,20 +105,20 @@ namespace Notify.Services.Location
                     {
                         Device.BeginInvokeOnMainThread(() =>
                         {
-                            r_logger.LogDebug($"User's current location: {message}, {DateTime.Now.ToLongTimeString()}");
+                            r_Logger.LogDebug($"User's current location: {message}, {DateTime.Now.ToLongTimeString()}");
                         });
                     });
 
                 MessagingCenter.Subscribe<StopServiceMessage>(this, "ServiceStopped",
                     message =>
                     {
-                        Device.BeginInvokeOnMainThread(() => { r_logger.LogDebug("Location Service has been stopped!"); });
+                        Device.BeginInvokeOnMainThread(() => { r_Logger.LogDebug("Location Service has been stopped!"); });
                     });
 
                 MessagingCenter.Subscribe<LocationErrorMessage>(this, "LocationError",
                     message =>
                     {
-                        Device.BeginInvokeOnMainThread(() => { r_logger.LogDebug("There was an error updating location!"); });
+                        Device.BeginInvokeOnMainThread(() => { r_Logger.LogDebug("There was an error updating location!"); });
                     });
 
                 if (Preferences.Get(Constants.START_LOCATION_SERVICE, false))
@@ -133,7 +133,7 @@ namespace Notify.Services.Location
             StartServiceMessage message = new StartServiceMessage();
             MessagingCenter.Send(message, "Location service started!");
             Preferences.Set(Constants.START_LOCATION_SERVICE, true);
-            r_logger.LogDebug("Location service has been started!");
+            r_Logger.LogDebug("Location service has been started!");
         }
 
         private void stopService()
@@ -141,7 +141,7 @@ namespace Notify.Services.Location
             StopServiceMessage message = new StopServiceMessage();
             MessagingCenter.Send(message, "Location service stopped!");
             Preferences.Set(Constants.START_LOCATION_SERVICE, false);
-            r_logger.LogDebug("Location service has been stopped!");
+            r_Logger.LogDebug("Location service has been stopped!");
         }
     }
 }

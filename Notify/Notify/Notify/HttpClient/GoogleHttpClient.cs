@@ -50,7 +50,7 @@ namespace Notify.HttpClient
             }
         }*/
         
-        private readonly LoggerService r_logger = LoggerService.Instance;
+        private static readonly LoggerService r_Logger = LoggerService.Instance;
         private readonly System.Net.Http.HttpClient r_HttpClient;
         private static readonly string r_GoogleAPIkey = "AIzaSyCXUyen9sW3LhiELjOPJtUc0OqZlhLr-cg";
 
@@ -94,13 +94,13 @@ namespace Notify.HttpClient
             }
             catch (Exception ex)
             {
-                r_logger.LogError($"Error occured on Execute: {Environment.NewLine}{ex.Message}");
+                r_Logger.LogError($"Error occured on Execute: {Environment.NewLine}{ex.Message}");
             }
             
             return content;
         }
 
-        public static async Task<List<String>> GetAddressSuggestions(string subAddress, LoggerService i_logger)
+        public static async Task<List<String>> GetAddressSuggestions(string subAddress)
         {
             string requestUrl =
                 $"https://maps.googleapis.com/maps/api/place/autocomplete/json?input={subAddress}&types=address&key={r_GoogleAPIkey}";
@@ -121,18 +121,18 @@ namespace Notify.HttpClient
                 {
                     address = prediction["description"].ToString();
                     suggestions.Add(address);
-                    i_logger.LogDebug(address);
+                    r_Logger.LogDebug(address);
                 }
             }
             catch (Exception ex)
             {
-                i_logger.LogError($"Error occured on GetAddressSuggestions: {ex.Message}");
+                r_Logger.LogError($"Error occured on GetAddressSuggestions: {ex.Message}");
             }
 
             return suggestions;
         }
         
-        public static async Task<Coordinates> GetCoordinatesFromAddress(string address, LoggerService i_logger)
+        public static async Task<Coordinates> GetCoordinatesFromAddress(string address)
         {
             string requestUrl =
                 $"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={r_GoogleAPIkey}";
@@ -149,19 +149,19 @@ namespace Notify.HttpClient
                 geocodingResponse = JsonConvert.DeserializeObject<GeocodingResponse>(response);
                 if (geocodingResponse.Results.Count > 0)
                 {
-                    i_logger.LogDebug($"eocodingResponse.Results.Count: {geocodingResponse.Results.Count}");
+                    r_Logger.LogDebug($"eocodingResponse.Results.Count: {geocodingResponse.Results.Count}");
                     coordinates = geocodingResponse.Results[0].Geometry.Location;
                 }
             }
             catch (Exception ex)
             {
-                i_logger.LogError($"Error occured on GetLatLngFromAddress: {ex.Message}");
+                r_Logger.LogError($"Error occured on GetLatLngFromAddress: {ex.Message}");
             }
 
             return coordinates;
         }
         
-        public static async Task<string> GetAddressFromCoordinatesAsync(double latitude, double longitude, LoggerService i_logger)
+        public static async Task<string> GetAddressFromCoordinatesAsync(double latitude, double longitude)
         {
             string requestUrl = 
                 $"https://maps.googleapis.com/maps/api/geocode/json?key={r_GoogleAPIkey}&latlng={latitude},{longitude}";
@@ -184,23 +184,23 @@ namespace Notify.HttpClient
                 if (result == null || result.GoogleMapsResults.Length == 0)
                 {
                     address = "Unknown address";
-                    i_logger.LogDebug($"Unknown address");
+                    r_Logger.LogDebug($"Unknown address");
                 }
                 else
                 {
                     address = result.GoogleMapsResults[0].FormattedAddress;
-                    i_logger.LogDebug($"Current address: {address}");
+                    r_Logger.LogDebug($"Current address: {address}");
                 }
             }
             catch (Exception ex)
             {
-                i_logger.LogError($"Error occured on GetAddressFromCoordinatesAsync: {Environment.NewLine}{ex.Message}");
+                r_Logger.LogError($"Error occured on GetAddressFromCoordinatesAsync: {Environment.NewLine}{ex.Message}");
             }
 
             return address;
         }
         
-        public static async Task<List<Place>> SearchPlacesNearby(double latitude, double longitude, int radius, string type, LoggerService i_logger)
+        public static async Task<List<Place>> SearchPlacesNearby(double latitude, double longitude, int radius, string type)
         {
             string requestUrl = 
                 $"https://maps.googleapis.com/maps/api/place/nearbysearch/json?key={r_GoogleAPIkey}&location={latitude},{longitude}&radius={radius}&type={type.ToLower()}";
@@ -231,7 +231,7 @@ namespace Notify.HttpClient
             }
             catch (Exception ex)
             {
-                i_logger.LogError($"Error occured on SearchPlacesNearby: {Environment.NewLine}{ex.Message}");
+                r_Logger.LogError($"Error occured on SearchPlacesNearby: {Environment.NewLine}{ex.Message}");
             }
 
             return places;
