@@ -27,22 +27,37 @@ namespace Notify
         private readonly INotificationManager notificationManager = DependencyService.Get<INotificationManager>();
         private readonly IWiFiManager m_WiFiManager = DependencyService.Get<IWiFiManager>();
         private readonly IBluetoothManager m_BluetoothManager = DependencyService.Get<IBluetoothManager>();
+        private static readonly object m_NotificationsLock = new object();
+        private static readonly object m_InitializeLock = new object();
+        private static bool m_IsInitialized = false;
            
         public AppShell()
         {
             InitializeComponent();
-            registerRoutes();
-            Connectivity.ConnectivityChanged += internetConnectivityChanged;
-            setNoficicationManagerNotificationReceived();
-            setMessagingCenterSubscriptions();
+            InitializeAppShell();
+        }
 
-            if (Preferences.Get(Constants.START_LOCATION_SERVICE, false))
+        private void InitializeAppShell()
+        {
+            lock (m_InitializeLock)
             {
-                startService();
-            }
+                if (!m_IsInitialized)
+                {
+                    m_IsInitialized = true;
+                    registerRoutes();
+                    Connectivity.ConnectivityChanged += internetConnectivityChanged;
+                    setNoficicationManagerNotificationReceived();
+                    setMessagingCenterSubscriptions();
 
-            getBluetoothDevices();
-            retriveDestinations();
+                    if (Preferences.Get(Constants.START_LOCATION_SERVICE, false))
+                    {
+                        startService();
+                    }
+
+                    getBluetoothDevices();
+                    retriveDestinations();
+                }
+            }
         }
 
         private void getBluetoothDevices()
@@ -142,24 +157,29 @@ namespace Notify
                 List<string> destinationsArrived = new List<string>();
                 List<Notification> arrivedLocationNotifications;
                 
+                Debug.WriteLine($"Location: latitude: {location.Latitude}, longitude: {location.Longitude}");
+                
                 destinationsArrived = getAllArrivedDestinations(location);
 
                 if (destinationsArrived.Count > 0)
                 {
-                    arrivedLocationNotifications = getAllArrivedLocationNotifications(destinationsArrived);
-                    
-                    Device.BeginInvokeOnMainThread(() =>
+                    lock (m_NotificationsLock)
                     {
-                        try
+                        arrivedLocationNotifications = getAllArrivedLocationNotifications(destinationsArrived);
+                    
+                        Device.BeginInvokeOnMainThread(() =>
                         {
-                            AnnounceDestinationArrival(arrivedLocationNotifications);
-                            updateStatusOfSentNotifications(arrivedLocationNotifications);
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.WriteLine($"Failed in MessagingCenter.Subscribe<Location>: {ex.Message}");
-                        }
-                    });
+                            try
+                            {
+                                AnnounceDestinationArrival(arrivedLocationNotifications);
+                                updateStatusOfSentNotifications(arrivedLocationNotifications);
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine($"Failed in MessagingCenter.Subscribe<Location>: {ex.Message}");
+                            }
+                        });
+                    }
                 }
             });
         }
@@ -217,11 +237,21 @@ namespace Notify
                         bool isNewNotification = notification.Status.ToLower().Equals("new");
 
                         if (isLocationNotification && isArrivedLocationNotification && isNewNotification)
-                            Debug.WriteLine($"Found arrived location notification: {notification.Name}");
+                            Debug.WriteLine($"Found arrived location notification: {notification.ID}");
                         
                         return isLocationNotification && isArrivedLocationNotification && isNewNotification;
                     });
-
+            
+            notifications.ForEach(notification =>
+            {
+                if (arrivedLocationNotifications.Contains(notification))
+                {
+                    notification.Status = "Sending";
+                    Debug.WriteLine($"Updated status of notification {notification.ID} to 'Sending'");
+                }
+            });
+            
+            Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
             Debug.WriteLine($"Found {arrivedLocationNotifications.Count} arrived location notifications");
             return arrivedLocationNotifications;
         }

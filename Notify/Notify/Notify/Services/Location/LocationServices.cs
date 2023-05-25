@@ -77,8 +77,11 @@ namespace Notify.Services.Location
                     });
                 CrossGeolocator.Current.PositionChanged += (sender, args) =>
                 {
-                    MessagingCenter.Send<Core.Location>(new Core.Location(args.Position.Longitude, args.Position.Latitude), "Location");
-                    Debug.WriteLine($"Current location: {args.Position.Latitude},{args.Position.Longitude}");
+                    MessagingCenter.Send<Core.Location>(new Core.Location(
+                        longitude: args.Position.Longitude, 
+                        latitude: args.Position.Latitude),
+                        message: "Location");
+                    Debug.WriteLine($"Current location: latitude: {args.Position.Latitude}, longitude: {args.Position.Longitude}");
                 };
             }
             

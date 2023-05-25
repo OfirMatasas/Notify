@@ -113,7 +113,7 @@ namespace Notify.ViewModels
 
         private async Task updateLocation(double latitude, double longitude)
         {
-            Location location = new Location(latitude, longitude);
+            Location location = new Location(latitude: latitude, longitude: longitude);
             bool successfulUpdate;
             
             Debug.WriteLine($"Longitude and latitude are in the right range - updating location");
@@ -195,20 +195,20 @@ namespace Notify.ViewModels
          {
              GeolocationRequest request;
              Xamarin.Essentials.Location location;
-             double longitude, latitude;
         
              try
              {
                  request = new GeolocationRequest(GeolocationAccuracy.High);
                  location = await Xamarin.Essentials.Geolocation.GetLocationAsync(request);
                  
-                 longitude = location.Longitude;
-                 latitude = location.Latitude;
-        
-                 SelectedAddress =  await GoogleHttpClient.GetAddressFromCoordinatesAsync(latitude, longitude);
-                 Longitude = longitude.ToString();
-                 Latitude = latitude.ToString();
+                 Longitude = location.Longitude.ToString();
+                 Latitude = location.Latitude.ToString();
                  Debug.WriteLine($"onGetCurrentLocationButtonClicked - Longitude: {Longitude}, Latitude: {Latitude}");
+
+                 SelectedAddress =  await GoogleHttpClient.GetAddressFromCoordinatesAsync(
+                     latitude: location.Latitude, 
+                     longitude: location.Longitude);
+                 Debug.WriteLine($"onGetCurrentLocationButtonClicked - SelectedAddress: {SelectedAddress}");
              }
              catch (Exception ex)
              {

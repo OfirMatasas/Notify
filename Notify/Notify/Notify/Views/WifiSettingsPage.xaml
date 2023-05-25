@@ -14,8 +14,7 @@
                 HorizontalTextAlignment="Center"
                 Margin="40"
                 Style="{StaticResource Body1FontSize_ExoBold}"
-                Text="Wifi Settings"
-                TextColor="Black " />
+                Text="WiFi Settings" />
             <ImageButton
                 Aspect="AspectFit"
                 BackgroundColor="Transparent"
@@ -32,14 +31,13 @@
                 HorizontalTextAlignment="Center"
                 Style="{StaticResource Body1FontSize_ExoBold}"
                 Text="Select WiFi"
-                TextColor="Black"
                 VerticalOptions="Start" />
             <Picker
                 Grid.Column="0"
                 Grid.Row="2"
                 ItemsSource="{Binding WiFiSelectionList}"
                 SelectedItem="{Binding SelectedWiFiSSID}"
-                TextColor="Black"
+                Style="{StaticResource Body1FontSize_ExoBold}"
                 VerticalOptions="Start" />
 
             <Label
@@ -48,21 +46,24 @@
                 HorizontalTextAlignment="Center"
                 Style="{StaticResource Body1FontSize_ExoBold}"
                 Text="Choose location"
-                TextColor="Black"
                 VerticalOptions="Start" />
             <Picker
                 Grid.Column="0"
                 Grid.Row="4"
                 ItemsSource="{Binding LocationSelectionList}"
                 SelectedItem="{Binding SelectedLocation}"
-                TextColor="Black"
+                Style="{StaticResource Body1FontSize_ExoBold}"
                 VerticalOptions="Start" />
 
             <Button
+                BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
+                                                  Dark={StaticResource DarkButtonColor}}"
                 Command="{Binding UpdateWifiSettingsCommand}"
                 Grid.Column="0"
                 Grid.Row="5"
                 Text="Update"
+                TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
+                                            Dark={StaticResource DarkButtonTextColor}}"
                 VerticalOptions="End" />
         </Grid>
     </ContentPage.Content>
