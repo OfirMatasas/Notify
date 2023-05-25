@@ -94,5 +94,11 @@
     </Compile>
     <Compile Remove="Helpers\AndroidLogSink.cs" />
     <Compile Remove="Helpers\ILogger.cs" />
+    <Compile Remove="Services\Ergast\ErgastService.cs" />
+    <Compile Remove="Services\Information\InformationsService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\Ergast\" />
+    <Folder Include="Services\Information\" />
   </ItemGroup>
 </Project>
