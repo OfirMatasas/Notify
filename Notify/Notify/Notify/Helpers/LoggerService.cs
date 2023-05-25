@@ -17,7 +17,7 @@ namespace Notify.Helpers
                 {
                     if (m_Instance == null)
                     {
-                        Debug.Write("ERROR with initialize logger.");
+                        Debug.Write("ERROR to initialize logger.");
                     }
                     
                     return m_Instance;

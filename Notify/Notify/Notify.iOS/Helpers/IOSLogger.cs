@@ -30,9 +30,9 @@ namespace Notify.Helpers
         public override void InitializeLogger()
         {
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
+                .MinimumLevel.Information()
                 .WriteTo.File("/data/data/com.notify.notify/files/logsFile.txt")
-                .WriteTo.Debug(outputTemplate: "{Timestamp:dd-MM-yyy HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+                .WriteTo.Debug(outputTemplate: "[{Timestamp:dd-MM-yyy HH:mm:ss}] [{Level:u3}] {Message:lj}{NewLine}{Exception}")
                 .CreateLogger();
         }
     }

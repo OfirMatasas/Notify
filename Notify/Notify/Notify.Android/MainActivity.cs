@@ -44,8 +44,8 @@ namespace Notify.Droid
             
             if (Preferences.ContainsKey(Constants.PREFERENCES_USERNAME) && Preferences.ContainsKey(Constants.PREFERENCES_PASSWORD))
             {
-                r_Logger.LogDebug($"Logging in with credentials from preferences.{Environment.NewLine}UserName: {Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty)}" +
-                                  $" and Password: {Preferences.Get(Constants.PREFERENCES_PASSWORD, string.Empty)}");
+                r_Logger.LogInformation($"Logging in with credentials from preferences.{Environment.NewLine}UserName: {Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty)}" +
+                                        $", Password: {Preferences.Get(Constants.PREFERENCES_PASSWORD, string.Empty)}");
                 Shell.Current.GoToAsync("//home");
                 app.MainPage = Shell.Current;
             }

@@ -111,14 +111,7 @@ namespace Notify
             {
                 Device.BeginInvokeOnMainThread(() =>
                 {
-                    try
-                    {
-                        r_Logger.LogWarning("There was an error updating location!");
-                    }
-                    catch (Exception ex)
-                    {
-                        r_Logger.LogError($"Failed in MessagingCenter.Subscribe<LocationErrorMessage>: {ex.Message}");
-                    }
+                    r_Logger.LogWarning("There was an error updating location!");
                 });
             });
         }
@@ -129,15 +122,7 @@ namespace Notify
             {
                 Device.BeginInvokeOnMainThread(() =>
                 {
-                    try
-                    {
-                        r_Logger.LogDebug("Location Service has been stopped!");
-
-                    }
-                    catch (Exception ex)
-                    {
-                        r_Logger.LogError($"Failed in MessagingCenter.Subscribe<StopServiceMessage>: {ex.Message}");
-                    }
+                    r_Logger.LogDebug("Location Service has been stopped!");
                 });
             });
         }
