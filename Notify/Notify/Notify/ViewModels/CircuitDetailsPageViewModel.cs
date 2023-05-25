@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using Notify.Models;
-using Notify.Services.Ergast;
-using Notify.Services.Information;
 using Notify.Views.Popups;
 using Xamarin.CommunityToolkit.Extensions;
 using Xamarin.CommunityToolkit.UI.Views;
@@ -16,10 +12,7 @@ namespace Notify.ViewModels
     public class CircuitDetailsPageViewModel : BaseViewModel, IQueryAttributable
     {
         #region Fields
-
-        private readonly IErgastService _ergastService;
-        private readonly IInformationService _informationsService;
-
+        
         #endregion
 
         #region Properties
@@ -45,13 +38,8 @@ namespace Notify.ViewModels
 
         #region Constructors
 
-        public CircuitDetailsPageViewModel(
-            IErgastService ergastService,
-            IInformationService informationsService)
+        public CircuitDetailsPageViewModel()
         {
-            _ergastService = ergastService;
-            _informationsService = informationsService;
-
             BackCommand = new Command(BackCommandHandler);
             SelectRaceTypeCommand = new Command(SelectRaceTypeCommandHandler);
             ViewLapByLapCommand = new Command<RaceResultModel>(ViewLapByLapCommandHandler);
@@ -105,7 +93,7 @@ namespace Notify.ViewModels
 
         private async Task GetRaceEvent(int round)
         {
-            var res = await _ergastService.GetRaceEventInformations("current", round);
+            RaceEventModel res = null;
             if (res != null)
             {
                 RaceEvent = res;
@@ -120,44 +108,21 @@ namespace Notify.ViewModels
 
         private async Task GetResults()
         {
-            var res = await _ergastService.GetResults("current", RaceEvent.Round.ToString(), ConvertNameToRaceType(SelectedRaceType));
-            if (res != null)
+            Results = null;
+            if (SelectedRaceType == "Sprint")
             {
-                Results = new RaceEventResultsModel()
-                {
-                    RaceResults = res.First().Results != null ? new ObservableCollection<RaceResultModel>(res.First().Results) : null,
-                    QualifyingResults = res.First().QualifyingResults != null ? new ObservableCollection<QualifyingResultModel>(res.First().QualifyingResults) : null,
-                    SprintResults = res.First().SprintResults != null ? new ObservableCollection<RaceResultModel>(res.First().SprintResults) : null,
-                };
-                ResultsState = LayoutState.None;
+                ResultsState = LayoutState.Success;
             }
             else
             {
-                Results = null;
-                if(SelectedRaceType == "Sprint")
-                {
-                    ResultsState = LayoutState.Success;
-                }
-                else
-                {
-                    ResultsState = LayoutState.Empty;
-                }
+                ResultsState = LayoutState.Empty;
             }
         }
 
         private async Task GetInformations()
-        {
-            var res = await _informationsService.GetCircuitInformation(RaceEvent.Circuit.Location.Country);
-            if (res != null)
-            {
-                CircuitInformations = res;
-                InformationsState = LayoutState.None;
-            }
-            else
-            {
-                CircuitInformations = null;
-                InformationsState = LayoutState.Empty;
-            }
+        { 
+            CircuitInformations = null;
+            InformationsState = LayoutState.Empty;
         }
 
         private string ConvertNameToRaceType(string name)

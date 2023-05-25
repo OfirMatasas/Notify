@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using Notify.Models;
-using Notify.Services.Ergast;
 using Xamarin.CommunityToolkit.UI.Views;
 using Xamarin.Forms;
 
@@ -13,7 +11,6 @@ namespace Notify.ViewModels.TabViews
     {
         #region Fields
 
-        private readonly IErgastService _ergastService;
 
         private RaceEventModel _latestRace;
 
@@ -52,12 +49,9 @@ namespace Notify.ViewModels.TabViews
 
         #region Constructors
 
-        public HomeViewModel(
-            IErgastService ergastService)
+        public HomeViewModel()
         {
             Title = "Home";
-            _ergastService = ergastService;
-
             ProfileCommand = new Command(ProfileCommandHandler);
             SeeDriverCommand = new Command<RaceResultModel>(SeeDriverCommandHandler);
             SeeMoreResultsCommand = new Command(SeeMoreResultsCommandHandler);
@@ -144,34 +138,24 @@ namespace Notify.ViewModels.TabViews
 
         private async Task GetResults()
         {
-            var res = await _ergastService.GetResults("current", "last", "results", "limit=10");
-            _latestRace = res.First();
-            LatestRace = $"Round {res.First().Round} - {res.First().Circuit.Location.Country} ({res.First().Circuit.CircuitName})";
-            LatestResults = new ObservableCollection<RaceResultModel>(res.First().Results);
-            LatestResults.Add(new RaceResultModel());
             ResultsState = LayoutState.None;
         }
 
         private async Task GetSchedule()
         {
-            var res = await _ergastService.GetSchedule("current");
-            _latestRace = res.PastRaceEvents.Last();
-            UpcomingRaceEventList = new ObservableCollection<RaceEventModel>(res.UpcomingRaceEvents.Take(3));
             UpcomingRaceEventList.Add(new RaceEventModel());
             ScheduleState = LayoutState.None;
         }
 
         private async Task GetDriverStadings()
         {
-            var res = await _ergastService.GetDriverStadings("current", "&limit=3");
-            DriversList = new ObservableCollection<DriverStadingsModel>(res);
+            DriversList = new ObservableCollection<DriverStadingsModel>(null);
             DriverStadingsState = LayoutState.None;
         }
 
         private async Task GetTeamStadings()
         {
-            var res = await _ergastService.GetTeamStadings("current", "&limit=3");
-            TeamsList = new ObservableCollection<ConstructorStadingsModel>(res);
+            TeamsList = new ObservableCollection<ConstructorStadingsModel>(null);
             TeamStadingsState = LayoutState.None;
         }
 

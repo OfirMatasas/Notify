@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <ContentPage
-    BindingContext="{Binding FriendsPage, Source={StaticResource ViewModelLocator}}"
     Title="Friends"
     x:Class="Notify.Views.FriendsPage"
     xmlns="http://xamarin.com/schemas/2014/forms"

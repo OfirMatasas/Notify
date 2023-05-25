@@ -9,6 +9,7 @@ namespace Notify.Views
         public TeamDetailsPage()
         {
             InitializeComponent();
+            BindingContext = new ViewModels.TeamDetailsPageViewModel();
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using Notify.Models;
-using Notify.Services.Ergast;
 using Xamarin.CommunityToolkit.UI.Views;
 using Xamarin.Forms;
 
@@ -11,9 +9,7 @@ namespace Notify.ViewModels.TabViews
     public class ScheduleViewModel: BaseViewModel
     {
         #region Fields
-
-        private readonly IErgastService _ergastService;
-
+        
         #endregion
 
         #region Properties
@@ -33,11 +29,9 @@ namespace Notify.ViewModels.TabViews
 
         #region Constructors
 
-        public ScheduleViewModel(
-            IErgastService ergastService)
+        public ScheduleViewModel()
         {
             Title = "Schedule";
-            _ergastService = ergastService;
 
             CircuitDetailsCommand = new Command<RaceEventModel>(CircuitDetailsCommandHandler);
 
@@ -60,9 +54,8 @@ namespace Notify.ViewModels.TabViews
         private async Task Initialize()
         {
             MainState = LayoutState.Loading;
-            var res = await _ergastService.GetSchedule("current");
-            UpcomingRaceEventList = new ObservableCollection<RaceEventModel>(res.UpcomingRaceEvents);
-            PastRaceEventList = new ObservableCollection<RaceEventModel>(res.PastRaceEvents.OrderByDescending(r => r.Round));
+            UpcomingRaceEventList = new ObservableCollection<RaceEventModel>(null);
+            PastRaceEventList = new ObservableCollection<RaceEventModel>(null);
             MainState = LayoutState.None;
         }
 

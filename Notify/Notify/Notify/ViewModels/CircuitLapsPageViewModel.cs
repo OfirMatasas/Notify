@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Notify.Models;
-using Notify.Services.Ergast;
 using Xamarin.CommunityToolkit.UI.Views;
 using Xamarin.Forms;
 
@@ -12,9 +10,7 @@ namespace Notify.ViewModels
     public class CircuitLapsPageViewModel : BaseViewModel, IQueryAttributable
     {
         #region Fields
-
-        private readonly IErgastService _ergastService;
-
+        
         #endregion
 
         #region Properties
@@ -33,11 +29,8 @@ namespace Notify.ViewModels
 
         #region Constructors
 
-        public CircuitLapsPageViewModel(
-            IErgastService ergastService)
+        public CircuitLapsPageViewModel()
         {
-            _ergastService = ergastService;
-
             BackCommand = new Command(BackCommandHandler);
         }
 
@@ -73,17 +66,8 @@ namespace Notify.ViewModels
 
         private async Task GetLapResults(int round, string driverId)
         {
-            var res = await _ergastService.GetResultsLapByLap("current", round, driverId);
-            if (res != null)
-            {
-                LapResults = res.Count > 0 ? res.First() : null;
-                LapsState = LayoutState.None;
-            }
-            else
-            {
-                LapResults = null;
-                LapsState = LayoutState.Empty;
-            }
+            LapResults = null;
+            LapsState = LayoutState.Empty;
         }
 
         #endregion

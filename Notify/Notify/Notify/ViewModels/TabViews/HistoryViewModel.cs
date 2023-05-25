@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Notify.Models;
-using Notify.Services.Ergast;
 using Notify.Views.Popups;
 using Xamarin.CommunityToolkit.Extensions;
 using Xamarin.CommunityToolkit.UI.Views;
@@ -14,7 +13,6 @@ namespace Notify.ViewModels.TabViews
     {
         #region Fields
 
-        private readonly IErgastService _ergastService;
 
         #endregion
 
@@ -42,12 +40,10 @@ namespace Notify.ViewModels.TabViews
 
         #region Constructors
 
-        public HistoryViewModel(IErgastService ergastService)
+        public HistoryViewModel()
         {
             Title = "History";
-
-            _ergastService = ergastService;
-
+            
             SelectSeasonCommand = new Command(SelectSeasonCommandHandler);
 
             Init = Initialize();
@@ -89,22 +85,19 @@ namespace Notify.ViewModels.TabViews
 
         private async Task GetDrivers(string season)
         {
-            var resDrivers = await _ergastService.GetDriverStadings(season);
-            DriversList = new ObservableCollection<DriverStadingsModel>(resDrivers);
+            DriversList = new ObservableCollection<DriverStadingsModel>(null);
             DriversState = LayoutState.None;
         }
 
         private async Task GetTeams(string season)
         {
-            var resTeams = await _ergastService.GetTeamStadings(SelectedSeason.ToString());
-            TeamsList = new ObservableCollection<ConstructorStadingsModel>(resTeams);
+            TeamsList = new ObservableCollection<ConstructorStadingsModel>(null);
             TeamsState = LayoutState.None;
         }
 
         private async Task GetSchedule(string season)
         {
-            var resSchedule = await _ergastService.GetSchedule(SelectedSeason.ToString());
-            ScheduleList = new ObservableCollection<RaceEventModel>(resSchedule.PastRaceEvents);
+            ScheduleList = new ObservableCollection<RaceEventModel>(null);
             ScheduleState = LayoutState.None;
         }
 

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Notify.Models;
-using Notify.Services.Ergast;
-using Notify.Services.Information;
 using Notify.Views.Popups;
 using Xamarin.CommunityToolkit.Extensions;
 using Xamarin.CommunityToolkit.UI.Views;
@@ -15,10 +13,7 @@ namespace Notify.ViewModels
     public class DriverDetailsPageViewModel: BaseViewModel, IQueryAttributable
     {
         #region Fields
-
-        private readonly IErgastService _ergastService;
-        private readonly IInformationService _informationsService;
-
+        
         #endregion
 
         #region Properties
@@ -42,13 +37,8 @@ namespace Notify.ViewModels
 
         #region Constructors
 
-        public DriverDetailsPageViewModel(
-            IErgastService ergastService,
-            IInformationService informationsService)
+        public DriverDetailsPageViewModel()
         {
-            _ergastService = ergastService;
-            _informationsService = informationsService;
-
             BackCommand = new Command(BackCommandHandler);
             SelectSeasonCommand = new Command(SelectSeasonCommandHandler);
         }
@@ -94,48 +84,19 @@ namespace Notify.ViewModels
 
         private async Task GetDriver(string driver)
         {
-            var res = await _ergastService.GetDriverInformations(driver);
-            if (res != null)
-            {
-                Driver = res;
-                SelectedSeason = "Current Season";
-                MainState = LayoutState.None;
-                ResultsState = LayoutState.Loading;
-                InformationsState = LayoutState.Loading;
-                await GetResults();
-                await GetInformations();
-            }
+            
         }
 
         private async Task GetResults()
-        {
-            var season = SelectedSeason == "Current Season" ? "current" : SelectedSeason;
-            var res = await _ergastService.GetResultsByDriver(season, Driver.DriverId);
-            if (res != null)
-            {
-                RaceResults = new ObservableCollection<RaceEventModel>(res);
-                ResultsState = LayoutState.None;
-            }
-            else
-            {
-                RaceResults = null;
-                ResultsState = LayoutState.Empty;
-            }
+        { 
+            RaceResults = null;
+            ResultsState = LayoutState.Empty;
         }
 
         private async Task GetInformations()
-        {
-            var res = await _informationsService.GetDriverInformation(string.Format("{0}-{1}", Driver.GivenName.ToLower(), Driver.FamilyName.ToLower()));
-            if (res != null)
-            {
-                DriverInformations = res;
-                InformationsState = LayoutState.None;
-            }
-            else
-            {
-                DriverInformations = null;
-                InformationsState = LayoutState.Empty;
-            }
+        { 
+            DriverInformations = null;
+            InformationsState = LayoutState.Empty;
         }
 
         #endregion

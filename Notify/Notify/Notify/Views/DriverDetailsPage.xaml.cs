@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using Notify.ViewModels;
+using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace Notify.Views
@@ -9,6 +10,7 @@ namespace Notify.Views
         public DriverDetailsPage()
         {
             InitializeComponent();
+            BindingContext = new DriverDetailsPageViewModel();
         }
     }
 }
