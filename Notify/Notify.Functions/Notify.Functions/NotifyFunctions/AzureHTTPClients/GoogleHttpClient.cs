@@ -4,32 +4,28 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using GooglePlacesApi;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Notify.Core;
-using Xamarin.Forms.Internals;
-using Constants = Notify.Helpers.Constants;
-using Notify.Helpers;
+using Notify.Functions.Core;
+using Constants = Notify.Functions.Core.Constants;
 
-namespace Notify.HttpClient
+namespace Notify.Functions.NotifyFunctions.AzureHTTPClients
 {
     public class GoogleHttpClient
     { 
         private static GoogleHttpClient m_Instance;
         private static readonly object r_LockInstanceCreation = new object();
-        private static System.Net.Http.HttpClient m_HttpClient;
-        private static readonly string r_GoogleAPIkey = "AIzaSyCXUyen9sW3LhiELjOPJtUc0OqZlhLr-cg";
+        private static HttpClient m_HttpClient;
 
         private GoogleHttpClient()
         {
-            m_HttpClient = new System.Net.Http.HttpClient
+            m_HttpClient = new HttpClient
             {
-                BaseAddress = new Uri(Constants.GOOGLE_BASE_URL),
+                BaseAddress = new Uri(Constants.GOOGLE_API_BASE_URL),
                 DefaultRequestHeaders =
                 {
                     Accept = { new MediaTypeWithQualityHeaderValue("application/json")},
-                    Authorization = new AuthenticationHeaderValue("Bearer", r_GoogleAPIkey)
                 },
                 Timeout = TimeSpan.FromSeconds(30)
             };
@@ -55,26 +51,17 @@ namespace Notify.HttpClient
        
                 return m_Instance;
             }
-        }*/
-        
-        private static readonly LoggerService r_Logger = LoggerService.Instance;
-        private readonly System.Net.Http.HttpClient r_HttpClient;
-        private static readonly string r_GoogleAPIkey = "AIzaSyCXUyen9sW3LhiELjOPJtUc0OqZlhLr-cg";
         }
 
-        public GoogleHttpClient Uri(string uri)
+        private async Task<string> GetAsync(string uri)
         {
-            m_HttpClient.BaseAddress = new Uri(uri);
-            return this;
-        }
-
-        public async Task<string> GetAsync(string uri)
-        {
+            string googleAPIkey = await AzureVault.AzureVault.GetSecretFromVault(Constants.GOOGLE_API_KEY);
             string content = null;
             HttpResponseMessage response;
 
             try
             {
+                m_HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", googleAPIkey);
                 response = await m_HttpClient.GetAsync(uri);
                 response.EnsureSuccessStatusCode();
                 content = await response.Content.ReadAsStringAsync();
@@ -87,9 +74,10 @@ namespace Notify.HttpClient
             return content;
         }
 
-        public async Task<List<String>> GetAddressSuggestions(string addressProvided)
+        public async Task<List<string>> GetAddressSuggestionsAsync(string addressProvided, ILogger logger)
         {
-            string requestUri = $"place/autocomplete/json?input={addressProvided}&types=address&key={r_GoogleAPIkey}";
+            string googleAPIkey = await AzureVault.AzureVault.GetSecretFromVault(Constants.GOOGLE_API_KEY);
+            string requestUri = $"place/autocomplete/json?input={addressProvided}&types=address&key={googleAPIkey}";
             List<string> suggestions = new List<string>();
             string response;
             JObject responseJson;
@@ -100,19 +88,24 @@ namespace Notify.HttpClient
                 response = await GetAsync(requestUri);
                 responseJson = JObject.Parse(response);
                 predictions = responseJson["predictions"];
-                predictions.ForEach(prediction => suggestions.Add(prediction["description"].ToString()));
+
+                foreach (JToken prediction in predictions)
+                {
+                    suggestions.Add(prediction["description"].ToString());
+                }
             }
             catch (Exception ex)
             {
-                r_Logger.LogError($"Error occured on GetAddressSuggestions: {ex.Message}");
+                logger.LogError($"Error occured on GetAddressSuggestions: {Environment.NewLine}{ex.Message}");
             }
 
             return suggestions;
         }
         
-        public async Task<Coordinates> GetCoordinatesFromAddress(string addressProvided)
+        public async Task<Coordinates> GetCoordinatesFromAddressAsync(string addressProvided, ILogger logger)
         {
-            string requestUri = $"geocode/json?address={addressProvided}&key={r_GoogleAPIkey}";
+            string googleAPIkey = await AzureVault.AzureVault.GetSecretFromVault(Constants.GOOGLE_API_KEY);
+            string requestUri = $"geocode/json?address={addressProvided}&key={googleAPIkey}";
             Coordinates coordinates = null;
             string response;
             GeocodingResponse geocodingResponse;
@@ -124,14 +117,13 @@ namespace Notify.HttpClient
                 
                 if (geocodingResponse.Results.Count > 0)
                 {
-                    r_Logger.LogDebug($"eocodingResponse.Results.Count: {geocodingResponse.Results.Count}");
                     coordinates = geocodingResponse.Results[0].Geometry.Location;
-                    Debug.WriteLine($"Coordinates from address provided: latitude: {coordinates.Lat}, longitude: {coordinates.Lng}");
+                    logger.LogInformation($"Coordinates from address provided: latitude: {coordinates.Lat}, longitude: {coordinates.Lng}");
                 }
             }
             catch (Exception ex)
             {
-                r_Logger.LogError($"Error occured on GetLatLngFromAddress: {ex.Message}");
+                logger.LogError($"Error occured on GetCoordinatesFromAddress: {Environment.NewLine}{ex.Message}");
             }
 
             return coordinates;
@@ -139,10 +131,10 @@ namespace Notify.HttpClient
         
         public async Task<string> GetAddressFromCoordinatesAsync(double latitude, double longitude)
         {
-            string requestUri = $"geocode/json?key={r_GoogleAPIkey}&latlng={latitude},{longitude}";
+            string googleAPIkey = await AzureVault.AzureVault.GetSecretFromVault(Constants.GOOGLE_API_KEY);
+            string requestUri = $"geocode/json?key={googleAPIkey}&latlng={latitude},{longitude}";
             string address = null;
             string response;
-            string responseJson;
             GoogleMapsApiResult result;
     
             try
@@ -153,19 +145,17 @@ namespace Notify.HttpClient
                 if (result == null || result.GoogleMapsResults.Length == 0)
                 {
                     address = "Unknown address";
-                    r_Logger.LogDebug($"Unknown address");
                 }
                 else
                 {
                     address = result.GoogleMapsResults[0].FormattedAddress;
-                    r_Logger.LogDebug($"Current address: {address}");
                 }
                 
                 Debug.WriteLine($"Address from coordinates provided: {address}");
             }
             catch (Exception ex)
             {
-                r_Logger.LogError($"Error occured on GetAddressFromCoordinatesAsync: {Environment.NewLine}{ex.Message}");
+                Debug.WriteLine($"Error occured on GetAddressFromCoordinatesAsync: {Environment.NewLine}{ex.Message}");
             }
 
             return address;
@@ -173,7 +163,8 @@ namespace Notify.HttpClient
         
         public async Task<List<Place>> SearchPlacesNearby(double latitude, double longitude, int radius, string type)
         {
-            string requestUri = $"place/nearbysearch/json?key={r_GoogleAPIkey}&location={latitude},{longitude}&radius={radius}&type={type.ToLower()}";
+            string googleAPIkey = await AzureVault.AzureVault.GetSecretFromVault(Constants.GOOGLE_API_KEY);
+            string requestUri = $"place/nearbysearch/json?key={googleAPIkey}&location={latitude},{longitude}&radius={radius}&type={type.ToLower()}";
             List<Place> places = new List<Place>();
             string response;
             JObject responseJson;
@@ -198,7 +189,7 @@ namespace Notify.HttpClient
             }
             catch (Exception ex)
             {
-                r_Logger.LogError($"Error occured on SearchPlacesNearby: {Environment.NewLine}{ex.Message}");
+                Debug.WriteLine($"Error occured on SearchPlacesNearby: {Environment.NewLine}{ex.Message}");
             }
 
             return places;

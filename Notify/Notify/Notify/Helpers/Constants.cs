@@ -118,6 +118,8 @@ namespace Notify.Helpers
         public static readonly string AZURE_FUNCTIONS_PATTERN_NOTIFICATION_DYNAMIC = $"{AZURE_FUNCTIONS_PATTERN_NOTIFICATION}/dynamic";
         public static readonly string AZURE_FUNCTIONS_PATTERN_NOTIFICATION_UPDATE_STATUS = $"{AZURE_FUNCTIONS_PATTERN_NOTIFICATION}/update/status";
         public static readonly string AZURE_FUNCTIONS_PATTERN_DESTINATION_UPDATE = "destination/update";
+        public static readonly string AZURE_FUNCTIONS_PATTERN_DESTINATION_SUGGESTIONS = "destination/suggestions";
+        public static readonly string AZURE_FUNCTIONS_PATTERN_DESTINATION_COORDINATES= "destination/coordinates";
         public static readonly string AZURE_FUNCTIONS_PATTERN_LOGIN = "login";
         public static readonly string AZURE_FUNCTIONS_PATTERN_REGISTER = "register";
         public static readonly string AZURE_FUNCTIONS_PATTERN_FRIEND = "friends";
@@ -128,7 +130,7 @@ namespace Notify.Helpers
 
         #region Google Http Client
 
-        public static readonly string GOOGLE_BASE_URL = "https://maps.googleapis.com/maps/api/";
+        public static readonly string GOOGLE_API_BASE_URL = "https://maps.googleapis.com/maps/api/";
         public static readonly string GOOGLE_PATTERN_PLACE_AUTOCOMPLETE = "place/autocomplete";
         public static readonly string GOOGLE_PATTERN_GEOCODES = "geocode";
 

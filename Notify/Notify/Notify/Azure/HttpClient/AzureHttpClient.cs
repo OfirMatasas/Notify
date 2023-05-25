@@ -488,5 +488,56 @@ namespace Notify.Azure.HttpClient
                 r_Logger.LogError($"Error occured on UpdateNotificationsStatus: {ex.Message}");
             }
         }
+
+        public async Task<Location> GetCoordinatesFromAddress(string selectedAddress)
+        {
+            string query = $"?address={selectedAddress}";
+            string requestUri = Constants.AZURE_FUNCTIONS_PATTERN_DESTINATION_COORDINATES + query;
+            HttpResponseMessage response;
+            dynamic returnedObject;
+            Location location = null;
+
+            try
+            {
+                response = await m_HttpClient.GetAsync(requestUri);
+                response.EnsureSuccessStatusCode();
+
+                returnedObject = await DeserializeObjectFromResponseAsync(response);
+                location = new Location(
+                    longitude: Convert.ToDouble(returnedObject.longitude),
+                    latitude: Convert.ToDouble(returnedObject.latitude));
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error occured on GetAddressSuggestions: {Environment.NewLine}{ex.Message}");
+            }
+            
+            return location;
+        }
+
+        public async Task<List<string>> GetAddressSuggestions(string searchAddress)
+        {
+            string query = $"?address={searchAddress}";
+            string requestUri = Constants.AZURE_FUNCTIONS_PATTERN_DESTINATION_SUGGESTIONS + query;
+            HttpResponseMessage response;
+            string responseJson;
+            List<string> suggestions;
+
+            try
+            {
+                response = await m_HttpClient.GetAsync(requestUri);
+                response.EnsureSuccessStatusCode();
+                
+                responseJson = await response.Content.ReadAsStringAsync();
+                suggestions = JsonConvert.DeserializeObject<List<string>>(responseJson);
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error occured on GetAddressSuggestions: {Environment.NewLine}{ex.Message}");
+                suggestions = new List<string>();
+            }
+            
+            return suggestions;
+        }
     }
 }
