@@ -1,41 +1,32 @@
-﻿using Serilog;
+﻿using System.Diagnostics;
+using Android.App;
+using Serilog;
 
 namespace Notify.Helpers
 {
-    public sealed class LoggerService
+    public abstract class LoggerService
     {
-        private static LoggerService m_instance = null;
-        private static readonly object r_lock = new object();
-
-        private LoggerService()
-        {
-            InitializeLogger();
-        }
+        protected static LoggerService m_Instance;
+        private static readonly object r_Lock = new object();
 
         public static LoggerService Instance
         {
             get
             {
-                lock (r_lock)
+                lock (r_Lock)
                 {
-                    if (m_instance == null)
+                    if (m_Instance == null)
                     {
-                        m_instance = new LoggerService();
+                        Debug.Write("ERROR with initialize logger.");
                     }
                     
-                    return m_instance;
+                    return m_Instance;
                 }
             }
         }
 
-        private void InitializeLogger()
-        {
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .WriteTo.File("/data/data/com.notify.notify/files/logsFile.txt")
-                .WriteTo.Debug(outputTemplate: "{Timestamp:dd-MM-yyy HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
-                .CreateLogger();
-        }
+        public abstract void InitializeLogger();
+        
         
         public void LogVerbose(string message)
         {

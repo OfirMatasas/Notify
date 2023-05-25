@@ -93,5 +93,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Remove="Helpers\AndroidLogSink.cs" />
+    <Compile Remove="Helpers\ILogger.cs" />
   </ItemGroup>
 </Project>

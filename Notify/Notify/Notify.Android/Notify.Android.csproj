@@ -75,6 +75,7 @@
   <ItemGroup>
     <Compile Include="AndroidLocationService.cs" />
     <Compile Include="BootBroadcastReceiver.cs" />
+    <Compile Include="Helpers\AndroidLogger.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Managers\AndroidBluetoothManager.cs" />
     <Compile Include="Managers\AndroidWiFiManager.cs" />

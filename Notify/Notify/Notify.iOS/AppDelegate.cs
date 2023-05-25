@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Foundation;
+using Notify.Helpers;
 using Notify.iOS.Notifications;
 using UIKit;
 using UserNotifications;
@@ -12,6 +13,7 @@ namespace Notify.iOS
     [Register("AppDelegate")]
     public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
     {
+        private readonly LoggerService r_Logger = IOSLogger.Instance;
         private iOSNotificationManager m_NotificationManager = new iOSNotificationManager();
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
