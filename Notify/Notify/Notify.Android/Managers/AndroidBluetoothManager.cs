@@ -1,4 +1,5 @@
 using Android.Bluetooth;
+using Notify.Helpers;
 using Notify.Interfaces.Managers;
 using Xamarin.Forms;
 using Debug = System.Diagnostics.Debug;
@@ -8,29 +9,31 @@ namespace Notify.Droid.Managers
 {
     public class AndroidBluetoothManager : IBluetoothManager
     {
+        private readonly LoggerService r_Logger = LoggerService.Instance;
+
         public void PrintAllBondedBluetoothDevices()
         {
             BluetoothAdapter adapter = BluetoothAdapter.DefaultAdapter;
             
             if (adapter == null)
             {
-                Debug.WriteLine("No Bluetooth adapter found.");
+                r_Logger.LogInformation("No Bluetooth adapter found.");
             }
             
             if (!adapter!.IsEnabled)
             {
-                Debug.WriteLine("Bluetooth adapter is not enabled.");
+                r_Logger.LogInformation("Bluetooth adapter is not enabled.");
             }
             
             if (adapter.BondedDevices?.Count == 0)
             {
-                Debug.WriteLine("No Bluetooth devices found.");
+                r_Logger.LogInformation("No Bluetooth devices found.");
             }
             else
             {
                 foreach (var device in adapter.BondedDevices!)
                 {
-                    Debug.WriteLine($"Found Bluetooth device: {device.Name}, address: {device.Address}");
+                    r_Logger.LogInformation($"Found Bluetooth device: {device.Name}, address: {device.Address}");
                 }
             }
         }

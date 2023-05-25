@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Foundation;
+using Notify.Helpers;
 using Notify.iOS.Notifications;
 using UIKit;
 using UserNotifications;
@@ -12,6 +13,7 @@ namespace Notify.iOS
     [Register("AppDelegate")]
     public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
     {
+        private readonly LoggerService r_Logger = IOSLogger.Instance;
         private iOSNotificationManager m_NotificationManager = new iOSNotificationManager();
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
@@ -29,7 +31,7 @@ namespace Notify.iOS
 
             /*UIApplication.SharedApplication.BeginBackgroundTask(() =>
             {
-                Debug.WriteLine("Started iOS background task");
+                 r_logger.LogDebug("Started iOS background task");
                 
                 var position = Geolocation.GetLocationAsync().Result;
                 //
@@ -38,7 +40,7 @@ namespace Notify.iOS
                 MessagingCenter.Send(location, "Location");
                 m_NotificationManager.SendNotification("Location changed", "From Background task");
                 
-                Debug.WriteLine("Finished iOS background task");
+                 r_logger.LogDebug("Finished iOS background task");
             });*/
             
             return base.FinishedLaunching(app, options);

@@ -2,6 +2,7 @@ using Notify.Interfaces.Managers;
 using Xamarin.Forms;
 using CoreBluetooth;
 using Foundation;
+using Notify.Helpers;
 using Debug = System.Diagnostics.Debug;
 
 [assembly: Dependency(typeof(Notify.iOS.Managers.iOSBluetoothManager))]
@@ -9,6 +10,8 @@ namespace Notify.iOS.Managers
 {
     public class iOSBluetoothManager : IBluetoothManager
     {
+        private readonly LoggerService r_Logger = LoggerService.Instance;
+
         public void PrintAllBondedBluetoothDevices()
         {
             CBCentralManager centralManager = new CBCentralManager();
@@ -16,7 +19,7 @@ namespace Notify.iOS.Managers
 
             foreach (CBPeripheral peripheral in connectedPeripheralIds)
             {
-                Debug.WriteLine($"Name: {peripheral.Name}, UUID: {peripheral.Identifier}");
+                r_Logger.LogInformation($"Name: {peripheral.Name}, UUID: {peripheral.Identifier}");
             }
         }
     }

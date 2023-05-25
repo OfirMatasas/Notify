@@ -17,6 +17,7 @@ namespace Notify.Droid
     [Activity(Label = "Notify", Icon = "@mipmap/icon", Theme = "@style/MainTheme", LaunchMode = LaunchMode.SingleTop, MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
+        private readonly LoggerService r_Logger = AndroidLogger.Instance;
         private Intent serviceIntent;
         private const int RequestCode = 5469;
         internal static readonly string CHANNEL_ID = "my_notification_channel";
@@ -43,8 +44,8 @@ namespace Notify.Droid
             
             if (Preferences.ContainsKey(Constants.PREFERENCES_USERNAME) && Preferences.ContainsKey(Constants.PREFERENCES_PASSWORD))
             {
-                Debug.WriteLine($"Logging in with credentials from preferences.{Environment.NewLine}UserName: {Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty)}" +
-                                $" and Password: {Preferences.Get(Constants.PREFERENCES_PASSWORD, string.Empty)}");
+                r_Logger.LogInformation($"Logging in with credentials from preferences.{Environment.NewLine}UserName: {Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty)}" +
+                                        $", Password: {Preferences.Get(Constants.PREFERENCES_PASSWORD, string.Empty)}");
                 Shell.Current.GoToAsync("//home");
                 app.MainPage = Shell.Current;
             }

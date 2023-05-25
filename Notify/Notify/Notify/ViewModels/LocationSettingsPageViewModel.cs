@@ -13,6 +13,8 @@ namespace Notify.ViewModels
 {
     public class LocationSettingsPageViewModel : BaseViewModel
     {
+        private readonly LoggerService r_Logger = LoggerService.Instance;
+
         #region Constructor
         
         public LocationSettingsPageViewModel()
@@ -116,7 +118,7 @@ namespace Notify.ViewModels
             Location location = new Location(latitude: latitude, longitude: longitude);
             bool successfulUpdate;
             
-            Debug.WriteLine($"Longitude and latitude are in the right range - updating location");
+            r_Logger.LogDebug("Longitude and latitude are in the right range - updating location");
             successfulUpdate = AzureHttpClient.Instance.UpdateDestination(SelectedLocation, location).Result;
 
             if (successfulUpdate)
@@ -176,7 +178,7 @@ namespace Notify.ViewModels
         {
             GoogleHttpClient.Coordinates coordinates;
             
-            Debug.WriteLine($"Getting geographic coordinates for: {SelectedAddress}");
+            r_Logger.LogDebug($"Getting geographic coordinates for: {SelectedAddress}");
             
             if (string.IsNullOrEmpty(SelectedAddress))
             {
@@ -187,7 +189,7 @@ namespace Notify.ViewModels
                 coordinates = await GoogleHttpClient.GetCoordinatesFromAddress(SelectedAddress);
                 Longitude = coordinates.Lng.ToString();
                 Latitude = coordinates.Lat.ToString();
-                Debug.WriteLine($"onGetGeographicCoordinatesButtonClicked - Longitude: {Longitude}, Latitude: {Latitude}");
+                r_Logger.LogDebug($"onGetGeographicCoordinatesButtonClicked - Longitude: {Longitude}, Latitude: {Latitude}");
             }
         }
 
@@ -195,7 +197,8 @@ namespace Notify.ViewModels
          {
              GeolocationRequest request;
              Xamarin.Essentials.Location location;
-        
+             double longitude, latitude;
+             
              try
              {
                  request = new GeolocationRequest(GeolocationAccuracy.High);
@@ -203,23 +206,23 @@ namespace Notify.ViewModels
                  
                  Longitude = location.Longitude.ToString();
                  Latitude = location.Latitude.ToString();
-                 Debug.WriteLine($"onGetCurrentLocationButtonClicked - Longitude: {Longitude}, Latitude: {Latitude}");
+                 r_Logger.LogDebug($"onGetCurrentLocationButtonClicked - Longitude: {Longitude}, Latitude: {Latitude}");
 
                  SelectedAddress =  await GoogleHttpClient.GetAddressFromCoordinatesAsync(
                      latitude: location.Latitude, 
                      longitude: location.Longitude);
-                 Debug.WriteLine($"onGetCurrentLocationButtonClicked - SelectedAddress: {SelectedAddress}");
+                 r_Logger.LogDebug($"onGetCurrentLocationButtonClicked - SelectedAddress: {SelectedAddress}");
              }
              catch (Exception ex)
              {
-                 Debug.WriteLine($"Error occured on onGetCurrentLocationButtonClicked:{Environment.NewLine}{ex.Message}");
+                 r_Logger.LogError($"onGetCurrentLocationButtonClicked: {ex.Message}");
              }
          }
         
         public async void onGetAddressSuggestionsButtonClicked()
         {
-            Debug.WriteLine($"Getting suggestions for {SearchAddress}");
-            
+            r_Logger.LogDebug($"Getting suggestions for {SearchAddress}");
+
             DropBoxOptions = await GoogleHttpClient.GetAddressSuggestions(SearchAddress);
         }
     }

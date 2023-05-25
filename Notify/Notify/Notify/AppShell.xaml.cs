@@ -24,6 +24,7 @@ namespace Notify
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AppShell
     {
+        private static readonly LoggerService r_Logger = LoggerService.Instance;
         private readonly INotificationManager notificationManager = DependencyService.Get<INotificationManager>();
         private readonly IWiFiManager m_WiFiManager = DependencyService.Get<IWiFiManager>();
         private readonly IBluetoothManager m_BluetoothManager = DependencyService.Get<IBluetoothManager>();
@@ -94,11 +95,11 @@ namespace Notify
                 {
                     try
                     {
-                        Debug.Write("You've arrived at your destination!");
+                        r_Logger.LogInformation("You've arrived at your destination!");
                     }
                     catch (Exception ex)
                     {
-                        Debug.Write($"Failed in MessagingCenter.Subscribe<LocationArrivedMessage>: {ex.Message}");
+                        r_Logger.LogError($"Failed in MessagingCenter.Subscribe<LocationArrivedMessage>: {ex.Message}");
                     }
                 });
             });
@@ -110,14 +111,7 @@ namespace Notify
             {
                 Device.BeginInvokeOnMainThread(() =>
                 {
-                    try
-                    {
-                        Debug.Write("There was an error updating location!");
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.Write($"Failed in MessagingCenter.Subscribe<LocationErrorMessage>: {ex.Message}");
-                    }
+                    r_Logger.LogWarning("There was an error updating location!");
                 });
             });
         }
@@ -128,14 +122,7 @@ namespace Notify
             {
                 Device.BeginInvokeOnMainThread(() =>
                 {
-                    try
-                    {
-                        Debug.Write("Location Service has been stopped!");
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.Write($"Failed in MessagingCenter.Subscribe<StopServiceMessage>: {ex.Message}");
-                    }
+                    r_Logger.LogDebug("Location Service has been stopped!");
                 });
             });
         }
@@ -147,7 +134,7 @@ namespace Notify
                 List<string> destinationsArrived = new List<string>();
                 List<Notification> arrivedLocationNotifications;
                 
-                Debug.WriteLine($"Location: latitude: {location.Latitude}, longitude: {location.Longitude}");
+                r_Logger.LogDebug($"Location: latitude: {location.Latitude}, longitude: {location.Longitude}");
                 
                 destinationsArrived = getAllArrivedDestinations(location);
 
@@ -166,7 +153,7 @@ namespace Notify
                             }
                             catch (Exception ex)
                             {
-                                Debug.WriteLine($"Failed in MessagingCenter.Subscribe<Location>: {ex.Message}");
+                                r_Logger.LogError($"Failed in MessagingCenter.Subscribe<Location>: {ex.Message}");
                             }
                         });
                     }
@@ -184,7 +171,7 @@ namespace Notify
                 if (arrivedLocationNotifications.Any(arrivedNotification => arrivedNotification.ID == notification.ID))
                 {
                     notification.Status = "Sent";
-                    Debug.WriteLine($"Updated status of notification {notification.ID} to 'Sent'");
+                    r_Logger.LogDebug($"Updated status of notification {notification.ID} to 'Sent'");
                 }
             });
             
@@ -203,12 +190,13 @@ namespace Notify
                 if (destination.IsArrived(location))
                 {
                     destinationsArrived.Add(destination.Name);
-                    Debug.WriteLine($"Added {destination.Name} to destinations arrived list");
+                    r_Logger.LogDebug($"Added {destination.Name} to destinations arrived list");
                 }
             });
-
-            Debug.WriteLine($"Arrived to {destinationsArrived.Count} destinations of out {destinations.Count}:");
-            Debug.WriteLine($"- {string.Join($"{Environment.NewLine}- ", destinationsArrived)}");
+            
+            r_Logger.LogDebug($"Arrived to {destinationsArrived.Count} destinations of out {destinations.Count}:");
+            r_Logger.LogDebug($"- {string.Join($"{Environment.NewLine}- ", destinationsArrived)}");
+            
             return destinationsArrived;
         }
         
@@ -227,22 +215,25 @@ namespace Notify
                         bool isNewNotification = notification.Status.ToLower().Equals("new");
 
                         if (isLocationNotification && isArrivedLocationNotification && isNewNotification)
-                            Debug.WriteLine($"Found arrived location notification: {notification.ID}");
+                            r_Logger.LogDebug($"Found arrived location notification: {notification.ID}");
                         
                         return isLocationNotification && isArrivedLocationNotification && isNewNotification;
                     });
+
+            r_Logger.LogDebug($"Found {arrivedLocationNotifications.Count} arrived location notifications");
+
             
             notifications.ForEach(notification =>
             {
                 if (arrivedLocationNotifications.Contains(notification))
                 {
                     notification.Status = "Sending";
-                    Debug.WriteLine($"Updated status of notification {notification.ID} to 'Sending'");
+                    r_Logger.LogDebug($"Updated status of notification {notification.ID} to 'Sending'");
                 }
             });
             
             Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
-            Debug.WriteLine($"Found {arrivedLocationNotifications.Count} arrived location notifications");
+            r_Logger.LogDebug($"Found {arrivedLocationNotifications.Count} arrived location notifications");
             return arrivedLocationNotifications;
         }
 
@@ -253,8 +244,9 @@ namespace Notify
                 notificationManager.SendNotification(
                     title: notification.Name,
                     message: $"{notification.Description}{Environment.NewLine}- {notification.Creator}");
-                Debug.WriteLine($"You've arrived at your {notification.TypeInfo} destination!");
-                Debug.WriteLine($"Notification: {notification.Name}, {notification.Description}, {notification.Creator}");
+                
+                r_Logger.LogDebug($"You've arrived at your {notification.TypeInfo} destination!");
+                r_Logger.LogDebug($"Notification: {notification.Name}, {notification.Description}, {notification.Creator}");
             });
         }
 
@@ -279,18 +271,18 @@ namespace Notify
                     MessagingCenter.Send(startServiceMessage, "ServiceStarted");
                     Preferences.Set(Constants.START_LOCATION_SERVICE, false);
 
-                    Debug.WriteLine("Location Service has been started!");
+                    r_Logger.LogDebug("Location Service has been started!");
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                r_Logger.LogError(ex.Message);
             }
         }
 
         private void showNotification(string title, string message)
         {
-            Debug.WriteLine($"title: {title}, message: {message}");
+            r_Logger.LogInformation($"title: {title}, message: {message}");
         }
     }
 }

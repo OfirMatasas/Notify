@@ -16,6 +16,8 @@ namespace Notify.ViewModels
 {
     public sealed class NotificationsPageViewModel : INotifyPropertyChanged
     {
+        private readonly LoggerService r_Logger = LoggerService.Instance;
+
         #region Constructor
 
         public NotificationsPageViewModel()
@@ -31,13 +33,13 @@ namespace Notify.ViewModels
                 notificationsJson = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
                 if (!notificationsJson.Equals(string.Empty))
                 {
-                    Debug.WriteLine("Notifications found in preferences");
+                    r_Logger.LogDebug("Notifications found in preferences");
                     Notifications = JsonConvert.DeserializeObject<List<Notification>>(notificationsJson);
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                r_Logger.LogError(ex.Message);
             }
 
             onNotificationsRefreshClicked();

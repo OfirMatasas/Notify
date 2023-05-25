@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Notify.Helpers;
 
 namespace Notify.HttpClient
 {
@@ -48,7 +49,8 @@ namespace Notify.HttpClient
                 return m_Instance;
             }
         }*/
-
+        
+        private static readonly LoggerService r_Logger = LoggerService.Instance;
         private readonly System.Net.Http.HttpClient r_HttpClient;
         private static readonly string r_GoogleAPIkey = "AIzaSyCXUyen9sW3LhiELjOPJtUc0OqZlhLr-cg";
 
@@ -92,7 +94,7 @@ namespace Notify.HttpClient
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error occured on Execute: {Environment.NewLine}{ex.Message}");
+                r_Logger.LogError($"Error occured on Execute: {Environment.NewLine}{ex.Message}");
             }
             
             return content;
@@ -119,12 +121,12 @@ namespace Notify.HttpClient
                 {
                     address = prediction["description"].ToString();
                     suggestions.Add(address);
-                    Debug.WriteLine(address);
+                    r_Logger.LogDebug(address);
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error occured on GetAddressSuggestions: {Environment.NewLine}{ex.Message}");
+                r_Logger.LogError($"Error occured on GetAddressSuggestions: {ex.Message}");
             }
 
             return suggestions;
@@ -147,13 +149,13 @@ namespace Notify.HttpClient
                 geocodingResponse = JsonConvert.DeserializeObject<GeocodingResponse>(response);
                 if (geocodingResponse.Results.Count > 0)
                 {
-                    Debug.WriteLine($"eocodingResponse.Results.Count: {geocodingResponse.Results.Count}");
+                    r_Logger.LogDebug($"eocodingResponse.Results.Count: {geocodingResponse.Results.Count}");
                     coordinates = geocodingResponse.Results[0].Geometry.Location;
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error occured on GetLatLngFromAddress: {Environment.NewLine}{ex.Message}");
+                r_Logger.LogError($"Error occured on GetLatLngFromAddress: {ex.Message}");
             }
 
             return coordinates;
@@ -182,17 +184,17 @@ namespace Notify.HttpClient
                 if (result == null || result.GoogleMapsResults.Length == 0)
                 {
                     address = "Unknown address";
-                    Debug.WriteLine($"Unknown address");
+                    r_Logger.LogDebug($"Unknown address");
                 }
                 else
                 {
                     address = result.GoogleMapsResults[0].FormattedAddress;
-                    Debug.WriteLine($"Current address: {address}");
+                    r_Logger.LogDebug($"Current address: {address}");
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error occured on GetAddressFromCoordinatesAsync: {Environment.NewLine}{ex.Message}");
+                r_Logger.LogError($"Error occured on GetAddressFromCoordinatesAsync: {Environment.NewLine}{ex.Message}");
             }
 
             return address;
@@ -229,7 +231,7 @@ namespace Notify.HttpClient
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error occured on SearchPlacesNearby: {Environment.NewLine}{ex.Message}");
+                r_Logger.LogError($"Error occured on SearchPlacesNearby: {Environment.NewLine}{ex.Message}");
             }
 
             return places;

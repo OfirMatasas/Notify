@@ -11,6 +11,7 @@ namespace Notify.ViewModels
 {
     public class LoginPageViewModel : BaseViewModel, INotifyPropertyChanged
     {
+        private readonly LoggerService r_Logger = LoggerService.Instance;
         private string m_UserName;
         private string m_Password;
         private bool m_RememberMe;
@@ -74,7 +75,7 @@ namespace Notify.ViewModels
                 if (RememberMe)
                 {
                     Preferences.Set(Constants.PREFERENCES_PASSWORD, Password);
-                    Debug.WriteLine("User credentials are saved in preferences");
+                    r_Logger.LogDebug("User credentials are saved in preferences");
                 }
 
                 await locationService.ManageLocationTracking();
