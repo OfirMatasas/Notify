@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -9,15 +8,14 @@ using Notify.Core;
 using Notify.Helpers;
 using Notify.Interfaces.Managers;
 using Notify.Notifications;
-using Notify.Views;
 using Notify.WiFi;
+using Plugin.BLE;
+using Plugin.BLE.Abstractions.Contracts;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using DriverDetailsPage = Notify.Views.DriverDetailsPage;
 using Location = Notify.Core.Location;
-using ProfilePage = Notify.Views.ProfilePage;
-using TeamDetailsPage = Notify.Views.TeamDetailsPage;
+using Log = Xamarin.Forms.Internals.Log;
 
 namespace Notify
 {
@@ -31,11 +29,14 @@ namespace Notify
         private static readonly object m_NotificationsLock = new object();
         private static readonly object m_InitializeLock = new object();
         private static bool m_IsInitialized = false;
+        IBluetoothLE ble = CrossBluetoothLE.Current;
+        IAdapter adapter = CrossBluetoothLE.Current.Adapter;
            
         public AppShell()
         {
             InitializeComponent();
             InitializeAppShell();
+
         }
 
         private void InitializeAppShell()
@@ -48,23 +49,21 @@ namespace Notify
                     Connectivity.ConnectivityChanged += internetConnectivityChanged;
                     setNoficicationManagerNotificationReceived();
                     setMessagingCenterSubscriptions();
+                    ble.StateChanged += (s, e) =>
+                    {
+                        r_Logger.LogInformation($"The bluetooth state changed to {e.NewState}");
+                    };
 
                     if (Preferences.Get(Constants.START_LOCATION_SERVICE, false))
                     {
                         startService();
                     }
 
-                    getBluetoothDevices();
                     retriveDestinations();
                 }
             }
         }
-
-        private void getBluetoothDevices()
-        {
-            m_BluetoothManager.PrintAllBondedBluetoothDevices();
-        }
-
+        
         private void internetConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
         {
             m_WiFiManager.PrintConnectedWiFi(sender, e);

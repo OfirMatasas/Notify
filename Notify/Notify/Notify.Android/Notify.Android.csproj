@@ -77,7 +77,6 @@
     <Compile Include="BootBroadcastReceiver.cs" />
     <Compile Include="Helpers\AndroidLogger.cs" />
     <Compile Include="MainActivity.cs" />
-    <Compile Include="Managers\AndroidBluetoothManager.cs" />
     <Compile Include="Managers\AndroidWiFiManager.cs" />
     <Compile Include="Notifications\AlarmHandler.cs" />
     <Compile Include="Notifications\AndroidNotificationManager.cs" />
