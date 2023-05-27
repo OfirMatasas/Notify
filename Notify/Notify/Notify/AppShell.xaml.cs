@@ -6,7 +6,6 @@ using Newtonsoft.Json;
 using Notify.Azure.HttpClient;
 using Notify.Core;
 using Notify.Helpers;
-using Notify.Interfaces.Managers;
 using Notify.Notifications;
 using Notify.WiFi;
 using Plugin.BLE;
@@ -24,18 +23,36 @@ namespace Notify
         private static readonly LoggerService r_Logger = LoggerService.Instance;
         private readonly INotificationManager notificationManager = DependencyService.Get<INotificationManager>();
         private readonly IWiFiManager m_WiFiManager = DependencyService.Get<IWiFiManager>();
-        private readonly IBluetoothManager m_BluetoothManager = DependencyService.Get<IBluetoothManager>();
         private static readonly object m_NotificationsLock = new object();
         private static readonly object m_InitializeLock = new object();
-        private static bool m_IsInitialized = false;
-        IBluetoothLE ble = CrossBluetoothLE.Current;
-        IAdapter adapter = CrossBluetoothLE.Current.Adapter;
-           
+        private static bool m_IsInitialized;
+        IBluetoothLE m_BluetoothLe = CrossBluetoothLE.Current;
+        IAdapter m_BluetoothAdapter = CrossBluetoothLE.Current.Adapter;
+        List<IDevice> Devices = new List<IDevice>();
+
         public AppShell()
         {
             InitializeComponent();
             InitializeAppShell();
+            m_BluetoothLe.StateChanged += async (sender, e) =>
+            {
+                r_Logger.LogDebug($"Switching from {e.OldState} to {e.NewState}");
 
+                if (e.NewState.Equals(BluetoothState.On))
+                {
+                    Devices.Clear();
+                    m_BluetoothAdapter.DeviceDiscovered += (s, a) =>
+                    {
+                        if (!Devices.Any(d => d.Id == a.Device.Id))
+                        {
+                            Devices.Add(a.Device);
+                            r_Logger.LogInformation($"device added to list: {a.Device.Name} | {a.Device.Id}");
+                        }
+                    };
+
+                    await m_BluetoothAdapter.StartScanningForDevicesAsync();
+                }
+            };
         }
 
         private void InitializeAppShell()
@@ -48,11 +65,7 @@ namespace Notify
                     Connectivity.ConnectivityChanged += internetConnectivityChanged;
                     setNoficicationManagerNotificationReceived();
                     setMessagingCenterSubscriptions();
-                    ble.StateChanged += (s, e) =>
-                    {
-                        r_Logger.LogInformation($"The bluetooth state changed to {e.NewState}");
-                    };
-
+                    
                     if (Preferences.Get(Constants.START_LOCATION_SERVICE, false))
                     {
                         startService();
