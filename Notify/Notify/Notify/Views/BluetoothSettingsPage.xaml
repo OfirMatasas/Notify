@@ -1,33 +1,69 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<ContentPage 
-    xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    NavigationPage.HasNavigationBar="False"
     x:Class="Notify.Views.BluetoothSettingsPage"
-    BindingContext="{Binding BluetoothSettingsPage, Source={StaticResource ViewModelLocator}}"
-    NavigationPage.HasNavigationBar="False">
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
     <ContentPage.Content>
-        <Grid
-            RowDefinitions="Auto, Auto, Auto, *"
-            BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor}, Dark={StaticResource DarkPageBackgroundColor}}">
-            <StackLayout
+        <Grid BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor}, Dark={StaticResource DarkPageBackgroundColor}}" Row="6">
+            <Label
+                FontSize="Large"
+                Grid.Column="0"
                 Grid.Row="0"
-                Margin="40">
-                <Label
-                    Text="Bluetooth Settings"
-                    Style="{StaticResource Body1FontSize_ExoBold}"
-                    FontSize="Large"
-                    HorizontalTextAlignment="Center">
-                </Label>
-            </StackLayout>
-            <StackLayout 
-                Margin="0,30,350,0">
-                <ImageButton
-                    Source="backButton.png"
-                    BackgroundColor="Transparent"
-                    Aspect="AspectFit"
-                    Command="{Binding BackCommand}">
-                </ImageButton>
-            </StackLayout>
+                HorizontalTextAlignment="Center"
+                Margin="40"
+                Style="{StaticResource Body1FontSize_ExoBold}"
+                Text="Bluetooth Settings" />
+            <ImageButton
+                Aspect="AspectFit"
+                BackgroundColor="Transparent"
+                Command="{Binding BackCommand}"
+                Grid.Column="0"
+                Grid.Row="0"
+                HeightRequest="70"
+                HorizontalOptions="Start"
+                Source="backButton.png" />
+
+            <Label
+                Grid.Column="0"
+                Grid.Row="1"
+                HorizontalTextAlignment="Center"
+                Style="{StaticResource Body1FontSize_ExoBold}"
+                Text="Select Bluetooth"
+                VerticalOptions="Start" />
+            <Picker
+                Grid.Column="0"
+                Grid.Row="2"
+                ItemsSource="{Binding BluetoothSelectionList}"
+                SelectedItem="{Binding SelectedBluetoothID}"
+                Style="{StaticResource Body1FontSize_ExoBold}"
+                VerticalOptions="Start" />
+
+            <Label
+                Grid.Column="0"
+                Grid.Row="3"
+                HorizontalTextAlignment="Center"
+                Style="{StaticResource Body1FontSize_ExoBold}"
+                Text="Choose location"
+                VerticalOptions="Start" />
+            <Picker
+                Grid.Column="0"
+                Grid.Row="4"
+                ItemsSource="{Binding LocationSelectionList}"
+                SelectedItem="{Binding SelectedLocation}"
+                Style="{StaticResource Body1FontSize_ExoBold}"
+                VerticalOptions="Start" />
+
+            <Button
+                BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
+                                                  Dark={StaticResource DarkButtonColor}}"
+                Command="{Binding UpdateBluetoothSettingsCommand}"
+                Grid.Column="0"
+                Grid.Row="5"
+                Text="Update"
+                TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
+                                            Dark={StaticResource DarkButtonTextColor}}"
+                VerticalOptions="End" />
         </Grid>
     </ContentPage.Content>
 </ContentPage>

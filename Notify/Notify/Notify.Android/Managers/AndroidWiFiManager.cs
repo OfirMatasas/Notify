@@ -12,7 +12,6 @@ using Xamarin.Essentials;
 using Xamarin.Forms;
 using Application = Android.App.Application;
 using Context = Android.Content.Context;
-using Debug = System.Diagnostics.Debug;
 using Notification = Notify.Core.Notification;
 
 [assembly: Dependency(typeof(Notify.Droid.Managers.AndroidWiFiManager))]
