@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Notify.Helpers;
 using System.Collections.ObjectModel;
+using Microsoft.IdentityModel.Tokens;
+using Notify.Azure.HttpClient;
 
 namespace Notify.ViewModels
 {
@@ -17,9 +19,11 @@ namespace Notify.ViewModels
         private List<IDevice> m_ScannedDevices;
         private IBluetoothLE m_BluetoothLE;
         private IAdapter m_BluetoothAdapter;
-        public ObservableCollection<string> BluetoothSelectionList { get; }
-
-
+        public List<string> BluetoothSelectionList { get; }
+        public List<string> LocationSelectionList { get; set; } = Constants.LOCATIONS_LIST;
+        public string SelectedLocation { get; set; }
+        string SelectedBluetoothID { get; set; }
+        
         public BluetoothSettingsPageViewModel()
         {
             BackCommand = new Command(onBackButtonClicked);
@@ -27,7 +31,7 @@ namespace Notify.ViewModels
             m_ScannedDevices = new List<IDevice>();
             m_BluetoothLE = CrossBluetoothLE.Current;
             m_BluetoothAdapter = CrossBluetoothLE.Current.Adapter;
-            BluetoothSelectionList = new ObservableCollection<string>();
+            BluetoothSelectionList = new List<string>();
             
             scanForDevices();
         }
@@ -39,13 +43,32 @@ namespace Notify.ViewModels
 
         private async void onUpdateBluetoothSettingsClicked()
         {
+            bool successfulUpdate;
             
+            if(SelectedLocation.IsNullOrEmpty() || SelectedBluetoothID.IsNullOrEmpty())
+            {
+                await App.Current.MainPage.DisplayAlert("Error", "Please select a location and a BT device", "OK");
+            }
+            else
+            {
+                successfulUpdate = AzureHttpClient.Instance.UpdateDestination(SelectedLocation, SelectedBluetoothID).Result;
+                
+                if (successfulUpdate)
+                {
+                    App.Current.MainPage.DisplayAlert("Update", $"Updated {SelectedBluetoothID} as your {SelectedLocation}", "OK");
+                    await AzureHttpClient.Instance.GetDestinations();
+                }
+                else
+                {
+                    App.Current.MainPage.DisplayAlert("Error", "Something went wrong", "OK");
+                }
+            }
         }
         
         private void scanForDevices()
         {
             m_BluetoothAdapter.ScanMode = ScanMode.Balanced;
-            m_BluetoothAdapter.ScanTimeout = Constants.ONE_MINUTE_IN_MS;
+            m_BluetoothAdapter.ScanTimeout = Constants.TEN_SECONDS_IN_MS;
             
             m_BluetoothLE.StateChanged += async (sender, e) =>
             {
@@ -53,7 +76,7 @@ namespace Notify.ViewModels
 
                 if (e.NewState.Equals(BluetoothState.On))
                 {
-                    m_ScannedDevices.Clear(); //TODO check if necessary
+                    m_ScannedDevices.Clear();
                     BluetoothSelectionList.Clear();
                     m_BluetoothAdapter.DeviceDiscovered += (s, a) =>
                     {

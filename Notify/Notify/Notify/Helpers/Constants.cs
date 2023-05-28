@@ -150,7 +150,7 @@ namespace Notify.Helpers
         public static readonly int LATITUDE_MIN = -90;
         public static readonly int LONGITUDE_MAX = 180;
         public static readonly int LONGITUDE_MIN = -180;
-        public static readonly int ONE_MINUTE_IN_MS = 60000;
+        public static readonly int TEN_SECONDS_IN_MS = 10000;
 
         #endregion
 
