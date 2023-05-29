@@ -19,10 +19,10 @@ namespace Notify.ViewModels
         private List<IDevice> m_ScannedDevices;
         private IBluetoothLE m_BluetoothLE;
         private IAdapter m_BluetoothAdapter;
-        public List<string> BluetoothSelectionList { get; }
+        public ObservableCollection<string> BluetoothSelectionList { get; }
         public List<string> LocationSelectionList { get; set; } = Constants.LOCATIONS_LIST;
         public string SelectedLocation { get; set; }
-        string SelectedBluetoothID { get; set; }
+        public string SelectedBluetoothID { get; set; }
         
         public BluetoothSettingsPageViewModel()
         {
@@ -31,7 +31,7 @@ namespace Notify.ViewModels
             m_ScannedDevices = new List<IDevice>();
             m_BluetoothLE = CrossBluetoothLE.Current;
             m_BluetoothAdapter = CrossBluetoothLE.Current.Adapter;
-            BluetoothSelectionList = new List<string>();
+            BluetoothSelectionList = new ObservableCollection<string>();
             
             scanForDevices();
         }
@@ -84,7 +84,7 @@ namespace Notify.ViewModels
                         {
                             m_ScannedDevices.Add(a.Device);
                             BluetoothSelectionList.Add(a.Device.Name ?? a.Device.Id.ToString());
-                            r_Logger.LogInformation($"device added to list: {a.Device.Name} | {a.Device.Id}");
+                            r_Logger.LogInformation($"device added to list: {a.Device.Name}");
                         }
                     };
 

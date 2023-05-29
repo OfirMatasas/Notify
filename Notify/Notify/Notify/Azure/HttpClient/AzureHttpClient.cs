@@ -79,7 +79,7 @@ namespace Notify.Azure.HttpClient
                 }
 
                 json = JsonConvert.SerializeObject(data);
-                r_Logger.LogDebug($"request:{Environment.NewLine}{data}");
+                r_Logger.LogInformation($"request:{Environment.NewLine}{data}");
 
                 response = postAsync(
                     requestUri: Constants.AZURE_FUNCTIONS_PATTERN_DESTINATION_UPDATE,
@@ -114,7 +114,7 @@ namespace Notify.Azure.HttpClient
                 data.verificationCode = verificationCode;
                 
                 json = JsonConvert.SerializeObject(data);
-                r_Logger.LogDebug($"request:{Environment.NewLine}{data}");
+                r_Logger.LogInformation($"request:{Environment.NewLine}{data}");
 
                 response = postAsync(
                     requestUri: Constants.AZURE_FUNCTIONS_PATTERN_SEND_SMS,
@@ -149,7 +149,7 @@ namespace Notify.Azure.HttpClient
                 data.telephone = telephone;
 
                 json = JsonConvert.SerializeObject(data);
-                r_Logger.LogDebug($"request:{Environment.NewLine}{data}");
+                r_Logger.LogInformation($"request:{Environment.NewLine}{data}");
 
                 response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_REGISTER, createJsonStringContent(json)).Result;
                 response.EnsureSuccessStatusCode();
@@ -180,7 +180,7 @@ namespace Notify.Azure.HttpClient
                 data.telephone = telephone;
 
                 json = JsonConvert.SerializeObject(data);
-                r_Logger.LogDebug($"request:{Environment.NewLine}{data}");
+                r_Logger.LogInformation($"request:{Environment.NewLine}{data}");
 
                 response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_CHECK_USER_EXISTS, createJsonStringContent(json)).Result;
         
@@ -220,7 +220,7 @@ namespace Notify.Azure.HttpClient
                 request.location.latitude = location.Latitude;
                 request.location.longitude = location.Longitude;
                 json = JsonConvert.SerializeObject(request);
-                r_Logger.LogDebug($"request:{Environment.NewLine}{request}");
+                r_Logger.LogInformation($"request:{Environment.NewLine}{request}");
 
                 response = postAsync(
                     requestUri: Constants.AZURE_FUNCTIONS_PATTERN_DISTANCE, 
@@ -297,7 +297,7 @@ namespace Notify.Azure.HttpClient
             try
             {
                 json = createJsonOfNotificationRequest(notificationName, description, notificationType, key, value , users);
-                r_Logger.LogDebug($"request:{Environment.NewLine}{json}");
+                r_Logger.LogInformation($"request:{Environment.NewLine}{json}");
 
                 response = postAsync(uri, createJsonStringContent(json)).Result;
 
@@ -476,7 +476,7 @@ namespace Notify.Azure.HttpClient
                 };
                 
                 json = JsonConvert.SerializeObject(request);
-                r_Logger.LogDebug($"request:{Environment.NewLine}{json}");
+                r_Logger.LogInformation($"request:{Environment.NewLine}{json}");
 
                 response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_UPDATE_STATUS, createJsonStringContent(json)).Result;
 
