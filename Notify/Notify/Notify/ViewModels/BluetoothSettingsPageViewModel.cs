@@ -30,8 +30,14 @@ namespace Notify.ViewModels
             UpdateBluetoothSettingsCommand = new Command(onUpdateBluetoothSettingsClicked);
             m_BluetoothManager = new BluetoothManager();
             BluetoothSelectionList = m_BluetoothManager.BluetoothSelectionList;
-        }
 
+            // Populate BluetoothSelectionList with the values from BluetoothManager
+            foreach (var item in m_BluetoothManager.BluetoothSelectionList)
+            {
+                BluetoothSelectionList.Add(item);
+            }
+        }
+        
         private async void onBackButtonClicked()
         {
             await Shell.Current.GoToAsync("///settings");
