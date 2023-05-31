@@ -46,11 +46,9 @@ namespace Notify.Bluetooth
                 await StartBluetoothScanning();
                 return true;
             }
-            else
-            {
-                logMessage("Bluetooth Off", "Bluetooth is currently off. Please turn it on.");
-                return false;
-            }
+
+            logMessage("Bluetooth Off", "Bluetooth is currently off. Please turn it on.");
+            return false;
         }
 
         public async void StopScanningForDevices()

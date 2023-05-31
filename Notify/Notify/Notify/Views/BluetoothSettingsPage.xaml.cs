@@ -25,12 +25,17 @@ namespace Notify.Views
         {
             base.OnAppearing();
 
-            bool isBluetoothOn = await m_BluetoothManager.CheckBluetoothStatus();
-
-            if (!isBluetoothOn)
+            if (await m_BluetoothManager.CheckBluetoothStatus())
             {
-                await DisplayAlert("Bluetooth Off", "Bluetooth is currently off. Please turn it on.", "OK");
+                m_BluetoothManager.StartBluetoothScanning();
             }
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+
+            m_BluetoothManager.StopScanningForDevices();
         }
     }
 }
