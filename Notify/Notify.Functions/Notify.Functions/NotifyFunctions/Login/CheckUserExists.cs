@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -42,30 +43,37 @@ namespace Notify.Functions.NotifyFunctions.Login
                 requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 data = JsonConvert.DeserializeObject(requestBody);
                 log.LogInformation($"Data:{Environment.NewLine}{data}");
-                
-                filterUsername = Builders<BsonDocument>.Filter.Regex("userName",
-                    new BsonRegularExpression(Convert.ToString(data.username), "i"));
-                filterTelephone = Builders<BsonDocument>.Filter.Eq("telephone", Convert.ToString(data.telephone));
 
-                countUsername = await collection.CountDocumentsAsync(filterUsername);
-                countTelephone = await collection.CountDocumentsAsync(filterTelephone);
-
-                if (countUsername > 0 && countTelephone > 0)
+                if (data.userName == null || data.telephone == null)
                 {
-                    result = new ConflictObjectResult(
-                        $"User with username '{data.username}' and telephone '{data.telephone}' already exists.");
-                }
-                else if (countUsername > 0)
-                {
-                    result = new ConflictObjectResult($"User with username '{data.username}' already exists.");
-                }
-                else if (countTelephone > 0)
-                {
-                    result = new ConflictObjectResult($"User with telephone '{data.telephone}' already exists.");
+                    result = new BadRequestObjectResult("Username and telephone are required.");
                 }
                 else
                 {
-                    result = new OkObjectResult(JsonConvert.SerializeObject(data));
+                    filterUsername = Builders<BsonDocument>.Filter.Regex("userName",
+                        new BsonRegularExpression($"^{Regex.Escape(Convert.ToString(data.userName))}$", "i"));
+                    filterTelephone = Builders<BsonDocument>.Filter.Eq("telephone", Convert.ToString(data.telephone));
+
+                    countUsername = await collection.CountDocumentsAsync(filterUsername);
+                    countTelephone = await collection.CountDocumentsAsync(filterTelephone);
+
+                    if (countUsername > 0 && countTelephone > 0)
+                    {
+                        result = new ConflictObjectResult(
+                            $"User with username '{data.userName}' and telephone '{data.telephone}' already exists.");
+                    }
+                    else if (countUsername > 0)
+                    {
+                        result = new ConflictObjectResult($"User with username '{data.userName}' already exists.");
+                    }
+                    else if (countTelephone > 0)
+                    {
+                        result = new ConflictObjectResult($"User with telephone '{data.telephone}' already exists.");
+                    }
+                    else
+                    {
+                        result = new OkObjectResult(JsonConvert.SerializeObject(data));
+                    }
                 }
             }
             catch (Exception ex)

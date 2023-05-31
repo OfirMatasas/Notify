@@ -1,0 +1,82 @@
+{
+	"info": {
+		"_postman_id": "053badd3-5e68-429e-bed3-8ba0ac99b820",
+		"name": "Destination",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26136776",
+		"_collection_link": "https://warped-shadow-814178.postman.co/workspace/My-Workspace~54429c37-4045-4a7c-8a63-dc888dec1345/collection/26136776-053badd3-5e68-429e-bed3-8ba0ac99b820?action=share&creator=26136776&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Get destinations",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HTTP}}/destination?username=matasas",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"destination"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "matasas"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get address suggestions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HTTP}}/destination/suggestions?address=קדושי קהיר 4",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"destination",
+						"suggestions"
+					],
+					"query": [
+						{
+							"key": "address",
+							"value": "קדושי קהיר 4"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get address coordinates",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HTTP}}/destination/coordinates?address=\"חולון קדושי קהיר 4\"",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"destination",
+						"coordinates"
+					],
+					"query": [
+						{
+							"key": "address",
+							"value": "\"חולון קדושי קהיר 4\""
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

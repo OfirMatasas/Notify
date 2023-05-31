@@ -1,0 +1,89 @@
+{
+	"info": {
+		"_postman_id": "76155660-0779-4ad8-9ed6-f711716a9208",
+		"name": "User",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26136776",
+		"_collection_link": "https://warped-shadow-814178.postman.co/workspace/My-Workspace~54429c37-4045-4a7c-8a63-dc888dec1345/collection/26136776-76155660-0779-4ad8-9ed6-f711716a9208?action=share&creator=26136776&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\": \"matasas\",\n    \"password\": \"Ofir123456@\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HTTP}}/login",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check user existance",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\": \"matasas\",\n    \"telephone\": \"0542001717\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HTTP}}/checkUserExists",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"checkUserExists"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n    \"name\": \"Ofir\",\n    \"userName\": \"matasas\",\n    \"password\": \"123\",\n    \"telephone\": \"+972542001818\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HTTP}}/register",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

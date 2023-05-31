@@ -1,0 +1,155 @@
+{
+	"info": {
+		"_postman_id": "740a4a1b-479f-4716-af2e-faba52e58f30",
+		"name": "Notification",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26136776",
+		"_collection_link": "https://warped-shadow-814178.postman.co/workspace/My-Workspace~54429c37-4045-4a7c-8a63-dc888dec1345/collection/26136776-740a4a1b-479f-4716-af2e-faba52e58f30?action=share&creator=26136776&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Create location notification",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"creator\":\"Ofir\",\n    \"description\":\"null\",\n    \"notification\":{\n        \"name\":\"Testing\",\n        \"type\":\"Location\",\n        \"location\":\"Home\"\n        },\n    \"users\":[\"linkimos\"]\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HTTP}}/notification/location",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"notification",
+						"location"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create time notification",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"creator\":\"Ofir\",\n    \"description\": \"This is a time notification\",\n    \"notification\":{\n        \"name\":\"Timer Notification\",\n        \"type\":\"Time\",\n        \"timestamp\":1683999900\n        },\n    \"users\":[\"linkimos\"]\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HTTP}}/notification/time",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"notification",
+						"time"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get notifications",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"creator\": \"Ofir\",\n  \"creation_timestamp\": 45235235,\n  \"notification\": {\n    \"name\": \"Testing\",\n    \"type\": \"Location\",\n    \"location\": \"Home\"\n  },\n  \"users\": [\n    \"Dekel\",\n    \"Lin\"\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HTTP}}/notification?username=Dekelr",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"notification"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "Dekelr"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update notification status",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"notifications\": [\n        \"645deb953b532818048d5844\"\n    ],\n    \"status\": \"New\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HTTP}}/notification/update/status",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"notification",
+						"update",
+						"status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Dynamic notification",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"creator\":\"linkimos\",\n    \"description\":\"This is a test\",\n    \"notification\":\n    {\n        \"name\":\"Dynamic testing\",\n        \"type\":\"Dynamic\",\n        \"location\":\"Supermarket\"\n    },\n    \"users\":[\"linkimos\"]\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HTTP}}/notification/dynamic",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"notification",
+						"dynamic"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

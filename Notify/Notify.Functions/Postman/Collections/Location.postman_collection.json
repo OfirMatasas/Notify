@@ -1,0 +1,107 @@
+{
+	"info": {
+		"_postman_id": "53678d8d-64d9-4b85-b569-7bd726afb7e8",
+		"name": "Location",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26136776",
+		"_collection_link": "https://warped-shadow-814178.postman.co/workspace/My-Workspace~54429c37-4045-4a7c-8a63-dc888dec1345/collection/26136776-53678d8d-64d9-4b85-b569-7bd726afb7e8?action=share&creator=26136776&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Set destination",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"user\": \"linkimos\",\n  \"location\": {\n    \"name\": \"Home\",\n    \"type\": \"WiFi\",\n    \"ssid\": \"AndroidWifi\",\n    //\"type\": \"Location\",\n    \"longitude\": 33.22,\n    \"latitude\": 11.22\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HTTP}}/destination/update",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"destination",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Distance from destination",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "x-functions-key",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"location\":\n    {\n        \"latitude\": 32.020699,\n        \"longitude\": 34.763500\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HTTP}}/distance",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"distance"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete destination",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user\": \"Lin\",\n    \"location\": \"Home\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HTTP}}/destination/delete",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"destination",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
