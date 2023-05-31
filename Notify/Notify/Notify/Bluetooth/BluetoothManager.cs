@@ -25,13 +25,13 @@ namespace Notify.Bluetooth
             m_BluetoothLE.StateChanged += OnBluetoothStateChanged;
         }
 
-        private async void OnBluetoothStateChanged(object sender, BluetoothStateChangedArgs e)
+        public async void OnBluetoothStateChanged(object sender, BluetoothStateChangedArgs bluetoothState)
         {
-            if (e.NewState == BluetoothState.On)
+            if (bluetoothState.NewState == BluetoothState.On)
             {
                 await StartBluetoothScanning();
             }
-            else if (e.NewState == BluetoothState.Off)
+            else if (bluetoothState.NewState == BluetoothState.Off)
             {
                 StopScanningForDevices();
             }
@@ -39,15 +39,17 @@ namespace Notify.Bluetooth
 
         public async Task<bool> CheckBluetoothStatus()
         {
-            var bluetoothState = m_BluetoothLE.State;
+            BluetoothState bluetoothState = m_BluetoothLE.State;
 
             if (bluetoothState == BluetoothState.On)
             {
                 await StartBluetoothScanning();
+                
                 return true;
             }
 
             logMessage("Bluetooth Off", "Bluetooth is currently off. Please turn it on.");
+            
             return false;
         }
 
@@ -56,7 +58,7 @@ namespace Notify.Bluetooth
             try
             {
                 BluetoothSelectionList.Clear();
-                r_Logger.LogInformation("Stop scanning for Bluetooth devices");
+                r_Logger.LogDebug("Stop scanning for Bluetooth devices");
                 await m_BluetoothAdapter.StopScanningForDevicesAsync();
             }
             catch (Exception ex)
@@ -70,7 +72,7 @@ namespace Notify.Bluetooth
             m_BluetoothAdapter.ScanMode = ScanMode.Balanced;
             m_BluetoothAdapter.ScanTimeout = Constants.HOUR_IN_MS;
 
-            r_Logger.LogInformation(
+            r_Logger.LogDebug(
                 $"start scanning for Bluetooth devices. Scan timeout: {TimeSpan.FromMilliseconds(m_BluetoothAdapter.ScanTimeout).Hours} Hours");
 
             m_BluetoothAdapter.DeviceDiscovered += (sender, deviceArg) =>

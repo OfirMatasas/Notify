@@ -39,14 +39,14 @@ namespace Notify.ViewModels
             m_BluetoothManager.m_BluetoothAdapter.DeviceDiscovered += OnDeviceDiscovered;
         }
 
-        private async void OnDeviceDiscovered(object sender, DeviceEventArgs e)
+        private async void OnDeviceDiscovered(object sender, DeviceEventArgs deviceArg)
         {
             Device.BeginInvokeOnMainThread(() =>
             {
-                if (e.Device.Name != null && !BluetoothSelectionList.Contains(e.Device.Name))
+                if (!deviceArg.Device.Name.IsNullOrEmpty() && !BluetoothSelectionList.Contains(deviceArg.Device.Name))
                 {
-                    BluetoothSelectionList.Add(e.Device.Name);
-                    r_Logger.LogInformation($"device added to list: {e.Device.Name}");
+                    BluetoothSelectionList.Add(deviceArg.Device.Name);
+                    r_Logger.LogInformation($"device added to list: {deviceArg.Device.Name}");
                 }
             });
         }
