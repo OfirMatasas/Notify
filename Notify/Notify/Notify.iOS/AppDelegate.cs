@@ -1,12 +1,8 @@
-﻿using System.Diagnostics;
-using Foundation;
+﻿using Foundation;
 using Notify.Helpers;
 using Notify.iOS.Notifications;
 using UIKit;
 using UserNotifications;
-using Xamarin.Essentials;
-using Xamarin.Forms;
-using Location = Notify.Core.Location;
 
 namespace Notify.iOS
 {

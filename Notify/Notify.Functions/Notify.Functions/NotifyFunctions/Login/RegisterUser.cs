@@ -30,7 +30,6 @@ namespace Notify.Functions.NotifyFunctions.Login
             FilterDefinition<BsonDocument> filter;
             long usersCount;
             ObjectResult result;
-            string encryptedPassword;
 
             log.LogInformation("Got client's HTTP request to register");
 

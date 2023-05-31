@@ -29,7 +29,6 @@ namespace Notify.Functions.NotifyFunctions.Login
             string requestBody;
             dynamic data;
             FilterDefinition<BsonDocument> filter;
-            List<BsonDocument> documents;
             ObjectResult result;
             string decryptedPassword;
             string storedEncryptedPassword;

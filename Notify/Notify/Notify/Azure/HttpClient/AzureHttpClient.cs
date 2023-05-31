@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -52,7 +51,7 @@ namespace Notify.Azure.HttpClient
         public async Task<bool> UpdateDestination<T>(string destinationName, T locationData)
         {
             dynamic data = new JObject();
-            string json;
+            string json, content;
             HttpResponseMessage response;
             bool isSuccess;
 
@@ -87,7 +86,7 @@ namespace Notify.Azure.HttpClient
                 ).Result;
 
                 response.EnsureSuccessStatusCode();
-                string content = await response.Content.ReadAsStringAsync();
+                content = await response.Content.ReadAsStringAsync();
                 r_Logger.LogDebug(content);
                 r_Logger.LogInformation($"Successful status code from Azure Function from UpdateDestination for {destinationName}");
                 isSuccess = true;
@@ -203,46 +202,6 @@ namespace Notify.Azure.HttpClient
             }
 
             return userExists;
-        }
-        
-        public bool CheckIfArrivedDestination(Location location)
-        {
-            dynamic request = new JObject();
-            string json;
-            HttpResponseMessage response;
-            dynamic returnedObject;
-            double distance;
-            bool arrived;
-
-            try
-            {
-                request.location = new JObject();
-                request.location.latitude = location.Latitude;
-                request.location.longitude = location.Longitude;
-                json = JsonConvert.SerializeObject(request);
-                r_Logger.LogDebug($"request:{Environment.NewLine}{request}");
-
-                response = postAsync(
-                    requestUri: Constants.AZURE_FUNCTIONS_PATTERN_DISTANCE, 
-                    content: createJsonStringContent(json)
-                    ).Result;
-
-                response.EnsureSuccessStatusCode();
-                r_Logger.LogInformation($"Successful status code from Azure Function from GetDistanceToDestinationFromCurrentLocation, location: {location}!");
-
-                returnedObject = DeserializeObjectFromResponseAsync(response).Result;
-                distance = Convert.ToDouble(returnedObject.distance);
-                r_Logger.LogDebug($"distance: {distance}");
-
-                arrived = distance <= Constants.DESTINATION_MAXMIMUM_DISTANCE;
-            }
-            catch (Exception ex)
-            {
-                r_Logger.LogError($"Error occured on GetDistanceToDestinationFromCurrentLocation, {location}:{Environment.NewLine}{ex.Message}");
-                arrived = false;
-            }
-
-            return arrived;
         }
 
         private async Task<HttpResponseMessage> postAsync(string requestUri, StringContent content)
@@ -487,6 +446,59 @@ namespace Notify.Azure.HttpClient
             {
                 r_Logger.LogError($"Error occured on UpdateNotificationsStatus: {ex.Message}");
             }
+        }
+
+        public async Task<Location> GetCoordinatesFromAddress(string selectedAddress)
+        {
+            string query = $"?address={selectedAddress}";
+            string requestUri = Constants.AZURE_FUNCTIONS_PATTERN_DESTINATION_COORDINATES + query;
+            HttpResponseMessage response;
+            dynamic returnedObject;
+            Location location = null;
+
+            try
+            {
+                response = await m_HttpClient.GetAsync(requestUri);
+                response.EnsureSuccessStatusCode();
+
+                returnedObject = await DeserializeObjectFromResponseAsync(response);
+                location = new Location(
+                    longitude: Convert.ToDouble(returnedObject.longitude),
+                    latitude: Convert.ToDouble(returnedObject.latitude));
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error occured on GetAddressSuggestions: {Environment.NewLine}{ex.Message}");
+            }
+            
+            return location;
+        }
+
+        public async Task<List<string>> GetAddressSuggestions(string searchAddress)
+        {
+            string query = $"?address={searchAddress}";
+            string requestUri = Constants.AZURE_FUNCTIONS_PATTERN_DESTINATION_SUGGESTIONS + query;
+            HttpResponseMessage response;
+            string responseJson;
+            List<string> suggestions;
+
+            try
+            {
+                r_Logger.LogInformation($"Getting address suggestions from {requestUri}");
+                response = await m_HttpClient.GetAsync(requestUri);
+                response.EnsureSuccessStatusCode();
+                
+                responseJson = await response.Content.ReadAsStringAsync();
+                suggestions = JsonConvert.DeserializeObject<List<string>>(responseJson);
+                r_Logger.LogInformation($"Got {suggestions.Count} suggestions from {requestUri}:{Environment.NewLine}{string.Join($"{Environment.NewLine}- ", suggestions)}");
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error occured on GetAddressSuggestions: {Environment.NewLine}{ex.Message}");
+                suggestions = new List<string>();
+            }
+            
+            return suggestions;
         }
     }
 }
