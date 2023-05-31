@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using Microsoft.IdentityModel.Tokens;
 using Notify.Azure.HttpClient;
 using Notify.Bluetooth;
+using Plugin.BLE.Abstractions.EventArgs;
 
 namespace Notify.ViewModels
 {
@@ -23,7 +24,6 @@ namespace Notify.ViewModels
         private BluetoothManager m_BluetoothManager;
         public ObservableCollection<string> BluetoothSelectionList { get; set; }
 
-
         public BluetoothSettingsPageViewModel()
         {
             BackCommand = new Command(onBackButtonClicked);
@@ -31,13 +31,26 @@ namespace Notify.ViewModels
             m_BluetoothManager = new BluetoothManager();
             BluetoothSelectionList = m_BluetoothManager.BluetoothSelectionList;
 
-            // Populate BluetoothSelectionList with the values from BluetoothManager
-            foreach (var item in m_BluetoothManager.BluetoothSelectionList)
+            foreach (string item in m_BluetoothManager.BluetoothSelectionList)
             {
                 BluetoothSelectionList.Add(item);
             }
+
+            m_BluetoothManager.m_BluetoothAdapter.DeviceDiscovered += OnDeviceDiscovered;
         }
-        
+
+        private async void OnDeviceDiscovered(object sender, DeviceEventArgs e)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                if (e.Device.Name != null && !BluetoothSelectionList.Contains(e.Device.Name))
+                {
+                    BluetoothSelectionList.Add(e.Device.Name);
+                    r_Logger.LogInformation($"device added to list: {e.Device.Name}");
+                }
+            });
+        }
+
         private async void onBackButtonClicked()
         {
             await Shell.Current.GoToAsync("///settings");
@@ -53,11 +66,13 @@ namespace Notify.ViewModels
             }
             else
             {
-                successfulUpdate = AzureHttpClient.Instance.UpdateDestination(SelectedLocation, SelectedBluetoothID).Result;
+                successfulUpdate = AzureHttpClient.Instance.UpdateDestination(SelectedLocation, SelectedBluetoothID)
+                    .Result;
 
                 if (successfulUpdate)
                 {
-                    App.Current.MainPage.DisplayAlert("Update", $"Updated {SelectedBluetoothID} as your {SelectedLocation}", "OK");
+                    App.Current.MainPage.DisplayAlert("Update",
+                        $"Updated {SelectedBluetoothID} as your {SelectedLocation}", "OK");
                     await AzureHttpClient.Instance.GetDestinations();
                 }
                 else
@@ -68,3 +83,4 @@ namespace Notify.ViewModels
         }
     }
 }
+
