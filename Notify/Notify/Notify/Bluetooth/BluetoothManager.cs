@@ -21,10 +21,10 @@ namespace Notify.Bluetooth
             m_BluetoothLE = CrossBluetoothLE.Current;
             m_BluetoothAdapter = CrossBluetoothLE.Current.Adapter;
             BluetoothSelectionList = new ObservableCollection<string>();
-
+            
             m_BluetoothLE.StateChanged += OnBluetoothStateChanged;
         }
-        
+
         private async void OnBluetoothStateChanged(object sender, BluetoothStateChangedArgs e)
         {
             if (e.NewState == BluetoothState.On)
@@ -33,11 +33,27 @@ namespace Notify.Bluetooth
             }
             else if (e.NewState == BluetoothState.Off)
             {
-                stopScanningForDevices();
+                StopScanningForDevices();
             }
         }
-        
-        public async void stopScanningForDevices()
+
+        public async Task<bool> CheckBluetoothStatus()
+        {
+            var bluetoothState = m_BluetoothLE.State;
+
+            if (bluetoothState == BluetoothState.On)
+            {
+                await StartBluetoothScanning();
+                return true;
+            }
+            else
+            {
+                logMessage("Bluetooth Off", "Bluetooth is currently off. Please turn it on.");
+                return false;
+            }
+        }
+
+        public async void StopScanningForDevices()
         {
             try
             {
@@ -50,8 +66,8 @@ namespace Notify.Bluetooth
                 r_Logger.LogError($"Error occurred while stopping Bluetooth scanning: {ex.Message}");
             }
         }
-        
-        private async Task StartBluetoothScanning()
+
+        public async Task StartBluetoothScanning()
         {
             m_BluetoothAdapter.ScanMode = ScanMode.Balanced;
             m_BluetoothAdapter.ScanTimeout = Constants.HOUR_IN_MS;
@@ -69,6 +85,11 @@ namespace Notify.Bluetooth
             };
 
             await m_BluetoothAdapter.StartScanningForDevicesAsync();
+        }
+
+        private void logMessage(string title, string message)
+        {
+            r_Logger.LogInformation($"DisplayAlert: {title} - {message}");
         }
     }
 }
