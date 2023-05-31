@@ -8,32 +8,30 @@ using Notify.Helpers;
 using System.Collections.ObjectModel;
 using Microsoft.IdentityModel.Tokens;
 using Notify.Azure.HttpClient;
+using Notify.Bluetooth;
 
 namespace Notify.ViewModels
 {
-    public class BluetoothSettingsPageViewModel
+    public class BluetoothSettingsPageViewModel : BaseViewModel
     {
         private static readonly LoggerService r_Logger = LoggerService.Instance;
         public Command BackCommand { get; set; }
         public Command UpdateBluetoothSettingsCommand { get; set; }
-        private IBluetoothLE m_BluetoothLE;
-        private IAdapter m_BluetoothAdapter;
-        public ObservableCollection<string> BluetoothSelectionList { get; }
         public List<string> LocationSelectionList { get; set; } = Constants.LOCATIONS_LIST;
         public string SelectedLocation { get; set; }
         public string SelectedBluetoothID { get; set; }
-        
+        private BluetoothManager m_BluetoothManager;
+        public ObservableCollection<string> BluetoothSelectionList { get; set; }
+
+
         public BluetoothSettingsPageViewModel()
         {
             BackCommand = new Command(onBackButtonClicked);
             UpdateBluetoothSettingsCommand = new Command(onUpdateBluetoothSettingsClicked);
-            m_BluetoothLE = CrossBluetoothLE.Current;
-            m_BluetoothAdapter = CrossBluetoothLE.Current.Adapter;
-            BluetoothSelectionList = new ObservableCollection<string>();
-            
-            scanForDevices();
+            m_BluetoothManager = new BluetoothManager();
+            BluetoothSelectionList = m_BluetoothManager.BluetoothSelectionList;
         }
-        
+
         private async void onBackButtonClicked()
         {
             await Shell.Current.GoToAsync("///settings");
@@ -42,15 +40,15 @@ namespace Notify.ViewModels
         private async void onUpdateBluetoothSettingsClicked()
         {
             bool successfulUpdate;
-            
-            if(SelectedLocation.IsNullOrEmpty() || SelectedBluetoothID.IsNullOrEmpty())
+
+            if (SelectedLocation.IsNullOrEmpty() || SelectedBluetoothID.IsNullOrEmpty())
             {
                 await App.Current.MainPage.DisplayAlert("Error", "Please select a location and a BT device", "OK");
             }
             else
             {
                 successfulUpdate = AzureHttpClient.Instance.UpdateDestination(SelectedLocation, SelectedBluetoothID).Result;
-                
+
                 if (successfulUpdate)
                 {
                     App.Current.MainPage.DisplayAlert("Update", $"Updated {SelectedBluetoothID} as your {SelectedLocation}", "OK");
@@ -61,37 +59,6 @@ namespace Notify.ViewModels
                     App.Current.MainPage.DisplayAlert("Error", "Something went wrong", "OK");
                 }
             }
-        }
-        
-        private void scanForDevices()
-        {
-            m_BluetoothAdapter.ScanMode = ScanMode.Balanced;
-            m_BluetoothAdapter.ScanTimeout = Constants.HOUR_IN_MS;
-            
-            m_BluetoothLE.StateChanged += async (sender, e) =>
-            {
-                r_Logger.LogInformation($"Switching from {e.OldState} to {e.NewState}");
-
-                if (e.NewState.Equals(BluetoothState.On))
-                {
-                    BluetoothSelectionList.Clear();
-                    m_BluetoothAdapter.DeviceDiscovered += (s, a) =>
-                    {
-                        if (!BluetoothSelectionList.Contains(a.Device.Name))
-                        {
-                            BluetoothSelectionList.Add(a.Device.Name);
-                            r_Logger.LogInformation($"device added to list: {a.Device.Name}");
-                        }
-                    };
-
-                    await m_BluetoothAdapter.StartScanningForDevicesAsync();
-                }
-                else if (e.NewState.Equals(BluetoothState.Off))
-                {
-                    BluetoothSelectionList.Clear();
-                    await m_BluetoothAdapter.StopScanningForDevicesAsync();
-                }
-            };
         }
     }
 }
