@@ -18,19 +18,6 @@ namespace Notify.Views
         {
             InitializeComponent();
             BindingContext = new ViewModels.BluetoothSettingsPageViewModel();
-            m_BluetoothManager = new BluetoothManager();
-        }
-
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-            m_BluetoothManager.startScanningForDevices();
-        }
-
-        protected override void OnDisappearing()
-        {
-            base.OnDisappearing();
-            m_BluetoothManager.stopScanningForDevices();
         }
     }
 }

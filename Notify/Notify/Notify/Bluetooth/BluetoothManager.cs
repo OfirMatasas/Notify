@@ -22,40 +22,18 @@ namespace Notify.Bluetooth
             m_BluetoothAdapter = CrossBluetoothLE.Current.Adapter;
             BluetoothSelectionList = new ObservableCollection<string>();
 
-            m_BluetoothLE.StateChanged += onBluetoothStateChanged;
+            m_BluetoothLE.StateChanged += OnBluetoothStateChanged;
         }
-
-        private async void onBluetoothStateChanged(object sender, BluetoothStateChangedArgs bluetoothState)
+        
+        private async void OnBluetoothStateChanged(object sender, BluetoothStateChangedArgs e)
         {
-            r_Logger.LogInformation(
-                $"Switching from {bluetoothState.OldState} to {bluetoothState.NewState}");
-
-            if (bluetoothState.NewState == BluetoothState.On)
+            if (e.NewState == BluetoothState.On)
             {
                 await StartBluetoothScanning();
             }
-        }
-
-        public async void startScanningForDevices()
-        {
-            try
+            else if (e.NewState == BluetoothState.Off)
             {
-                BluetoothSelectionList.Clear();
-                
-                if (m_BluetoothLE.IsOn)
-                {
-                    await StartBluetoothScanning();
-                }
-                else
-                {
-                    App.Current.MainPage.DisplayAlert("Bluetooth Off",
-                        "Bluetooth is currently off. Please turn it on.", "OK");
-                    BluetoothSelectionList.Clear();
-                }
-            }
-            catch (Exception ex)
-            {
-                r_Logger.LogError($"Error occurred while starting Bluetooth scanning: {ex.Message}");
+                stopScanningForDevices();
             }
         }
         
