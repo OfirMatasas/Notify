@@ -12,8 +12,8 @@ namespace Notify.Bluetooth
     public class BluetoothManager
     {
         private static readonly LoggerService r_Logger = LoggerService.Instance;
-        private IBluetoothLE m_BluetoothLE;
-        private IAdapter m_BluetoothAdapter;
+        public IBluetoothLE m_BluetoothLE;
+        public IAdapter m_BluetoothAdapter;
         public ObservableCollection<string> BluetoothSelectionList { get; }
 
         public BluetoothManager()
