@@ -18,6 +18,19 @@ namespace Notify.Views
         {
             InitializeComponent();
             BindingContext = new ViewModels.BluetoothSettingsPageViewModel();
+            m_BluetoothManager = new BluetoothManager();
+        }
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+
+            bool isBluetoothOn = await m_BluetoothManager.CheckBluetoothStatus();
+
+            if (!isBluetoothOn)
+            {
+                await DisplayAlert("Bluetooth Off", "Bluetooth is currently off. Please turn it on.", "OK");
+            }
         }
     }
 }
