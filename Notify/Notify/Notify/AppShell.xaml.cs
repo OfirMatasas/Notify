@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -9,15 +8,11 @@ using Notify.Core;
 using Notify.Helpers;
 using Notify.Interfaces.Managers;
 using Notify.Notifications;
-using Notify.Views;
 using Notify.WiFi;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using DriverDetailsPage = Notify.Views.DriverDetailsPage;
 using Location = Notify.Core.Location;
-using ProfilePage = Notify.Views.ProfilePage;
-using TeamDetailsPage = Notify.Views.TeamDetailsPage;
 
 namespace Notify
 {

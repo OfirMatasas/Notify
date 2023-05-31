@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Geolocation;
 using Notify.Helpers;
 

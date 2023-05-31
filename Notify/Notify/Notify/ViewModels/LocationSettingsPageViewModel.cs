@@ -62,7 +62,7 @@ namespace Notify.ViewModels
         public Command GetCurrentLocationCommand { get; set; }
         private string m_SearchedAddress;
         private string m_SelectedAddress;
-        private List<string> m_DropBoxSuggestions;        
+        private List<string> m_DropBoxSuggestions;
 
         public string SelectedAddress
         {

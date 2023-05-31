@@ -2,7 +2,6 @@ using Android.Bluetooth;
 using Notify.Helpers;
 using Notify.Interfaces.Managers;
 using Xamarin.Forms;
-using Debug = System.Diagnostics.Debug;
 
 [assembly: Dependency(typeof(Notify.Droid.Managers.AndroidBluetoothManager))]
 namespace Notify.Droid.Managers

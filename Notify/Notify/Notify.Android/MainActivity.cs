@@ -9,7 +9,6 @@ using Notify.Helpers;
 using Notify.Notifications;
 using Xamarin.Forms;
 using Xamarin.Essentials;
-using Debug = System.Diagnostics.Debug;
 using Environment = System.Environment;
 
 namespace Notify.Droid
