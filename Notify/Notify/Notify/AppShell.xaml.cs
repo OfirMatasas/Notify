@@ -44,7 +44,7 @@ namespace Notify
                     m_IsInitialized = true;
                     Connectivity.ConnectivityChanged += internetConnectivityChanged;
                     m_BluetoothManager = BluetoothManager.Instance;
-                    m_BluetoothManager.StartBluetoothScanning(); // TODO : check if works
+                    m_BluetoothManager.StartBluetoothScanning();
                     setNoficicationManagerNotificationReceived();
                     setMessagingCenterSubscriptions();
                     

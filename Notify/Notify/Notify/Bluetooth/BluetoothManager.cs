@@ -1,10 +1,18 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Notify.Azure.HttpClient;
+using Notify.Core;
 using Notify.Helpers;
+using Notify.Notifications;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
+using Xamarin.Essentials;
+using Xamarin.Forms;
 
 namespace Notify.Bluetooth
 {
@@ -16,13 +24,15 @@ namespace Notify.Bluetooth
 
         private IBluetoothLE m_BluetoothLE;
         private IAdapter m_BluetoothAdapter;
+        private static object m_NotificationsLock = new object();
 
-        public ObservableCollection<string> BluetoothSelectionList { get; private set; }
+        public static ObservableCollection<string> BluetoothSelectionList { get; private set; }
 
         private BluetoothManager()
         {
             initBluetoothManager();
             subscribeBluetoothEvents();
+            StartBluetoothScanning();
         }
 
         public static BluetoothManager Instance
@@ -35,6 +45,7 @@ namespace Notify.Bluetooth
                     {
                         m_Instance = new BluetoothManager();
                     }
+
                     return m_Instance;
                 }
             }
@@ -91,6 +102,7 @@ namespace Notify.Bluetooth
             try
             {
                 m_BluetoothAdapter.ScanMode = ScanMode.Balanced;
+                m_BluetoothAdapter.ScanTimeout = Int32.MaxValue;
 
                 r_Logger.LogDebug($"Start scanning for Bluetooth devices");
 
@@ -108,7 +120,82 @@ namespace Notify.Bluetooth
             {
                 BluetoothSelectionList.Add(e.Device.Name);
                 r_Logger.LogInformation($"Device added to list: {e.Device.Name}");
+                SendNotifications();
             }
+        }
+
+        public void SendNotifications()
+        {
+            string notificationsJson, destinationJson;
+            List<Notification> notifications;
+            List<Destination> destinations;
+            
+            notificationsJson = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
+            destinationJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, string.Empty);
+
+            if (!notificationsJson.Equals(string.Empty) && !destinationJson.Equals(string.Empty))
+            {
+                notifications = JsonConvert.DeserializeObject<List<Notification>>(notificationsJson);
+                destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationJson);
+
+                sendAllRelevantBluetoothNotifications(destinations, notifications);
+            }
+        }
+
+        private static void sendAllRelevantBluetoothNotifications(List<Destination> destinations, List<Notification> notifications)
+        {
+            List<Notification> sentNotifications = new List<Notification>();
+            
+            lock (m_NotificationsLock)
+            {
+                r_Logger.LogDebug("Sending notifications");
+
+                foreach (Destination destination in destinations)
+                {
+                    if (BluetoothSelectionList.Contains(destination.Bluetooth))
+                    {
+                        r_Logger.LogDebug(
+                            $"Found a destination with name: {destination.Name} and bluetooth: {destination.Bluetooth}");
+
+                        foreach (Notification notification in notifications)
+                        {
+                            if (notification.Type.Equals(NotificationType.Location) &&
+                                notification.TypeInfo.Equals(destination.Name) &&
+                                notification.Status.ToLower().Equals("new"))
+                            {
+                                notification.Status = "Sent";
+                                r_Logger.LogDebug(
+                                    $"Sending notification with name: {notification.Name} and description: {notification.Description}");
+                                DependencyService.Get<INotificationManager>()
+                                    .SendNotification(notification.Name, notification.Description);
+                                sentNotifications.Add(notification);
+                            }
+                        }
+                    }
+                }
+
+                r_Logger.LogDebug("Finished sending notifications");
+                Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
+                updateStatusOfSentNotifications(sentNotifications);
+            }
+        }
+
+        private static void updateStatusOfSentNotifications(List<Notification> arrivedLocationNotifications)
+        {
+            string json = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
+            List<Notification> notifications = JsonConvert.DeserializeObject<List<Notification>>(json);
+
+            notifications.ForEach(notification =>
+            {
+                if (arrivedLocationNotifications.Any(arrivedNotification => arrivedNotification.ID == notification.ID))
+                {
+                    notification.Status = "Sent";
+                    r_Logger.LogDebug($"Updated status of notification {notification.ID} to 'Sent'");
+                }
+            });
+
+            Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
+            AzureHttpClient.Instance.UpdateNotificationsStatus(arrivedLocationNotifications, "Sent");
         }
     }
 }
