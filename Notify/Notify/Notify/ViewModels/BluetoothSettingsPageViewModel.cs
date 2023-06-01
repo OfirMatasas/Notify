@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Notify.Azure.HttpClient;
 using Notify.Helpers;
 using Notify.Bluetooth;
+using Notify.Core;
 
 namespace Notify.ViewModels
 {
@@ -52,7 +53,7 @@ namespace Notify.ViewModels
             }
             else
             {
-                successfulUpdate = AzureHttpClient.Instance.UpdateDestination(SelectedLocation, SelectedBluetoothID)
+                successfulUpdate = AzureHttpClient.Instance.UpdateDestination(SelectedLocation, SelectedBluetoothID, NotificationType.Bluetooth)
                     .Result;
 
                 if (successfulUpdate)
