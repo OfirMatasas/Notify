@@ -66,6 +66,7 @@
     <Compile Include="Helpers\IOSLogger.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
+    <Compile Include="Services\iOSDeviceService.cs" />
     <None Include="Entitlements.plist" />
     <None Include="Info.plist" />
     <Compile Include="Managers\iOSBluetoothManager.cs" />
