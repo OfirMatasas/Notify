@@ -66,9 +66,9 @@ namespace Notify.Bluetooth
 
         private async void onBluetoothStateChanged(object sender, BluetoothStateChangedArgs e)
         {
-            if (e.NewState == BluetoothState.On)
+            if (e.NewState.Equals(BluetoothState.On))
                 await StartBluetoothScanning();
-            else if (e.NewState == BluetoothState.Off)
+            else if (e.NewState.Equals(BluetoothState.Off))
                 stopScanningForDevices();
         }
 
