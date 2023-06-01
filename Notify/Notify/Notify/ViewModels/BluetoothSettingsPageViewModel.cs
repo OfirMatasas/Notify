@@ -34,7 +34,7 @@ namespace Notify.ViewModels
 
         private void initBluetoothManager()
         {
-            m_BluetoothManager = new BluetoothManager();
+            m_BluetoothManager = BluetoothManager.Instance;
             BluetoothSelectionList = m_BluetoothManager.BluetoothSelectionList;
         }
 

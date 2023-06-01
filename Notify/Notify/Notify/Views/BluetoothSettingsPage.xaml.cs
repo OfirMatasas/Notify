@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Notify.Bluetooth;
+﻿using Notify.Bluetooth;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -12,30 +7,30 @@ namespace Notify.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class BluetoothSettingsPage : ContentPage
     {
-        private BluetoothManager m_BluetoothManager;
+        //private BluetoothManager m_BluetoothManager;
         
         public BluetoothSettingsPage()
         {
             InitializeComponent();
             BindingContext = new ViewModels.BluetoothSettingsPageViewModel();
-            m_BluetoothManager = new BluetoothManager();
+            //m_BluetoothManager = BluetoothManager.Instance;
         }
 
-        protected override async void OnAppearing()
-        {
-            base.OnAppearing();
-
-            if (await m_BluetoothManager.CheckBluetoothStatus())
-            {
-                m_BluetoothManager.StartBluetoothScanning();
-            }
-        }
-
-        protected override void OnDisappearing()
-        {
-            base.OnDisappearing();
-
-            m_BluetoothManager.StopScanningForDevices();
-        }
+        // protected override async void OnAppearing()
+        // {
+        //     base.OnAppearing();
+        //
+        //     if (await m_BluetoothManager.CheckBluetoothStatus())
+        //     {
+        //         m_BluetoothManager.StartBluetoothScanning();
+        //     }
+        // }
+        //
+        // protected override void OnDisappearing()
+        // {
+        //     base.OnDisappearing();
+        //
+        //     m_BluetoothManager.StopScanningForDevices();
+        // }
     }
 }
