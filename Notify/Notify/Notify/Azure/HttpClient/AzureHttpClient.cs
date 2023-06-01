@@ -148,7 +148,7 @@ namespace Notify.Azure.HttpClient
                 data.userName = userName;
                 data.password = password;
                 data.telephone = telephone;
-                data.deviceID = DependencyService.Get<IDeviceService>().GetDeviceId();
+                data.deviceID = "DeviceInfo.Idiom.ToString();";
 
                 json = JsonConvert.SerializeObject(data);
                 r_Logger.LogDebug($"request:{Environment.NewLine}{data}");
