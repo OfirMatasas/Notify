@@ -49,7 +49,7 @@ namespace Notify.Azure.HttpClient
             }
         }
 
-        public async Task<bool> UpdateDestination<T>(string destinationName, T locationData)
+        public async Task<bool> UpdateDestination<T>(string destinationName, T locationData, NotificationType notificationType)
         {
             dynamic data = new JObject();
             string json;
@@ -62,16 +62,24 @@ namespace Notify.Azure.HttpClient
                 data.location = new JObject();
                 data.location.name = destinationName;
 
-                if (locationData is Location location)
+                if (notificationType.Equals(NotificationType.Location))
                 {
+                    Location location = locationData as Location;
                     data.location.type = NotificationType.Location.ToString();
-                    data.location.longitude = location.Longitude;
-                    data.location.latitude = location.Latitude;
+                    data.location.longitude = location?.Longitude;
+                    data.location.latitude = location?.Latitude;
                 }
-                else if (locationData is string wifiSsid)
+                else if (notificationType.Equals(NotificationType.WiFi))
                 {
+                    string wifiSsid = locationData as string;
                     data.location.type = NotificationType.WiFi.ToString();
                     data.location.ssid = wifiSsid;
+                }
+                else if (notificationType.Equals(NotificationType.Bluetooth))
+                {
+                    string bluetoothName = locationData as string;
+                    data.location.type = NotificationType.Bluetooth.ToString();
+                    data.location.device = bluetoothName;
                 }
                 else
                 {

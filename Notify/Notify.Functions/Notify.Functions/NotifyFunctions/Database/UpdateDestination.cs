@@ -92,6 +92,10 @@ namespace Notify.Functions.NotifyFunctions.Database
             {
                 document["location"].AsBsonDocument["ssid"] = Convert.ToString(data.location.ssid);
             }
+            else if (type.Equals("Bluetooth"))
+            {
+                document["location"].AsBsonDocument["device"] = Convert.ToString(data.location.device);
+            }
             else
             {
                 throw new ArgumentException($"Invalid location type: {type}");

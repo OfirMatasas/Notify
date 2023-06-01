@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 using Notify.Azure.HttpClient;
+using Notify.Core;
 using Notify.Helpers;
 using Xamarin.Essentials;
 using Location = Notify.Core.Location;
@@ -119,7 +120,7 @@ namespace Notify.ViewModels
             bool successfulUpdate;
             
             r_Logger.LogDebug("Longitude and latitude are in the right range - updating location");
-            successfulUpdate = AzureHttpClient.Instance.UpdateDestination(SelectedLocation, location).Result;
+            successfulUpdate = AzureHttpClient.Instance.UpdateDestination(SelectedLocation, location, NotificationType.Location).Result;
 
             if (successfulUpdate)
             {
