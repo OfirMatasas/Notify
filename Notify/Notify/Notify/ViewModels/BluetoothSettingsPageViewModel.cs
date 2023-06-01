@@ -1,11 +1,10 @@
 ﻿using Xamarin.Forms;
 using System.Collections.Generic;
-using Notify.Helpers;
 using System.Collections.ObjectModel;
 using Microsoft.IdentityModel.Tokens;
 using Notify.Azure.HttpClient;
+using Notify.Helpers;
 using Notify.Bluetooth;
-using Plugin.BLE.Abstractions.EventArgs;
 
 namespace Notify.ViewModels
 {
@@ -17,34 +16,25 @@ namespace Notify.ViewModels
         public List<string> LocationSelectionList { get; set; } = Constants.LOCATIONS_LIST;
         public string SelectedLocation { get; set; }
         public string SelectedBluetoothID { get; set; }
-        private BluetoothManager m_BluetoothManager;
         public ObservableCollection<string> BluetoothSelectionList { get; set; }
+        private BluetoothManager m_BluetoothManager;
 
         public BluetoothSettingsPageViewModel()
         {
-            BackCommand = new Command(onBackButtonClicked);
-            UpdateBluetoothSettingsCommand = new Command(onUpdateBluetoothSettingsClicked);
-            m_BluetoothManager = new BluetoothManager();
-            BluetoothSelectionList = m_BluetoothManager.BluetoothSelectionList;
-
-            foreach (string item in m_BluetoothManager.BluetoothSelectionList)
-            {
-                BluetoothSelectionList.Add(item);
-            }
-
-            m_BluetoothManager.m_BluetoothAdapter.DeviceDiscovered += onDeviceDiscovered;
+            initCommands();
+            initBluetoothManager();
         }
 
-        private void onDeviceDiscovered(object sender, DeviceEventArgs deviceArg)
+        private void initCommands()
         {
-            Device.BeginInvokeOnMainThread(() =>
-            {
-                if (!deviceArg.Device.Name.IsNullOrEmpty() && !BluetoothSelectionList.Contains(deviceArg.Device.Name))
-                {
-                    BluetoothSelectionList.Add(deviceArg.Device.Name);
-                    r_Logger.LogInformation($"device added to list: {deviceArg.Device.Name}");
-                }
-            });
+            BackCommand = new Command(onBackButtonClicked);
+            UpdateBluetoothSettingsCommand = new Command(onUpdateBluetoothSettingsClicked);
+        }
+
+        private void initBluetoothManager()
+        {
+            m_BluetoothManager = new BluetoothManager();
+            BluetoothSelectionList = m_BluetoothManager.BluetoothSelectionList;
         }
 
         private async void onBackButtonClicked()
@@ -79,4 +69,3 @@ namespace Notify.ViewModels
         }
     }
 }
-
