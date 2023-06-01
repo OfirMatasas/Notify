@@ -69,7 +69,8 @@ namespace Notify.Functions.NotifyFunctions.Login
                         { "telephone", Convert.ToString(data.telephone) },
                         { "deviceID", Convert.ToString(data.deviceID) }
                     };
-
+                    
+                    
                     await collection.InsertOneAsync(userDocument);
                     log.LogInformation(
                         $"Inserted user with username {data.userName} and telephone {data.telephone} into database");
