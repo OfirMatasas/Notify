@@ -211,38 +211,7 @@ namespace Notify.Azure.HttpClient
 
             return userExists;
         }
-
-            try
-            {
-                request.location = new JObject();
-                request.location.latitude = location.Latitude;
-                request.location.longitude = location.Longitude;
-                json = JsonConvert.SerializeObject(request);
-                r_Logger.LogInformation($"request:{Environment.NewLine}{request}");
-
-                response = postAsync(
-                    requestUri: Constants.AZURE_FUNCTIONS_PATTERN_DISTANCE, 
-                    content: createJsonStringContent(json)
-                    ).Result;
-
-                response.EnsureSuccessStatusCode();
-                r_Logger.LogInformation($"Successful status code from Azure Function from GetDistanceToDestinationFromCurrentLocation, location: {location}!");
-
-                returnedObject = DeserializeObjectFromResponseAsync(response).Result;
-                distance = Convert.ToDouble(returnedObject.distance);
-                r_Logger.LogDebug($"distance: {distance}");
-
-                arrived = distance <= Constants.DESTINATION_MAXMIMUM_DISTANCE;
-            }
-            catch (Exception ex)
-            {
-                r_Logger.LogError($"Error occured on GetDistanceToDestinationFromCurrentLocation, {location}:{Environment.NewLine}{ex.Message}");
-                arrived = false;
-            }
-
-            return arrived;
-        }
-
+        
         private async Task<HttpResponseMessage> postAsync(string requestUri, StringContent content)
         {
             HttpResponseMessage response = await m_HttpClient.PostAsync(requestUri, content).ConfigureAwait(false);
