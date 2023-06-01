@@ -9,7 +9,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Notify.Core;
 using Notify.Helpers;
+using Notify.Services;
 using Xamarin.Essentials;
+using Xamarin.Forms;
 using Location = Notify.Core.Location;
 
 namespace Notify.Azure.HttpClient
@@ -154,6 +156,7 @@ namespace Notify.Azure.HttpClient
                 data.userName = userName;
                 data.password = password;
                 data.telephone = telephone;
+                data.deviceID = DependencyService.Get<IDeviceService>().GetDeviceId();
 
                 json = JsonConvert.SerializeObject(data);
                 r_Logger.LogInformation($"request:{Environment.NewLine}{data}");
