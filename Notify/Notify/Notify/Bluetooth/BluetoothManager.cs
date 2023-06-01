@@ -1,7 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Microsoft.IdentityModel.Tokens;
 using Notify.Helpers;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
@@ -12,43 +11,46 @@ namespace Notify.Bluetooth
     public class BluetoothManager
     {
         private static readonly LoggerService r_Logger = LoggerService.Instance;
-        public IBluetoothLE m_BluetoothLE;
-        public IAdapter m_BluetoothAdapter;
-        public ObservableCollection<string> BluetoothSelectionList { get; }
+        private IBluetoothLE m_BluetoothLE;
+        private IAdapter m_BluetoothAdapter;
+        public ObservableCollection<string> BluetoothSelectionList { get; private set; }
 
         public BluetoothManager()
+        {
+            initBluetoothManager();
+            subscribeBluetoothEvents();
+        }
+
+        private void initBluetoothManager()
         {
             m_BluetoothLE = CrossBluetoothLE.Current;
             m_BluetoothAdapter = CrossBluetoothLE.Current.Adapter;
             BluetoothSelectionList = new ObservableCollection<string>();
-            m_BluetoothLE.StateChanged += onBluetoothStateChanged;
         }
 
-        private async void onBluetoothStateChanged(object sender, BluetoothStateChangedArgs bluetoothState)
+        private void subscribeBluetoothEvents()
         {
-            if (bluetoothState.NewState == BluetoothState.On)
-            {
+            m_BluetoothLE.StateChanged += onBluetoothStateChanged;
+            m_BluetoothAdapter.DeviceDiscovered += onDeviceDiscovered;
+        }
+
+        private async void onBluetoothStateChanged(object sender, BluetoothStateChangedArgs e)
+        {
+            if (e.NewState == BluetoothState.On)
                 await StartBluetoothScanning();
-            }
-            else if (bluetoothState.NewState == BluetoothState.Off)
-            {
+            else if (e.NewState == BluetoothState.Off)
                 StopScanningForDevices();
-            }
         }
 
         public async Task<bool> CheckBluetoothStatus()
         {
-            BluetoothState bluetoothState = m_BluetoothLE.State;
-
-            if (bluetoothState == BluetoothState.On)
-            {
+            var isBluetoothOn = m_BluetoothLE.State == BluetoothState.On;
+            if (isBluetoothOn)
                 await StartBluetoothScanning();
-                
-                return true;
-            }
-            r_Logger.LogInformation("Bluetooth Off");
-            
-            return false;
+            else
+                r_Logger.LogInformation("Bluetooth Off");
+
+            return isBluetoothOn;
         }
 
         public async void StopScanningForDevices()
@@ -72,23 +74,22 @@ namespace Notify.Bluetooth
                 m_BluetoothAdapter.ScanMode = ScanMode.Balanced;
                 m_BluetoothAdapter.ScanTimeout = Constants.HOUR_IN_MS;
 
-                r_Logger.LogDebug(
-                    $"start scanning for Bluetooth devices. Scan timeout: {TimeSpan.FromMilliseconds(m_BluetoothAdapter.ScanTimeout).Hours} Hours");
-
-                m_BluetoothAdapter.DeviceDiscovered += (sender, deviceArg) =>
-                {
-                    if (!deviceArg.Device.Name.IsNullOrEmpty() && !BluetoothSelectionList.Contains(deviceArg.Device.Name))
-                    {
-                        BluetoothSelectionList.Add(deviceArg.Device.Name);
-                        r_Logger.LogInformation($"device added to list: {deviceArg.Device.Name}");
-                    }
-                };
+                r_Logger.LogDebug($"Start scanning for Bluetooth devices. Scan timeout: {TimeSpan.FromMilliseconds(m_BluetoothAdapter.ScanTimeout).Hours} Hours");
 
                 await m_BluetoothAdapter.StartScanningForDevicesAsync();
             }
             catch (Exception ex)
             {
                 r_Logger.LogError($"Error occurred in StartBluetoothScanning: {ex.Message}");
+            }
+        }
+
+        private void onDeviceDiscovered(object sender, DeviceEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(e.Device.Name) && !BluetoothSelectionList.Contains(e.Device.Name))
+            {
+                BluetoothSelectionList.Add(e.Device.Name);
+                r_Logger.LogInformation($"Device added to list: {e.Device.Name}");
             }
         }
     }
