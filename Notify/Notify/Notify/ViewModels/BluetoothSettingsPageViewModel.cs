@@ -1,9 +1,5 @@
-﻿using System;
-using Xamarin.Forms;
-using Plugin.BLE;
-using Plugin.BLE.Abstractions.Contracts;
+﻿using Xamarin.Forms;
 using System.Collections.Generic;
-using System.Linq;
 using Notify.Helpers;
 using System.Collections.ObjectModel;
 using Microsoft.IdentityModel.Tokens;
@@ -36,10 +32,10 @@ namespace Notify.ViewModels
                 BluetoothSelectionList.Add(item);
             }
 
-            m_BluetoothManager.m_BluetoothAdapter.DeviceDiscovered += OnDeviceDiscovered;
+            m_BluetoothManager.m_BluetoothAdapter.DeviceDiscovered += onDeviceDiscovered;
         }
 
-        private async void OnDeviceDiscovered(object sender, DeviceEventArgs deviceArg)
+        private void onDeviceDiscovered(object sender, DeviceEventArgs deviceArg)
         {
             Device.BeginInvokeOnMainThread(() =>
             {
