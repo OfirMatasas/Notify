@@ -11,7 +11,6 @@ namespace Notify.ViewModels
 {
     public class BluetoothSettingsPageViewModel : BaseViewModel
     {
-        private static readonly LoggerService r_Logger = LoggerService.Instance;
         public Command BackCommand { get; set; }
         public Command UpdateBluetoothSettingsCommand { get; set; }
         public List<string> LocationSelectionList { get; set; } = Constants.LOCATIONS_LIST;

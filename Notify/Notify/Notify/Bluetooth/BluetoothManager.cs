@@ -69,21 +69,10 @@ namespace Notify.Bluetooth
             if (e.NewState == BluetoothState.On)
                 await StartBluetoothScanning();
             else if (e.NewState == BluetoothState.Off)
-                StopScanningForDevices();
+                stopScanningForDevices();
         }
 
-        public async Task<bool> CheckBluetoothStatus()
-        {
-            var isBluetoothOn = m_BluetoothLE.State == BluetoothState.On;
-            if (isBluetoothOn)
-                await StartBluetoothScanning();
-            else
-                r_Logger.LogInformation("Bluetooth Off");
-
-            return isBluetoothOn;
-        }
-
-        public async void StopScanningForDevices()
+        private async void stopScanningForDevices()
         {
             try
             {
@@ -120,11 +109,11 @@ namespace Notify.Bluetooth
             {
                 BluetoothSelectionList.Add(e.Device.Name);
                 r_Logger.LogInformation($"Device added to list: {e.Device.Name}");
-                SendNotifications();
+                sendNotifications();
             }
         }
 
-        public void SendNotifications()
+        private void sendNotifications()
         {
             string notificationsJson, destinationJson;
             List<Notification> notifications;
