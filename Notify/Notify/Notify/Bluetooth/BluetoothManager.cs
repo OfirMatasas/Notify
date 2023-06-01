@@ -21,11 +21,10 @@ namespace Notify.Bluetooth
             m_BluetoothLE = CrossBluetoothLE.Current;
             m_BluetoothAdapter = CrossBluetoothLE.Current.Adapter;
             BluetoothSelectionList = new ObservableCollection<string>();
-            
-            m_BluetoothLE.StateChanged += OnBluetoothStateChanged;
+            m_BluetoothLE.StateChanged += onBluetoothStateChanged;
         }
 
-        public async void OnBluetoothStateChanged(object sender, BluetoothStateChangedArgs bluetoothState)
+        private async void onBluetoothStateChanged(object sender, BluetoothStateChangedArgs bluetoothState)
         {
             if (bluetoothState.NewState == BluetoothState.On)
             {
@@ -47,8 +46,7 @@ namespace Notify.Bluetooth
                 
                 return true;
             }
-
-            logMessage("Bluetooth Off", "Bluetooth is currently off. Please turn it on.");
+            r_Logger.LogInformation("Bluetooth Off");
             
             return false;
         }
@@ -69,27 +67,29 @@ namespace Notify.Bluetooth
 
         public async Task StartBluetoothScanning()
         {
-            m_BluetoothAdapter.ScanMode = ScanMode.Balanced;
-            m_BluetoothAdapter.ScanTimeout = Constants.HOUR_IN_MS;
-
-            r_Logger.LogDebug(
-                $"start scanning for Bluetooth devices. Scan timeout: {TimeSpan.FromMilliseconds(m_BluetoothAdapter.ScanTimeout).Hours} Hours");
-
-            m_BluetoothAdapter.DeviceDiscovered += (sender, deviceArg) =>
+            try
             {
-                if (!deviceArg.Device.Name.IsNullOrEmpty() && !BluetoothSelectionList.Contains(deviceArg.Device.Name))
+                m_BluetoothAdapter.ScanMode = ScanMode.Balanced;
+                m_BluetoothAdapter.ScanTimeout = Constants.HOUR_IN_MS;
+
+                r_Logger.LogDebug(
+                    $"start scanning for Bluetooth devices. Scan timeout: {TimeSpan.FromMilliseconds(m_BluetoothAdapter.ScanTimeout).Hours} Hours");
+
+                m_BluetoothAdapter.DeviceDiscovered += (sender, deviceArg) =>
                 {
-                    BluetoothSelectionList.Add(deviceArg.Device.Name);
-                    r_Logger.LogInformation($"device added to list: {deviceArg.Device.Name}");
-                }
-            };
+                    if (!deviceArg.Device.Name.IsNullOrEmpty() && !BluetoothSelectionList.Contains(deviceArg.Device.Name))
+                    {
+                        BluetoothSelectionList.Add(deviceArg.Device.Name);
+                        r_Logger.LogInformation($"device added to list: {deviceArg.Device.Name}");
+                    }
+                };
 
-            await m_BluetoothAdapter.StartScanningForDevicesAsync();
-        }
-
-        private void logMessage(string title, string message)
-        {
-            r_Logger.LogInformation($"DisplayAlert: {title} - {message}");
+                await m_BluetoothAdapter.StartScanningForDevicesAsync();
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error occurred in StartBluetoothScanning: {ex.Message}");
+            }
         }
     }
 }
