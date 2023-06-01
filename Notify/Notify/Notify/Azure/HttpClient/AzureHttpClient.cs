@@ -454,11 +454,11 @@ namespace Notify.Azure.HttpClient
                         longitude: (double)(destination.location.longitude ?? 0), 
                         latitude: (double)(destination.location.latitude ?? 0)),
                     SSID = (string)(destination.location.ssid ?? ""),
-                    Bluetooth = (string)(destination.location.bluetooth ?? "")
+                    Bluetooth = (string)(destination.location.device ?? "")
                 });
         }
 
-        public void UpdateNotificationsStatus(List<Notification> notifications, string sent)
+        public void UpdateNotificationsStatus(List<Notification> notifications, string newStatus)
         {
             List<string> notificationsIds = notifications.Select(notification => notification.ID).ToList();
             dynamic request;
@@ -470,7 +470,7 @@ namespace Notify.Azure.HttpClient
                 request = new JObject
                 {
                     { "notifications", JToken.FromObject(notificationsIds) },
-                    { "status", sent }
+                    { "status", newStatus }
                 };
                 
                 json = JsonConvert.SerializeObject(request);

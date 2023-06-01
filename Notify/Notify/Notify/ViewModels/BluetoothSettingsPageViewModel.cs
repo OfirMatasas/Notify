@@ -35,7 +35,7 @@ namespace Notify.ViewModels
         private void initBluetoothManager()
         {
             m_BluetoothManager = BluetoothManager.Instance;
-            BluetoothSelectionList = m_BluetoothManager.BluetoothSelectionList;
+            BluetoothSelectionList = BluetoothManager.BluetoothSelectionList;
         }
 
         private async void onBackButtonClicked()
