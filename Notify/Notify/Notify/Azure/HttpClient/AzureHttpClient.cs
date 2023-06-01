@@ -510,5 +510,29 @@ namespace Notify.Azure.HttpClient
             
             return suggestions;
         }
+
+        public async Task<List<Friend>> GetNotFriendsUsers()
+        {
+            return await GetData(
+                endpoint: Constants.AZURE_FUNCTIONS_PATTERN_USERS_NOT_FRIENDS, 
+                preferencesKey: Constants.PREFERENCES_NOT_FRIENDS_USERS, 
+                converter: friend => new Friend(
+                    name: (string)friend.name, 
+                    userName: (string)friend.userName, 
+                    telephone: (string)friend.telephone));
+        }
+
+        public async void SendFriendRequest(string username)
+        {
+            dynamic request = new JObject
+            {
+                { "userName", username },
+                { "requester", Preferences.Get(Constants.PREFERENCES_USERNAME, "") }
+            };
+            string json = JsonConvert.SerializeObject(request);
+            
+            createJsonStringContent(JsonConvert.SerializeObject(request));
+            await postAsync(requestUri: Constants.AZURE_FUNCTIONS_PATTERN_FRIEND_REQUEST, createJsonStringContent(json));
+        }
     }
 }

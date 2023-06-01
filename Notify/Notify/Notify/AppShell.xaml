@@ -34,6 +34,10 @@
         <ShellContent ContentTemplate="{DataTemplate Views:RegistrationPage}" />
     </ShellItem>
 
+    <ShellItem Route="friend_request">
+        <ShellContent ContentTemplate="{DataTemplate views:FriendRequestPage}" />
+    </ShellItem>
+
     <ShellItem Route="create_notification">
         <ShellContent ContentTemplate="{DataTemplate Views:NotificationCreationPage}" />
     </ShellItem>

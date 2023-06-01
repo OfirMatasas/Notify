@@ -80,9 +80,9 @@ namespace Notify.ViewModels
             await Shell.Current.Navigation.PushAsync(new FriendDetailsPage(SelectedFriend));
         }
 
-        private void onShowFriendRequestsClicked()
+        private async void onShowFriendRequestsClicked()
         {
-            //TODO: Show friend requests
+            await Shell.Current.Navigation.PushAsync(new FriendRequestPage());
         }
         
         public event PropertyChangedEventHandler PropertyChanged;
