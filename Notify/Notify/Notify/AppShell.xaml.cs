@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Notify.Azure.HttpClient;
+using Notify.Bluetooth;
 using Notify.Core;
 using Notify.Helpers;
 using Notify.Notifications;
@@ -26,14 +27,15 @@ namespace Notify
         private static readonly object m_NotificationsLock = new object();
         private static readonly object m_InitializeLock = new object();
         private static bool m_IsInitialized;
+        private BluetoothManager m_BluetoothManager;
 
         public AppShell()
         {
             InitializeComponent();
-            InitializeAppShell();
+            initializeAppShell();
         }
 
-        private void InitializeAppShell()
+        private void initializeAppShell()
         {
             lock (m_InitializeLock)
             {
@@ -41,6 +43,8 @@ namespace Notify
                 {
                     m_IsInitialized = true;
                     Connectivity.ConnectivityChanged += internetConnectivityChanged;
+                    m_BluetoothManager = BluetoothManager.Instance;
+                    m_BluetoothManager.StartBluetoothScanning(); // TODO : check if works
                     setNoficicationManagerNotificationReceived();
                     setMessagingCenterSubscriptions();
                     

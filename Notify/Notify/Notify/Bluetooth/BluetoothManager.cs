@@ -11,14 +11,33 @@ namespace Notify.Bluetooth
     public class BluetoothManager
     {
         private static readonly LoggerService r_Logger = LoggerService.Instance;
+        private static BluetoothManager m_Instance;
+        private static readonly object r_Lock = new object();
+
         private IBluetoothLE m_BluetoothLE;
         private IAdapter m_BluetoothAdapter;
+
         public ObservableCollection<string> BluetoothSelectionList { get; private set; }
 
-        public BluetoothManager()
+        private BluetoothManager()
         {
             initBluetoothManager();
             subscribeBluetoothEvents();
+        }
+
+        public static BluetoothManager Instance
+        {
+            get
+            {
+                lock (r_Lock)
+                {
+                    if (m_Instance == null)
+                    {
+                        m_Instance = new BluetoothManager();
+                    }
+                    return m_Instance;
+                }
+            }
         }
 
         private void initBluetoothManager()
@@ -72,9 +91,8 @@ namespace Notify.Bluetooth
             try
             {
                 m_BluetoothAdapter.ScanMode = ScanMode.Balanced;
-                m_BluetoothAdapter.ScanTimeout = Constants.HOUR_IN_MS;
 
-                r_Logger.LogDebug($"Start scanning for Bluetooth devices. Scan timeout: {TimeSpan.FromMilliseconds(m_BluetoothAdapter.ScanTimeout).Hours} Hours");
+                r_Logger.LogDebug($"Start scanning for Bluetooth devices");
 
                 await m_BluetoothAdapter.StartScanningForDevicesAsync();
             }
