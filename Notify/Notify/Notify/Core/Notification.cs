@@ -6,7 +6,8 @@ namespace Notify.Core
     {
         Time,
         Location,
-        WiFi
+        WiFi,
+        Bluetooth
     }
     
     public class Notification

@@ -4,6 +4,7 @@
     x:Class="Notify.App"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:styles="clr-namespace:Notify.Styles"
+    xmlns:system="clr-namespace:System;assembly=netstandard"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
     <Application.Resources>
         <ResourceDictionary>

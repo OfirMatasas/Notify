@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Notify.Azure.HttpClient;
+using Notify.Bluetooth;
 using Notify.Core;
 using Notify.Helpers;
-using Notify.Interfaces.Managers;
 using Notify.Notifications;
 using Notify.WiFi;
+using Plugin.BLE;
+using Plugin.BLE.Abstractions.Contracts;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -22,18 +24,18 @@ namespace Notify
         private static readonly LoggerService r_Logger = LoggerService.Instance;
         private readonly INotificationManager notificationManager = DependencyService.Get<INotificationManager>();
         private readonly IWiFiManager m_WiFiManager = DependencyService.Get<IWiFiManager>();
-        private readonly IBluetoothManager m_BluetoothManager = DependencyService.Get<IBluetoothManager>();
         private static readonly object m_NotificationsLock = new object();
         private static readonly object m_InitializeLock = new object();
-        private static bool m_IsInitialized = false;
-           
+        private static bool m_IsInitialized;
+        private BluetoothManager m_BluetoothManager;
+
         public AppShell()
         {
             InitializeComponent();
-            InitializeAppShell();
+            initializeAppShell();
         }
 
-        private void InitializeAppShell()
+        private void initializeAppShell()
         {
             lock (m_InitializeLock)
             {
@@ -41,25 +43,21 @@ namespace Notify
                 {
                     m_IsInitialized = true;
                     Connectivity.ConnectivityChanged += internetConnectivityChanged;
+                    m_BluetoothManager = BluetoothManager.Instance;
+                    m_BluetoothManager.StartBluetoothScanning();
                     setNoficicationManagerNotificationReceived();
                     setMessagingCenterSubscriptions();
-
+                    
                     if (Preferences.Get(Constants.START_LOCATION_SERVICE, false))
                     {
                         startService();
                     }
 
-                    getBluetoothDevices();
                     retriveDestinations();
                 }
             }
         }
-
-        private void getBluetoothDevices()
-        {
-            m_BluetoothManager.PrintAllBondedBluetoothDevices();
-        }
-
+        
         private void internetConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
         {
             m_WiFiManager.PrintConnectedWiFi(sender, e);
@@ -163,7 +161,7 @@ namespace Notify
             
             notifications.ForEach(notification =>
             {
-                if (arrivedLocationNotifications.Any(arrivedNotification => arrivedNotification.ID == notification.ID))
+                if (arrivedLocationNotifications.Any(arrivedNotification => arrivedNotification.ID.Equals(notification.ID)))
                 {
                     notification.Status = "Sent";
                     r_Logger.LogDebug($"Updated status of notification {notification.ID} to 'Sent'");

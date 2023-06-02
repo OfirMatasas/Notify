@@ -48,7 +48,7 @@ namespace Notify.Azure.HttpClient
             }
         }
 
-        public async Task<bool> UpdateDestination<T>(string destinationName, T locationData)
+        public async Task<bool> UpdateDestination<T>(string destinationName, T locationData, NotificationType notificationType)
         {
             dynamic data = new JObject();
             string json, content;
@@ -61,16 +61,24 @@ namespace Notify.Azure.HttpClient
                 data.location = new JObject();
                 data.location.name = destinationName;
 
-                if (locationData is Location location)
+                if (notificationType.Equals(NotificationType.Location))
                 {
+                    Location location = locationData as Location;
                     data.location.type = NotificationType.Location.ToString();
-                    data.location.longitude = location.Longitude;
-                    data.location.latitude = location.Latitude;
+                    data.location.longitude = location?.Longitude;
+                    data.location.latitude = location?.Latitude;
                 }
-                else if (locationData is string wifiSsid)
+                else if (notificationType.Equals(NotificationType.WiFi))
                 {
+                    string wifiSsid = locationData as string;
                     data.location.type = NotificationType.WiFi.ToString();
                     data.location.ssid = wifiSsid;
+                }
+                else if (notificationType.Equals(NotificationType.Bluetooth))
+                {
+                    string bluetoothName = locationData as string;
+                    data.location.type = NotificationType.Bluetooth.ToString();
+                    data.location.device = bluetoothName;
                 }
                 else
                 {
@@ -78,7 +86,7 @@ namespace Notify.Azure.HttpClient
                 }
 
                 json = JsonConvert.SerializeObject(data);
-                r_Logger.LogDebug($"request:{Environment.NewLine}{data}");
+                r_Logger.LogInformation($"request:{Environment.NewLine}{data}");
 
                 response = postAsync(
                     requestUri: Constants.AZURE_FUNCTIONS_PATTERN_DESTINATION_UPDATE,
@@ -113,7 +121,7 @@ namespace Notify.Azure.HttpClient
                 data.verificationCode = verificationCode;
                 
                 json = JsonConvert.SerializeObject(data);
-                r_Logger.LogDebug($"request:{Environment.NewLine}{data}");
+                r_Logger.LogInformation($"request:{Environment.NewLine}{data}");
 
                 response = postAsync(
                     requestUri: Constants.AZURE_FUNCTIONS_PATTERN_SEND_SMS,
@@ -148,7 +156,7 @@ namespace Notify.Azure.HttpClient
                 data.telephone = telephone;
 
                 json = JsonConvert.SerializeObject(data);
-                r_Logger.LogDebug($"request:{Environment.NewLine}{data}");
+                r_Logger.LogInformation($"request:{Environment.NewLine}{data}");
 
                 response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_REGISTER, createJsonStringContent(json)).Result;
                 response.EnsureSuccessStatusCode();
@@ -179,7 +187,7 @@ namespace Notify.Azure.HttpClient
                 data.telephone = telephone;
 
                 json = JsonConvert.SerializeObject(data);
-                r_Logger.LogDebug($"request:{Environment.NewLine}{data}");
+                r_Logger.LogInformation($"request:{Environment.NewLine}{data}");
 
                 response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_CHECK_USER_EXISTS, createJsonStringContent(json)).Result;
         
@@ -203,7 +211,7 @@ namespace Notify.Azure.HttpClient
 
             return userExists;
         }
-
+        
         private async Task<HttpResponseMessage> postAsync(string requestUri, StringContent content)
         {
             HttpResponseMessage response = await m_HttpClient.PostAsync(requestUri, content).ConfigureAwait(false);
@@ -256,7 +264,7 @@ namespace Notify.Azure.HttpClient
             try
             {
                 json = createJsonOfNotificationRequest(notificationName, description, notificationType, key, value , users);
-                r_Logger.LogDebug($"request:{Environment.NewLine}{json}");
+                r_Logger.LogInformation($"request:{Environment.NewLine}{json}");
 
                 response = postAsync(uri, createJsonStringContent(json)).Result;
 
@@ -415,11 +423,11 @@ namespace Notify.Azure.HttpClient
                         longitude: (double)(destination.location.longitude ?? 0), 
                         latitude: (double)(destination.location.latitude ?? 0)),
                     SSID = (string)(destination.location.ssid ?? ""),
-                    Bluetooth = (string)(destination.location.bluetooth ?? "")
+                    Bluetooth = (string)(destination.location.device ?? "")
                 });
         }
 
-        public void UpdateNotificationsStatus(List<Notification> notifications, string sent)
+        public void UpdateNotificationsStatus(List<Notification> notifications, string newStatus)
         {
             List<string> notificationsIds = notifications.Select(notification => notification.ID).ToList();
             dynamic request;
@@ -431,11 +439,11 @@ namespace Notify.Azure.HttpClient
                 request = new JObject
                 {
                     { "notifications", JToken.FromObject(notificationsIds) },
-                    { "status", sent }
+                    { "status", newStatus }
                 };
                 
                 json = JsonConvert.SerializeObject(request);
-                r_Logger.LogDebug($"request:{Environment.NewLine}{json}");
+                r_Logger.LogInformation($"request:{Environment.NewLine}{json}");
 
                 response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_UPDATE_STATUS, createJsonStringContent(json)).Result;
 

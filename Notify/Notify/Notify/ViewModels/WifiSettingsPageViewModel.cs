@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Microsoft.IdentityModel.Tokens;
 using Notify.Azure.HttpClient;
+using Notify.Core;
 using Notify.Helpers;
 using Notify.WiFi;
 using Xamarin.Forms;
@@ -60,7 +61,7 @@ namespace Notify.ViewModels
             }
             else
             {
-                successfulUpdate =  AzureHttpClient.Instance.UpdateDestination(SelectedLocation, SelectedWiFiSSID).Result;
+                successfulUpdate =  AzureHttpClient.Instance.UpdateDestination(SelectedLocation, SelectedWiFiSSID, NotificationType.WiFi).Result;
                 
                 if (successfulUpdate)
                 {
