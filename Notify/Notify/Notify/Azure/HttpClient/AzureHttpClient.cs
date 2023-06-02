@@ -156,6 +156,7 @@ namespace Notify.Azure.HttpClient
                 data.userName = userName;
                 data.password = password;
                 data.telephone = telephone;
+                data.deviceID = "DeviceInfo.Idiom.ToString();";
 
                 json = JsonConvert.SerializeObject(data);
                 r_Logger.LogInformation($"request:{Environment.NewLine}{data}");
