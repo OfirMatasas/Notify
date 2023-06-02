@@ -29,7 +29,7 @@ namespace Notify.ViewModels
 
         private async void onSettingsButtonClicked()
         {
-            await Shell.Current.GoToAsync("///settings");
+            await Shell.Current.GoToAsync(Constants.SHELL_NAVIGATION_REGISTER);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -56,7 +56,7 @@ namespace Notify.ViewModels
         {
             locationService = new LocationService();
 
-            await Shell.Current.GoToAsync("///login");
+            await Shell.Current.GoToAsync(Constants.SHELL_NAVIGATION_LOGIN);
 
             locationService.SubscribeToLocationMessaging();
         }
@@ -78,7 +78,7 @@ namespace Notify.ViewModels
                 }
 
                 await locationService.ManageLocationTracking();
-                await Shell.Current.GoToAsync("///main");
+                await Shell.Current.GoToAsync(Constants.SHELL_NAVIGATION_MAIN);
             }
             else
             {
@@ -95,7 +95,7 @@ namespace Notify.ViewModels
 
         private async void onSignUpClicked()
         {
-            await Shell.Current.GoToAsync("///register");
+            await Shell.Current.GoToAsync(Constants.SHELL_NAVIGATION_REGISTER);
         }
 
         protected virtual void OnPropertyChanged(string propertyName)

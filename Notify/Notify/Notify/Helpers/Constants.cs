@@ -141,6 +141,24 @@ namespace Notify.Helpers
         public static readonly string AZURE_FUNCTIONS_PATTERN_SEND_SMS = "SendSMS";
         
         #endregion
+
+        #region Shell Navigation
+            
+        public static readonly string SHELL_NAVIGATION_LOGIN = "///login";
+        public static readonly string SHELL_NAVIGATION_MAIN = "///main";
+        public static readonly string SHELL_NAVIGATION_REGISTER = "///register";
+        public static readonly string SHELL_NAVIGATION_SETTINGS = "///settings";
+        public static readonly string SHELL_NAVIGATION_NOTIFICATIONS = "///notifications";
+        public static readonly string SHELL_NAVIGATION_CREATE_NOTIFICATION = "///create_notification";
+        public static readonly string SHELL_NAVIGATION_LOCATION_SETTINGS = "///location_settings";
+        public static readonly string SHELL_NAVIGATION_NOTIFICATIONS_SETTINGS = "///notification_settings";
+        public static readonly string SHELL_NAVIGATION_WIFI_SETTINGS = "///wifi_settings";
+        public static readonly string SHELL_NAVIGATION_BLUETOOTH_SETTINGS = "///bluetooth_settings";
+        
+
+
+
+        #endregion
         
         #region Values
 

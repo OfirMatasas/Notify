@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Notify.Core;
+using Notify.Helpers;
 using Xamarin.Forms;
 
 namespace Notify.ViewModels
@@ -29,7 +30,7 @@ namespace Notify.ViewModels
         
         private async void onBackButtonClicked()
         {
-            await Shell.Current.Navigation.PopAsync();
+            await Shell.Current.GoToAsync(Constants.SHELL_NAVIGATION_SETTINGS);
         }
 
         private void setSelectedNotificationDetails(Notification notification)

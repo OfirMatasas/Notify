@@ -223,7 +223,7 @@ namespace Notify.ViewModels
                         {
                             await Application.Current.MainPage.DisplayAlert("Registration Success",
                                 "You have successfully registered to Notify.", "OK");
-                            await Shell.Current.GoToAsync("///login");
+                            await Shell.Current.GoToAsync(Constants.SHELL_NAVIGATION_LOGIN);
                         }
                         else
                         {
@@ -280,7 +280,7 @@ namespace Notify.ViewModels
         
         private async void onBackClicked()
         {
-            await Shell.Current.GoToAsync("///login");
+            await Shell.Current.GoToAsync(Constants.SHELL_NAVIGATION_LOGIN);
         }
 
         private void OnPropertyChanged(string propertyName)
