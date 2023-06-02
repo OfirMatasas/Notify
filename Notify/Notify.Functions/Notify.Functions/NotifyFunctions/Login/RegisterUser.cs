@@ -66,7 +66,8 @@ namespace Notify.Functions.NotifyFunctions.Login
                         { "name", Convert.ToString(data.name) },
                         { "userName", Convert.ToString(data.userName) },
                         { "password", Convert.ToString(data.password) },
-                        { "telephone", Convert.ToString(data.telephone) }
+                        { "telephone", Convert.ToString(data.telephone) },
+                        { "deviceID", Convert.ToString(data.deviceID) }
                     };
                     
                     
