@@ -39,15 +39,18 @@ namespace Notify.Bluetooth
         {
             get
             {
-                lock (r_Lock)
+                if (m_Instance is null)
                 {
-                    if (m_Instance == null)
+                    lock (r_Lock)
                     {
-                        m_Instance = new BluetoothManager();
+                        if (m_Instance is null)
+                        {
+                            m_Instance = new BluetoothManager();
+                        }
                     }
-
-                    return m_Instance;
                 }
+                
+                return m_Instance;
             }
         }
 
@@ -176,7 +179,7 @@ namespace Notify.Bluetooth
 
             notifications.ForEach(notification =>
             {
-                if (arrivedLocationNotifications.Any(arrivedNotification => arrivedNotification.ID == notification.ID))
+                if (arrivedLocationNotifications.Any(arrivedNotification => arrivedNotification.ID.Equals(notification.ID)))
                 {
                     notification.Status = "Sent";
                     r_Logger.LogDebug($"Updated status of notification {notification.ID} to 'Sent'");

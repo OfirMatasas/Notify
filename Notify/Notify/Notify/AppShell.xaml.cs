@@ -161,7 +161,7 @@ namespace Notify
             
             notifications.ForEach(notification =>
             {
-                if (arrivedLocationNotifications.Any(arrivedNotification => arrivedNotification.ID == notification.ID))
+                if (arrivedLocationNotifications.Any(arrivedNotification => arrivedNotification.ID.Equals(notification.ID)))
                 {
                     notification.Status = "Sent";
                     r_Logger.LogDebug($"Updated status of notification {notification.ID} to 'Sent'");
