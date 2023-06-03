@@ -1,4 +1,3 @@
-   <h1><div align="center"<h1>Notify</h1></div><h1>
 <div align="center">
     <img src="Notify/Notify/Notify.Android/Resources/drawable/Notify-without-background.png" alt="Notify Logo" width="650" height="600">
     <p>
