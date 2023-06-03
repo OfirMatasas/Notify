@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Android.Provider;
+using Geolocation;
+using GooglePlacesApi.Models;
 using Newtonsoft.Json;
 using Notify.Azure.HttpClient;
 using Notify.Bluetooth;
@@ -120,7 +123,168 @@ namespace Notify
             });
         }
 
+        public async void MyFunction()
+        {
+            List<LocationNotificationInfo> searchedLocationsInfo;
+            List<Notification> arrivedLocationNotifications;
+            Location location = new Location(34.8009826, 32.1093649);
+                    
+            r_Logger.LogDebug($"Location: latitude: {location.Latitude.ToString()}, longitude: {location.Longitude.ToString()}");
+
+            searchedLocationsInfo = await getAllLocationBasedNotifications(location);
+
+            arrivedLocationNotifications = checkIfArrivedToLocation(searchedLocationsInfo, location);
+
+            if (arrivedLocationNotifications.Count() > 0)
+            {
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    try
+                    {
+                        AnnounceDestinationArrival(arrivedLocationNotifications); // TODO - for dynamic notification maybe add the addres
+                        updateStatusOfSentNotifications(arrivedLocationNotifications);
+                    }
+                    catch (Exception ex)
+                    {
+                        r_Logger.LogError($"Failed in MessagingCenter.Subscribe<Location>: {ex.Message}");
+                    }
+                });
+            }
+            else
+            {
+                r_Logger.LogDebug($"Haven't arrived at any location set in notifications.");
+            }
+        }
+    
         private void setMessagingCenterLocationSubscription()
+        {
+            lock (m_NotificationsLock)
+            {
+                MessagingCenter.Subscribe<Location>(this, "Location", async location =>
+                {
+                    List<LocationNotificationInfo> searchedLocationsInfo;
+                    List<Notification> arrivedLocationNotifications;
+                    
+                    r_Logger.LogDebug($"Location: latitude: {location.Latitude.ToString()}, longitude: {location.Longitude.ToString()}");
+
+                    searchedLocationsInfo = await getAllLocationBasedNotifications(location);
+
+                    arrivedLocationNotifications = checkIfArrivedToLocation(searchedLocationsInfo, location);
+                    
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        try
+                        {
+                            AnnounceDestinationArrival(arrivedLocationNotifications);
+                            updateStatusOfSentNotifications(arrivedLocationNotifications);
+                        }
+                        catch (Exception ex)
+                        {
+                            r_Logger.LogError($"Failed in MessagingCenter.Subscribe<Location>: {ex.Message}");
+                        }
+                    });
+                });
+            }
+        }
+
+        private async Task<List<LocationNotificationInfo>> getAllLocationBasedNotifications(Location location)
+        {
+            string notificationsJson = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
+            List<Notification> notifications = JsonConvert.DeserializeObject<List<Notification>>(notificationsJson);
+            string destinationsJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, string.Empty);
+            List<Destination> destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationsJson);
+            List<Notification> locationNotifications;
+            List<LocationNotificationInfo> searchedLocationsInfo = new List<LocationNotificationInfo>();
+
+            locationNotifications = notifications
+                .FindAll(
+                    notification =>
+                    {
+                        bool isLocationNotification = notification.Type is NotificationType.Location;
+                        bool isNewNotification = notification.Status.ToLower().Equals("new");
+
+                        return isLocationNotification && isNewNotification;
+                    });
+            
+            foreach (Notification locationNotification in locationNotifications)
+            {
+                if (Constants.DYNAMIC_PLACE_LIST.Contains(locationNotification.TypeInfo))
+                {
+                    List<Place> places = await AzureHttpClient.Instance.GetNearPlacesByType(locationNotification.TypeInfo.ToString(), location.Latitude, location.Longitude);
+
+                    foreach (Place place in places)
+                    {
+                        LocationNotificationInfo locationInfo = new LocationNotificationInfo
+                        {
+                            Name = place.Name,
+                            NotificationId = locationNotification.ID,
+                            Latitude = place.Geometry.Location.Latitude,
+                            Longitude = place.Geometry.Location.Longitude
+                        };
+
+                        searchedLocationsInfo.Add(locationInfo);
+                    }
+                }
+                else
+                {
+                    foreach (Destination destination in destinations)
+                    {
+                        if (locationNotification.TypeInfo.ToString() == destination.Name)
+                        {
+                            LocationNotificationInfo locationInfo = new LocationNotificationInfo
+                            {
+                                Name = destination.Name,
+                                NotificationId = locationNotification.ID,
+                                Latitude = destination.Location.Latitude,
+                                Longitude = destination.Location.Longitude
+                            };
+
+                            searchedLocationsInfo.Add(locationInfo);
+                        }
+                    }
+                }
+            }
+
+            return searchedLocationsInfo;
+        }
+
+        private List<Notification> checkIfArrivedToLocation(List<LocationNotificationInfo> searchedLocationsInfo, Location location)
+        {
+            Coordinate currentLocation,destination;
+            double distance;
+            List<Notification> notifications, arrivedLocationNotifications;
+            string json;
+                
+            json = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
+            notifications = JsonConvert.DeserializeObject<List<Notification>>(json);
+            arrivedLocationNotifications = new List<Notification>();
+                
+            currentLocation= new Coordinate(latitude: location.Latitude, longitude: location.Longitude);
+
+            foreach (LocationNotificationInfo locationInfo in searchedLocationsInfo)
+            {
+                destination = new Coordinate(latitude: locationInfo.Latitude, longitude: locationInfo.Longitude);
+                distance = GeoCalculator.GetDistance(originCoordinate: currentLocation, destinationCoordinate: destination, 
+                    distanceUnit: DistanceUnit.Meters);
+
+                if (distance <= Constants.DESTINATION_MAXMIMUM_DISTANCE)
+                {
+                    r_Logger.LogDebug($"Distance to {locationInfo.Name} is {distance.ToString()} meters");
+
+                    foreach (Notification notification in notifications)
+                    {
+                        if (notification.ID == locationInfo.NotificationId)
+                        {
+                            arrivedLocationNotifications.Add(notification);
+                        }
+                    }
+                }
+            }
+
+            return arrivedLocationNotifications;
+        }
+        
+        private void setMessagingCenterLocationSubscription1()
         {
             MessagingCenter.Subscribe<Location>(this, "Location", location =>
             {
@@ -214,7 +378,6 @@ namespace Notify
                     });
 
             r_Logger.LogDebug($"Found {arrivedLocationNotifications.Count} arrived location notifications");
-
             
             notifications.ForEach(notification =>
             {

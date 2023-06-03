@@ -9,6 +9,7 @@ using Notify.Azure.HttpClient;
 using Notify.Helpers;
 using Notify.Bluetooth;
 using Notify.Core;
+using Constants = Notify.Helpers.Constants;
 
 namespace Notify.ViewModels
 {

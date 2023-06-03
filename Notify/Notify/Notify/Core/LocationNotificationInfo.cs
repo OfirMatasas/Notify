@@ -1,9 +1,9 @@
 namespace Notify.Core
 {
-    public class Place
+    public class LocationNotificationInfo
     {
         public string Name { get; set; }
-        public string PlaceId { get; set; }
+        public string NotificationId { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
     }

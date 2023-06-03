@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using GooglePlacesApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Notify.Core;
@@ -509,6 +510,49 @@ namespace Notify.Azure.HttpClient
             }
             
             return suggestions;
+        }
+
+        // TODO:
+        // 1. modify the call for Notify.Functions
+        // 2. save this data in cache and add functionallity to refresh (change in location)
+        public async Task<List<Place>> GetNearPlacesByType(string placeType, double latitude, double longitude)
+        {
+            string apiKey = "AIzaSyCXUyen9sW3LhiELjOPJtUc0OqZlhLr-cg";
+            List<Place> places = new List<Place>();
+
+            using (System.Net.Http.HttpClient httpClient = new System.Net.Http.HttpClient())
+            {
+                string url = $"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={latitude},{longitude}&radius={Constants.ONE_KM}&type={placeType.ToLower()}&key={apiKey}";
+
+                try
+                {
+                    HttpResponseMessage response = await httpClient.GetAsync(url);
+                    response.EnsureSuccessStatusCode();
+                    
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    dynamic responseObject = JsonConvert.DeserializeObject(responseBody);
+                    JArray results = responseObject.results; 
+                    
+                    foreach (dynamic placeData in results)
+                    {
+                        Place place = new Place
+                        {
+                            Name = placeData.name,
+                            Vicinity = placeData.vicinity,
+                            Geometry = placeData.geometry.ToObject<Geometry>(),
+                            PlaceId = placeData.place_id,
+                        };
+
+                        places.Add(place);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    r_Logger.LogError($"Error occured on UpdateNotificationsStatus: {ex.Message}");
+                }
+            }
+            
+            return places;
         }
     }
 }
