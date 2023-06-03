@@ -111,28 +111,23 @@ namespace Notify.Helpers
         #region Azure Http Client
 
         public static readonly string AZURE_FUNCTIONS_APP_BASE_URL = "https://notifymta.azurewebsites.net/api/";
-        public static readonly string AZURE_FUNCTIONS_PATTERN_DISTANCE = "distance";
+        public static readonly string AZURE_FUNCTIONS_PATTERN_USER = "user";
+        public static readonly string AZURE_FUNCTIONS_PATTERN_USERS_NOT_FRIENDS = AZURE_FUNCTIONS_PATTERN_USER + "/notFriends";
         public static readonly string AZURE_FUNCTIONS_PATTERN_NOTIFICATION = "notification";
         public static readonly string AZURE_FUNCTIONS_PATTERN_NOTIFICATION_TIME = $"{AZURE_FUNCTIONS_PATTERN_NOTIFICATION}/time";
         public static readonly string AZURE_FUNCTIONS_PATTERN_NOTIFICATION_LOCATION = $"{AZURE_FUNCTIONS_PATTERN_NOTIFICATION}/location";
         public static readonly string AZURE_FUNCTIONS_PATTERN_NOTIFICATION_DYNAMIC = $"{AZURE_FUNCTIONS_PATTERN_NOTIFICATION}/dynamic";
         public static readonly string AZURE_FUNCTIONS_PATTERN_NOTIFICATION_UPDATE_STATUS = $"{AZURE_FUNCTIONS_PATTERN_NOTIFICATION}/update/status";
-        public static readonly string AZURE_FUNCTIONS_PATTERN_DESTINATION_UPDATE = "destination/update";
-        public static readonly string AZURE_FUNCTIONS_PATTERN_DESTINATION_SUGGESTIONS = "destination/suggestions";
-        public static readonly string AZURE_FUNCTIONS_PATTERN_DESTINATION_COORDINATES= "destination/coordinates";
+        public static readonly string AZURE_FUNCTIONS_PATTERN_DESTINATION = "destination";
+        public static readonly string AZURE_FUNCTIONS_PATTERN_DESTINATION_UPDATE = AZURE_FUNCTIONS_PATTERN_DESTINATION + "/update";
+        public static readonly string AZURE_FUNCTIONS_PATTERN_DESTINATION_SUGGESTIONS = AZURE_FUNCTIONS_PATTERN_DESTINATION + "/suggestions";
+        public static readonly string AZURE_FUNCTIONS_PATTERN_DESTINATION_COORDINATES= AZURE_FUNCTIONS_PATTERN_DESTINATION + "/coordinates";
         public static readonly string AZURE_FUNCTIONS_PATTERN_LOGIN = "login";
         public static readonly string AZURE_FUNCTIONS_PATTERN_REGISTER = "register";
         public static readonly string AZURE_FUNCTIONS_PATTERN_FRIEND = "friends";
+        public static readonly string AZURE_FUNCTIONS_PATTERN_FRIEND_REQUEST = AZURE_FUNCTIONS_PATTERN_FRIEND + "/request";
         public static readonly string AZURE_FUNCTIONS_PATTERN_DESTINATIONS = "destination";
         public static readonly string AZURE_FUNCTIONS_PATTERN_CHECK_USER_EXISTS = "checkUserExists";
-
-        #endregion
-
-        #region Google Http Client
-
-        public static readonly string GOOGLE_API_BASE_URL = "https://maps.googleapis.com/maps/api/";
-        public static readonly string GOOGLE_PATTERN_PLACE_AUTOCOMPLETE = "place/autocomplete";
-        public static readonly string GOOGLE_PATTERN_GEOCODES = "geocode";
 
         #endregion
 
@@ -180,6 +175,7 @@ namespace Notify.Helpers
         public static readonly string PREFERENCES_FRIENDS = "Friends";
         public static readonly string PREFERENCES_USERNAME = "NotifyUserName";
         public static readonly string PREFERENCES_PASSWORD = "NotifyPassword";
+        public static readonly string PREFERENCES_NOT_FRIENDS_USERS = "NotFriendsUsers";
 
         #endregion
 

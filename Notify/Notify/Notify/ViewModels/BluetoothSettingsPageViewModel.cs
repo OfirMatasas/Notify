@@ -1,14 +1,11 @@
-using System;
-using System.Diagnostics;
-using Serilog.Core;
 using Xamarin.Forms;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Microsoft.IdentityModel.Tokens;
 using Notify.Azure.HttpClient;
-using Notify.Helpers;
 using Notify.Bluetooth;
 using Notify.Core;
+using Constants = Notify.Helpers.Constants;
 
 namespace Notify.ViewModels
 {

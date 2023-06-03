@@ -19,7 +19,7 @@ namespace Notify.Functions.Friends
     {
         [FunctionName("GetFriends")]
         [AllowAnonymous]
-        public static async Task<IActionResult> Run(
+        public static async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "friends")]
             HttpRequest req, ILogger log)
         {

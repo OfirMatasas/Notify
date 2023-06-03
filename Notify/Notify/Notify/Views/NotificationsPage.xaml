@@ -110,6 +110,16 @@
                                 HorizontalOptions="Center"
                                 Style="{StaticResource Body1FontSize_ExoBold}"
                                 Text="{Binding Type}" />
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup Name="CommonStates">
+                                    <VisualState Name="Normal" />
+                                    <VisualState Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="Gray" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
