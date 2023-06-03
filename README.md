@@ -51,14 +51,13 @@ Instructions and examples for use will be provided here. Screenshots can be incl
 
 This project exists thanks to the following contributors:
 
-| [![Lin Moskovitch](https://github.com/linmoskovitch.png?size=50)](https://github.com/linmoskovitch) | [![Ofir Matasas](https://github.com/ofirmatasas.png?size=50)](https://github.com/ofirmatasas) | [![Dekel Amrani](https://github.com/dekelamrani.png?size=50)](https://github.com/dekelamrani) |
+| [Lin Moskovitch](https://github.com/linmoskovitch) | [Ofir Matasas](https://github.com/ofirmatasas) | [Dekel Amrani](https://github.com/DekelR) |
 | --- | --- | --- |
-| [Lin Moskovitch](https://github.com/linmoskovitch) | [Ofir Matasas](https://github.com/ofirmatasas) | [Dekel Amrani](https://github.com/dekelamrani) |
-| [<img src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/linkedin.svg" width="20">](https://www.linkedin.com/in/lin-moskovitch) | [<img src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/linkedin.svg" width="20">](https://www.linkedin.com/in/ofir-matasas) | [<img src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/linkedin.svg" width="20">](https://www.linkedin.com/in/dekel-amrani) |
+| [<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" width="20">](https://www.linkedin.com/in/lin-moskovitch) | [<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" width="20">](https://www.linkedin.com/in/ofir-matasas) | [<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" width="20">](https://www.linkedin.com/in/dekel-amrani) |
 
 ## 📃 License
 
-Information about the project's license will be provided here.
+![GitHub](https://img.shields.io/github/license/OfirMatasas/Notify)
 
 ## 🤝 How to Contribute
 
