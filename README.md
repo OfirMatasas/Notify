@@ -53,7 +53,7 @@ This project exists thanks to the following contributors:
 
 | [Lin Moskovitch](https://github.com/linmoskovitch) | [Ofir Matasas](https://github.com/ofirmatasas) | [Dekel Amrani](https://github.com/DekelR) |
 | --- | --- | --- |
-| [<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" width="20">](https://www.linkedin.com/in/lin-moskovitch) | [<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" width="20">](https://www.linkedin.com/in/ofir-matasas) | [<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" width="20">](https://www.linkedin.com/in/dekel-amrani) |
+| [<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" width="20">](https://www.linkedin.com/in/lin-moskovitch) | [<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" width="20">](https://www.linkedin.com/in/ofir-matasas) | [<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" width="20">](https://www.linkedin.com/in/dekel-amrani-b28b24232/?originalSubdomain=il) |
 
 ## 📃 License
 
