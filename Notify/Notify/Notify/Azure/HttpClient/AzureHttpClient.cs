@@ -419,13 +419,19 @@ namespace Notify.Azure.HttpClient
             return await GetData( 
                 endpoint: Constants.AZURE_FUNCTIONS_PATTERN_DESTINATIONS, 
                 preferencesKey: Constants.PREFERENCES_DESTINATIONS,
-                converter: destination => new Destination((string)destination.location.name) 
+                converter: destination =>
                 {
-                    Location = new Location(
-                        longitude: (double)(destination.location.longitude ?? 0), 
-                        latitude: (double)(destination.location.latitude ?? 0)),
-                    SSID = (string)(destination.location.ssid ?? ""),
-                    Bluetooth = (string)(destination.location.device ?? "")
+                    return new Destination((string)destination.location.name)
+                    {
+                        Locations = new List<Location>
+                        {
+                            new Location(
+                                longitude: (double)(destination.location.longitude ?? 0),
+                                latitude: (double)(destination.location.latitude ?? 0))
+                        },
+                        SSID = (string)(destination.location.ssid ?? ""),
+                        Bluetooth = (string)(destination.location.device ?? "")
+                    };
                 });
         }
 

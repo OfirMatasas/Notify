@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Geolocation;
 using Notify.Helpers;
 
@@ -5,9 +6,8 @@ namespace Notify.Core
 {
     public class Destination
     {
-        private readonly LoggerService r_Logger = LoggerService.Instance;
         private string m_Name;
-        private Location m_Location;
+        private List<Location> m_Locations = new List<Location>();
         private string m_SSID;
         private string m_Bluetooth;
 
@@ -22,10 +22,10 @@ namespace Notify.Core
             set => m_Name = value;
         }
 
-        public Location Location
+        public List<Location> Locations
         {
-            get => m_Location;
-            set => m_Location = value;
+            get => m_Locations;
+            set => m_Locations = value;
         }
 
         public string SSID
@@ -40,21 +40,35 @@ namespace Notify.Core
             set => m_Bluetooth = value;
         }
 
-        public bool IsArrived(Location location)
+        public bool IsArrived(Location currentLocation)
         {
-            Coordinate currentLocation = new Coordinate(
-                latitude: location.Latitude, 
-                longitude: location.Longitude);
-            Coordinate destination = new Coordinate(
-                latitude: Location.Latitude, 
-                longitude: Location.Longitude);
-            double distance = GeoCalculator.GetDistance(
-                originCoordinate: currentLocation,
-                destinationCoordinate: destination, 
-                distanceUnit: DistanceUnit.Meters);
+            Coordinate currentCoordinate, destinationCoordinate;
+            double distance;
+            bool isArrived = false;
 
-            r_Logger.LogDebug($"Distance to {Name} is {distance} meters");
-            return distance <= Constants.DESTINATION_MAXMIMUM_DISTANCE;
+            foreach (Location location in Locations)
+            {
+                currentCoordinate = new Coordinate(
+                    latitude: location.Latitude, 
+                    longitude: location.Longitude);
+                destinationCoordinate = new Coordinate(
+                    latitude: currentLocation.Latitude, 
+                    longitude: currentLocation.Longitude);
+                
+                distance = GeoCalculator.GetDistance(
+                    originCoordinate: currentCoordinate,
+                    destinationCoordinate: destinationCoordinate, 
+                    distanceUnit: DistanceUnit.Meters);
+                
+                if(distance <= Constants.DESTINATION_MAXMIMUM_DISTANCE)
+                {
+                    LoggerService.Instance.LogDebug($"Destination {Name} is arrived.");
+                    isArrived = true;
+                    break;
+                }
+            }
+
+            return isArrived;
         }
     }
 }
