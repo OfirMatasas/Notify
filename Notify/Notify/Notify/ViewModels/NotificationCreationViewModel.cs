@@ -217,7 +217,7 @@ namespace Notify.ViewModels
         
         private async void onBackClicked()
         {
-            await Shell.Current.GoToAsync("///notifications");
+            await Shell.Current.GoToAsync(Constants.SHELL_NAVIGATION_NOTIFICATIONS);
         }
     }
 }

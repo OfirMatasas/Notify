@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using Notify.Helpers;
+using Xamarin.Forms;
 
 namespace Notify.ViewModels
 {
@@ -13,7 +14,7 @@ namespace Notify.ViewModels
         
         private async void onBackButtonClicked()
         {
-            await Shell.Current.GoToAsync("///settings");
+            await Shell.Current.GoToAsync(Constants.SHELL_NAVIGATION_SETTINGS);
         }
     }
 }

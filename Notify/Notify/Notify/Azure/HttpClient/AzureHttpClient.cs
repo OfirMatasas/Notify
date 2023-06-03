@@ -9,7 +9,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Notify.Core;
 using Notify.Helpers;
+using Notify.Services;
 using Xamarin.Essentials;
+using Xamarin.Forms;
 using Location = Notify.Core.Location;
 
 namespace Notify.Azure.HttpClient

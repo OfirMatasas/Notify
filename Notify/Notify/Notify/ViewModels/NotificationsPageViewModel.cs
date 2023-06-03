@@ -52,7 +52,7 @@ namespace Notify.ViewModels
 
         private async void onCreateNotificationClicked()
         {
-            await Shell.Current.GoToAsync("///create_notification");
+            await Shell.Current.GoToAsync(Constants.SHELL_NAVIGATION_CREATE_NOTIFICATION);
         }
 
         #endregion

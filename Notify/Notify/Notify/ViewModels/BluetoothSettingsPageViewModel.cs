@@ -1,4 +1,7 @@
-﻿using Xamarin.Forms;
+using System;
+using System.Diagnostics;
+using Serilog.Core;
+using Xamarin.Forms;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Microsoft.IdentityModel.Tokens;
@@ -39,7 +42,7 @@ namespace Notify.ViewModels
 
         private async void onBackButtonClicked()
         {
-            await Shell.Current.GoToAsync("///settings");
+            await Shell.Current.GoToAsync(Constants.SHELL_NAVIGATION_SETTINGS);
         }
 
         private async void onUpdateBluetoothSettingsClicked()

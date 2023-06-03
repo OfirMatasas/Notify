@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Notify.Helpers;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -34,22 +35,22 @@ namespace Notify.ViewModels
 
         private async void onLocationSettingsButtonClicked()
         {
-            await Shell.Current.GoToAsync("///location_settings");
+            await Shell.Current.GoToAsync(Constants.SHELL_NAVIGATION_LOCATION_SETTINGS);
         }
         
         private async void onNotificationSettingsButtonClicked()
         {
-            await Shell.Current.GoToAsync("///notification_settings");
+            await Shell.Current.GoToAsync(Constants.SHELL_NAVIGATION_NOTIFICATIONS_SETTINGS);
         }
         
         private async void onWifiSettingsButtonClicked()
         {
-            await Shell.Current.GoToAsync("///wifi_settings");
+            await Shell.Current.GoToAsync(Constants.SHELL_NAVIGATION_WIFI_SETTINGS);
         }
         
         private async void onBluetoothSettingsButtonClicked()
         {
-            await Shell.Current.GoToAsync("///bluetooth_settings");
+            await Shell.Current.GoToAsync(Constants.SHELL_NAVIGATION_BLUETOOTH_SETTINGS);
         }
         
         private void DarkModeToggleCommandHandler()
