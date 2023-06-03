@@ -9,7 +9,7 @@
 
 ## 📝 Description
 
-Notify is a unique social reminder app that utilizes dynamic location-based reminders. With Notify, users can set personalized "smart" reminders based on time and/or location, both on their device and for other users. The app's registration process is phone number-based, sending an SMS containing a verification code to the number used for registration.
+Notify is an exceptional social reminder application that employs dynamic location-based reminders. Through Notify, users have the ability to configure personalized "smart" reminders based on time and/or location, both on their own device and for other users. The app's registration process is based on phone numbers, where an SMS containing a verification code is sent to the registered number.
 
 ## 🌟 Features
 
