@@ -168,18 +168,25 @@ namespace Notify
 
                     arrivedLocationNotifications = checkIfArrivedToLocation(searchedLocationsInfo, location);
                     
-                    Device.BeginInvokeOnMainThread(() =>
+                    if (arrivedLocationNotifications.Count() > 0)
                     {
-                        try
+                        Device.BeginInvokeOnMainThread(() =>
                         {
-                            AnnounceDestinationArrival(arrivedLocationNotifications);
-                            updateStatusOfSentNotifications(arrivedLocationNotifications);
-                        }
-                        catch (Exception ex)
-                        {
-                            r_Logger.LogError($"Failed in MessagingCenter.Subscribe<Location>: {ex.Message}");
-                        }
-                    });
+                            try 
+                            {
+                                AnnounceDestinationArrival(arrivedLocationNotifications);
+                                updateStatusOfSentNotifications(arrivedLocationNotifications); 
+                            }
+                            catch (Exception ex)
+                            {
+                                r_Logger.LogError($"Failed in MessagingCenter.Subscribe<Location>: {ex.Message}");
+                            }
+                        });
+                    }
+                    else
+                    {
+                        r_Logger.LogDebug($"Haven't arrived at any location set in notifications.");
+                    }
                 });
             }
         }
