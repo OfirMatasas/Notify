@@ -183,7 +183,7 @@ namespace Notify.Azure.HttpClient
 
             try
             {
-                data.username = userName;
+                data.userName = userName;
                 data.telephone = telephone;
 
                 json = JsonConvert.SerializeObject(data);
