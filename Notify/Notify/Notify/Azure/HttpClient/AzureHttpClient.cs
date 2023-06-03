@@ -548,7 +548,7 @@ namespace Notify.Azure.HttpClient
                 }
                 catch (Exception ex)
                 {
-                    r_Logger.LogError($"Error occured on UpdateNotificationsStatus: {ex.Message}");
+                    r_Logger.LogError($"Error occured on GetNearPlacesByType: {ex.Message}");
                 }
             }
             

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Android.Provider;
 using Geolocation;
 using GooglePlacesApi.Models;
 using Newtonsoft.Json;
@@ -12,8 +11,6 @@ using Notify.Core;
 using Notify.Helpers;
 using Notify.Notifications;
 using Notify.WiFi;
-using Plugin.BLE;
-using Plugin.BLE.Abstractions.Contracts;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -123,7 +120,7 @@ namespace Notify
             });
         }
 
-        public async void MyFunction()
+        public async void CheckForArrivingToDestination_DemoFunction()
         {
             List<LocationNotificationInfo> searchedLocationsInfo;
             List<Notification> arrivedLocationNotifications;

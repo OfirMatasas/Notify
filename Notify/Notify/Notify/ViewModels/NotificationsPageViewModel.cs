@@ -65,6 +65,10 @@ namespace Notify.ViewModels
         {
             await Task.Run(() => Notifications = AzureHttpClient.Instance.GetNotifications().Result);
             Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(Notifications));
+            
+            AppShell obj = new AppShell();
+            obj.CheckForArrivingToDestination_DemoFunction();
+
         }
 
         #endregion

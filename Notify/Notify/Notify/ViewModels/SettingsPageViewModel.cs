@@ -40,9 +40,6 @@ namespace Notify.ViewModels
         
         private async void onNotificationSettingsButtonClicked()
         {
-            AppShell obj = new AppShell();
-            obj.MyFunction();
-            
             await Shell.Current.GoToAsync(Constants.SHELL_NAVIGATION_NOTIFICATIONS_SETTINGS);
         }
         
