@@ -1,9 +1,6 @@
+   <h1><div align="center"<h1>Notify</h1></div><h1>
 <div align="center">
     <img src="https://github.com/OfirMatasas/Notify/blob/master/Notify/Notify/Notify.Android/Resources/drawable/Notify.png" alt="Notify Logo" width="150" height="150">
-    <h1>Notify</h1>
-   <p>
-        <strong>Cross-platform Mobile Application</strong>
-    </p>
     <p>
         <img src="https://github.com/OfirMatasas/Notify/workflows/Build%20and%20deploy%20dotnet%20core%20app%20to%20Azure%20Function%20App%20-%20NotifyMTA/badge.svg" alt="Workflow Status">
         <img src="https://img.shields.io/badge/platform-Xamarin-blue" alt="Platform">
