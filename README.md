@@ -1,11 +1,8 @@
    <h1><div align="center"<h1>Notify</h1></div><h1>
 <div align="center">
-    <img src="https://github.com/OfirMatasas/Notify/blob/master/Notify/Notify/Notify.Android/Resources/drawable/Notify.png" alt="Notify Logo" width="150" height="150">
+    <img src="https://github.com/OfirMatasas/Notify/blob/master/Notify/Notify/Notify.Android/Resources/drawable/Notify.png" alt="Notify Logo" width="350" height="350">
     <p>
         <img src="https://github.com/OfirMatasas/Notify/workflows/Build%20and%20deploy%20dotnet%20core%20app%20to%20Azure%20Function%20App%20-%20NotifyMTA/badge.svg" alt="Workflow Status">
-        <img src="https://img.shields.io/badge/platform-Xamarin-blue" alt="Platform">
-        <img src="https://img.shields.io/badge/Serverless-Azure_Functions-green" alt="Serverless: Azure Functions">
-        <img src="https://img.shields.io/badge/Database-CosmosDB-yellow" alt="Database: CosmosDB">
     </p>
 </div>
 
@@ -38,19 +35,24 @@ Instructions and examples for use will be provided here. Screenshots can be incl
 
 ## 🛠️ Built with
 
-<div>
+<div align="center">
     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/xamarin/xamarin-original.svg" alt="Xamarin" width="50" height="50">
+    <img src="https://img.shields.io/badge/Xamarin-blue?logo=xamarin&logoColor=white" alt="Xamarin Badge">
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg" alt="Azure Functions" width="50" height="50">
+    <img src="https://img.shields.io/badge/Azure_Functions-green?logo=microsoft-azure&logoColor=white" alt="Azure Functions Badge">
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" alt="CosmosDB" width="50" height="50">
+    <img src="https://img.shields.io/badge/CosmosDB-yellow?logo=mongodb&logoColor=white" alt="CosmosDB Badge">
 </div>
 
 ## 👥 Credits
 
 This project exists thanks to the following contributors:
 
-| [Lin Moskovitch](https://github.com/linmoskovitch) | [Ofir Matasas](https://github.com/ofirmatasas) | [Dekel Amrani](https://github.com/DekelR) |
+| [<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" width="20"> Lin Moskovitch](https://github.com/linmoskovitch) | [<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" width="20"> Ofir Matasas](https://github.com/ofirmatasas) | [<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" width="20"> Dekel Amrani](https://github.com/DekelR) |
 | --- | --- | --- |
-| [<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" width="20">](https://www.linkedin.com/in/lin-moskovitch) | [<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" width="20">](https://www.linkedin.com/in/ofir-matasas) | [<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" width="20">](https://www.linkedin.com/in/dekel-amrani-b28b24232/?originalSubdomain=il) |
+| [<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" width="20"> Lin Moskovitch](https://www.linkedin.com/in/lin-moskovitch) | [<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" width="20"> Ofir Matasas](https://www.linkedin.com/in/ofir-matasas) | [<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" width="20"> Dekel Amrani](https://www.linkedin.com/in/dekel-amrani-b28b24232/?originalSubdomain=il) |
 
 ## 📃 License
 
@@ -59,7 +61,3 @@ This project exists thanks to the following contributors:
 ## 🤝 How to Contribute
 
 Guidelines for other developers who would like to contribute to the project will be provided here.
-
-## 🧪 Tests
-
-Examples of how to run tests for the application will be provided here.
