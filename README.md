@@ -19,12 +19,12 @@ Notify is an exceptional social reminder application that employs dynamic locati
     - Predefined groups.
 - **Reminder types:**
     - Static location.
-    - Type of location (e.g., supermarket, ATM, pharmacy).
+    - Place type (e.g., supermarket, ATM, pharmacy).
     - Time.
     - WiFi - Upon connection/disconnection.
     - Bluetooth - Upon connection/disconnection.
 
-Location type reminders allow users to choose a type of location and a distance from the location, receiving a notification when they are within the defined distance from the location. For example, a user who needs to withdraw cash could set a reminder for 50 meters from an ATM, receiving a notification on their device along with the location of the nearby ATM when they come within 50 meters of any ATM.
+Location-based reminders allow users to select a specific type of location and set a desired distance from that location. Users will receive a notification when they are within the defined distance from the chosen location. For instance, if a user needs to withdraw cash, they can set a reminder for 50 meters from an ATM. When they approach within 50 meters of any ATM, they will receive a notification on their device along with the nearby ATM's location information.
 
 ## 🚀 Installation
 
