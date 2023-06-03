@@ -54,7 +54,7 @@ This project exists thanks to the following contributors:
 
 ## 📃 License
 
-![GitHub](https://img.shields.io/github/license/OfirMatasas/Notify)
+![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)
 
 ## 🤝 How to Contribute
 
