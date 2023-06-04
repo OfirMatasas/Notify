@@ -10,10 +10,13 @@ namespace Notify.Core
         private List<Location> m_Locations = new List<Location>();
         private string m_SSID;
         private string m_Bluetooth;
+        private Location m_LastUpdatedLocation = new Location(0, 0);
+        private bool m_IsDynamic;
 
-        public Destination(string name)
+        public Destination(string name, bool isDynamic = false)
         {
             Name = name;
+            IsDynamic = isDynamic;
         }
 
         public string Name
@@ -38,6 +41,18 @@ namespace Notify.Core
         {
             get => m_Bluetooth;
             set => m_Bluetooth = value;
+        }
+        
+        public Location LastUpdatedLocation
+        {
+            get => m_LastUpdatedLocation;
+            set => m_LastUpdatedLocation = value;
+        }
+        
+        public bool IsDynamic
+        {
+            get => m_IsDynamic;
+            set => m_IsDynamic = value;
         }
 
         public bool IsArrived(Location currentLocation)
@@ -69,6 +84,26 @@ namespace Notify.Core
             }
 
             return isArrived;
+        }
+
+        public bool ShouldLocationsBeUpdated(Location location)
+        {
+            Coordinate currentCoordinate, lastUpdatedLocationCoordinate;
+            double distance;
+            
+            currentCoordinate = new Coordinate(
+                latitude: location.Latitude, 
+                longitude: location.Longitude);
+            lastUpdatedLocationCoordinate = new Coordinate(
+                latitude: LastUpdatedLocation.Latitude, 
+                longitude: LastUpdatedLocation.Longitude);
+            
+            distance = GeoCalculator.GetDistance(
+                originCoordinate: currentCoordinate,
+                destinationCoordinate: lastUpdatedLocationCoordinate, 
+                distanceUnit: DistanceUnit.Meters);        
+            
+            return distance >= Constants.DYANMIC_DESTINATION_UPDATE_DISTANCE_THRESHOLD;
         }
     }
 }

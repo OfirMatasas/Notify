@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
@@ -16,8 +17,9 @@ namespace Notify.Functions.Google
     public static class GetDynamicLocations
     {
         [FunctionName("GetDynamicLocations")]
+        [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "destination/dynamic")]
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "destination/dynamic")]
             HttpRequest req, ILogger log)
         {
             string requestBody;

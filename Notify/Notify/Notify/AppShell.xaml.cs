@@ -9,8 +9,6 @@ using Notify.Core;
 using Notify.Helpers;
 using Notify.Notifications;
 using Notify.WiFi;
-using Plugin.BLE;
-using Plugin.BLE.Abstractions.Contracts;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -21,7 +19,6 @@ namespace Notify
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AppShell
     {
-        private static readonly LoggerService r_Logger = LoggerService.Instance;
         private readonly INotificationManager notificationManager = DependencyService.Get<INotificationManager>();
         private readonly IWiFiManager m_WiFiManager = DependencyService.Get<IWiFiManager>();
         private static readonly object m_NotificationsLock = new object();
@@ -88,11 +85,11 @@ namespace Notify
                 {
                     try
                     {
-                        r_Logger.LogInformation("You've arrived at your destination!");
+                        LoggerService.Instance.LogInformation("You've arrived at your destination!");
                     }
                     catch (Exception ex)
                     {
-                        r_Logger.LogError($"Failed in MessagingCenter.Subscribe<LocationArrivedMessage>: {ex.Message}");
+                        LoggerService.Instance.LogError($"Failed in MessagingCenter.Subscribe<LocationArrivedMessage>: {ex.Message}");
                     }
                 });
             });
@@ -104,7 +101,7 @@ namespace Notify
             {
                 Device.BeginInvokeOnMainThread(() =>
                 {
-                    r_Logger.LogWarning("There was an error updating location!");
+                    LoggerService.Instance.LogWarning("There was an error updating location!");
                 });
             });
         }
@@ -115,7 +112,7 @@ namespace Notify
             {
                 Device.BeginInvokeOnMainThread(() =>
                 {
-                    r_Logger.LogDebug("Location Service has been stopped!");
+                    LoggerService.Instance.LogDebug("Location Service has been stopped!");
                 });
             });
         }
@@ -124,34 +121,58 @@ namespace Notify
         {
             MessagingCenter.Subscribe<Location>(this, "Location", location =>
             {
-                List<string> destinationsArrived = new List<string>();
-                List<Notification> arrivedLocationNotifications;
+                LoggerService.Instance.LogDebug($"Location: latitude: {location.Latitude}, longitude: {location.Longitude}");
                 
-                r_Logger.LogDebug($"Location: latitude: {location.Latitude}, longitude: {location.Longitude}");
-                
-                destinationsArrived = getAllArrivedDestinations(location);
-
-                if (destinationsArrived.Count > 0)
-                {
-                    lock (m_NotificationsLock)
-                    {
-                        arrivedLocationNotifications = getAllArrivedLocationNotifications(destinationsArrived);
-                    
-                        Device.BeginInvokeOnMainThread(() =>
-                        {
-                            try
-                            {
-                                AnnounceDestinationArrival(arrivedLocationNotifications);
-                                updateStatusOfSentNotifications(arrivedLocationNotifications);
-                            }
-                            catch (Exception ex)
-                            {
-                                r_Logger.LogError($"Failed in MessagingCenter.Subscribe<Location>: {ex.Message}");
-                            }
-                        });
-                    }
-                }
+                checkIfDynamicLocationNotificationShouldBeUpdated(location);
+                checkIfThereAreNotificationsThatShouldBeTriggered(location);
             });
+        }
+
+        private async void checkIfDynamicLocationNotificationShouldBeUpdated(Location location)
+        {
+            string destinationsJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, string.Empty);
+            List<Destination> destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationsJson);
+
+            foreach (Destination destination in destinations)
+            {
+                if (destination.ShouldLocationsBeUpdated(location))
+                {
+                    LoggerService.Instance.LogDebug($"Updating dynamic locations for {destination.Name}");
+                    destination.Locations = await AzureHttpClient.Instance.GetNearbyPlaces(destination.Name, location);
+                    destination.LastUpdatedLocation = location;
+                    LoggerService.Instance.LogDebug($"Updated {destination.Locations.Count} dynamic locations for {destination.Name}");
+                }
+            }
+            
+            Preferences.Set(Constants.PREFERENCES_DESTINATIONS, JsonConvert.SerializeObject(destinations));
+        }
+
+        private void checkIfThereAreNotificationsThatShouldBeTriggered(Location location)
+        {
+            List<string> destinationsArrived = new List<string>();
+            List<Notification> arrivedLocationNotifications;
+            destinationsArrived = getAllArrivedDestinations(location);
+
+            if (destinationsArrived.Count > 0)
+            {
+                lock (m_NotificationsLock)
+                {
+                    arrivedLocationNotifications = getAllArrivedLocationNotifications(destinationsArrived);
+
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        try
+                        {
+                            AnnounceDestinationArrival(arrivedLocationNotifications);
+                            updateStatusOfSentNotifications(arrivedLocationNotifications);
+                        }
+                        catch (Exception ex)
+                        {
+                            LoggerService.Instance.LogError($"Failed in checkIfThereAreNotificationsThatShouldBeTriggered: {ex.Message}");
+                        }
+                    });
+                }
+            }
         }
 
         private static void updateStatusOfSentNotifications(List<Notification> arrivedLocationNotifications)
@@ -164,7 +185,7 @@ namespace Notify
                 if (arrivedLocationNotifications.Any(arrivedNotification => arrivedNotification.ID.Equals(notification.ID)))
                 {
                     notification.Status = "Sent";
-                    r_Logger.LogDebug($"Updated status of notification {notification.ID} to 'Sent'");
+                    LoggerService.Instance.LogDebug($"Updated status of notification {notification.ID} to 'Sent'");
                 }
             });
             
@@ -183,12 +204,12 @@ namespace Notify
                 if (destination.IsArrived(location))
                 {
                     destinationsArrived.Add(destination.Name);
-                    r_Logger.LogDebug($"Added {destination.Name} to destinations arrived list");
+                    LoggerService.Instance.LogDebug($"Added {destination.Name} to destinations arrived list");
                 }
             });
             
-            r_Logger.LogDebug($"Arrived to {destinationsArrived.Count} destinations of out {destinations.Count}:");
-            r_Logger.LogDebug($"- {string.Join($"{Environment.NewLine}- ", destinationsArrived)}");
+            LoggerService.Instance.LogDebug($"Arrived to {destinationsArrived.Count} destinations of out {destinations.Count}:");
+            LoggerService.Instance.LogDebug($"- {string.Join($"{Environment.NewLine}- ", destinationsArrived)}");
             
             return destinationsArrived;
         }
@@ -208,12 +229,12 @@ namespace Notify
                         bool isNewNotification = notification.Status.ToLower().Equals("new");
 
                         if (isLocationNotification && isArrivedLocationNotification && isNewNotification)
-                            r_Logger.LogDebug($"Found arrived location notification: {notification.ID}");
+                            LoggerService.Instance.LogDebug($"Found arrived location notification: {notification.ID}");
                         
                         return isLocationNotification && isArrivedLocationNotification && isNewNotification;
                     });
 
-            r_Logger.LogDebug($"Found {arrivedLocationNotifications.Count} arrived location notifications");
+            LoggerService.Instance.LogDebug($"Found {arrivedLocationNotifications.Count} arrived location notifications");
 
             
             notifications.ForEach(notification =>
@@ -221,12 +242,12 @@ namespace Notify
                 if (arrivedLocationNotifications.Contains(notification))
                 {
                     notification.Status = "Sending";
-                    r_Logger.LogDebug($"Updated status of notification {notification.ID} to 'Sending'");
+                    LoggerService.Instance.LogDebug($"Updated status of notification {notification.ID} to 'Sending'");
                 }
             });
             
             Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
-            r_Logger.LogDebug($"Found {arrivedLocationNotifications.Count} arrived location notifications");
+            LoggerService.Instance.LogDebug($"Found {arrivedLocationNotifications.Count} arrived location notifications");
             return arrivedLocationNotifications;
         }
 
@@ -238,8 +259,8 @@ namespace Notify
                     title: notification.Name,
                     message: $"{notification.Description}{Environment.NewLine}- {notification.Creator}");
                 
-                r_Logger.LogDebug($"You've arrived at your {notification.TypeInfo} destination!");
-                r_Logger.LogDebug($"Notification: {notification.Name}, {notification.Description}, {notification.Creator}");
+                LoggerService.Instance.LogDebug($"You've arrived at your {notification.TypeInfo} destination!");
+                LoggerService.Instance.LogDebug($"Notification: {notification.Name}, {notification.Description}, {notification.Creator}");
             });
         }
 
@@ -264,18 +285,18 @@ namespace Notify
                     MessagingCenter.Send(startServiceMessage, "ServiceStarted");
                     Preferences.Set(Constants.START_LOCATION_SERVICE, false);
 
-                    r_Logger.LogDebug("Location Service has been started!");
+                    LoggerService.Instance.LogDebug("Location Service has been started!");
                 }
             }
             catch (Exception ex)
             {
-                r_Logger.LogError(ex.Message);
+                LoggerService.Instance.LogError(ex.Message);
             }
         }
 
         private void showNotification(string title, string message)
         {
-            r_Logger.LogInformation($"title: {title}, message: {message}");
+            LoggerService.Instance.LogInformation($"title: {title}, message: {message}");
         }
     }
 }

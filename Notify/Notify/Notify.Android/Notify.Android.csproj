@@ -102,6 +102,7 @@
     <AndroidResource Include="Resources\drawable\friends.png" />
     <AndroidResource Include="Resources\drawable\google.png" />
     <AndroidResource Include="Resources\drawable\groups.png" />
+    <AndroidResource Include="Resources\drawable\ofir_profile_image.jpg" />
     <AndroidResource Include="Resources\drawable\refresh_icon.png" />
     <AndroidResource Include="Resources\drawable\home.png" />
     <AndroidResource Include="Resources\drawable\lock.jpeg" />

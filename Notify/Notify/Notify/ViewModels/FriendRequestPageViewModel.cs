@@ -38,6 +38,18 @@ namespace Notify.ViewModels
             }
         }
 
+        private List<Friend> m_FriendRequestsList;
+
+        public List<Friend> FriendRequestsList
+        {
+            get => m_FriendRequestsList;
+            set
+            {
+                m_FriendRequestsList = value;
+                OnPropertyChanged(nameof(FriendRequestsList));
+            }
+        }
+        
         private Friend m_SelectedUserName;
         public Friend SelectedUserName
         {
@@ -48,13 +60,25 @@ namespace Notify.ViewModels
                 OnPropertyChanged(nameof(SelectedUserName));
             }
         }
-        
+
+        private bool m_AreThereFriendRequests;
+        public bool AreThereFriendRequests
+        {
+            get => m_AreThereFriendRequests;
+            set
+            {
+                m_AreThereFriendRequests = value;
+                OnPropertyChanged(nameof(AreThereFriendRequests));
+            }
+        }
+
         public FriendRequestPageViewModel()
         {
             BackCommand = new Command(onBackButtonClicked);
             SendRequestCommand = new Command(onSendRequestButtonClicked);
             SearchTextChangedCommand = new Command(onSearchTextChanged);
             PopulateUsersList();
+            PopulateFriendRequestsList();
         }
 
         private void onSearchTextChanged()
@@ -82,6 +106,17 @@ namespace Notify.ViewModels
             
             UsersList = JsonConvert.DeserializeObject<List<Friend>>(usersListJson);
             UsersSelectionList = UsersList = await AzureHttpClient.Instance.GetNotFriendsUsers();
+        }
+        
+        private async void PopulateFriendRequestsList()
+        {
+            //string usersListJson = Preferences.Get(Constants.PREFERENCES_FRIEND_REQUESTS, "");
+            
+            //UsersList = JsonConvert.DeserializeObject<List<Friend>>(usersListJson);
+            FriendRequestsList = new List<Friend>()
+            {
+                new Friend("Ofir", "OfirOfir", "0542001717")
+            };
         }
 
         private void onSendRequestButtonClicked()

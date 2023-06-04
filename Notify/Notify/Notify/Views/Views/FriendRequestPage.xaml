@@ -47,60 +47,131 @@
                 VerticalOptions="Start" />
 
             <ScrollView Grid.Row="2">
-                <CollectionView
-                    HorizontalOptions="Center"
-                    ItemsSource="{Binding UsersSelectionList}"
-                    Margin="20,10,20,0"
-                    SelectedItem="{Binding SelectedUserName}"
-                    SelectionMode="Single">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid
-                                Column="2"
-                                ColumnDefinitions="*, *"
-                                HorizontalOptions="Center"
-                                Margin="0,10,0,0"
-                                RowDefinitions="auto">
-                                <Image
-                                    Grid.Column="0"
-                                    Grid.Row="0"
-                                    Grid.RowSpan="2"
-                                    HeightRequest="30"
+                <StackLayout>
+
+                    <CollectionView
+                        HorizontalOptions="Center"
+                        IsVisible="{Binding AreThereFriendRequests}"
+                        ItemsSource="{Binding FriendRequestsList}"
+                        Margin="20,10,20,0"
+                        SelectedItem="{Binding SelectedUserName}"
+                        SelectionMode="Single">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid
+                                    Column="2"
+                                    ColumnDefinitions="*, *, *"
+                                    HeightRequest="60"
                                     HorizontalOptions="Center"
-                                    Source="{Binding ProfileImage}"
-                                    VerticalOptions="Center" />
-                                <materialDesignControls1:MaterialLabel
-                                    FontAttributes="Bold"
-                                    FontSize="Medium"
-                                    Grid.Column="1"
-                                    Grid.ColumnSpan="2"
-                                    Grid.Row="0"
-                                    HorizontalOptions="Start"
-                                    Style="{StaticResource Body1FontSize_ExoBold}"
-                                    Text="{Binding UserName}"
-                                    VerticalTextAlignment="Center" />
-                                <materialDesignControls1:MaterialLabel
-                                    FontSize="Small"
-                                    Grid.Column="1"
-                                    Grid.Row="1"
-                                    HorizontalOptions="Start"
-                                    Style="{StaticResource Body1FontSize_ExoBold}"
-                                    Text="{Binding Name}"
-                                    VerticalTextAlignment="Center" />
-                                <VisualStateManager.VisualStateGroups>
-                                    <VisualStateGroup Name="CommonStates">
-                                        <VisualState Name="Normal" />
-                                        <VisualState Name="Selected">
-                                            <VisualState.Setters>
-                                                <Setter Property="BackgroundColor" Value="Gray" />
-                                            </VisualState.Setters>
-                                        </VisualState>
-                                    </VisualStateGroup>
-                                </VisualStateManager.VisualStateGroups>
-                            </Grid>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
+                                    Margin="0,10,0,0"
+                                    Row="4"
+                                    RowDefinitions="Auto, Auto, Auto, Auto">
+                                    <Image
+                                        Grid.Column="0"
+                                        Grid.Row="0"
+                                        Grid.RowSpan="2"
+                                        HeightRequest="30"
+                                        HorizontalOptions="Center"
+                                        Source="{Binding ProfileImage}"
+                                        VerticalOptions="Center" />
+                                    <materialDesignControls1:MaterialLabel
+                                        FontAttributes="Bold"
+                                        FontSize="Medium"
+                                        Grid.Column="1"
+                                        Grid.ColumnSpan="2"
+                                        Grid.Row="0"
+                                        HorizontalOptions="Start"
+                                        Style="{StaticResource Body1FontSize_ExoBold}"
+                                        Text="{Binding UserName}"
+                                        VerticalTextAlignment="Center" />
+                                    <materialDesignControls1:MaterialLabel
+                                        FontSize="Small"
+                                        Grid.Column="1"
+                                        Grid.Row="1"
+                                        HorizontalOptions="Start"
+                                        Style="{StaticResource Body1FontSize_ExoBold}"
+                                        Text="{Binding Name}"
+                                        VerticalTextAlignment="Center" />
+                                    <materialDesignControls1:MaterialButton
+                                        BackgroundColor="LawnGreen"
+                                        Grid.Column="3"
+                                        Grid.RowSpan="2"
+                                        Text="Accept" />
+                                    <materialDesignControls1:MaterialButton
+                                        BackgroundColor="Red"
+                                        Grid.Column="4"
+                                        Grid.RowSpan="2"
+                                        Text="Decline" />
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroup Name="CommonStates">
+                                            <VisualState Name="Normal" />
+                                            <VisualState Name="Selected">
+                                                <VisualState.Setters>
+                                                    <Setter Property="BackgroundColor" Value="Gray" />
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateManager.VisualStateGroups>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <CollectionView
+                        HorizontalOptions="Center"
+                        ItemsSource="{Binding UsersSelectionList}"
+                        Margin="20,10,20,0"
+                        SelectedItem="{Binding SelectedUserName}"
+                        SelectionMode="Single">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid
+                                    Column="2"
+                                    ColumnDefinitions="*, *"
+                                    HorizontalOptions="Center"
+                                    Margin="0,10,0,0"
+                                    RowDefinitions="auto">
+                                    <Image
+                                        Grid.Column="0"
+                                        Grid.Row="0"
+                                        Grid.RowSpan="2"
+                                        HeightRequest="30"
+                                        HorizontalOptions="Center"
+                                        Source="{Binding ProfileImage}"
+                                        VerticalOptions="Center" />
+                                    <materialDesignControls1:MaterialLabel
+                                        FontAttributes="Bold"
+                                        FontSize="Medium"
+                                        Grid.Column="1"
+                                        Grid.ColumnSpan="2"
+                                        Grid.Row="0"
+                                        HorizontalOptions="Start"
+                                        Style="{StaticResource Body1FontSize_ExoBold}"
+                                        Text="{Binding UserName}"
+                                        VerticalTextAlignment="Center" />
+                                    <materialDesignControls1:MaterialLabel
+                                        FontSize="Small"
+                                        Grid.Column="1"
+                                        Grid.Row="1"
+                                        HorizontalOptions="Start"
+                                        Style="{StaticResource Body1FontSize_ExoBold}"
+                                        Text="{Binding Name}"
+                                        VerticalTextAlignment="Center" />
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroup Name="CommonStates">
+                                            <VisualState Name="Normal" />
+                                            <VisualState Name="Selected">
+                                                <VisualState.Setters>
+                                                    <Setter Property="BackgroundColor" Value="Gray" />
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateManager.VisualStateGroups>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </StackLayout>
             </ScrollView>
 
             <materialDesignControls1:MaterialButton

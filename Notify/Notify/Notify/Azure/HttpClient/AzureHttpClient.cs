@@ -383,24 +383,43 @@ namespace Notify.Azure.HttpClient
 
         public async Task<List<Notification>> GetNotifications()
         {
-            return await GetData(
+            List<Notification> notifications = await GetData(
                 endpoint: Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION,
                 preferencesKey: Constants.PREFERENCES_NOTIFICATIONS, 
-                converter:  notification => { 
-                    NotificationType notificationType = notification.notification.location == null ? NotificationType.Time : NotificationType.Location; 
-                    object notificationTypeValue = notification.notification.location ?? DateTimeOffset.FromUnixTimeSeconds((long)notification.notification.timestamp).LocalDateTime;
-                    
-                    return new Notification(
-                        id: (string)notification.id,
-                        name: (string)notification.notification.name, 
-                        description: (string)(notification.description ?? notification.info), 
-                        creationDateTime: DateTimeOffset.FromUnixTimeSeconds((long)notification.creation_timestamp).LocalDateTime, 
-                        status: (string)notification.status, 
-                        creator: (string)notification.creator, 
-                        type: notificationType, 
-                        typeInfo: notificationTypeValue, 
-                        target: (string)notification.user);
+                converter: Converter.ToNotification);
+
+            createNewDynamicDestinations(notifications);
+
+            return notifications;
+        }
+
+        private void createNewDynamicDestinations(List<Notification> notifications)
+        {
+            List<string> newDynamicDestinations;
+            string destinationsJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, string.Empty);
+            List<Destination> destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationsJson);
+            
+            newDynamicDestinations = Constants.DYNAMIC_PLACE_LIST.FindAll(place =>
+            {
+                bool isPlaceInDestinations = destinations.Any(destination => destination.Name.Equals(place));
+                bool isPlaceInNotifications = notifications.Any(notification =>
+                    notification.Type.Equals(NotificationType.Dynamic) && notification.TypeInfo.Equals(place));
+                
+                return !isPlaceInDestinations && isPlaceInNotifications;
             });
+            
+            if(newDynamicDestinations.Count > 0)
+            {
+                LoggerService.Instance.LogInformation($"New dynamic destinations: {string.Join(", ", newDynamicDestinations)}");
+            }
+            
+            foreach (string dynamicDestination in newDynamicDestinations)
+            {
+                destinations.Add(new Destination(dynamicDestination, true));
+            }
+            
+            LoggerService.Instance.LogDebug($"New destinations: {string.Join(", ", destinations.Select(destination => destination.Name))}");
+            Preferences.Set(Constants.PREFERENCES_DESTINATIONS, JsonConvert.SerializeObject(destinations));
         }
 
         public async Task<List<Friend>> GetFriends()
@@ -417,7 +436,7 @@ namespace Notify.Azure.HttpClient
         public async Task<List<Destination>> GetDestinations()
         {
             return await GetData( 
-                endpoint: Constants.AZURE_FUNCTIONS_PATTERN_DESTINATIONS, 
+                endpoint: Constants.AZURE_FUNCTIONS_PATTERN_DESTINATION, 
                 preferencesKey: Constants.PREFERENCES_DESTINATIONS,
                 converter: destination =>
                 {
@@ -539,6 +558,48 @@ namespace Notify.Azure.HttpClient
             
             createJsonStringContent(JsonConvert.SerializeObject(request));
             await postAsync(requestUri: Constants.AZURE_FUNCTIONS_PATTERN_FRIEND_REQUEST, createJsonStringContent(json));
+        }
+
+        public async Task<List<Location>> GetNearbyPlaces(string destination, Location location)
+        {
+            List<Location> nearbyPlaces = new List<Location>();
+            HttpResponseMessage response;
+            dynamic returnedObject;
+            dynamic data = new JObject
+            {
+                { "type", destination },
+                { "longitude", location.Longitude },
+                { "latitude", location.Latitude }
+            };
+
+            try
+            {
+                response = await postAsync(
+                    requestUri: Constants.AZURE_FUNCTIONS_PATTERN_DYNAMIC_DESTINATION,
+                    content: createJsonStringContent(JsonConvert.SerializeObject(data)));
+
+                response.EnsureSuccessStatusCode();
+                LoggerService.Instance.LogDebug($"Successful status code from Azure Function from GetNearbyPlaces");
+
+                returnedObject = await DeserializeObjectFromResponseAsync(response);
+                if (returnedObject != null)
+                {
+                    foreach (dynamic place in returnedObject)
+                    {
+                        nearbyPlaces.Add(new Location(
+                            name: (string)place.name,
+                            address: (string)place.address,
+                            longitude: (double)place.longitude,
+                            latitude: (double)place.latitude));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggerService.Instance.LogError($"Error occured on GetNearbyPlaces: {ex.Message}");
+            }
+            
+            return nearbyPlaces;
         }
     }
 }

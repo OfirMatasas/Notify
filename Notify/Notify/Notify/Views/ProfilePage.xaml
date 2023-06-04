@@ -10,29 +10,17 @@
                                               Dark={StaticResource DarkPageBackgroundColor}}"
             Column="2"
             ColumnDefinitions="*, *"
-            RowDefinitions="Auto, Auto, Auto, *">
-            <Label
-                FontSize="Large"
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                Grid.Row="0"
-                HorizontalOptions="CenterAndExpand"
-                HorizontalTextAlignment="Center"
-                Margin="0,20,0,0"
-                Style="{StaticResource Body1FontSize_ExoBold}"
-                Text="Profile Page"
-                TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
-                                            Dark={StaticResource DarkPrimaryTextColor}}" />
+            RowDefinitions="Auto, Auto, Auto, *, Auto, Auto, *">
             <Image
                 Grid.ColumnSpan="2"
-                Grid.Row="1"
-                HeightRequest="100"
-                Margin="20"
-                Source="Notify.png"
+                Grid.Row="0"
+                HeightRequest="150"
+                Margin="0,50,0,20"
+                Source="ofir_profile_image.png"
                 WidthRequest="100" />
             <Label
                 Grid.Column="0"
-                Grid.Row="2"
+                Grid.Row="1"
                 HorizontalTextAlignment="End"
                 Style="{StaticResource Body1FontSize_ExoRegular}"
                 Text="Hello,"
@@ -40,7 +28,7 @@
                                             Dark={StaticResource DarkPrimaryTextColor}}" />
             <Label
                 Grid.Column="1"
-                Grid.Row="2"
+                Grid.Row="1"
                 HorizontalTextAlignment="Start"
                 Style="{StaticResource Body1FontSize_ExoBold}"
                 Text="{Binding UserName}"

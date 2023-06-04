@@ -126,8 +126,8 @@ namespace Notify.Helpers
         public static readonly string AZURE_FUNCTIONS_PATTERN_REGISTER = "register";
         public static readonly string AZURE_FUNCTIONS_PATTERN_FRIEND = "friends";
         public static readonly string AZURE_FUNCTIONS_PATTERN_FRIEND_REQUEST = AZURE_FUNCTIONS_PATTERN_FRIEND + "/request";
-        public static readonly string AZURE_FUNCTIONS_PATTERN_DESTINATIONS = "destination";
         public static readonly string AZURE_FUNCTIONS_PATTERN_CHECK_USER_EXISTS = "checkUserExists";
+        public static readonly string AZURE_FUNCTIONS_PATTERN_DYNAMIC_DESTINATION = AZURE_FUNCTIONS_PATTERN_DESTINATION + "/dynamic";
 
         #endregion
 
@@ -149,15 +149,14 @@ namespace Notify.Helpers
         public static readonly string SHELL_NAVIGATION_NOTIFICATIONS_SETTINGS = "///notification_settings";
         public static readonly string SHELL_NAVIGATION_WIFI_SETTINGS = "///wifi_settings";
         public static readonly string SHELL_NAVIGATION_BLUETOOTH_SETTINGS = "///bluetooth_settings";
+        public static readonly string SHELL_NAVIGATION_FRIENDS = "///friends";
         
-
-
-
         #endregion
         
         #region Values
 
         public static readonly int DESTINATION_MAXMIMUM_DISTANCE = 50;
+        public static readonly int DYANMIC_DESTINATION_UPDATE_DISTANCE_THRESHOLD = 500;
         public static readonly int DISTANCE_UPDATE_THRESHOLD = 30;
         public static readonly int METERS_IN_KM = 1000;
         public static readonly int VERIFICATION_CODE_MAX_LENGTH = 6;
@@ -176,6 +175,7 @@ namespace Notify.Helpers
         public static readonly string PREFERENCES_USERNAME = "NotifyUserName";
         public static readonly string PREFERENCES_PASSWORD = "NotifyPassword";
         public static readonly string PREFERENCES_NOT_FRIENDS_USERS = "NotFriendsUsers";
+        public static readonly string PREFERENCES_DYNAMIC_LOCATIONS = "DynamicLocations";
 
         #endregion
 
