@@ -152,8 +152,12 @@ namespace Notify
             List<string> destinationsArrived = new List<string>();
             List<Notification> arrivedLocationNotifications;
             destinationsArrived = getAllArrivedDestinations(location);
+            List<Notification> arrivedTimeNotification;
+            List<Notification> sentNotifications;
+            
+            destinationsArrived = getAllArrivedDestinations(location);
 
-            if (destinationsArrived.Count > 0)
+            if (destinationsArrived.Count > 0 || arrivedTimeNotification.Count > 0)
             {
                 lock (m_NotificationsLock)
                 {
@@ -164,7 +168,8 @@ namespace Notify
                         try
                         {
                             AnnounceDestinationArrival(arrivedLocationNotifications);
-                            updateStatusOfSentNotifications(arrivedLocationNotifications);
+                            sentNotifications = arrivedLocationNotifications.Concat(arrivedTimeNotification).ToList();
+                            updateStatusOfSentNotifications(sentNotifications);
                         }
                         catch (Exception ex)
                         {
@@ -174,15 +179,14 @@ namespace Notify
                 }
             }
         }
-
-        private static void updateStatusOfSentNotifications(List<Notification> arrivedLocationNotifications)
+        
+        private static void updateStatusOfSentNotifications(List<Notification> sentNotifications)
         {
             string json = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
             List<Notification> notifications = JsonConvert.DeserializeObject<List<Notification>>(json);
-            
             notifications.ForEach(notification =>
             {
-                if (arrivedLocationNotifications.Any(arrivedNotification => arrivedNotification.ID.Equals(notification.ID)))
+                if (sentNotifications.Any(sentNotification => sentNotification.ID.Equals(notification.ID)))
                 {
                     notification.Status = "Sent";
                     LoggerService.Instance.LogDebug($"Updated status of notification {notification.ID} to 'Sent'");
@@ -190,7 +194,7 @@ namespace Notify
             });
             
             Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
-            AzureHttpClient.Instance.UpdateNotificationsStatus(arrivedLocationNotifications, "Sent");
+            AzureHttpClient.Instance.UpdateNotificationsStatus(sentNotifications, "Sent");
         }
 
         private List<string> getAllArrivedDestinations(Location location)
@@ -213,7 +217,47 @@ namespace Notify
             
             return destinationsArrived;
         }
-        
+
+        private List<Notification> getAllCurrentTimeNotifications()
+        {
+            string notificationsJson = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
+            List<Notification> notifications = JsonConvert.DeserializeObject<List<Notification>>(notificationsJson);
+            List<Notification> currentTimeNotifications;
+
+            currentTimeNotifications = notifications
+                .FindAll(
+                    notification =>
+                    {
+                        bool isTimeNotification = notification.Type is NotificationType.Time;
+                        bool isCurrentMinuteNotification = notification.TypeInfo is DateTime timeInNotification
+                                                           && timeInNotification.Minute.Equals(DateTime.Now.Minute);
+                        bool isNewNotification = notification.Status.ToLower().Equals("new");
+
+                        if (isTimeNotification && isCurrentMinuteNotification && isNewNotification) 
+                            r_Logger.LogDebug(
+                                $"Found a notification {notification.ID} for the current time {DateTime.Now}:"); 
+                        
+                        return isTimeNotification && isCurrentMinuteNotification && isNewNotification;
+                        
+                    });
+
+            r_Logger.LogDebug($"Found {currentTimeNotifications.Count} current time notifications");
+
+            notifications.ForEach(notification =>
+            {
+                if (currentTimeNotifications.Contains(notification))
+                {
+                    notification.Status = "Sending";
+                    r_Logger.LogDebug($"Updated status of notification {notification.ID} to 'Sending'");
+                }
+            });
+
+            Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
+            r_Logger.LogDebug($"Updated {currentTimeNotifications.Count} current time notifications");
+
+            return currentTimeNotifications;
+        }
+
         private List<Notification> getAllArrivedLocationNotifications(List<string> destinationsArrived)
         {
             string notificationsJson = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
