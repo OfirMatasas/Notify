@@ -43,6 +43,7 @@
 
         <ScrollView>
             <CollectionView
+                EmptyView="No notifications found"
                 ItemsSource="{Binding Notifications}"
                 SelectedItem="{Binding SelectedNotification}"
                 SelectionChangedCommand="{Binding NotificationSelectedCommand}"

@@ -6,59 +6,81 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:xct="http://xamarin.com/schemas/2020/toolkit">
     <ContentPage.Content>
-        <Grid BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor}, Dark={StaticResource DarkPageBackgroundColor}}" RowDefinitions="Auto, Auto, Auto, *">
-            <StackLayout Grid.Row="0" Margin="40">
-                <Label
-                    FontSize="Large"
-                    HorizontalTextAlignment="Center"
-                    Style="{StaticResource Body1FontSize_ExoBold}"
-                    Text="Settings" />
-            </StackLayout>
-            <StackLayout
+        <Grid
+            BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor},
+                                              Dark={StaticResource DarkPageBackgroundColor}}"
+            Column="2"
+            Row="6"
+            RowDefinitions="Auto, Auto, Auto, Auto, *, Auto">
+            <Label
+                FontAttributes="Bold"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Grid.Row="0"
+                HorizontalTextAlignment="Center"
+                Margin="40"
+                Style="{StaticResource Headline3_ExoBold}"
+                Text="Settings" />
+
+            <Button
+                BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
+                                                  Dark={StaticResource DarkButtonColor}}"
+                Command="{Binding GoLocationSettingsPageCommand}"
+                CornerRadius="30"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
                 Grid.Row="1"
-                Margin="120,100"
-                Orientation="Horizontal">
-                <Label Style="{StaticResource Body1FontSize_ExoRegular}" Text="Dark mode" />
-                <Switch
-                    BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor},
-                                                      Dark={StaticResource DarkPageBackgroundColor}}"
-                    HorizontalOptions="EndAndExpand"
-                    IsToggled="{Binding IsDarkMode}"
-                    OnColor="{AppThemeBinding Light={StaticResource LightSecondaryTextColor},
-                                              Dark={StaticResource DarkSecondaryTextColor}}"
-                    ThumbColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
-                                                 Dark={StaticResource DarkPrimaryTextColor}}">
-                    <Switch.Behaviors>
-                        <xct:EventToCommandBehavior Command="{Binding DarkModeToggleCommand}" EventName="Toggled" />
-                    </Switch.Behaviors>
-                </Switch>
-            </StackLayout>
-            <StackLayout Margin="20,200,20,0">
-                <Button
-                    BackgroundColor="#393E46"
-                    Command="{Binding GoLocationSettingsPageCommand}"
-                    CornerRadius="30"
-                    Text="Location Settings"
-                    TextColor="#EEEEEE" />
-                <Button
-                    BackgroundColor="#393E46"
-                    Command="{Binding GoNotificationSettingsPageCommand}"
-                    CornerRadius="30"
-                    Text="Notification Settings"
-                    TextColor="#EEEEEE" />
-                <Button
-                    BackgroundColor="#393E46"
-                    Command="{Binding GoWifiSettingsPageCommand}"
-                    CornerRadius="30"
-                    Text="WiFi Settings"
-                    TextColor="#EEEEEE" />
-                <Button
-                    BackgroundColor="#393E46"
-                    Command="{Binding GoBluetoothSettingsPageCommand}"
-                    CornerRadius="30"
-                    Text="Bluetooth Settings"
-                    TextColor="#EEEEEE" />
-            </StackLayout>
+                Text="Location Settings"
+                TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
+                                            Dark={StaticResource DarkButtonTextColor}}" />
+
+            <Button
+                BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
+                                                  Dark={StaticResource DarkButtonColor}}"
+                Command="{Binding GoWifiSettingsPageCommand}"
+                CornerRadius="30"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Grid.Row="2"
+                Text="WiFi Settings"
+                TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
+                                            Dark={StaticResource DarkButtonTextColor}}" />
+
+            <Button
+                BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
+                                                  Dark={StaticResource DarkButtonColor}}"
+                Command="{Binding GoBluetoothSettingsPageCommand}"
+                CornerRadius="30"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Grid.Row="3"
+                Text="Bluetooth Settings"
+                TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
+                                            Dark={StaticResource DarkButtonTextColor}}" />
+
+            <Label
+                Grid.Column="0"
+                Grid.Row="5"
+                HorizontalOptions="EndAndExpand"
+                Margin="0,0,0,50"
+                Style="{StaticResource Body1FontSize_ExoRegular}"
+                Text="Dark Mode"
+                VerticalTextAlignment="End" />
+            <Switch
+                Grid.Column="1"
+                Grid.Row="5"
+                HorizontalOptions="Start"
+                IsToggled="{Binding IsDarkMode}"
+                Margin="0,0,0,50"
+                OnColor="{AppThemeBinding Light={StaticResource LightSecondaryTextColor},
+                                          Dark={StaticResource DarkSecondaryTextColor}}"
+                ThumbColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                             Dark={StaticResource DarkPrimaryTextColor}}"
+                VerticalOptions="End">
+                <Switch.Behaviors>
+                    <xct:EventToCommandBehavior Command="{Binding DarkModeToggleCommand}" EventName="Toggled" />
+                </Switch.Behaviors>
+            </Switch>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

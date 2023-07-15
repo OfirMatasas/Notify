@@ -21,7 +21,6 @@ namespace Notify.ViewModels
             BackCommand = new Command(onBackButtonClicked);
             UpdateLocationCommand = new Command(onUpdateLocationButtonClicked);
             GetAddressSuggestionsCommand = new Command(onGetAddressSuggestionsButtonClicked);
-            GetGeographicCoordinatesCommand = new Command(onGetGeographicCoordinatesButtonClicked);
             GetCurrentLocationCommand = new Command(onGetCurrentLocationButtonClicked);
         }
 
@@ -59,7 +58,6 @@ namespace Notify.ViewModels
         #region Address
 
         public Command GetAddressSuggestionsCommand { get; set; }
-        public Command GetGeographicCoordinatesCommand { get; set; }
         public Command GetCurrentLocationCommand { get; set; }
         private string m_SearchedAddress;
         private string m_SelectedAddress;
