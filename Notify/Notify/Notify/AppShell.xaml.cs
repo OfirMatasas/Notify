@@ -152,16 +152,12 @@ namespace Notify
         {
             List<string> destinationsArrived = new List<string>();
             List<Notification> arrivedLocationNotifications;
-            destinationsArrived = getAllArrivedDestinations(location);
-            List<Notification> arrivedTimeNotification;
-            List<Notification> sentNotifications;
+            List<Notification> elapsedTimeNotification;
             
             destinationsArrived = getAllArrivedDestinations(location);
-        
-            arrivedTimeNotification = getAllCurrentTimeNotifications();
-
-
-            if (destinationsArrived.Count > 0 || arrivedTimeNotification.Count > 0)
+            elapsedTimeNotification = getAllElapsedTimeNotifications();
+            
+            if (destinationsArrived.Count > 0 || elapsedTimeNotification.Count > 0)
             {
                 lock (m_NotificationsLock)
                 {
@@ -171,9 +167,9 @@ namespace Notify
                     {
                         try
                         {
-                            AnnounceDestinationArrival(arrivedLocationNotifications);
-                            sentNotifications = arrivedLocationNotifications.Concat(arrivedTimeNotification).ToList();
-                            updateStatusOfSentNotifications(sentNotifications);
+                            announceNotification(arrivedLocationNotifications, "You've arrived at your destination!");
+                            announceNotification(elapsedTimeNotification, "Time elapsed for a notification!");
+                            updateStatusOfSentNotifications(arrivedLocationNotifications, elapsedTimeNotification);
                         }
                         catch (Exception ex)
                         {
@@ -184,24 +180,27 @@ namespace Notify
             }
         }
 
-        private static void updateStatusOfSentNotifications(params List<Notification>[] sentNotificationsArrays)
+        private static void updateStatusOfSentNotifications(params List<Notification>[] sentNotificationLists)
         {
             string json = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
             List<Notification> notifications = JsonConvert.DeserializeObject<List<Notification>>(json);
 
             notifications.ForEach(notification =>
             {
-                foreach (List<Notification> sentNotifications in sentNotificationsArrays)
+                foreach (List<Notification> sentNotificationsList in sentNotificationLists)
                 {
-                    notification.Status = "Sent";
-                    LoggerService.Instance.LogDebug($"Updated status of notification {notification.ID} to 'Sent'");
+                    if (sentNotificationsList.Any(sentNotification => sentNotification.ID.Equals(notification.ID)))
+                    {
+                        notification.Status = "Sent";
+                        LoggerService.Instance.LogDebug($"Updated status of notification {notification.ID} to 'Sent'");
+                    }
                 }
             });
 
             Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
-            foreach (var sentNotifications in sentNotificationsArrays)
+            foreach (List<Notification> sentNotificationsList in sentNotificationLists)
             {
-                AzureHttpClient.Instance.UpdateNotificationsStatus(sentNotifications, "Sent");
+                AzureHttpClient.Instance.UpdateNotificationsStatus(sentNotificationsList, "Sent");
             }
         }
 
@@ -231,9 +230,8 @@ namespace Notify
             string notificationsJson = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
             List<Notification> notifications = JsonConvert.DeserializeObject<List<Notification>>(notificationsJson);
             List<Notification> elapsedTimeNotifications;
-            DateTime notificationTime;
             
-            r_Logger.LogInformation("Getting all elapsed time notifications");
+            LoggerService.Instance.LogInformation("Getting all elapsed time notifications");
             
             elapsedTimeNotifications = notifications
                 .FindAll(
@@ -241,21 +239,21 @@ namespace Notify
                     {
                         bool isTimeNotification = notification.Type is NotificationType.Time;
                         bool isTimeElapsed = false;
-                        if (notification.TypeInfo is DateTime time)
+                        
+                        if (notification.TypeInfo is DateTime notificationTime)
                         {
-                            notificationTime = time;
                             isTimeElapsed = notificationTime <= DateTime.Now;
                         }
                         
                         bool isNewNotification = notification.Status.ToLower().Equals("new");
 
                         if (isTimeNotification && isTimeElapsed && isNewNotification)
-                            r_Logger.LogInformation($"Found a notification {notification.ID} that it's time elapsed");
+                            LoggerService.Instance.LogInformation($"Found a notification {notification.ID} that it's time elapsed");
                         
                         return isTimeNotification && isTimeElapsed && isNewNotification;
                     });
 
-            r_Logger.LogInformation($"Found a total of {elapsedTimeNotifications.Count} elapsed time notifications");
+            LoggerService.Instance.LogInformation($"Found a total of {elapsedTimeNotifications.Count} elapsed time notifications");
             updateAndSaveNotificationsInPrefrences(notifications, elapsedTimeNotifications);
             
             return elapsedTimeNotifications;
@@ -293,26 +291,11 @@ namespace Notify
                 if (toUpdateNotifications.Contains(notification))
                 {
                     notification.Status = "Sending";
-                    LoggerService.Instance.LogDebug($"Updated status of notification {notification.ID} to 'Sending'");
+                    LoggerService.Instance.LogInformation($"Updated status of notification {notification.ID} to 'Sending'");
                 }
             });
             
-            Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
-            LoggerService.Instance.LogDebug($"Found {arrivedLocationNotifications.Count} arrived location notifications");
-            return arrivedLocationNotifications;
-        }
-
-        private void AnnounceDestinationArrival(List<Notification> arrivedLocationNotifications)
-        {
-            arrivedLocationNotifications.ForEach(notification =>
-            {
-                notificationManager.SendNotification(
-                    title: notification.Name,
-                    message: $"{notification.Description}{Environment.NewLine}- {notification.Creator}");
-                
-                LoggerService.Instance.LogDebug($"You've arrived at your {notification.TypeInfo} destination!");
-                LoggerService.Instance.LogDebug($"Notification: {notification.Name}, {notification.Description}, {notification.Creator}");
-            });
+            Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(allNotifications));
         }
         
         private void announceNotification(List<Notification> notifications, string logMessage)
@@ -323,8 +306,8 @@ namespace Notify
                     title: notification.Name,
                     message: $"{notification.Description}{Environment.NewLine}- {notification.Creator}");
 
-                r_Logger.LogDebug(logMessage);
-                r_Logger.LogDebug($"Notification: {notification.Name}, {notification.Description}, {notification.Creator}");
+                LoggerService.Instance.LogDebug(logMessage);
+                LoggerService.Instance.LogDebug($"Notification: {notification.Name}, {notification.Description}, {notification.Creator}");
             });
         }
         
@@ -354,7 +337,7 @@ namespace Notify
             }
             catch (Exception ex)
             {
-                LoggerService.Instance.LogError(ex.Message);
+                LoggerService.Instance.LogError($"Error in start service: {ex.Message}");
             }
         }
 
