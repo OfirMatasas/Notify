@@ -48,7 +48,7 @@ namespace Notify.ViewModels
                 OnPropertyChanged(nameof(SelectedUserName));
             }
         }
-        
+
         public FriendRequestPageViewModel()
         {
             BackCommand = new Command(onBackButtonClicked);

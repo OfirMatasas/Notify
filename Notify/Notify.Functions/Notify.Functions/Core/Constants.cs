@@ -27,6 +27,7 @@ namespace Notify.Functions.Core
         #region GoogleHttpClient
 
         public static readonly string GOOGLE_API_BASE_URL = "https://maps.googleapis.com/maps/api/";
+        public static readonly int GOOGLE_API_RADIUS = 1000;
 
         #endregion
     }

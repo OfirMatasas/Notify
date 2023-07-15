@@ -12,29 +12,33 @@ namespace Notify.Helpers
         {
             get
             {
-                lock (r_Lock)
+                if (m_Instance == null)
                 {
-                    if (m_Instance == null)
+                    lock (r_Lock)
                     {
-                        Debug.Write("ERROR to initialize logger.");
+                        if (m_Instance == null)
+                        {
+                            Debug.Write("ERROR to initialize logger.");
+                        }
                     }
-                    
-                    return m_Instance;
                 }
+                
+                return m_Instance;
             }
         }
 
         public abstract void InitializeLogger();
         
-        
         public void LogVerbose(string message)
         {
             Log.Verbose(message);
         }
+        
         public void LogDebug(string message)
         {
             Log.Debug(message);
         }
+        
         public void LogInformation(string message)
         {
             Log.Information(message);

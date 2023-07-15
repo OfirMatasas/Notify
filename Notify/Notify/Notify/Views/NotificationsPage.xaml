@@ -85,31 +85,36 @@
                             Column="3"
                             ColumnDefinitions="*, *, *, *"
                             HorizontalOptions="Center"
+                            Margin="5"
                             RowDefinitions="auto">
                             <Label
                                 FontSize="15"
                                 Grid.Column="0"
                                 HorizontalOptions="Center"
                                 Style="{StaticResource Body1FontSize_ExoBold}"
-                                Text="{Binding Name}" />
+                                Text="{Binding Name}"
+                                VerticalOptions="Center" />
                             <Label
                                 FontSize="15"
                                 Grid.Column="1"
                                 HorizontalOptions="Center"
                                 Style="{StaticResource Body1FontSize_ExoBold}"
-                                Text="{Binding Description}" />
+                                Text="{Binding Description}"
+                                VerticalOptions="Center" />
                             <Label
                                 FontSize="15"
                                 Grid.Column="2"
                                 HorizontalOptions="Center"
                                 Style="{StaticResource Body1FontSize_ExoBold}"
-                                Text="{Binding Status}" />
+                                Text="{Binding Status}"
+                                VerticalOptions="Center" />
                             <Label
                                 FontSize="15"
                                 Grid.Column="3"
                                 HorizontalOptions="Center"
                                 Style="{StaticResource Body1FontSize_ExoBold}"
-                                Text="{Binding Type}" />
+                                Text="{Binding Type}"
+                                VerticalOptions="Center" />
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup Name="CommonStates">
                                     <VisualState Name="Normal" />

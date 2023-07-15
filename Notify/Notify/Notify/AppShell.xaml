@@ -71,16 +71,10 @@
         </Tab>
         <Tab
             Icon="friends.png"
-            Route="schedule"
-            Title="Schedule">
+            Route="friends"
+            Title="friends">
             <ShellContent ContentTemplate="{DataTemplate Views:FriendsPage}" />
         </Tab>
-        <!--  <Tab  -->
-        <!--  Icon="groups.png"  -->
-        <!--  Route="drivers"  -->
-        <!--  Title="Friends">  -->
-        <!--     <ShellContent ContentTemplate="{DataTemplate TabViews:DriversView}" /> -->
-        <!-- </Tab> -->
         <Tab
             Icon="notification.png"
             Route="notifications"

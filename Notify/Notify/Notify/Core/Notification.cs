@@ -7,7 +7,8 @@ namespace Notify.Core
         Time,
         Location,
         WiFi,
-        Bluetooth
+        Bluetooth,
+        Dynamic
     }
     
     public class Notification
