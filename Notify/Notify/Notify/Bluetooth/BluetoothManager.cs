@@ -8,6 +8,7 @@ using Notify.Azure.HttpClient;
 using Notify.Core;
 using Notify.Helpers;
 using Notify.Notifications;
+using Notify.Services;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;

@@ -7,6 +7,7 @@ using Notify.Azure.HttpClient;
 using Notify.Core;
 using Notify.Helpers;
 using Notify.Notifications;
+using Notify.Services;
 using Notify.WiFi;
 using Xamarin.Essentials;
 using Xamarin.Forms;

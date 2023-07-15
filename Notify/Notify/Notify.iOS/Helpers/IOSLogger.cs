@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using Notify.Services;
+using Serilog;
 
 namespace Notify.Helpers
 {

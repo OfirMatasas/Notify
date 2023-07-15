@@ -8,6 +8,7 @@ using Notify.Bluetooth;
 using Notify.Core;
 using Notify.Helpers;
 using Notify.Notifications;
+using Notify.Services;
 using Notify.WiFi;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -127,7 +128,7 @@ namespace Notify
                 checkIfThereAreNotificationsThatShouldBeTriggered(location);
             });
         }
-
+        
         private async void checkIfDynamicLocationNotificationShouldBeUpdated(Location location)
         {
             string destinationsJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, string.Empty);
@@ -156,6 +157,9 @@ namespace Notify
             List<Notification> sentNotifications;
             
             destinationsArrived = getAllArrivedDestinations(location);
+        
+            arrivedTimeNotification = getAllCurrentTimeNotifications();
+
 
             if (destinationsArrived.Count > 0 || arrivedTimeNotification.Count > 0)
             {
@@ -223,41 +227,48 @@ namespace Notify
             string notificationsJson = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
             List<Notification> notifications = JsonConvert.DeserializeObject<List<Notification>>(notificationsJson);
             List<Notification> currentTimeNotifications;
-
+            
+            DateTime timeInNotification;
+            
             currentTimeNotifications = notifications
                 .FindAll(
                     notification =>
                     {
+                        r_Logger.LogInformation($"Notification details: {notification.TypeInfo}, {notification.Type}");
                         bool isTimeNotification = notification.Type is NotificationType.Time;
-                        bool isCurrentMinuteNotification = notification.TypeInfo is DateTime timeInNotification
-                                                           && timeInNotification.Minute.Equals(DateTime.Now.Minute);
+                        bool isCurrentMinuteNotification = false;
+                        if (notification.TypeInfo is DateTime time)
+                        {
+                            timeInNotification = time;
+                            isCurrentMinuteNotification = timeInNotification.Date == DateTime.Now.Date &&
+                                                          timeInNotification.Hour == DateTime.Now.Hour &&
+                                                          timeInNotification.Minute == DateTime.Now.Minute;
+                        }
                         bool isNewNotification = notification.Status.ToLower().Equals("new");
 
-                        if (isTimeNotification && isCurrentMinuteNotification && isNewNotification) 
-                            r_Logger.LogDebug(
-                                $"Found a notification {notification.ID} for the current time {DateTime.Now}:"); 
-                        
+                        if (isTimeNotification && isCurrentMinuteNotification && isNewNotification)
+                            r_Logger.LogInformation($"Found a notification {notification.ID} for the current time {DateTime.Now}:");
+
                         return isTimeNotification && isCurrentMinuteNotification && isNewNotification;
-                        
                     });
 
-            r_Logger.LogDebug($"Found {currentTimeNotifications.Count} current time notifications");
+            r_Logger.LogInformation($"Found {currentTimeNotifications.Count} current time notifications");
 
             notifications.ForEach(notification =>
             {
                 if (currentTimeNotifications.Contains(notification))
                 {
                     notification.Status = "Sending";
-                    r_Logger.LogDebug($"Updated status of notification {notification.ID} to 'Sending'");
+                    r_Logger.LogInformation($"Updated status of notification {notification.ID} to 'Sending'");
                 }
             });
 
             Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
-            r_Logger.LogDebug($"Updated {currentTimeNotifications.Count} current time notifications");
+            r_Logger.LogInformation($"Updated {currentTimeNotifications.Count} current time notifications");
 
             return currentTimeNotifications;
         }
-
+        
         private List<Notification> getAllArrivedLocationNotifications(List<string> destinationsArrived)
         {
             string notificationsJson = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
@@ -304,6 +315,18 @@ namespace Notify
                 
                 LoggerService.Instance.LogDebug($"You've arrived at your {notification.TypeInfo} destination!");
                 LoggerService.Instance.LogDebug($"Notification: {notification.Name}, {notification.Description}, {notification.Creator}");
+            });
+        }
+        
+        private void AnnounceTimeArrival(List<Notification> currentTimeNotifications)
+        {
+            currentTimeNotifications.ForEach(notification =>
+            {
+                notificationManager.SendNotification(
+                    title: notification.Name,
+                    message: $"{notification.Description}{Environment.NewLine}- {notification.Creator}");
+                
+                r_Logger.LogDebug($"Notification: {notification.Name}, {notification.Description}, {notification.Creator}");
             });
         }
 

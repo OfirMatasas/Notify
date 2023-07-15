@@ -5,6 +5,7 @@ using System;
 using Notify.Azure.HttpClient;
 using Notify.Core;
 using Notify.Helpers;
+using Notify.Services;
 using Xamarin.Essentials;
 using Location = Notify.Core.Location;
 

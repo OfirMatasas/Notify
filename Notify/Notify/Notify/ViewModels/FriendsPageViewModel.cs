@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Notify.Azure.HttpClient;
 using Notify.Core;
 using Notify.Helpers;
+using Notify.Services;
 using Notify.Views.Views;
 using Xamarin.Essentials;
 using Xamarin.Forms;

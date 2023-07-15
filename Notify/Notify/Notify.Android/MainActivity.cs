@@ -7,6 +7,7 @@ using Android.Content;
 using Notify.Droid.Notifications;
 using Notify.Helpers;
 using Notify.Notifications;
+using Notify.Services;
 using Xamarin.Forms;
 using Xamarin.Essentials;
 using Environment = System.Environment;

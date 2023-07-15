@@ -3,6 +3,7 @@ using Xamarin.Forms;
 using CoreBluetooth;
 using Foundation;
 using Notify.Helpers;
+using Notify.Services;
 
 [assembly: Dependency(typeof(Notify.iOS.Managers.iOSBluetoothManager))]
 namespace Notify.iOS.Managers

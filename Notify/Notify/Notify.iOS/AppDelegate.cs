@@ -1,6 +1,7 @@
 ﻿using Foundation;
 using Notify.Helpers;
 using Notify.iOS.Notifications;
+using Notify.Services;
 using UIKit;
 using UserNotifications;
 
