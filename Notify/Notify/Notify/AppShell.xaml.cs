@@ -183,22 +183,26 @@ namespace Notify
                 }
             }
         }
-        
-        private static void updateStatusOfSentNotifications(List<Notification> sentNotifications)
+
+        private static void updateStatusOfSentNotifications(params List<Notification>[] sentNotificationsArrays)
         {
             string json = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
             List<Notification> notifications = JsonConvert.DeserializeObject<List<Notification>>(json);
+
             notifications.ForEach(notification =>
             {
-                if (sentNotifications.Any(sentNotification => sentNotification.ID.Equals(notification.ID)))
+                foreach (List<Notification> sentNotifications in sentNotificationsArrays)
                 {
                     notification.Status = "Sent";
                     LoggerService.Instance.LogDebug($"Updated status of notification {notification.ID} to 'Sent'");
                 }
             });
-            
+
             Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
-            AzureHttpClient.Instance.UpdateNotificationsStatus(sentNotifications, "Sent");
+            foreach (var sentNotifications in sentNotificationsArrays)
+            {
+                AzureHttpClient.Instance.UpdateNotificationsStatus(sentNotifications, "Sent");
+            }
         }
 
         private List<string> getAllArrivedDestinations(Location location)
@@ -222,51 +226,39 @@ namespace Notify
             return destinationsArrived;
         }
 
-        private List<Notification> getAllCurrentTimeNotifications()
+        private List<Notification> getAllElapsedTimeNotifications()
         {
             string notificationsJson = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
             List<Notification> notifications = JsonConvert.DeserializeObject<List<Notification>>(notificationsJson);
-            List<Notification> currentTimeNotifications;
+            List<Notification> elapsedTimeNotifications;
+            DateTime notificationTime;
             
-            DateTime timeInNotification;
+            r_Logger.LogInformation("Getting all elapsed time notifications");
             
-            currentTimeNotifications = notifications
+            elapsedTimeNotifications = notifications
                 .FindAll(
                     notification =>
                     {
-                        r_Logger.LogInformation($"Notification details: {notification.TypeInfo}, {notification.Type}");
                         bool isTimeNotification = notification.Type is NotificationType.Time;
-                        bool isCurrentMinuteNotification = false;
+                        bool isTimeElapsed = false;
                         if (notification.TypeInfo is DateTime time)
                         {
-                            timeInNotification = time;
-                            isCurrentMinuteNotification = timeInNotification.Date == DateTime.Now.Date &&
-                                                          timeInNotification.Hour == DateTime.Now.Hour &&
-                                                          timeInNotification.Minute == DateTime.Now.Minute;
+                            notificationTime = time;
+                            isTimeElapsed = notificationTime <= DateTime.Now;
                         }
+                        
                         bool isNewNotification = notification.Status.ToLower().Equals("new");
 
-                        if (isTimeNotification && isCurrentMinuteNotification && isNewNotification)
-                            r_Logger.LogInformation($"Found a notification {notification.ID} for the current time {DateTime.Now}:");
-
-                        return isTimeNotification && isCurrentMinuteNotification && isNewNotification;
+                        if (isTimeNotification && isTimeElapsed && isNewNotification)
+                            r_Logger.LogInformation($"Found a notification {notification.ID} that it's time elapsed");
+                        
+                        return isTimeNotification && isTimeElapsed && isNewNotification;
                     });
 
-            r_Logger.LogInformation($"Found {currentTimeNotifications.Count} current time notifications");
-
-            notifications.ForEach(notification =>
-            {
-                if (currentTimeNotifications.Contains(notification))
-                {
-                    notification.Status = "Sending";
-                    r_Logger.LogInformation($"Updated status of notification {notification.ID} to 'Sending'");
-                }
-            });
-
-            Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
-            r_Logger.LogInformation($"Updated {currentTimeNotifications.Count} current time notifications");
-
-            return currentTimeNotifications;
+            r_Logger.LogInformation($"Found a total of {elapsedTimeNotifications.Count} elapsed time notifications");
+            updateAndSaveNotificationsInPrefrences(notifications, elapsedTimeNotifications);
+            
+            return elapsedTimeNotifications;
         }
         
         private List<Notification> getAllArrivedLocationNotifications(List<string> destinationsArrived)
@@ -291,9 +283,14 @@ namespace Notify
 
             LoggerService.Instance.LogDebug($"Found {arrivedLocationNotifications.Count} arrived location notifications");
             
-            notifications.ForEach(notification =>
+            return arrivedLocationNotifications;
+        }
+        
+        private void updateAndSaveNotificationsInPrefrences(List<Notification> allNotifications, List<Notification> toUpdateNotifications)
+        {
+            allNotifications.ForEach(notification =>
             {
-                if (arrivedLocationNotifications.Contains(notification))
+                if (toUpdateNotifications.Contains(notification))
                 {
                     notification.Status = "Sending";
                     LoggerService.Instance.LogDebug($"Updated status of notification {notification.ID} to 'Sending'");
@@ -318,18 +315,19 @@ namespace Notify
             });
         }
         
-        private void AnnounceTimeArrival(List<Notification> currentTimeNotifications)
+        private void announceNotification(List<Notification> notifications, string logMessage)
         {
-            currentTimeNotifications.ForEach(notification =>
+            notifications.ForEach(notification =>
             {
                 notificationManager.SendNotification(
                     title: notification.Name,
                     message: $"{notification.Description}{Environment.NewLine}- {notification.Creator}");
-                
+
+                r_Logger.LogDebug(logMessage);
                 r_Logger.LogDebug($"Notification: {notification.Name}, {notification.Description}, {notification.Creator}");
             });
         }
-
+        
         private void setNoficicationManagerNotificationReceived()
         {
             notificationManager.NotificationReceived += (sender, eventArgs) =>
