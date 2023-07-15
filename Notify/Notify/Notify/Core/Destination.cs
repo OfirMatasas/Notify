@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Geolocation;
 using Notify.Helpers;
 
@@ -16,7 +17,7 @@ namespace Notify.Core
         public Destination(string name, bool isDynamic = false)
         {
             Name = name;
-            IsDynamic = isDynamic;
+            IsDynamic = isDynamic || Constants.DYNAMIC_PLACE_LIST.Any(destination => destination.Equals(name));
         }
 
         public string Name
@@ -49,7 +50,7 @@ namespace Notify.Core
             set => m_LastUpdatedLocation = value;
         }
         
-        public bool IsDynamic
+        private bool IsDynamic
         {
             get => m_IsDynamic;
             set => m_IsDynamic = value;
@@ -60,16 +61,18 @@ namespace Notify.Core
             Coordinate currentCoordinate, destinationCoordinate;
             double distance;
             bool isArrived = false;
+            
+            currentCoordinate = new Coordinate(
+                latitude: currentLocation.Latitude, 
+                longitude: currentLocation.Longitude);
 
+            LoggerService.Instance.LogDebug($"Checking if destination {Name} is arrived for {Locations.Count} locations.");
             foreach (Location location in Locations)
             {
-                currentCoordinate = new Coordinate(
+                destinationCoordinate = new Coordinate(
                     latitude: location.Latitude, 
                     longitude: location.Longitude);
-                destinationCoordinate = new Coordinate(
-                    latitude: currentLocation.Latitude, 
-                    longitude: currentLocation.Longitude);
-                
+
                 distance = GeoCalculator.GetDistance(
                     originCoordinate: currentCoordinate,
                     destinationCoordinate: destinationCoordinate, 
@@ -83,27 +86,38 @@ namespace Notify.Core
                 }
             }
 
+            LoggerService.Instance.LogDebug($"Destination {Name} is arrived: {isArrived}");
             return isArrived;
         }
 
-        public bool ShouldLocationsBeUpdated(Location location)
+        public bool ShouldDynamicLocationsBeUpdated(Location location)
         {
             Coordinate currentCoordinate, lastUpdatedLocationCoordinate;
             double distance;
-            
-            currentCoordinate = new Coordinate(
-                latitude: location.Latitude, 
-                longitude: location.Longitude);
-            lastUpdatedLocationCoordinate = new Coordinate(
-                latitude: LastUpdatedLocation.Latitude, 
-                longitude: LastUpdatedLocation.Longitude);
-            
-            distance = GeoCalculator.GetDistance(
-                originCoordinate: currentCoordinate,
-                destinationCoordinate: lastUpdatedLocationCoordinate, 
-                distanceUnit: DistanceUnit.Meters);        
-            
-            return distance >= Constants.DYANMIC_DESTINATION_UPDATE_DISTANCE_THRESHOLD;
+            bool shouldUpdate = false;
+
+            LoggerService.Instance.LogDebug($"Checking if {Name} destination should be updated.");
+            if (IsDynamic)
+            {
+                LoggerService.Instance.LogDebug($"Destination {Name} is dynamic.");
+
+                currentCoordinate = new Coordinate(
+                    latitude: location.Latitude,
+                    longitude: location.Longitude);
+                lastUpdatedLocationCoordinate = new Coordinate(
+                    latitude: LastUpdatedLocation.Latitude,
+                    longitude: LastUpdatedLocation.Longitude);
+
+                distance = GeoCalculator.GetDistance(
+                    originCoordinate: currentCoordinate,
+                    destinationCoordinate: lastUpdatedLocationCoordinate,
+                    distanceUnit: DistanceUnit.Meters);
+
+                shouldUpdate = distance >= Constants.DYANMIC_DESTINATION_UPDATE_DISTANCE_THRESHOLD;
+            }
+
+            LoggerService.Instance.LogDebug($"Should {Name} dynamic locations be updated: {shouldUpdate}");
+            return shouldUpdate;
         }
     }
 }

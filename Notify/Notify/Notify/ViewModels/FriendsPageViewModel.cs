@@ -75,6 +75,7 @@ namespace Notify.ViewModels
         }
         
         #endregion
+        
         private async void onSelectedFriendClicked()
         {
             await Shell.Current.Navigation.PushAsync(new FriendDetailsPage(SelectedFriend));

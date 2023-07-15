@@ -135,7 +135,7 @@ namespace Notify
 
             foreach (Destination destination in destinations)
             {
-                if (destination.ShouldLocationsBeUpdated(location))
+                if (destination.ShouldDynamicLocationsBeUpdated(location))
                 {
                     LoggerService.Instance.LogDebug($"Updating dynamic locations for {destination.Name}");
                     destination.Locations = await AzureHttpClient.Instance.GetNearbyPlaces(destination.Name, location);
@@ -198,16 +198,16 @@ namespace Notify
             string destinationsJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, string.Empty);
             List<Destination> destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationsJson);
             List<string> destinationsArrived = new List<string>();
-                
-            destinations.ForEach(destination =>
+
+            foreach (Destination destination in destinations)
             {
                 if (destination.IsArrived(location))
                 {
                     destinationsArrived.Add(destination.Name);
                     LoggerService.Instance.LogDebug($"Added {destination.Name} to destinations arrived list");
                 }
-            });
-            
+            }
+
             LoggerService.Instance.LogDebug($"Arrived to {destinationsArrived.Count} destinations of out {destinations.Count}:");
             LoggerService.Instance.LogDebug($"- {string.Join($"{Environment.NewLine}- ", destinationsArrived)}");
             
@@ -224,18 +224,17 @@ namespace Notify
                 .FindAll(
                     notification =>
                     {
-                        bool isLocationNotification = notification.Type is NotificationType.Location;
+                        bool isRelevantType = notification.Type is NotificationType.Location || notification.Type is NotificationType.Dynamic;
                         bool isArrivedLocationNotification = destinationsArrived.Contains(notification.TypeInfo.ToString());
                         bool isNewNotification = notification.Status.ToLower().Equals("new");
 
-                        if (isLocationNotification && isArrivedLocationNotification && isNewNotification)
+                        if (isRelevantType && isArrivedLocationNotification && isNewNotification)
                             LoggerService.Instance.LogDebug($"Found arrived location notification: {notification.ID}");
                         
-                        return isLocationNotification && isArrivedLocationNotification && isNewNotification;
+                        return isRelevantType && isArrivedLocationNotification && isNewNotification;
                     });
 
             LoggerService.Instance.LogDebug($"Found {arrivedLocationNotifications.Count} arrived location notifications");
-
             
             notifications.ForEach(notification =>
             {

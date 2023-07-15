@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Notify.Core;
 using Notify.Helpers;
 
@@ -37,6 +38,29 @@ namespace Notify.Azure.HttpClient
                 type: notificationType,
                 typeInfo: notificationTypeValue,
                 target: (string)notification.user);
+        }
+        
+        public static Friend ToFriend(dynamic friend)
+        {
+            return new Friend(
+                name: (string)friend.name, 
+                userName: (string)friend.userName, 
+                telephone: (string)friend.telephone);
+        }
+        
+        public static Destination ToDestination(dynamic destination)
+        {
+            return new Destination((string)destination.location.name)
+            {
+                Locations = new List<Location>
+                {
+                    new Location(
+                        longitude: (double)(destination.location.longitude ?? 0),
+                        latitude: (double)(destination.location.latitude ?? 0))
+                },
+                SSID = (string)(destination.location.ssid ?? ""),
+                Bluetooth = (string)(destination.location.device ?? "")
+            };
         }
     }
 }

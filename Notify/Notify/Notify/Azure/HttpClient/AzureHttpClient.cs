@@ -427,31 +427,25 @@ namespace Notify.Azure.HttpClient
             return await GetData(
                 endpoint: Constants.AZURE_FUNCTIONS_PATTERN_FRIEND, 
                 preferencesKey: Constants.PREFERENCES_FRIENDS, 
-                converter: friend => new Friend(
-                    name: (string)friend.name, 
-                    userName: (string)friend.userName, 
-                    telephone: (string)friend.telephone));
+                converter: Converter.ToFriend);
         }
 
         public async Task<List<Destination>> GetDestinations()
         {
-            return await GetData( 
-                endpoint: Constants.AZURE_FUNCTIONS_PATTERN_DESTINATION, 
+            List<Destination> destinations = await GetData(
+                endpoint: Constants.AZURE_FUNCTIONS_PATTERN_DESTINATION,
                 preferencesKey: Constants.PREFERENCES_DESTINATIONS,
-                converter: destination =>
-                {
-                    return new Destination((string)destination.location.name)
-                    {
-                        Locations = new List<Location>
-                        {
-                            new Location(
-                                longitude: (double)(destination.location.longitude ?? 0),
-                                latitude: (double)(destination.location.latitude ?? 0))
-                        },
-                        SSID = (string)(destination.location.ssid ?? ""),
-                        Bluetooth = (string)(destination.location.device ?? "")
-                    };
-                });
+                converter: Converter.ToDestination);
+
+            foreach (string dynamicDestination in Constants.DYNAMIC_PLACE_LIST)
+            {
+                destinations.Add(new Destination(dynamicDestination, true));
+            }
+            
+            LoggerService.Instance.LogInformation($"Destinations: {string.Join(", ", destinations.Select(destination => destination.Name))}");
+            
+            Preferences.Set(Constants.PREFERENCES_DESTINATIONS, JsonConvert.SerializeObject(destinations));
+            return destinations;
         }
 
         public void UpdateNotificationsStatus(List<Notification> notifications, string newStatus)
@@ -541,10 +535,7 @@ namespace Notify.Azure.HttpClient
             return await GetData(
                 endpoint: Constants.AZURE_FUNCTIONS_PATTERN_USERS_NOT_FRIENDS, 
                 preferencesKey: Constants.PREFERENCES_NOT_FRIENDS_USERS, 
-                converter: friend => new Friend(
-                    name: (string)friend.name, 
-                    userName: (string)friend.userName, 
-                    telephone: (string)friend.telephone));
+                converter: Converter.ToFriend);
         }
 
         public async void SendFriendRequest(string username)

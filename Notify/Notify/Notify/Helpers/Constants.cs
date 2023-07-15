@@ -149,7 +149,6 @@ namespace Notify.Helpers
         public static readonly string SHELL_NAVIGATION_NOTIFICATIONS_SETTINGS = "///notification_settings";
         public static readonly string SHELL_NAVIGATION_WIFI_SETTINGS = "///wifi_settings";
         public static readonly string SHELL_NAVIGATION_BLUETOOTH_SETTINGS = "///bluetooth_settings";
-        public static readonly string SHELL_NAVIGATION_FRIENDS = "///friends";
         
         #endregion
         

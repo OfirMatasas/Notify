@@ -21,15 +21,18 @@ namespace Notify.Helpers
         {
             get
             {
-                lock (r_Lock)
+                if (m_Instance == null)
                 {
-                    if (m_Instance == null)
+                    lock (r_Lock)
                     {
-                        m_Instance = new AndroidLogger();
+                        if (m_Instance == null)
+                        {
+                            m_Instance = new AndroidLogger();
+                        }
                     }
-                    
-                    return m_Instance;
                 }
+
+                return m_Instance;
             }
         }
         
