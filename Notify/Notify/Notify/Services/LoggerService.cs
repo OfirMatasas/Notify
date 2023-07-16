@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using Serilog;
 
-namespace Notify.Helpers
+namespace Notify.Services
 {
     public abstract class LoggerService
     {

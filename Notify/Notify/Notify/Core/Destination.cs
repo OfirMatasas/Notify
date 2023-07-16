@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Geolocation;
 using Notify.Helpers;
+using Notify.Services;
 
 namespace Notify.Core
 {

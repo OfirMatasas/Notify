@@ -1,4 +1,5 @@
 ﻿using Android.Util;
+using Notify.Services;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;

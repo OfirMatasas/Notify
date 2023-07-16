@@ -8,6 +8,7 @@ using Xamarin.Forms;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Notify.Azure.HttpClient;
+using Notify.Services;
 
 namespace Notify.ViewModels
 {
