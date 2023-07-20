@@ -101,5 +101,9 @@
     <Compile Remove="Helpers\ILogger.cs" />
     <Compile Remove="Services\Ergast\ErgastService.cs" />
     <Compile Remove="Services\Information\InformationsService.cs" />
+    <Compile Update="Views\SubViews\PendingFriendRequestsPage.xaml.cs">
+      <DependentUpon>PendingFriendRequestsPage.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 </Project>
