@@ -1,0 +1,56 @@
+<ContentPage
+    Title="Pending Friend Requests"
+    x:Class="Notify.Views.SubViews.PendingFriendRequestsPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label
+                FontAttributes="Bold"
+                FontSize="25"
+                HorizontalOptions="Center"
+                Margin="10"
+                Style="{StaticResource Body1FontSize_ExoBold}"
+                Text="Pending Friend Requests"
+                VerticalOptions="Start" />
+            <ListView ItemsSource="{Binding FriendRequests}" x:Name="FriendRequestsListView">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid Padding="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Label
+                                    FontSize="Medium"
+                                    Grid.Column="0"
+                                    Text="{Binding Sender.UserName, StringFormat='{0} wants to be your friend.'}"
+                                    TextColor="Black"
+                                    VerticalOptions="Center" />
+                                <ImageButton
+                                    BackgroundColor="Transparent"
+                                    Command="{Binding Path=BindingContext.AcceptFriendRequestCommand, Source={x:Reference Name=FriendRequestsListView}}"
+                                    CommandParameter="{Binding .}"
+                                    Grid.Column="1"
+                                    HorizontalOptions="End"
+                                    Source="accept_button.png"
+                                    VerticalOptions="Center" />
+                                <ImageButton
+                                    BackgroundColor="Transparent"
+                                    Command="{Binding Path=BindingContext.RejectFriendRequestCommand, Source={x:Reference Name=FriendRequestsListView}}"
+                                    CommandParameter="{Binding .}"
+                                    Grid.Column="2"
+                                    HorizontalOptions="End"
+                                    Source="reject_button.png"
+                                    VerticalOptions="Center" />
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

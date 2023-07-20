@@ -27,7 +27,7 @@ namespace Notify.Core
             IsSelected = false;
             ProfileImage = "profile.png"; // Set a default image
         }
-
+        
         #endregion
 
         #region Properties

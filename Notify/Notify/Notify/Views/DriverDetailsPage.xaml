@@ -4,6 +4,7 @@
     x:Class="Notify.Views.DriverDetailsPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:fragments="clr-namespace:Notify.Views.Fragments"
+    xmlns:subViews="clr-namespace:Notify.Views.SubViews;assembly=Notify"
     xmlns:views="clr-namespace:Notify.Views.Views;assembly=Notify"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:xct="http://xamarin.com/schemas/2020/toolkit">
@@ -133,7 +134,7 @@
                                 <xct:StateView RepeatCount="10" StateKey="Loading">
                                     <xct:StateView.Template>
                                         <DataTemplate>
-                                            <views:DriverRaceResultsLoadingView />
+                                            <subViews:DriverRaceResultsLoadingView />
                                         </DataTemplate>
                                     </xct:StateView.Template>
                                 </xct:StateView>

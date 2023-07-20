@@ -8,6 +8,8 @@ using Notify.Azure.HttpClient;
 using Notify.Core;
 using Notify.Helpers;
 using Notify.Services;
+using Notify.Views;
+using Notify.Views.SubViews;
 using Notify.Views.Views;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -22,6 +24,7 @@ namespace Notify.ViewModels
         
         public Command ShowFriendRequestsCommand { get; set; }
         public Command SelectedFriendCommand { get; set; }
+        public Command ShowPendingFriendRequestsCommand { get; set; }
 
         #endregion
 
@@ -36,6 +39,7 @@ namespace Notify.ViewModels
 
         public FriendsPageViewModel()
         {
+            ShowPendingFriendRequestsCommand = new Command(onShowPendingFriendRequestsClicked);
             RefreshFriendsCommand = new Command(onRefreshFriendsClicked);
             ShowFriendRequestsCommand = new Command(onShowFriendRequestsClicked);
             SelectedFriendCommand = new Command(onSelectedFriendClicked);
@@ -43,7 +47,7 @@ namespace Notify.ViewModels
             RefreshFriendsList();
             onRefreshFriendsClicked();
         }
-
+        
         private void RefreshFriendsList()
         {
             string friendsJson;
@@ -85,6 +89,12 @@ namespace Notify.ViewModels
         private async void onShowFriendRequestsClicked()
         {
             await Shell.Current.Navigation.PushAsync(new FriendRequestPage());
+        }
+        
+        
+        private async void onShowPendingFriendRequestsClicked()
+        {
+            await Shell.Current.Navigation.PushAsync(new PendingFriendRequestsPage());
         }
         
         public event PropertyChangedEventHandler PropertyChanged;
