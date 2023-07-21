@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Notify.Azure.HttpClient;
 using Notify.Core;
@@ -58,8 +59,8 @@ namespace Notify.ViewModels
             set => m_SelectedTimeOption = value;
         }
 
-        private static string m_SelectedActivationOption = string.Empty;
-        public static string SelectedActivationOption
+        private string m_SelectedActivationOption = string.Empty;
+        public string SelectedActivationOption
         {
             get => m_SelectedActivationOption;
             set => m_SelectedActivationOption = value;
@@ -150,6 +151,7 @@ namespace Notify.ViewModels
                         NotificationDescription,
                         SelectedNotificationOption,
                         SelectedLocationOption,
+                        SelectedActivationOption,
                         selectedFriends);
                 }
                 else if (IsDynamicOptionSelected)
@@ -159,6 +161,7 @@ namespace Notify.ViewModels
                         NotificationDescription,
                         SelectedNotificationOption,
                         SelectedDynamicOption,
+                        SelectedActivationOption,
                         selectedFriends);
                 }
                 else
@@ -203,13 +206,18 @@ namespace Notify.ViewModels
                     errorMessages.Add("You must choose a time in the future");
                 }
             }
-            else if (IsLocationOptionSelected && string.IsNullOrEmpty(m_SelectedLocationOption))
+            else if (IsLocationOptionSelected && m_SelectedLocationOption.IsNullOrEmpty())
             {
                 errorMessages.Add("You must choose a location");
             }
-            else if (IsDynamicOptionSelected && string.IsNullOrEmpty(m_SelectedDynamicOption))
+            else if (IsDynamicOptionSelected && m_SelectedDynamicOption.IsNullOrEmpty())
             {
                 errorMessages.Add("You must choose a type of place");
+            }
+            
+            if((IsDynamicOptionSelected || IsLocationOptionSelected) && SelectedActivationOption.IsNullOrEmpty())
+            {
+                errorMessages.Add("You must choose an activation option");
             }
             
             if (selectedFriends == null || selectedFriends.Count == 0)
@@ -217,7 +225,7 @@ namespace Notify.ViewModels
                 errorMessages.Add("You must choose at least one friend");
             }
 
-            return errorMessages.Count == 0;
+            return errorMessages.IsNullOrEmpty();
         }
 
         private void OnPropertyChanged(string propertyName)
