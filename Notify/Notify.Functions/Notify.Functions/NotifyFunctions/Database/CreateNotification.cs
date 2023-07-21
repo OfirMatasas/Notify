@@ -94,6 +94,11 @@ namespace Notify.Functions.NotifyFunctions.Database
                     { "user", user }
                 };
 
+                if (!type.ToLower().Equals("time"))
+                {
+                    document["notification"]["activation"] = json["notification"]["activation"].ToString();
+                }
+
                 documentsList.Add(document);
             }
         }

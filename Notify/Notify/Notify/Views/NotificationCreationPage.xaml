@@ -8,11 +8,25 @@
     <StackLayout BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor}, Dark={StaticResource DarkPageBackgroundColor}}">
         <Grid
             Column="3"
-            ColumnDefinitions="50, auto, *, *"
+            ColumnDefinitions="50, auto, *, 50"
             Margin="20,0,20,0"
             Row="6"
             RowDefinitions="auto, auto, auto, auto, auto, auto, auto">
 
+            <Label
+                FontAttributes="Bold"
+                FontSize="Large"
+                Grid.Column="1"
+                Grid.ColumnSpan="2"
+                Grid.Row="0"
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                Margin="0,0,0,0"
+                Text="Notification Creation"
+                TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                            Dark={StaticResource DarkPrimaryTextColor}}"
+                VerticalOptions="Center"
+                VerticalTextAlignment="Center" />
             <Button
                 Background="Transparent"
                 BackgroundColor="Transparent"
@@ -173,16 +187,6 @@
                         <views:FriendsListView />
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
-                <VisualStateManager.VisualStateGroups>
-                    <VisualStateGroup Name="CommonStates">
-                        <VisualState Name="Normal" />
-                        <VisualState Name="Selected">
-                            <VisualState.Setters>
-                                <Setter Property="BackgroundColor" Value="Gray" />
-                            </VisualState.Setters>
-                        </VisualState>
-                    </VisualStateGroup>
-                </VisualStateManager.VisualStateGroups>
             </CollectionView>
 
         </Grid>
