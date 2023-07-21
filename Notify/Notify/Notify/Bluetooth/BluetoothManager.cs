@@ -156,7 +156,7 @@ namespace Notify.Bluetooth
                                 notification.TypeInfo.Equals(destination.Name) &&
                                 notification.Status.ToLower().Equals("new"))
                             {
-                                notification.Status = "Sent";
+                                notification.Status = Constants.NOTIFICATION_STATUS_EXPIRED;
                                 r_Logger.LogDebug(
                                     $"Sending notification with name: {notification.Name} and description: {notification.Description}");
                                 DependencyService.Get<INotificationManager>()
@@ -182,13 +182,13 @@ namespace Notify.Bluetooth
             {
                 if (arrivedLocationNotifications.Any(arrivedNotification => arrivedNotification.ID.Equals(notification.ID)))
                 {
-                    notification.Status = "Sent";
-                    r_Logger.LogDebug($"Updated status of notification {notification.ID} to 'Sent'");
+                    notification.Status = Constants.NOTIFICATION_STATUS_EXPIRED;
+                    r_Logger.LogDebug($"Updated status of notification {notification.ID} to '{Constants.NOTIFICATION_STATUS_EXPIRED}'");
                 }
             });
 
             Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
-            AzureHttpClient.Instance.UpdateNotificationsStatus(arrivedLocationNotifications, "Sent");
+            AzureHttpClient.Instance.UpdateNotificationsStatus(arrivedLocationNotifications, Constants.NOTIFICATION_STATUS_EXPIRED);
         }
     }
 }
