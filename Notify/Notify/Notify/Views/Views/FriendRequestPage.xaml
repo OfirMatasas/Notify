@@ -20,19 +20,22 @@
                 HorizontalTextAlignment="Center"
                 Text="Friend Request"
                 TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
-                                            Dark={StaticResource DarkPrimaryTextColor}}" />
-            <Image
-                Aspect="AspectFit"
+                                            Dark={StaticResource DarkPrimaryTextColor}}"
+                VerticalTextAlignment="Center" />
+
+            <Button
+                Background="Transparent"
+                BackgroundColor="Transparent"
+                Command="{Binding BackCommand}"
+                FontAttributes="Bold"
+                FontSize="30"
                 Grid.Column="0"
                 Grid.Row="0"
-                HeightRequest="50"
                 HorizontalOptions="Start"
-                Source="back.png"
-                VerticalOptions="Start">
-                <Image.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding BackCommand}" />
-                </Image.GestureRecognizers>
-            </Image>
+                Text="❮"
+                TextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
+                                            Dark={StaticResource LightEntryBackgroundColor}}"
+                VerticalOptions="Start" />
 
             <materialDesignControls1:MaterialEntry
                 Grid.Row="1"
@@ -50,6 +53,7 @@
                 <StackLayout>
 
                     <CollectionView
+                        EmptyView="No users found"
                         HorizontalOptions="Center"
                         ItemsSource="{Binding UsersSelectionList}"
                         Margin="20,10,20,0"
@@ -113,7 +117,7 @@
                 CornerRadius="10"
                 FontSize="16"
                 Grid.Row="3"
-                Margin="20,10,20,0"
+                Margin="20,10,20,5"
                 Text="Send Request"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
                                             Dark={StaticResource DarkButtonTextColor}}"

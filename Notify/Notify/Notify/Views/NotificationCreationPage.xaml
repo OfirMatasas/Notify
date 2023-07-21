@@ -12,18 +12,19 @@
             Row="6"
             RowDefinitions="auto, auto, auto, auto, auto, auto">
 
-            <Image
-                Aspect="AspectFit"
+            <Button
+                Background="Transparent"
+                BackgroundColor="Transparent"
+                Command="{Binding BackCommand}"
+                FontAttributes="Bold"
+                FontSize="30"
                 Grid.Column="0"
                 Grid.Row="0"
-                HeightRequest="50"
-                Margin="20,0,0,0"
-                Source="back.png"
-                VerticalOptions="Start">
-                <Image.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding BackCommand}" />
-                </Image.GestureRecognizers>
-            </Image>
+                HorizontalOptions="Start"
+                Text="❮"
+                TextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
+                                            Dark={StaticResource LightEntryBackgroundColor}}"
+                VerticalOptions="Start" />
 
             <Label
                 Grid.Column="0"

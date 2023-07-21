@@ -53,7 +53,7 @@
                                     BorderColor="Transparent"
                                     FontSize="16"
                                     MaxLength="16"
-                                    Placeholder="User Name"
+                                    Placeholder="Username"
                                     PlaceholderColor="#EEEEEE"
                                     ReturnType="Next"
                                     TabIndex="1"
