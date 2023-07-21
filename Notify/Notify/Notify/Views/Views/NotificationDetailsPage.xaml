@@ -38,7 +38,7 @@
                 Column="2"
                 ColumnDefinitions="auto, auto"
                 Margin="20,20,20,0"
-                RowDefinitions="auto, auto, auto, auto, auto, auto, auto, auto">
+                RowDefinitions="auto, auto, auto, auto, auto, auto, auto, auto, auto">
                 <Label
                     FontAttributes="Bold"
                     FontSize="Medium"
@@ -150,13 +150,30 @@
                     FontSize="Medium"
                     Grid.Column="0"
                     Grid.Row="7"
-                    Text="Target user:"
+                    IsVisible="{Binding IsActivationType}"
+                    Text="Activate on:"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontSize="Medium"
                     Grid.Column="1"
                     Grid.Row="7"
+                    IsVisible="{Binding IsActivationType}"
+                    Text="{Binding Activation}"
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="Medium"
+                    Grid.Column="0"
+                    Grid.Row="8"
+                    Text="Target user:"
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
+                <Label
+                    FontSize="Medium"
+                    Grid.Column="1"
+                    Grid.Row="8"
                     Text="{Binding Target}"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />

@@ -18,7 +18,19 @@ namespace Notify.ViewModels
         public string Target { get; set; }
         public string Type { get; set; }
         public object TypeInfo { get; set; }
+        public string Activation { get; set; }
         public DateTime CreationDateTime { get; set; }
+
+        private bool m_IsActivationType;
+        public bool IsActivationType
+        {
+            get => m_IsActivationType;
+            set
+            {
+                m_IsActivationType = value;
+                OnPropertyChanged(nameof(IsActivationType));
+            }
+        }
 
         public Command BackCommand { get; set; }
         
@@ -42,6 +54,8 @@ namespace Notify.ViewModels
             Creator = notification.Creator;
             Type = Enum.GetName(typeof(NotificationType), notification.Type);
             TypeInfo = notification.TypeInfo;
+            Activation = notification.Activation;
+            IsActivationType = Activation != string.Empty;
             CreationDateTime = notification.CreationDateTime;
         }
 

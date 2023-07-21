@@ -10,7 +10,7 @@ namespace Notify.Azure.HttpClient
         public static Notification ToNotification(dynamic notification)
         {
             NotificationType notificationType;
-            string notificationTypeAsString;
+            string notificationTypeAsString, activation = string.Empty;
             object notificationTypeValue;
             
             if(notification.notification.location != null)
@@ -27,6 +27,11 @@ namespace Notify.Azure.HttpClient
                 notificationType = NotificationType.Time;
             }
 
+            if (notification.notification.activation != null)
+            {
+                activation = (string)notification.notification.activation;
+            }
+
             return new Notification(
                 id: (string)notification.id,
                 name: (string)notification.notification.name,
@@ -37,6 +42,7 @@ namespace Notify.Azure.HttpClient
                 creator: (string)notification.creator,
                 type: notificationType,
                 typeInfo: notificationTypeValue,
+                activation: activation,
                 target: (string)notification.user);
         }
         
