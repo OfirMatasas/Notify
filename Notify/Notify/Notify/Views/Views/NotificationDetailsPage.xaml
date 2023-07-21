@@ -13,25 +13,32 @@
                     FontSize="Large"
                     Grid.Column="0"
                     HorizontalTextAlignment="Center"
+                    Margin="0,0,0,0"
                     Text="Notification Details"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
-                                                Dark={StaticResource DarkPrimaryTextColor}}" />
-                <Image
-                    Aspect="AspectFit"
+                                                Dark={StaticResource DarkPrimaryTextColor}}"
+                    VerticalOptions="Center"
+                    VerticalTextAlignment="Center" />
+                <Button
+                    Background="Transparent"
+                    BackgroundColor="Transparent"
+                    Command="{Binding BackCommand}"
+                    FontAttributes="Bold"
+                    FontSize="30"
                     Grid.Column="0"
-                    HeightRequest="50"
+                    Grid.Row="0"
                     HorizontalOptions="Start"
-                    Source="back.png">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding BackCommand}" />
-                    </Image.GestureRecognizers>
-                </Image>
+                    Text="❮"
+                    TextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
+                                                Dark={StaticResource LightEntryBackgroundColor}}"
+                    VerticalOptions="Start" />
             </Grid>
 
             <Grid
                 Column="2"
                 ColumnDefinitions="auto, auto"
-                RowDefinitions="auto">
+                Margin="20,20,20,0"
+                RowDefinitions="auto, auto, auto, auto, auto, auto, auto, auto">
                 <Label
                     FontAttributes="Bold"
                     FontSize="Medium"

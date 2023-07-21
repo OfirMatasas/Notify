@@ -9,8 +9,9 @@
         <Grid
             Column="3"
             ColumnDefinitions="50, auto, *, *"
+            Margin="20,0,20,0"
             Row="6"
-            RowDefinitions="auto, auto, auto, auto, auto, auto">
+            RowDefinitions="auto, auto, auto, auto, auto, auto, auto">
 
             <Button
                 Background="Transparent"
@@ -136,16 +137,34 @@
                 SelectedItem="{Binding SelectedDynamicOption}"
                 Style="{StaticResource Body1FontSize_ExoBold}" />
 
+
+            <Label
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Grid.Row="5"
+                IsVisible="{Binding ShowActivationOptions}"
+                Style="{StaticResource Body1FontSize_ExoBold}"
+                Text="Activate on"
+                VerticalOptions="Center" />
+            <Picker
+                Grid.Column="2"
+                Grid.ColumnSpan="2"
+                Grid.Row="5"
+                IsVisible="{Binding ShowActivationOptions}"
+                ItemsSource="{Binding ActivationOptions}"
+                SelectedItem="{Binding SelectedActivationOption}"
+                Style="{StaticResource Body1FontSize_ExoBold}" />
+
             <Label
                 Grid.Column="0"
                 Grid.ColumnSpan="4"
-                Grid.Row="5"
+                Grid.Row="6"
                 Style="{StaticResource Body1FontSize_ExoBold}"
                 Text="Friends" />
             <CollectionView
                 Grid.Column="0"
                 Grid.ColumnSpan="4"
-                Grid.Row="6"
+                Grid.Row="7"
                 ItemsSource="{Binding Friends}"
                 SelectionChanged="SelectableItemsView_OnSelectionChanged"
                 SelectionMode="Multiple">

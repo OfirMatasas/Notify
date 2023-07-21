@@ -97,7 +97,6 @@ namespace Notify.Helpers
         public static readonly string TIME = "Time";
         public static readonly string LOCATION = "Location";
         public static readonly string DYNAMIC = "Dynamic";
-
         
         public static readonly List<string> NOTIFICATION_OPTIONS_LIST = new List<string>
         {
@@ -106,6 +105,12 @@ namespace Notify.Helpers
             DYNAMIC
         };
         
+        public static readonly List<string> ACTIVATION_OPTIONS_LIST = new List<string>
+        {
+            "Arrival",
+            "Leave"
+        };
+
         #endregion
 
         #region Azure Http Client

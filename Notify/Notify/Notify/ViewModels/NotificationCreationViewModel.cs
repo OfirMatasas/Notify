@@ -31,16 +31,19 @@ namespace Notify.ViewModels
                 OnPropertyChanged(nameof(IsTimeOptionSelected));
                 OnPropertyChanged(nameof(IsLocationOptionSelected));
                 OnPropertyChanged(nameof(IsDynamicOptionSelected));
+                OnPropertyChanged(nameof(ShowActivationOptions));
             }
         }
         
         public bool IsTimeOptionSelected => SelectedNotificationOption == Constants.TIME;
         public bool IsLocationOptionSelected => SelectedNotificationOption == Constants.LOCATION;
         public bool IsDynamicOptionSelected => SelectedNotificationOption == Constants.DYNAMIC;
-
+        public bool ShowActivationOptions => IsLocationOptionSelected || IsDynamicOptionSelected;
+        
         public List<string> LocationOptions { get; set; } = Constants.LOCATIONS_LIST;
         public List<string> DynamicOptions { get; set; } = Constants.DYNAMIC_PLACE_LIST;
-
+        public List<string> ActivationOptions { get; set; } = Constants.ACTIVATION_OPTIONS_LIST;
+        
         private string m_NotificationDescription;
         public string NotificationDescription
         {
@@ -53,6 +56,13 @@ namespace Notify.ViewModels
         {
             get => m_SelectedTimeOption;
             set => m_SelectedTimeOption = value;
+        }
+
+        private static string m_SelectedActivationOption = string.Empty;
+        public static string SelectedActivationOption
+        {
+            get => m_SelectedActivationOption;
+            set => m_SelectedActivationOption = value;
         }
         
         private static DateTime m_SelectedDateOption = DateTime.Today;
