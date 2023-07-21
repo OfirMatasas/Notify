@@ -250,10 +250,10 @@ namespace Notify.Azure.HttpClient
         }
 
         public bool CreateDynamicNotification(string notificationName, string description, string notificationType, 
-            string dynamicLocation, List<string> users)
+            string dynamicLocation, string activation, List<string> users)
         {
             return createNotification(notificationName, description, notificationType, "location", dynamicLocation, users, 
-                Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_DYNAMIC);
+                Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_DYNAMIC, activation);
         }
 
         private bool createNotification(string notificationName, string description, string notificationType, 
