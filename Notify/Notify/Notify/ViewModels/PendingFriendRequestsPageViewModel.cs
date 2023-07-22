@@ -13,7 +13,12 @@ namespace Notify.ViewModels
     public sealed class PendingFriendRequestsPageViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-
+        
+        public Command AcceptFriendRequestCommand { get; set; }
+        public Command RejectFriendRequestCommand { get; set; }
+        public Command BackCommand { get; set; }
+        public Command ShowFriendDetailsCommand { get; set; }
+        
         private ObservableCollection<FriendRequest> m_FriendRequests;
         public ObservableCollection<FriendRequest> FriendRequests
         {
@@ -27,10 +32,7 @@ namespace Notify.ViewModels
                 }
             }
         }
-
-        public ICommand AcceptFriendRequestCommand { get; set; }
-        public ICommand RejectFriendRequestCommand { get; set; }
-
+        
         public PendingFriendRequestsPageViewModel()
         {
             FriendRequests = new ObservableCollection<FriendRequest>
@@ -59,6 +61,13 @@ namespace Notify.ViewModels
 
             AcceptFriendRequestCommand = new Command<FriendRequest>(async request => await AcceptRequest(request));
             RejectFriendRequestCommand = new Command<FriendRequest>(async request => await RejectRequest(request));
+            ShowFriendDetailsCommand = new Command<FriendRequest>(onFriendClicked);
+            BackCommand = new Command(onBackButtonClicked);
+        }
+        
+        private void onFriendClicked(FriendRequest request)
+        {
+            App.Current.MainPage.DisplayAlert("Request Details", $"Username: {request.Sender.UserName}\nName: {request.Sender.Name}\nTelephone: {request.Sender.Telephone}\nRequest Date: {request.RequestDate}\nStatus: {request.Status}", "OK");
         }
 
         private async Task AcceptRequest(FriendRequest request)
@@ -69,6 +78,11 @@ namespace Notify.ViewModels
         private async Task RejectRequest(FriendRequest request)
         {
             Debug.WriteLine("in RejectRequest method");
+        }
+        
+        private async void onBackButtonClicked()
+        {
+            await Shell.Current.Navigation.PopAsync();
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)

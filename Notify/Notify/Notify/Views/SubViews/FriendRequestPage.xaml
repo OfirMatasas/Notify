@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8" ?>
-
 <ContentPage
     NavigationPage.HasNavigationBar="True"
     x:Class="Notify.Views.SubViews.FriendRequestPage"
@@ -12,31 +11,30 @@
             BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor},
                                               Dark={StaticResource DarkPageBackgroundColor}}"
             Column="1"
-            RowDefinitions="auto, auto, *, auto">
+            RowDefinitions="auto, auto, *, auto"
+            RowSpacing="0">
             <materialDesignControls:MaterialLabel
                 FontAttributes="Bold"
                 FontSize="Large"
-                Grid.Column="0"
                 Grid.Row="0"
+                HorizontalOptions="Center"
                 HorizontalTextAlignment="Center"
                 Text="Friend Request"
                 TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                             Dark={StaticResource DarkPrimaryTextColor}}"
-                VerticalTextAlignment="Center" />
-
+                VerticalOptions="Center" />
             <Button
                 Background="Transparent"
                 BackgroundColor="Transparent"
                 Command="{Binding BackCommand}"
                 FontAttributes="Bold"
                 FontSize="30"
-                Grid.Column="0"
                 Grid.Row="0"
                 HorizontalOptions="Start"
                 Text="❮"
                 TextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
                                             Dark={StaticResource LightEntryBackgroundColor}}"
-                VerticalOptions="Start" />
+                VerticalOptions="Center" />
 
             <materialDesignControls:MaterialEntry
                 Grid.Row="1"
@@ -78,7 +76,6 @@
                                             <TapGestureRecognizer Command="{Binding Path=BindingContext.ShowFriendDetailsCommand, Source={x:Reference Name=FriendReqPage}}" CommandParameter="{Binding .}" />
                                         </materialDesignControls:MaterialLabel.GestureRecognizers>
                                     </materialDesignControls:MaterialLabel>
-
                                     <ImageButton
                                         BackgroundColor="Transparent"
                                         Command="{Binding Path=BindingContext.SendRequestCommand, Source={x:Reference Name=FriendReqPage}}"
@@ -95,19 +92,6 @@
                     </CollectionView>
                 </StackLayout>
             </ScrollView>
-
-            <materialDesignControls1:MaterialButton
-                BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
-                                                  Dark={StaticResource DarkButtonColor}}"
-                Command="{Binding SendRequestCommand}"
-                CornerRadius="10"
-                FontSize="16"
-                Grid.Row="3"
-                Margin="20,10,20,5"
-                Text="Send Request"
-                TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
-                                            Dark={StaticResource DarkButtonTextColor}}"
-                VerticalOptions="End" />
         </Grid>
     </ContentPage.Content>
 </ContentPage>
