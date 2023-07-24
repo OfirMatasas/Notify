@@ -1,7 +1,9 @@
 using System;
 using Notify.Notifications;
 using Foundation;
+using Notify.Core;
 using UIKit;
+using Notify.Helpers;
 using UserNotifications;
 using Xamarin.Forms;
 
@@ -20,6 +22,24 @@ namespace Notify.iOS.Notifications
             {
                 hasNotificationsPermission = approved;
             });
+        }
+        
+        public void SendNotification(Notification notification)
+        {
+            string fallbackStatus = notification.Status;
+            
+            notification.Status = Constants.NOTIFICATION_STATUS_SENDING;
+
+            try
+            {
+                DependencyService.Get<INotificationManager>()
+                    .SendNotification(notification.Name, notification.Description);
+                notification.Status = Constants.NOTIFICATION_STATUS_EXPIRED;
+            }
+            catch (Exception)
+            {
+                notification.Status = fallbackStatus;
+            }
         }
 
         public void SendNotification(string title, string message, DateTime? notifyTime = null)

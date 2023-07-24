@@ -1,4 +1,5 @@
 using System;
+using Notify.Core;
 
 namespace Notify.Notifications
 {
@@ -6,6 +7,7 @@ namespace Notify.Notifications
     {
         event EventHandler NotificationReceived;
         void Initialize();
+        void SendNotification(Notification notification);
         void SendNotification(string title, string message, DateTime? notifyTime = null);
         void ReceiveNotification(string title, string message);
     }

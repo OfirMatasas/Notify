@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Android.Net;
 using Android.Net.Wifi;
@@ -106,32 +108,69 @@ namespace Notify.Droid.Managers
         {
             lock (m_NotificationsLock)
             {
-                r_Logger.LogDebug("Sending notifications");
+                r_Logger.LogInformation("Sending Wi-Fi notifications");
+                
+                List<Notification> locationNotifications = notifications.FindAll(notification => notification.Type.Equals(NotificationType.Location));
+                List<Destination> sameSSIDDestinations = destinations.FindAll(destination => ssid.Equals(destination.SSID));
+                List<Destination> differentSSIDDestinations = destinations.Intersect(sameSSIDDestinations).ToList();
 
-                foreach (Destination destination in destinations)
+                r_Logger.LogInformation("Sending Wi-Fi notifications for arrival destinations");
+                sendNotificationsForArrivalDestinations(locationNotifications, sameSSIDDestinations);
+                r_Logger.LogInformation("Finished sending Wi-Fi notifications for arrival destinations");
+                
+                r_Logger.LogInformation("Sending Wi-Fi notifications for leave destinations");
+                sendNotificationsForLeaveDestinations(locationNotifications, differentSSIDDestinations);
+                r_Logger.LogInformation("Finished sending Wi-Fi notifications for leave destinations");
+
+                r_Logger.LogInformation("Finished sending Wi-Fi notifications");
+                Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
+            }
+        }
+        
+        private static void sendNotificationsForArrivalDestinations(List<Notification> notifications, List<Destination> destinations)
+        {
+            bool isDestinationNotification, isArrivalNotification, isActive;
+
+            foreach (Destination destination in destinations)
+            {
+                foreach (Notification notification in notifications)
                 {
-                    if (destination.SSID.Equals(ssid))
+                    isDestinationNotification = notification.TypeInfo.Equals(destination.Name);
+                    isActive = notification.Status.Equals(Constants.NOTIFICATION_STATUS_ACTIVE);
+                    isArrivalNotification = notification.Activation.Equals(Constants.NOTIFICATION_ACTIVATION_ARRIVAL);
+
+                    if (isDestinationNotification && isActive)
                     {
-                        r_Logger.LogDebug($"Found a destination with SSID of {ssid}");
-
-                        foreach (Notification notification in notifications)
+                        if (isArrivalNotification)
                         {
-                            if (notification.Type.Equals(NotificationType.Location) &&
-                                notification.TypeInfo.Equals(destination.Name) &&
-                                notification.Status.Equals(Constants.NOTIFICATION_STATUS_ACTIVE))
-                            {
-                                notification.Status = Constants.NOTIFICATION_STATUS_EXPIRED;
-                                r_Logger.LogDebug($"Sending notification with name: {notification.Name} and description: {notification.Description}");
-                                DependencyService.Get<INotificationManager>()
-                                    .SendNotification(notification.Name, notification.Description);
-
-                            }
+                            DependencyService.Get<INotificationManager>().SendNotification(notification);
+                        }
+                        else
+                        {
+                            notification.Status = Constants.NOTIFICATION_STATUS_ARRIVED;
                         }
                     }
                 }
+            }
+        }
 
-                r_Logger.LogDebug("Finished sending notifications");
-                Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
+        private static void sendNotificationsForLeaveDestinations(List<Notification> notifications, List<Destination> destinations)
+        {
+            bool isDestinationNotification, isLeaveNotification, isArrived;
+
+            foreach (Destination destination in destinations)
+            {
+                foreach (Notification notification in notifications)
+                {
+                    isDestinationNotification = notification.TypeInfo.Equals(destination.Name);
+                    isLeaveNotification = notification.Activation.Equals(Constants.NOTIFICATION_ACTIVATION_LEAVE);
+                    isArrived = notification.Status.Equals(Constants.NOTIFICATION_STATUS_ARRIVED);
+
+                    if (isDestinationNotification && isLeaveNotification && isArrived)
+                    {
+                        DependencyService.Get<INotificationManager>().SendNotification(notification);
+                    }
+                }
             }
         }
 
