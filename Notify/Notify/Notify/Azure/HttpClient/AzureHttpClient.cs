@@ -548,7 +548,9 @@ namespace Notify.Azure.HttpClient
             dynamic request = new JObject
             {
                 { "userName", username },
-                { "requester", Preferences.Get(Constants.PREFERENCES_USERNAME, "") }
+                { "requester", Preferences.Get(Constants.PREFERENCES_USERNAME, "") },
+                { "requestDate", DateTime.Now },
+                { "status", StatusType.Pending.ToString() }
             };
             string json = JsonConvert.SerializeObject(request);
             
