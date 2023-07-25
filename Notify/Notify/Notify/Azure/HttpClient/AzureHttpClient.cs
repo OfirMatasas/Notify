@@ -558,6 +558,32 @@ namespace Notify.Azure.HttpClient
             await postAsync(requestUri: Constants.AZURE_FUNCTIONS_PATTERN_FRIEND_REQUEST, createJsonStringContent(json));
         }
 
+        public async Task<List<FriendRequest>> GetPendingFriendRequests(string userName)
+        {
+            string requestUri, responseJson;
+            HttpResponseMessage response;
+            List<FriendRequest> friendRequests;
+            
+            try
+            {
+                requestUri = Constants.AZURE_FUNCTIONS_PATTERN_PENDING_FRIEND_REQUEST + $"/{userName}";
+                r_Logger.LogInformation($"Getting pending friend requests from {requestUri}");
+                response = await m_HttpClient.GetAsync(requestUri);
+                response.EnsureSuccessStatusCode();
+
+                responseJson = await response.Content.ReadAsStringAsync();
+                friendRequests = JsonConvert.DeserializeObject<List<FriendRequest>>(responseJson);
+                r_Logger.LogInformation($"Got {friendRequests.Count} pending friend requests");
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error occured on GetPendingFriendRequests: {Environment.NewLine}{ex.Message}");
+                friendRequests = new List<FriendRequest>();
+            }
+
+            return friendRequests;
+        }
+
         public async Task<List<Location>> GetNearbyPlaces(string destination, Location location)
         {
             List<Location> nearbyPlaces = new List<Location>();

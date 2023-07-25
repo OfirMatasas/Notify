@@ -1,11 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Notify.Azure.HttpClient;
 using Notify.Core;
+using Notify.Helpers;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Notify.ViewModels
@@ -35,29 +39,7 @@ namespace Notify.ViewModels
         
         public PendingFriendRequestsPageViewModel()
         {
-            FriendRequests = new ObservableCollection<FriendRequest>
-            {
-                new FriendRequest
-                {
-                    Sender = new Friend("John Doe", "DekelR", "+1234567890")
-                    {
-                        IsSelected = false,
-                        ProfileImage = "friend_request.png"
-                    },
-                    RequestDate = DateTime.Now.AddDays(-1),
-                    Status = StatusType.Pending
-                },
-                new FriendRequest
-                {
-                    Sender = new Friend("Jane Doe", "MaTaSaS", "+0987654321")
-                    {
-                        IsSelected = false,
-                        ProfileImage = "friend_request.png"
-                    },
-                    RequestDate = DateTime.Now.AddDays(-2),
-                    Status = StatusType.Pending
-                }
-            };
+            LoadPendingFriendRequests();
 
             AcceptFriendRequestCommand = new Command<FriendRequest>(async request => await AcceptRequest(request));
             RejectFriendRequestCommand = new Command<FriendRequest>(async request => await RejectRequest(request));
@@ -67,7 +49,7 @@ namespace Notify.ViewModels
         
         private void onFriendClicked(FriendRequest request)
         {
-            App.Current.MainPage.DisplayAlert("Request Details", $"Username: {request.Sender.UserName}\nName: {request.Sender.Name}\nTelephone: {request.Sender.Telephone}\nRequest Date: {request.RequestDate}\nStatus: {request.Status}", "OK");
+            App.Current.MainPage.DisplayAlert("Request Details", $"Username: {request.Requester.UserName}\nName: {request.Requester.Name}\nTelephone: {request.Requester.Telephone}\nRequest Date: {request.RequestDate}\nStatus: {request.Status}", "OK");
         }
 
         private async Task AcceptRequest(FriendRequest request)
@@ -88,6 +70,25 @@ namespace Notify.ViewModels
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private async void LoadPendingFriendRequests()
+        {
+            string userName;
+            List<FriendRequest> pendingFriendRequests;
+            try
+            {
+                userName = Preferences.Get(Constants.PREFERENCES_USERNAME, "");
+                pendingFriendRequests = await AzureHttpClient.Instance.GetPendingFriendRequests(userName);
+                foreach (FriendRequest friendRequest in pendingFriendRequests)
+                {
+                    FriendRequests.Add(friendRequest);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error occured on LoadPendingRequests: {ex.Message}");
+            }
         }
     }
 }
