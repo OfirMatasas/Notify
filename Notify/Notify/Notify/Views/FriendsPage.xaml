@@ -7,30 +7,28 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <StackLayout BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor}, Dark={StaticResource DarkPageBackgroundColor}}">
-
-        <Grid ColumnDefinitions="*, *, auto" RowDefinitions="auto, *">
+        <Grid Padding="10,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
             <Label
                 FontAttributes="Bold"
                 FontSize="25"
                 Grid.Column="0"
-                Grid.ColumnSpan="2"
                 HorizontalOptions="CenterAndExpand"
-                Margin="10"
                 Style="{StaticResource Body1FontSize_ExoBold}"
                 Text="Friends"
                 VerticalOptions="Center" />
-
             <ImageButton
                 BackgroundColor="Transparent"
                 Command="{Binding ShowPendingFriendRequestsCommand}"
-                Grid.Column="2"
-                HeightRequest="30"
+                Grid.Column="1"
+                HeightRequest="50"
                 HorizontalOptions="End"
-                Margin="10"
                 Source="friend_request.png"
-                VerticalOptions="Center" />
+                WidthRequest="25" />
         </Grid>
-
         <Grid Column="3" ColumnDefinitions="auto, *, auto">
             <Image
                 Aspect="AspectFit"
