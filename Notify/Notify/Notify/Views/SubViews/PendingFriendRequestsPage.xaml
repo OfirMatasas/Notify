@@ -46,7 +46,7 @@
                                     <Label
                                         FontSize="Medium"
                                         Grid.Column="0"
-                                        Text="{Binding Sender.UserName, StringFormat='{0} wants to be your friend.'}"
+                                        Text="{Binding Requester, StringFormat='{0} wants to be your friend.'}"
                                         TextColor="Black"
                                         VerticalOptions="Center">
                                         <Label.GestureRecognizers>
