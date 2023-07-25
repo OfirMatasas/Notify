@@ -549,10 +549,12 @@ namespace Notify.Azure.HttpClient
             {
                 { "userName", username },
                 { "requester", Preferences.Get(Constants.PREFERENCES_USERNAME, "") },
-                { "requestDate", DateTime.Now },
+                { "requestDate", DateTime.Now.ToString() },
                 { "status", StatusType.Pending.ToString() }
             };
             string json = JsonConvert.SerializeObject(request);
+            
+            r_Logger.LogInformation($"request:{Environment.NewLine}{json}");
             
             createJsonStringContent(JsonConvert.SerializeObject(request));
             await postAsync(requestUri: Constants.AZURE_FUNCTIONS_PATTERN_FRIEND_REQUEST, createJsonStringContent(json));
@@ -567,7 +569,7 @@ namespace Notify.Azure.HttpClient
             try
             {
                 requestUri = Constants.AZURE_FUNCTIONS_PATTERN_PENDING_FRIEND_REQUEST + $"/{userName}";
-                r_Logger.LogInformation($"Getting pending friend requests from {requestUri}");
+                r_Logger.LogInformation($"Getting pending friend requests for user {userName}");
                 response = await m_HttpClient.GetAsync(requestUri);
                 response.EnsureSuccessStatusCode();
 

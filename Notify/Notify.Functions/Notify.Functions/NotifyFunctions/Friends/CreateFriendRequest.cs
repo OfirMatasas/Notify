@@ -27,15 +27,14 @@ namespace Notify.Functions.NotifyFunctions.Friends
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
-            string requester, username, status;
-            DateTime requestDate;
+            string requester, username, requestDate, status;
             ObjectResult result;
 
             try
             {
                 requester = Convert.ToString(data.requester);
                 username = Convert.ToString(data.userName);
-                requestDate = Convert.ToDateTime(data.requestDate);
+                requestDate = Convert.ToString(data.requestDate);
                 status = Convert.ToString(data.status);
                 result = friendRequestShouldBeCreated(requester, username, log);
                 
@@ -173,7 +172,7 @@ namespace Notify.Functions.NotifyFunctions.Friends
             return numberOfUsersFound.Equals(2);
         }
         
-        private static async Task createFriendRequest(string requester, string username, DateTime requestDate, string status)
+        private static async Task createFriendRequest(string requester, string username, string requestDate, string status)
         {
             IMongoCollection<BsonDocument> friendRequestsCollection;
             BsonDocument friendRequestDocument;
