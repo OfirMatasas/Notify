@@ -11,7 +11,8 @@ namespace Notify.Core
     
     public class FriendRequest
     {
-        public Friend Sender { get; set; }
+        public Friend Requester { get; set; }
+        public Friend UserName { get; set; }
         public DateTime RequestDate { get; set; }
         public StatusType Status { get; set; }
     }
