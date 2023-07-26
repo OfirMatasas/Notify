@@ -48,7 +48,7 @@ namespace Notify.ViewModels
             BackCommand = new Command(onBackButtonClicked);
         }
         
-        private void onFriendClicked(FriendRequest request) // TODO ask how to get the friend's name and telephone using the converter class Ofir made
+        private void onFriendClicked(FriendRequest request)
         {
             App.Current.MainPage.DisplayAlert("Request Details", $"Username: {request.Requester}\nName: hi\nTelephone: hi\nRequest Date: {request.RequestDate}\nStatus: {request.Status}", "OK");
         }
