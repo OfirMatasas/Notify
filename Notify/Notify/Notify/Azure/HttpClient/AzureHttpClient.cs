@@ -590,8 +590,7 @@ namespace Notify.Azure.HttpClient
             dynamic data = new JObject
             {
                 { "requester", requester },
-                { "receiver", receiver },
-                { "responseDate", DateTime.Now.Date.ToShortDateString() },
+                { "receiver", receiver }
             };
             string json = JsonConvert.SerializeObject(data);
 
@@ -609,8 +608,7 @@ namespace Notify.Azure.HttpClient
             dynamic data = new JObject
             {
                 { "requester", requester },
-                { "receiver", receiver },
-                { "responseDate", DateTime.Now.Date.ToShortDateString() },
+                { "receiver", receiver }
             };
             string json = JsonConvert.SerializeObject(data);
 
