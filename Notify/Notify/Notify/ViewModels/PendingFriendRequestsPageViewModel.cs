@@ -45,6 +45,7 @@ namespace Notify.ViewModels
             BackCommand = new Command(onBackButtonClicked);
         }
         
+        
         private void onFriendClicked(FriendRequest request)
         {
             App.Current.MainPage.DisplayAlert("Request Details", request.ToString() , "OK");
