@@ -11,9 +11,9 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using Notify.Functions.Core;
-using Notify.Functions.NotifyFunctions.AzureHTTPClients;
+using Notify.Functions.HTTPClients;
 
-namespace Notify.Functions.NotifyFunctions.Database
+namespace Notify.Functions.NotifyFunctions.Destinations
 {
     public static class DeleteDestination
     {

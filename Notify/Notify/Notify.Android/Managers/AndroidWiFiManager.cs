@@ -30,6 +30,7 @@ namespace Notify.Droid.Managers
         {
             retrieveDestinations();
         }        
+        
         public void PrintConnectedWiFi(object sender, ConnectivityChangedEventArgs e)
         {
             ConnectivityManager connectivityManager = (ConnectivityManager)Application.Context.GetSystemService(Context.ConnectivityService);
@@ -143,6 +144,7 @@ namespace Notify.Droid.Managers
                     {
                         if (isArrivalNotification)
                         {
+                            r_Logger.LogInformation($"Sending notification for arrival notification: {notification.Name}");
                             DependencyService.Get<INotificationManager>().SendNotification(notification);
                         }
                         else
@@ -168,6 +170,7 @@ namespace Notify.Droid.Managers
 
                     if (isDestinationNotification && isLeaveNotification && isArrived)
                     {
+                        r_Logger.LogInformation($"Sending notification for leave notification: {notification.Name}");
                         DependencyService.Get<INotificationManager>().SendNotification(notification);
                     }
                 }

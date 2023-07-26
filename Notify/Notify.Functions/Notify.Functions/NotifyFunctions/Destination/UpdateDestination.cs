@@ -11,10 +11,10 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using Newtonsoft.Json;
 using Notify.Functions.Core;
-using Notify.Functions.NotifyFunctions.AzureHTTPClients;
+using Notify.Functions.HTTPClients;
 using static MongoDB.Driver.Builders<MongoDB.Bson.BsonDocument>;
 
-namespace Notify.Functions.NotifyFunctions.Database
+namespace Notify.Functions.NotifyFunctions.Destination
 {
     public static class UpdateDestination
     {

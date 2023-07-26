@@ -8,9 +8,10 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Notify.Functions.Core;
+using Notify.Functions.NotifyFunctions.AzureVault;
 using Constants = Notify.Functions.Core.Constants;
 
-namespace Notify.Functions.NotifyFunctions.AzureHTTPClients
+namespace Notify.Functions.HTTPClients
 {
     public class GoogleHttpClient
     { 
@@ -55,7 +56,7 @@ namespace Notify.Functions.NotifyFunctions.AzureHTTPClients
 
         private async Task<string> GetAsync(string uri)
         {
-            string googleAPIkey = await AzureVault.AzureVault.GetSecretFromVault(Constants.GOOGLE_API_KEY);
+            string googleAPIkey = await AzureVault.GetSecretFromVault(Constants.GOOGLE_API_KEY);
             string content = null;
             HttpResponseMessage response;
 
@@ -76,7 +77,7 @@ namespace Notify.Functions.NotifyFunctions.AzureHTTPClients
 
         public async Task<List<string>> GetAddressSuggestionsAsync(string addressProvided, ILogger logger)
         {
-            string googleAPIkey = await AzureVault.AzureVault.GetSecretFromVault(Constants.GOOGLE_API_KEY);
+            string googleAPIkey = await AzureVault.GetSecretFromVault(Constants.GOOGLE_API_KEY);
             string requestUri = $"place/autocomplete/json?input={addressProvided}&types=address&key={googleAPIkey}";
             List<string> suggestions = new List<string>();
             string response;
@@ -104,7 +105,7 @@ namespace Notify.Functions.NotifyFunctions.AzureHTTPClients
         
         public async Task<Coordinates> GetCoordinatesFromAddressAsync(string addressProvided, ILogger logger)
         {
-            string googleAPIkey = await AzureVault.AzureVault.GetSecretFromVault(Constants.GOOGLE_API_KEY);
+            string googleAPIkey = await AzureVault.GetSecretFromVault(Constants.GOOGLE_API_KEY);
             string requestUri = $"geocode/json?address={addressProvided}&key={googleAPIkey}";
             Coordinates coordinates = null;
             string response;
@@ -131,7 +132,7 @@ namespace Notify.Functions.NotifyFunctions.AzureHTTPClients
         
         public async Task<string> GetAddressFromCoordinatesAsync(double latitude, double longitude)
         {
-            string googleAPIkey = await AzureVault.AzureVault.GetSecretFromVault(Constants.GOOGLE_API_KEY);
+            string googleAPIkey = await AzureVault.GetSecretFromVault(Constants.GOOGLE_API_KEY);
             string requestUri = $"geocode/json?key={googleAPIkey}&latlng={latitude},{longitude}";
             string address = null;
             string response;
@@ -163,7 +164,7 @@ namespace Notify.Functions.NotifyFunctions.AzureHTTPClients
         
         public async Task<List<Place>> SearchPlacesNearby(double latitude, double longitude, int radius, string type)
         {
-            string googleAPIkey = await AzureVault.AzureVault.GetSecretFromVault(Constants.GOOGLE_API_KEY);
+            string googleAPIkey = await AzureVault.GetSecretFromVault(Constants.GOOGLE_API_KEY);
             string requestUri = $"place/nearbysearch/json?key={googleAPIkey}&location={latitude},{longitude}&radius={radius}&type={type.ToLower()}";
             List<Place> places = new List<Place>();
             string response;

@@ -8,9 +8,9 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Notify.Functions.NotifyFunctions.AzureHTTPClients;
+using Notify.Functions.HTTPClients;
 
-namespace Notify.Functions.Google
+namespace Notify.Functions.NotifyFunctions.Google
 {
     public static class GetAddressSuggestions
     {

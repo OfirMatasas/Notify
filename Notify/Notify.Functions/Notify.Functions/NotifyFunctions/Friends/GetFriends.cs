@@ -10,10 +10,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using Notify.Functions.NotifyFunctions.AzureHTTPClients;
+using Notify.Functions.HTTPClients;
 using Constants = Notify.Functions.Core.Constants;
 
-namespace Notify.Functions.Friends
+namespace Notify.Functions.NotifyFunctions.Friends
 {
     public static class GetFriends
     {
