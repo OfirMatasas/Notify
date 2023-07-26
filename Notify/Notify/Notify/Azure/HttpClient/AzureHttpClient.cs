@@ -568,7 +568,7 @@ namespace Notify.Azure.HttpClient
             
             try
             {
-                requestUri = Constants.AZURE_FUNCTIONS_PATTERN_PENDING_FRIEND_REQUEST + $"/{userName}";
+                requestUri = Constants.AZURE_FUNCTIONS_PATTERN_FRIEND_REQUEST + $"?username={userName}";
                 r_Logger.LogInformation($"request URI {requestUri}");
                 response = await m_HttpClient.GetAsync(requestUri);
                 response.EnsureSuccessStatusCode();
