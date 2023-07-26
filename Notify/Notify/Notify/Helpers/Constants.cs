@@ -111,6 +111,9 @@ namespace Notify.Helpers
             "Leave"
         };
         
+        public static readonly string NOTIFICATION_ACTIVATION_ARRIVAL = "Arrival";
+        public static readonly string NOTIFICATION_ACTIVATION_LEAVE = "Leave";
+        
         public static readonly string NOTIFICATION_STATUS_PENDING = "Pending";
         public static readonly string NOTIFICATION_STATUS_ACTIVE = "Active";
         public static readonly string NOTIFICATION_STATUS_DECLINED = "Declined";

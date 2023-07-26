@@ -154,7 +154,7 @@ namespace Notify.Bluetooth
                         {
                             if (notification.Type.Equals(NotificationType.Location) &&
                                 notification.TypeInfo.Equals(destination.Name) &&
-                                notification.Status.ToLower().Equals("new"))
+                                notification.Status.Equals(Constants.NOTIFICATION_STATUS_ACTIVE))
                             {
                                 notification.Status = Constants.NOTIFICATION_STATUS_EXPIRED;
                                 r_Logger.LogDebug(

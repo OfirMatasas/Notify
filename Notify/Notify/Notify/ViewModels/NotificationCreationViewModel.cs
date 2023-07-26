@@ -39,7 +39,7 @@ namespace Notify.ViewModels
         public bool IsTimeOptionSelected => SelectedNotificationOption == Constants.TIME;
         public bool IsLocationOptionSelected => SelectedNotificationOption == Constants.LOCATION;
         public bool IsDynamicOptionSelected => SelectedNotificationOption == Constants.DYNAMIC;
-        public bool ShowActivationOptions => IsLocationOptionSelected || IsDynamicOptionSelected;
+        public bool ShowActivationOptions => IsLocationOptionSelected;
         
         public List<string> LocationOptions { get; set; } = Constants.LOCATIONS_LIST;
         public List<string> DynamicOptions { get; set; } = Constants.DYNAMIC_PLACE_LIST;
@@ -128,12 +128,12 @@ namespace Notify.ViewModels
 
         private async void OnCreateNotification()
         {
-            List<string> selectedFriends, errorMessages;
+            List<string> selectedRecipients, errorMessages;
             string completeErrorMessage;
             DateTime selectedDateTime = SelectedDateOption.Date.Add(SelectedTimeOption);
             bool isCreated;
 
-            if (checkIfSelectionsAreValid(out selectedFriends, out errorMessages))
+            if (checkIfRecipientSelectionsIsValid(out selectedRecipients, out errorMessages))
             {
                 if (IsTimeOptionSelected)
                 {
@@ -142,7 +142,7 @@ namespace Notify.ViewModels
                         NotificationDescription,
                         SelectedNotificationOption,
                         selectedDateTime,
-                        selectedFriends);
+                        selectedRecipients);
                 }
                 else if (IsLocationOptionSelected)
                 {
@@ -152,7 +152,7 @@ namespace Notify.ViewModels
                         SelectedNotificationOption,
                         SelectedLocationOption,
                         SelectedActivationOption,
-                        selectedFriends);
+                        selectedRecipients);
                 }
                 else if (IsDynamicOptionSelected)
                 {
@@ -161,8 +161,7 @@ namespace Notify.ViewModels
                         NotificationDescription,
                         SelectedNotificationOption,
                         SelectedDynamicOption,
-                        SelectedActivationOption,
-                        selectedFriends);
+                        selectedRecipients);
                 }
                 else
                 {
@@ -182,50 +181,68 @@ namespace Notify.ViewModels
             }
         }
 
-        private bool checkIfSelectionsAreValid(out List<string> selectedFriends, out List<string> errorMessages)
+        private bool checkIfRecipientSelectionsIsValid(out List<string> selectedRecipients, out List<string> errorMessages)
         {
             errorMessages = new List<string>();
-            selectedFriends = Friends
-                .Where(friends => friends.IsSelected)
-                .Select(friend => friend.UserName)
+            selectedRecipients = Friends
+                .Where(recipient => recipient.IsSelected)
+                .Select(recipient => recipient.UserName)
                 .ToList();
 
-            if (string.IsNullOrEmpty(NotificationName))
-            {
-                errorMessages.Add("You must name the notification");
-            }
+            addErrorMessageAccordingToNotificationName(ref errorMessages);
+            addErrorMessagesAccordingToNotificationType(ref errorMessages);
+            addErrorMessagesAccordingToSelectedRecipients(selectedRecipients, ref errorMessages);
 
-            if (string.IsNullOrEmpty(SelectedNotificationOption))
+            return errorMessages.IsNullOrEmpty();
+        }
+
+        private static void addErrorMessagesAccordingToSelectedRecipients(List<string> selectedRecipients, ref List<string> errorMessages)
+        {
+            if (selectedRecipients == null || selectedRecipients.Count == 0)
             {
-                errorMessages.Add("You must choose a notification type");
+                errorMessages.Add("You must choose at least one recipient");
             }
-            else if (IsTimeOptionSelected)
+        }
+
+        private void addErrorMessagesAccordingToNotificationType(ref List<string> errorMessages)
+        {
+            if (IsTimeOptionSelected)
             {
                 if (SelectedDateOption.Date.Add(SelectedTimeOption) < DateTime.Now)
                 {
                     errorMessages.Add("You must choose a time in the future");
                 }
             }
-            else if (IsLocationOptionSelected && m_SelectedLocationOption.IsNullOrEmpty())
+            else if (IsLocationOptionSelected)
             {
-                errorMessages.Add("You must choose a location");
+                if (m_SelectedLocationOption.IsNullOrEmpty())
+                {
+                    errorMessages.Add("You must choose a location");
+                }
+                if (SelectedActivationOption.IsNullOrEmpty())
+                {
+                    errorMessages.Add("You must choose an activation option");
+                }
             }
-            else if (IsDynamicOptionSelected && m_SelectedDynamicOption.IsNullOrEmpty())
+            else if (IsDynamicOptionSelected)
             {
-                errorMessages.Add("You must choose a type of place");
+                if (m_SelectedDynamicOption.IsNullOrEmpty())
+                {
+                    errorMessages.Add("You must choose a type of place");
+                }
             }
-            
-            if((IsDynamicOptionSelected || IsLocationOptionSelected) && SelectedActivationOption.IsNullOrEmpty())
+            else
             {
-                errorMessages.Add("You must choose an activation option");
+                errorMessages.Add("You must choose a notification type");
             }
-            
-            if (selectedFriends == null || selectedFriends.Count == 0)
-            {
-                errorMessages.Add("You must choose at least one friend");
-            }
+        }
 
-            return errorMessages.IsNullOrEmpty();
+        private void addErrorMessageAccordingToNotificationName(ref List<string> errorMessages)
+        {
+            if (string.IsNullOrEmpty(NotificationName))
+            {
+                errorMessages.Add("You must name the notification");
+            }
         }
 
         private void OnPropertyChanged(string propertyName)

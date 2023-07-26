@@ -245,7 +245,7 @@ namespace Notify
                             isTimeElapsed = notificationTime <= DateTime.Now;
                         }
                         
-                        bool isNewNotification = notification.Status.ToLower().Equals("new");
+                        bool isNewNotification = notification.Status.Equals(Constants.NOTIFICATION_STATUS_ACTIVE);
 
                         if (isTimeNotification && isTimeElapsed && isNewNotification)
                             LoggerService.Instance.LogInformation($"Found a notification {notification.ID} that it's time elapsed");
@@ -271,7 +271,7 @@ namespace Notify
                     {
                         bool isRelevantType = notification.Type is NotificationType.Location || notification.Type is NotificationType.Dynamic;
                         bool isArrivedLocationNotification = destinationsArrived.Contains(notification.TypeInfo.ToString());
-                        bool isNewNotification = notification.Status.ToLower().Equals("new");
+                        bool isNewNotification = notification.Status.Equals(Constants.NOTIFICATION_STATUS_ACTIVE);
 
                         if (isRelevantType && isArrivedLocationNotification && isNewNotification)
                             LoggerService.Instance.LogDebug($"Found arrived location notification: {notification.ID}");
