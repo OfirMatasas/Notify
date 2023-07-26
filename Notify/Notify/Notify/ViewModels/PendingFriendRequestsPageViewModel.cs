@@ -26,20 +26,17 @@ namespace Notify.ViewModels
         private ObservableCollection<FriendRequest> m_FriendRequests;
         public ObservableCollection<FriendRequest> FriendRequests
         {
-            get { return m_FriendRequests; }
+            get => m_FriendRequests;
             set
             {
-                if (m_FriendRequests != value)
-                {
-                    m_FriendRequests = value;
-                    OnPropertyChanged();
-                }
+                m_FriendRequests = value;
+                OnPropertyChanged();
             }
         }
         
         public PendingFriendRequestsPageViewModel()
         {
-            FriendRequests = new ObservableCollection<FriendRequest>(); // Initialize collection here
+            FriendRequests = new ObservableCollection<FriendRequest>(); 
             LoadPendingFriendRequests();
 
             AcceptFriendRequestCommand = new Command<FriendRequest>(async request => await AcceptRequest(request));
@@ -50,7 +47,7 @@ namespace Notify.ViewModels
         
         private void onFriendClicked(FriendRequest request)
         {
-            App.Current.MainPage.DisplayAlert("Request Details", $"Username: {request.Requester}\nName: hi\nTelephone: hi\nRequest Date: {request.RequestDate}\nStatus: {request.Status}", "OK");
+            App.Current.MainPage.DisplayAlert("Request Details", request.ToString() , "OK");
         }
 
         private async Task AcceptRequest(FriendRequest request)
