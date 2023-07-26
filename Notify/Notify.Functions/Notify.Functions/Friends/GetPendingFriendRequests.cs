@@ -14,6 +14,7 @@ using MongoDB.Driver;
 using Newtonsoft.Json;
 using Notify.Functions.Core;
 using Notify.Functions.NotifyFunctions.AzureHTTPClients;
+using Notify.Functions.Utils;
 
 namespace Notify.Functions.Friends;
 
@@ -22,18 +23,32 @@ public static class GetPendingFriendRequests
     [FunctionName("GetPendingFriendRequests")]
     [AllowAnonymous]
     public static async Task<IActionResult> RunAsync(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "pending/{userName}")] HttpRequest req, ILogger log, string userName)
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "friend/request")]
+        HttpRequest req, ILogger log)
     {
-        string lowerCasedUsername, response;
+        string lowerCasedUsername, response, username;
         List<BsonDocument> friendRequestDocuments;
         ObjectResult result;
-        
-        lowerCasedUsername = userName.ToLower();
 
-        log.LogInformation($"Got client's HTTP request to list all pending friend requests of user {lowerCasedUsername}");
-        
+        username = req.Query["username"];
+
+        if (!ValidationUtils.ValidateUserName(req, log))
+        {
+            return new BadRequestObjectResult("Missing username parameter in query string");
+        }
+
+        if (!await ValidationUtils.DoesUsernameExist(username))
+        {
+            return new BadRequestObjectResult("User does not exist");
+        }
+
+        lowerCasedUsername = username.ToLower();
+
+        log.LogInformation(
+            $"Got client's HTTP request to list all pending friend requests of user {lowerCasedUsername}");
+
         friendRequestDocuments = await GetPendingFriendRequestOfSelectedUsernameDocuments(lowerCasedUsername);
-        
+
         if (friendRequestDocuments.Count.Equals(0))
         {
             log.LogInformation($"No pending friend requests found for user {lowerCasedUsername}");
@@ -42,14 +57,15 @@ public static class GetPendingFriendRequests
         else
         {
             response = Utils.ConversionUtils.ConvertBsonDocumentListToJson(friendRequestDocuments);
-            log.LogInformation($"Retrieved {friendRequestDocuments.Count} pending friend requests of user {lowerCasedUsername}:");
+            log.LogInformation(
+                $"Retrieved {friendRequestDocuments.Count} pending friend requests of user {lowerCasedUsername}:");
             log.LogInformation(response);
             result = new OkObjectResult(response);
         }
 
         return result;
     }
-    
+
     private static async Task<List<BsonDocument>> GetPendingFriendRequestOfSelectedUsernameDocuments(string lowerCasedUsername)
     {
         IMongoCollection<BsonDocument> pendingFriendRequestsCollection;
