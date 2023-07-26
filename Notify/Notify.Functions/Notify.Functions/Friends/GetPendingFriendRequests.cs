@@ -78,9 +78,7 @@ public static class GetPendingFriendRequests
                 collectionName: Constants.COLLECTION_FRIEND_REQUEST);
 
         pendingFriendRequestFilter = Builders<BsonDocument>.Filter.Eq(
-                                  "userName", lowerCasedUsername) &
-                              Builders<BsonDocument>.Filter.Eq(
-                                  "status", "Pending");
+            "userName", lowerCasedUsername);
 
         pendingFriendRequestsList = await pendingFriendRequestsCollection
             .Find(pendingFriendRequestFilter)
