@@ -79,12 +79,12 @@ namespace Notify.ViewModels
 
         private async Task AcceptRequest(FriendRequest request)
         {
-            Debug.WriteLine("in AcceptRequest method");
+            await AzureHttpClient.Instance.AcceptFriendRequest(request.UserName, request.Requester);
         }
 
         private async Task RejectRequest(FriendRequest request)
         {
-            Debug.WriteLine("in RejectRequest method");
+            await AzureHttpClient.Instance.RejectFriendRequest(request.UserName, request.Requester);
         }
         
         private async void onBackButtonClicked()
