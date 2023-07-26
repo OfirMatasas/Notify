@@ -6,9 +6,11 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Newtonsoft.Json;
 using Notify.Azure.HttpClient;
 using Notify.Core;
 using Notify.Helpers;
+using Notify.Services;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -16,8 +18,9 @@ namespace Notify.ViewModels
 {
     public sealed class PendingFriendRequestsPageViewModel : INotifyPropertyChanged
     {
+        private readonly LoggerService r_Logger = LoggerService.Instance;
+
         public event PropertyChangedEventHandler PropertyChanged;
-        
         public Command AcceptFriendRequestCommand { get; set; }
         public Command RejectFriendRequestCommand { get; set; }
         public Command BackCommand { get; set; }
@@ -34,6 +37,8 @@ namespace Notify.ViewModels
             }
         }
         
+        public List<FriendRequest> PendingFriendRequests { get; set; }
+
         public PendingFriendRequestsPageViewModel()
         {
             FriendRequests = new ObservableCollection<FriendRequest>(); 
@@ -43,6 +48,27 @@ namespace Notify.ViewModels
             RejectFriendRequestCommand = new Command<FriendRequest>(async request => await RejectRequest(request));
             ShowFriendDetailsCommand = new Command<FriendRequest>(onFriendClicked);
             BackCommand = new Command(onBackButtonClicked);
+            RefreshPendingRequestsList();
+        }
+        
+        private void RefreshPendingRequestsList()
+        {
+            string requestsJson;
+            
+            try
+            {
+                requestsJson = Preferences.Get(Constants.PREFERENCES_PENDING_FRIEND_REQUESTS, string.Empty);
+                
+                if (!requestsJson.Equals(string.Empty))
+                {
+                    r_Logger.LogDebug("Pending friend requests found in preferences");
+                    PendingFriendRequests = JsonConvert.DeserializeObject<List<FriendRequest>>(requestsJson);
+                }
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError(ex.Message);
+            }
         }
         
         
@@ -86,8 +112,10 @@ namespace Notify.ViewModels
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error occured on LoadPendingRequests: {ex.Message}");
+                r_Logger.LogError($"Error occured on LoadPendingRequests: {ex.Message}");
             }
+            r_Logger.LogDebug($"{FriendRequests.Count} Pending friend requests found in preferences");
+            Preferences.Set(Constants.PREFERENCES_PENDING_FRIEND_REQUESTS, JsonConvert.SerializeObject(FriendRequests));
         }
     }
 }

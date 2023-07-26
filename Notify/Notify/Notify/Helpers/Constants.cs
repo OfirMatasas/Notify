@@ -186,6 +186,7 @@ namespace Notify.Helpers
         public static readonly string PREFERENCES_NOTIFICATIONS = "Notifications";
         public static readonly string PREFERENCES_DESTINATIONS = "Destinations";
         public static readonly string PREFERENCES_FRIENDS = "Friends";
+        public static readonly string PREFERENCES_PENDING_FRIEND_REQUESTS = "PendingFriendRequests";
         public static readonly string PREFERENCES_USERNAME = "NotifyUserName";
         public static readonly string PREFERENCES_PASSWORD = "NotifyPassword";
         public static readonly string PREFERENCES_NOT_FRIENDS_USERS = "NotFriendsUsers";
