@@ -191,8 +191,8 @@ namespace Notify
                 {
                     if (sentNotificationsList.Any(sentNotification => sentNotification.ID.Equals(notification.ID)))
                     {
-                        notification.Status = "Sent";
-                        LoggerService.Instance.LogDebug($"Updated status of notification {notification.ID} to 'Sent'");
+                        notification.Status = Constants.NOTIFICATION_STATUS_EXPIRED;
+                        LoggerService.Instance.LogDebug($"Updated status of notification {notification.ID} to {Constants.NOTIFICATION_STATUS_EXPIRED}");
                     }
                 }
             });
@@ -200,7 +200,7 @@ namespace Notify
             Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
             foreach (List<Notification> sentNotificationsList in sentNotificationLists)
             {
-                AzureHttpClient.Instance.UpdateNotificationsStatus(sentNotificationsList, "Sent");
+                AzureHttpClient.Instance.UpdateNotificationsStatus(sentNotificationsList, Constants.NOTIFICATION_STATUS_EXPIRED);
             }
         }
 
@@ -245,7 +245,7 @@ namespace Notify
                             isTimeElapsed = notificationTime <= DateTime.Now;
                         }
                         
-                        bool isNewNotification = notification.Status.ToLower().Equals("new");
+                        bool isNewNotification = notification.Status.Equals(Constants.NOTIFICATION_STATUS_ACTIVE);
 
                         if (isTimeNotification && isTimeElapsed && isNewNotification)
                             LoggerService.Instance.LogInformation($"Found a notification {notification.ID} that it's time elapsed");
@@ -271,7 +271,7 @@ namespace Notify
                     {
                         bool isRelevantType = notification.Type is NotificationType.Location || notification.Type is NotificationType.Dynamic;
                         bool isArrivedLocationNotification = destinationsArrived.Contains(notification.TypeInfo.ToString());
-                        bool isNewNotification = notification.Status.ToLower().Equals("new");
+                        bool isNewNotification = notification.Status.Equals(Constants.NOTIFICATION_STATUS_ACTIVE);
 
                         if (isRelevantType && isArrivedLocationNotification && isNewNotification)
                             LoggerService.Instance.LogDebug($"Found arrived location notification: {notification.ID}");
@@ -290,8 +290,8 @@ namespace Notify
             {
                 if (toUpdateNotifications.Contains(notification))
                 {
-                    notification.Status = "Sending";
-                    LoggerService.Instance.LogInformation($"Updated status of notification {notification.ID} to 'Sending'");
+                    notification.Status = Constants.NOTIFICATION_STATUS_SENDING;
+                    LoggerService.Instance.LogInformation($"Updated status of notification {notification.ID} to '{Constants.NOTIFICATION_STATUS_SENDING}'");
                 }
             });
             

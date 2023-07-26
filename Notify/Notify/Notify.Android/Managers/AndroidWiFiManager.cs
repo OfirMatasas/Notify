@@ -118,9 +118,9 @@ namespace Notify.Droid.Managers
                         {
                             if (notification.Type.Equals(NotificationType.Location) &&
                                 notification.TypeInfo.Equals(destination.Name) &&
-                                notification.Status.ToLower().Equals("new"))
+                                notification.Status.Equals(Constants.NOTIFICATION_STATUS_ACTIVE))
                             {
-                                notification.Status = "Sent";
+                                notification.Status = Constants.NOTIFICATION_STATUS_EXPIRED;
                                 r_Logger.LogDebug($"Sending notification with name: {notification.Name} and description: {notification.Description}");
                                 DependencyService.Get<INotificationManager>()
                                     .SendNotification(notification.Name, notification.Description);

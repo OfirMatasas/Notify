@@ -10,4 +10,14 @@
         Style="{StaticResource CaptionFontSize_ExoRegular}"
         Text="{Binding UserName}"
         VerticalOptions="Center" />
+    <VisualStateManager.VisualStateGroups>
+        <VisualStateGroup Name="CommonStates">
+            <VisualState Name="Normal" />
+            <VisualState Name="Selected">
+                <VisualState.Setters>
+                    <Setter Property="BackgroundColor" Value="Gray" />
+                </VisualState.Setters>
+            </VisualState>
+        </VisualStateGroup>
+    </VisualStateManager.VisualStateGroups>
 </Grid>

@@ -97,7 +97,6 @@ namespace Notify.Helpers
         public static readonly string TIME = "Time";
         public static readonly string LOCATION = "Location";
         public static readonly string DYNAMIC = "Dynamic";
-
         
         public static readonly List<string> NOTIFICATION_OPTIONS_LIST = new List<string>
         {
@@ -106,6 +105,22 @@ namespace Notify.Helpers
             DYNAMIC
         };
         
+        public static readonly List<string> ACTIVATION_OPTIONS_LIST = new List<string>
+        {
+            "Arrival",
+            "Leave"
+        };
+        
+        public static readonly string NOTIFICATION_ACTIVATION_ARRIVAL = "Arrival";
+        public static readonly string NOTIFICATION_ACTIVATION_LEAVE = "Leave";
+        
+        public static readonly string NOTIFICATION_STATUS_PENDING = "Pending";
+        public static readonly string NOTIFICATION_STATUS_ACTIVE = "Active";
+        public static readonly string NOTIFICATION_STATUS_DECLINED = "Declined";
+        public static readonly string NOTIFICATION_STATUS_ARRIVED = "Arrived";
+        public static readonly string NOTIFICATION_STATUS_SENDING = "Sending";
+        public static readonly string NOTIFICATION_STATUS_EXPIRED = "Expired";
+
         #endregion
 
         #region Azure Http Client

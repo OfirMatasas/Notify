@@ -21,9 +21,10 @@ namespace Notify.Core
         public string Creator { get; set; }
         public NotificationType Type { get; set; }
         public object TypeInfo { get; set; }
+        public string Activation { get; set; }
         public string Target { get; set; }
 
-        public Notification(string id, string name, string description, DateTime creationDateTime, string status, string creator, NotificationType type, object typeInfo, string target)
+        public Notification(string id, string name, string description, DateTime creationDateTime, string status, string creator, NotificationType type, object typeInfo, string target, string activation)
         {
             ID = id;
             Name = name;
@@ -33,6 +34,7 @@ namespace Notify.Core
             Creator = creator;
             Type = type;
             TypeInfo = typeInfo;
+            Activation = activation;
             Target = target;
         }
     }

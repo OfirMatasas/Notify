@@ -81,7 +81,7 @@ namespace Notify.Functions.NotifyFunctions.Database
                 {
                     { "creator", json["creator"].ToString() },
                     { "creation_timestamp", DateTimeOffset.Now.ToUnixTimeSeconds() },
-                    { "status", "New" },
+                    { "status", "Active" },
                     { "description", json["description"].ToString() },
                     {
                         "notification", new BsonDocument
@@ -93,6 +93,11 @@ namespace Notify.Functions.NotifyFunctions.Database
                     },
                     { "user", user }
                 };
+
+                if (type.ToLower().Equals("location"))
+                {
+                    document["notification"]["activation"] = json["notification"]["activation"].ToString();
+                }
 
                 documentsList.Add(document);
             }
