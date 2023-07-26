@@ -584,7 +584,45 @@ namespace Notify.Azure.HttpClient
 
             return friendRequests;
         }
+        
+        public async Task<bool> RejectFriendRequest(string requester, string receiver)
+        {
+            dynamic data = new JObject
+            {
+                { "requester", requester },
+                { "receiver", receiver },
+                { "responseDate", DateTime.Now.Date.ToShortDateString() },
+            };
+            string json = JsonConvert.SerializeObject(data);
 
+            r_Logger.LogInformation($"Reject friend request:{Environment.NewLine}{json}");
+
+            var response = await postAsync(
+                requestUri: Constants.AZURE_FUNCTIONS_PATTERN_REJECT_FRIEND_REQUEST,
+                content: createJsonStringContent(json));
+
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> AcceptFriendRequest(string requester, string receiver)
+        {
+            dynamic data = new JObject
+            {
+                { "requester", requester },
+                { "receiver", receiver },
+                { "responseDate", DateTime.Now.Date.ToShortDateString() },
+            };
+            string json = JsonConvert.SerializeObject(data);
+
+            r_Logger.LogInformation($"Accept friend request:{Environment.NewLine}{json}");
+
+            var response = await postAsync(
+                requestUri: Constants.AZURE_FUNCTIONS_PATTERN_ACCEPT_FRIEND_REQUEST,
+                content: createJsonStringContent(json));
+
+            return response.IsSuccessStatusCode;
+        }
+        
         public async Task<List<Location>> GetNearbyPlaces(string destination, Location location)
         {
             List<Location> nearbyPlaces = new List<Location>();
