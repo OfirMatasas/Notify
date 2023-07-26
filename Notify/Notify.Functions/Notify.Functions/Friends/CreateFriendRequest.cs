@@ -36,7 +36,6 @@ namespace Notify.Functions.Friends
                 requester = Convert.ToString(data.requester);
                 username = Convert.ToString(data.userName);
                 requestDate = Convert.ToString(data.requestDate);
-                status = Convert.ToString(data.status);
                 result = friendRequestShouldBeCreated(requester, username, log);
                 
                 if (result is null)
@@ -47,9 +46,9 @@ namespace Notify.Functions.Friends
                 if (result is OkObjectResult)
                 {
                     log.LogInformation($"Creating friend request from {requester} to {username}");
-                    await createFriendRequest(requester, username, requestDate, status);
+                    await createFriendRequest(requester, username, requestDate);
 
-                    log.LogInformation($"$Friend request created. requester: {requester}, username: {username}, requestDate: {requestDate}, status: {status}");
+                    log.LogInformation($"$Friend request created. requester: {requester}, username: {username}, requestDate: {requestDate}");
                 }
             }
             catch (Exception ex)
@@ -173,7 +172,7 @@ namespace Notify.Functions.Friends
             return numberOfUsersFound.Equals(2);
         }
         
-        private static async Task createFriendRequest(string requester, string username, string requestDate, string status)
+        private static async Task createFriendRequest(string requester, string username, string requestDate)
         {
             IMongoCollection<BsonDocument> friendRequestsCollection;
             BsonDocument friendRequestDocument;
@@ -187,7 +186,6 @@ namespace Notify.Functions.Friends
                     { "requester", requester },
                     { "userName", username },
                     { "requestDate", requestDate },
-                    { "status", status }
                 };
             
             await friendRequestsCollection.InsertOneAsync(friendRequestDocument);
