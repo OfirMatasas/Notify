@@ -20,7 +20,7 @@ namespace Notify.Functions.Friends
         [FunctionName("GetFriends")]
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "friends")]
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "friend")]
             HttpRequest req, ILogger log)
         {
             string lowerCasedUsername, response;

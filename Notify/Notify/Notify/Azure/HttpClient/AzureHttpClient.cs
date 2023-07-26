@@ -549,8 +549,7 @@ namespace Notify.Azure.HttpClient
             {
                 { "userName", username },
                 { "requester", Preferences.Get(Constants.PREFERENCES_USERNAME, "") },
-                { "requestDate", DateTime.Now.Date.ToShortDateString() },
-                { "status", StatusType.Pending.ToString() }
+                { "requestDate", DateTime.Now.Date.ToShortDateString() }
             };
             string json = JsonConvert.SerializeObject(request);
             
