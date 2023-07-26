@@ -143,6 +143,8 @@ namespace Notify.Helpers
         public static readonly string AZURE_FUNCTIONS_PATTERN_FRIEND_REQUEST = AZURE_FUNCTIONS_PATTERN_FRIEND + "/request";
         public static readonly string AZURE_FUNCTIONS_PATTERN_CHECK_USER_EXISTS = "checkUserExists";
         public static readonly string AZURE_FUNCTIONS_PATTERN_DYNAMIC_DESTINATION = AZURE_FUNCTIONS_PATTERN_DESTINATION + "/dynamic";
+        public static readonly string AZURE_FUNCTIONS_PATTERN_REJECT_FRIEND_REQUEST = AZURE_FUNCTIONS_PATTERN_FRIEND + "/reject";
+        public static readonly string AZURE_FUNCTIONS_PATTERN_ACCEPT_FRIEND_REQUEST = AZURE_FUNCTIONS_PATTERN_FRIEND + "/accept";
 
         #endregion
 
