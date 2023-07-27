@@ -23,7 +23,6 @@ namespace Notify.Droid.Managers
     public class AndroidWiFiManager : IWiFiManager
     {
         private static readonly LoggerService r_Logger = LoggerService.Instance;
-        private readonly string m_AndroidWiFi = "\"AndroidWifi\"";
         private static readonly object m_NotificationsLock = new object();
 
         public AndroidWiFiManager()

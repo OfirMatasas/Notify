@@ -22,7 +22,7 @@ namespace Notify.Functions.NotifyFunctions.Friends
         [FunctionName("CreateFriendRequest")]
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", "put", Route = "friends/request")]
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", "put", Route = "friend/request")]
             HttpRequest req, ILogger log)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
