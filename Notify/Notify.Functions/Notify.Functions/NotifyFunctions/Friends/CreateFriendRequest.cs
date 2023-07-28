@@ -27,7 +27,7 @@ namespace Notify.Functions.NotifyFunctions.Friends
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
-            string requester, username, requestDate, status;
+            string requester, username, requestDate;
             ObjectResult result;
 
             try
