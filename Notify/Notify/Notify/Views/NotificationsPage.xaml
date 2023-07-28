@@ -50,11 +50,12 @@
                 SelectionChangedCommand="{Binding NotificationSelectedCommand}"
                 SelectionMode="Single">
                 <CollectionView.Header>
-                    <Grid ColumnDefinitions="*, *, *, *">
+                    <Grid ColumnDefinitions="*, *, *, *" Margin="0,0,0,10">
                         <Label
                             FontAttributes="Bold"
-                            FontSize="18"
+                            FontSize="Default"
                             Grid.Column="0"
+                            Grid.ColumnSpan="2"
                             HorizontalOptions="CenterAndExpand"
                             Style="{StaticResource Body1FontSize_ExoBold}"
                             Text="Name"
@@ -62,29 +63,20 @@
                             VerticalTextAlignment="Center" />
                         <Label
                             FontAttributes="Bold"
-                            FontSize="18"
-                            Grid.Column="1"
-                            HorizontalOptions="CenterAndExpand"
-                            Style="{StaticResource Body1FontSize_ExoBold}"
-                            Text="Description"
-                            VerticalOptions="Center"
-                            VerticalTextAlignment="Center" />
-                        <Label
-                            FontAttributes="Bold"
-                            FontSize="18"
+                            FontSize="Default"
                             Grid.Column="2"
                             HorizontalOptions="CenterAndExpand"
                             Style="{StaticResource Body1FontSize_ExoBold}"
-                            Text="Status"
+                            Text="Type"
                             VerticalOptions="Center"
                             VerticalTextAlignment="Center" />
                         <Label
                             FontAttributes="Bold"
-                            FontSize="18"
+                            FontSize="Default"
                             Grid.Column="3"
                             HorizontalOptions="CenterAndExpand"
                             Style="{StaticResource Body1FontSize_ExoBold}"
-                            Text="Type"
+                            Text="Status"
                             VerticalOptions="Center"
                             VerticalTextAlignment="Center" />
                     </Grid>
@@ -95,42 +87,36 @@
                             Column="3"
                             ColumnDefinitions="*, *, *, *"
                             HorizontalOptions="Center"
-                            Margin="5"
+                            Margin="10"
                             RowDefinitions="auto">
                             <Label
-                                FontSize="15"
+                                FontSize="Default"
                                 Grid.Column="0"
+                                Grid.ColumnSpan="2"
                                 HorizontalOptions="Center"
                                 HorizontalTextAlignment="Center"
+                                LineBreakMode="TailTruncation"
+                                MaxLines="2"
                                 Style="{StaticResource Body1FontSize_ExoBold}"
                                 Text="{Binding Name}"
                                 VerticalOptions="Center"
                                 VerticalTextAlignment="Center" />
                             <Label
-                                FontSize="15"
-                                Grid.Column="1"
-                                HorizontalOptions="Center"
-                                HorizontalTextAlignment="Center"
-                                Style="{StaticResource Body1FontSize_ExoBold}"
-                                Text="{Binding Description}"
-                                VerticalOptions="Center"
-                                VerticalTextAlignment="Center" />
-                            <Label
-                                FontSize="15"
+                                FontSize="Default"
                                 Grid.Column="2"
                                 HorizontalOptions="Center"
                                 HorizontalTextAlignment="Center"
                                 Style="{StaticResource Body1FontSize_ExoBold}"
-                                Text="{Binding Status}"
+                                Text="{Binding Type}"
                                 VerticalOptions="Center"
                                 VerticalTextAlignment="Center" />
                             <Label
-                                FontSize="15"
+                                FontSize="Default"
                                 Grid.Column="3"
                                 HorizontalOptions="Center"
                                 HorizontalTextAlignment="Center"
                                 Style="{StaticResource Body1FontSize_ExoBold}"
-                                Text="{Binding Type}"
+                                Text="{Binding Status}"
                                 VerticalOptions="Center"
                                 VerticalTextAlignment="Center" />
                             <VisualStateManager.VisualStateGroups>
