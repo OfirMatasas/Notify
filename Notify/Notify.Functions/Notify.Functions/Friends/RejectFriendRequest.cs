@@ -7,15 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using Notify.Functions.Core;
 using Notify.Functions.NotifyFunctions.AzureHTTPClients;
-
-namespace Notify.Functions.Friends;
 
 namespace Notify.Functions.Friends
 {
@@ -38,7 +35,7 @@ namespace Notify.Functions.Friends
                 username = Convert.ToString(data.userName);
                 
                 log.LogInformation($"Rejecting friend request from {requester} to {username}");
-                await deleteFriendRequest(requester, username);
+                await deletePendingFriendRequest(requester, username);
 
                 log.LogInformation($"Friend request rejected. requester: {requester}, username: {username}");
             }
@@ -51,7 +48,7 @@ namespace Notify.Functions.Friends
             return result;
         }
 
-        private static async Task deleteFriendRequest(string requester, string username)
+        private static async Task deletePendingFriendRequest(string requester, string username)
         {
             IMongoCollection<BsonDocument> friendRequestsCollection;
             FilterDefinition<BsonDocument> friendRequestsFilter;
