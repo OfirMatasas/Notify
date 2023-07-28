@@ -614,7 +614,7 @@ namespace Notify.Azure.HttpClient
 
             r_Logger.LogInformation($"Accept friend request:{Environment.NewLine}{json}");
 
-            var response = await postAsync(
+            HttpResponseMessage response = await postAsync(
                 requestUri: Constants.AZURE_FUNCTIONS_PATTERN_ACCEPT_FRIEND_REQUEST,
                 content: createJsonStringContent(json));
             
