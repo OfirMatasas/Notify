@@ -585,12 +585,12 @@ namespace Notify.Azure.HttpClient
             return friendRequests;
         }
         
-        public async Task<bool> RejectFriendRequest(string requester, string receiver)
+        public async Task<bool> RejectFriendRequest(string userName, string requester)
         {
             dynamic data = new JObject
             {
                 { "requester", requester },
-                { "receiver", receiver }
+                { "userName", userName }
             };
             string json = JsonConvert.SerializeObject(data);
 
@@ -599,16 +599,18 @@ namespace Notify.Azure.HttpClient
             var response = await postAsync(
                 requestUri: Constants.AZURE_FUNCTIONS_PATTERN_REJECT_FRIEND_REQUEST,
                 content: createJsonStringContent(json));
+            
+            r_Logger.LogInformation($"Friend request from {requester} to {userName} was rejected");
 
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<bool> AcceptFriendRequest(string requester, string receiver)
+        public async Task<bool> AcceptFriendRequest(string userName, string requester)
         {
             dynamic data = new JObject
             {
                 { "requester", requester },
-                { "receiver", receiver }
+                { "userName", userName }
             };
             string json = JsonConvert.SerializeObject(data);
 
@@ -617,7 +619,9 @@ namespace Notify.Azure.HttpClient
             var response = await postAsync(
                 requestUri: Constants.AZURE_FUNCTIONS_PATTERN_ACCEPT_FRIEND_REQUEST,
                 content: createJsonStringContent(json));
-
+            
+            r_Logger.LogInformation($"Friend request from {requester} to {userName} was accepted");
+            
             return response.IsSuccessStatusCode;
         }
         
