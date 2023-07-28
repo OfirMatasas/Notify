@@ -17,12 +17,12 @@ using Notify.Functions.NotifyFunctions.AzureHTTPClients;
 
 namespace Notify.Functions.Friends
 {
-    public static class ApproveFriendRequest
+    public static class AcceptFriendRequest
     {
-        [FunctionName("ApproveFriendRequest")]
+        [FunctionName("AcceptFriendRequest")]
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "friend/approve")]
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "friend/accept")]
             HttpRequest req, ILogger log)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
@@ -35,15 +35,15 @@ namespace Notify.Functions.Friends
                 requester = Convert.ToString(data.requester);
                 username = Convert.ToString(data.userName);
                 
-                log.LogInformation($"Approving friend request from {requester} to {username}");
+                log.LogInformation($"Accepting friend request from {requester} to {username}");
                 await createFriendship(requester, username, log);
                 await deleteFriendRequest(requester, username, log);
 
-                log.LogInformation($"Friendship approved in the DB. requester: {requester}, username: {username}");
+                log.LogInformation($"Friendship accepted in the DB. requester: {requester}, username: {username}");
             }
             catch (Exception ex)
             {
-                log.LogError($"Error approving friend request: {ex.Message}");
+                log.LogError($"Error accepting friend request: {ex.Message}");
                 result = new ExceptionResult(ex, false);
             }
 
