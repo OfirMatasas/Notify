@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -28,7 +27,7 @@ namespace Notify.Functions.Friends
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
-            string requester, username, requestDate, status;
+            string requester, username, requestDate;
             ObjectResult result;
 
             try
