@@ -2,6 +2,7 @@ using System;
 using Notify.Notifications;
 using Foundation;
 using Notify.Core;
+using Notify.Helpers;
 using UIKit;
 using Notify.Helpers;
 using UserNotifications;
