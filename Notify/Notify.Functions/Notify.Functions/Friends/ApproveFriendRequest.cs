@@ -36,10 +36,10 @@ namespace Notify.Functions.Friends
                 username = Convert.ToString(data.userName);
                 
                 log.LogInformation($"Approving friend request from {requester} to {username}");
-                await createFriendship(requester, username);
-                await deleteFriendRequest(requester, username);
+                await createFriendship(requester, username, log);
+                await deleteFriendRequest(requester, username, log);
 
-                log.LogInformation($"Friendship approved. requester: {requester}, username: {username}");
+                log.LogInformation($"Friendship approved in the DB. requester: {requester}, username: {username}");
             }
             catch (Exception ex)
             {
@@ -47,10 +47,10 @@ namespace Notify.Functions.Friends
                 result = new ExceptionResult(ex, false);
             }
 
-            return result;
+            return (IActionResult)result ?? new OkResult();
         }
 
-        private static async Task createFriendship(string requester, string username)
+        private static async Task createFriendship(string requester, string username, ILogger log)
         {
             IMongoCollection<BsonDocument> friendsCollection;
             BsonDocument friendDocument;
@@ -64,11 +64,15 @@ namespace Notify.Functions.Friends
                     { "userName1", requester },
                     { "userName2", username }
                 };
+
+            log.LogInformation($"Creating friendship document between {requester} and {username}");
             
             await friendsCollection.InsertOneAsync(friendDocument);
+
+            log.LogInformation($"Friendship document between {requester} and {username} created successfully");
         }
 
-        private static async Task deleteFriendRequest(string requester, string username)
+        private static async Task deleteFriendRequest(string requester, string username, ILogger log)
         {
             IMongoCollection<BsonDocument> friendRequestsCollection;
             FilterDefinition<BsonDocument> friendRequestsFilter;
@@ -82,7 +86,12 @@ namespace Notify.Functions.Friends
                 Builders<BsonDocument>.Filter.Eq("userName", username)
             );
 
+            log.LogInformation($"Deleting the pending friend request document from {requester} to {username}");
+
             await friendRequestsCollection.DeleteOneAsync(friendRequestsFilter);
+
+            log.LogInformation($"Friend request document between {requester} and {username} deleted successfully");
         }
     }
 }
+

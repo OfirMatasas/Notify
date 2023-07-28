@@ -585,7 +585,7 @@ namespace Notify.Azure.HttpClient
             return friendRequests;
         }
         
-        public async Task<bool> RejectFriendRequest(string userName, string requester)
+        public async Task RejectFriendRequest(string userName, string requester)
         {
             dynamic data = new JObject
             {
@@ -596,16 +596,14 @@ namespace Notify.Azure.HttpClient
 
             r_Logger.LogInformation($"Reject friend request:{Environment.NewLine}{json}");
 
-            var response = await postAsync(
+            HttpResponseMessage response = await postAsync(
                 requestUri: Constants.AZURE_FUNCTIONS_PATTERN_REJECT_FRIEND_REQUEST,
                 content: createJsonStringContent(json));
             
             r_Logger.LogInformation($"Friend request from {requester} to {userName} was rejected");
-
-            return response.IsSuccessStatusCode;
         }
 
-        public async Task<bool> AcceptFriendRequest(string userName, string requester)
+        public async Task AcceptFriendRequest(string userName, string requester)
         {
             dynamic data = new JObject
             {
@@ -621,8 +619,6 @@ namespace Notify.Azure.HttpClient
                 content: createJsonStringContent(json));
             
             r_Logger.LogInformation($"Friend request from {requester} to {userName} was accepted");
-            
-            return response.IsSuccessStatusCode;
         }
         
         public async Task<List<Location>> GetNearbyPlaces(string destination, Location location)
