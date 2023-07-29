@@ -19,7 +19,6 @@ namespace Notify.ViewModels
     public sealed class PendingFriendRequestsPageViewModel : INotifyPropertyChanged
     {
         private readonly LoggerService r_Logger = LoggerService.Instance;
-
         public event PropertyChangedEventHandler PropertyChanged;
         public Command AcceptFriendRequestCommand { get; set; }
         public Command RejectFriendRequestCommand { get; set; }
@@ -71,7 +70,6 @@ namespace Notify.ViewModels
             }
         }
         
-        
         private void onFriendClicked(FriendRequest request)
         {
             App.Current.MainPage.DisplayAlert("Request Details", request.ToString() , "OK");
@@ -101,10 +99,12 @@ namespace Notify.ViewModels
         {
             string userName;
             List<FriendRequest> pendingFriendRequests;
+            
             try
             {
-                userName = Preferences.Get(Constants.PREFERENCES_USERNAME, "");
-                pendingFriendRequests = await AzureHttpClient.Instance.GetPendingFriendRequests(userName);
+                userName = Preferences.Get(Constants.PREFERENCES_USERNAME, String.Empty);
+                pendingFriendRequests = await AzureHttpClient.Instance.GetFriendRequests(userName);
+                
                 foreach (FriendRequest friendRequest in pendingFriendRequests)
                 {
                     FriendRequests.Add(friendRequest);
@@ -114,7 +114,7 @@ namespace Notify.ViewModels
             {
                 r_Logger.LogError($"Error occured on LoadPendingRequests: {ex.Message}");
             }
-            r_Logger.LogDebug($"{FriendRequests.Count} Pending friend requests found in preferences");
+            
             Preferences.Set(Constants.PREFERENCES_PENDING_FRIEND_REQUESTS, JsonConvert.SerializeObject(FriendRequests));
         }
     }

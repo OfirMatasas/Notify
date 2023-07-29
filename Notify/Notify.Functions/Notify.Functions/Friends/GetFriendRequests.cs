@@ -18,7 +18,7 @@ using Notify.Functions.Utils;
 
 namespace Notify.Functions.Friends;
 
-public static class GetPendingFriendRequests
+public static class GetFriendRequests
 {
     [FunctionName("GetPendingFriendRequests")]
     [AllowAnonymous]

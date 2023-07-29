@@ -286,7 +286,7 @@ namespace Notify.Azure.HttpClient
         private string createJsonOfNotificationRequest(string notificationName, string description, string notificationType,
             string key, JToken value, List<string> users, string activation)
         {
-            string userName = Preferences.Get(Constants.PREFERENCES_USERNAME, "");
+            string userName = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
             dynamic request = new JObject
             {
                 { "creator", userName },
@@ -352,7 +352,7 @@ namespace Notify.Azure.HttpClient
 
         private async Task<List<T>> GetData<T>(string endpoint, string preferencesKey, Func<dynamic, T> converter)
         {
-            string userName = Preferences.Get(Constants.PREFERENCES_USERNAME, "");
+            string userName = Preferences.Get(Constants.PREFERENCES_USERNAME, String.Empty);
             string query = $"?username={userName}";
             HttpResponseMessage response;
             dynamic returnedObject;
@@ -548,7 +548,7 @@ namespace Notify.Azure.HttpClient
             dynamic request = new JObject
             {
                 { "userName", username },
-                { "requester", Preferences.Get(Constants.PREFERENCES_USERNAME, "") },
+                { "requester", Preferences.Get(Constants.PREFERENCES_USERNAME, String.Empty) },
                 { "requestDate", DateTime.Now.Date.ToShortDateString() }
             };
             string json = JsonConvert.SerializeObject(request);
@@ -559,7 +559,7 @@ namespace Notify.Azure.HttpClient
             await postAsync(requestUri: Constants.AZURE_FUNCTIONS_PATTERN_FRIEND_REQUEST, createJsonStringContent(json));
         }
 
-        public async Task<List<FriendRequest>> GetPendingFriendRequests(string userName)
+        public async Task<List<FriendRequest>> GetFriendRequests(string userName)
         {
             string requestUri, responseJson;
             HttpResponseMessage response;
@@ -574,19 +574,20 @@ namespace Notify.Azure.HttpClient
 
                 responseJson = await response.Content.ReadAsStringAsync();
                 friendRequests = JsonConvert.DeserializeObject<List<FriendRequest>>(responseJson);
-                r_Logger.LogInformation($"Got {friendRequests.Count} pending friend requests");
+                r_Logger.LogInformation($"Got {friendRequests.Count} friend requests");
             }
             catch (Exception ex)
             {
-                r_Logger.LogError($"Error occured on GetPendingFriendRequests: {Environment.NewLine}{ex.Message}");
+                r_Logger.LogError($"Error occured on GetFriendRequests: {Environment.NewLine}{ex.Message}");
                 friendRequests = new List<FriendRequest>();
             }
 
             return friendRequests;
         }
-        
+
         public async Task RejectFriendRequest(string userName, string requester)
         {
+            HttpResponseMessage response;
             dynamic data = new JObject
             {
                 { "requester", requester },
@@ -596,15 +597,16 @@ namespace Notify.Azure.HttpClient
 
             r_Logger.LogInformation($"Reject friend request:{Environment.NewLine}{json}");
 
-            HttpResponseMessage response = await postAsync(
+            response = await postAsync(
                 requestUri: Constants.AZURE_FUNCTIONS_PATTERN_REJECT_FRIEND_REQUEST,
                 content: createJsonStringContent(json));
-            
+
             r_Logger.LogInformation($"Friend request from {requester} to {userName} was rejected");
         }
 
         public async Task AcceptFriendRequest(string userName, string requester)
         {
+            HttpResponseMessage response;
             dynamic data = new JObject
             {
                 { "requester", requester },
@@ -614,13 +616,13 @@ namespace Notify.Azure.HttpClient
 
             r_Logger.LogInformation($"Accept friend request:{Environment.NewLine}{json}");
 
-            HttpResponseMessage response = await postAsync(
+            response = await postAsync(
                 requestUri: Constants.AZURE_FUNCTIONS_PATTERN_ACCEPT_FRIEND_REQUEST,
                 content: createJsonStringContent(json));
-            
+
             r_Logger.LogInformation($"Friend request from {requester} to {userName} was accepted");
         }
-        
+
         public async Task<List<Location>> GetNearbyPlaces(string destination, Location location)
         {
             List<Location> nearbyPlaces = new List<Location>();
