@@ -79,11 +79,7 @@ namespace Notify.ViewModels
         
         private void onFriendClicked(Friend friend)
         {
-            if (friend is null)
-            {
-                App.Current.MainPage.DisplayAlert("Error", "Please select a user to view details", "OK");
-            }
-            else
+            if (!(friend is null))
             {
                 App.Current.MainPage.DisplayAlert("Friend Details", $"Name: {friend.Name}\nUsername: {friend.UserName}\nTelephone: {friend.Telephone}", "OK");
             }
@@ -91,14 +87,11 @@ namespace Notify.ViewModels
 
         private void onSendRequestButtonClicked(Friend friend)
         {
-            if (friend is null)
-            {
-                App.Current.MainPage.DisplayAlert("Error", "Please select a user to send a request to", "OK");
-            }
-            else
+            if (!(friend is null))
             {
                 AzureHttpClient.Instance.SendFriendRequest(friend.UserName);
-                App.Current.MainPage.DisplayAlert("Friend Request Sent", $"Friend request sent to {friend.UserName}", "OK");
+                App.Current.MainPage.DisplayAlert("Friend Request Sent", $"Friend request sent to {friend.UserName}",
+                    "OK");
             }
         }
 

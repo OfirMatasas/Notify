@@ -28,7 +28,7 @@ namespace Notify.Functions.Friends
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
             string requester, username;
-            ObjectResult result = null;
+            ObjectResult result;
 
             try
             {
@@ -38,8 +38,8 @@ namespace Notify.Functions.Friends
                 log.LogInformation($"Accepting friend request from {requester} to {username}");
                 await createFriendship(requester, username, log);
                 await deleteFriendRequest(requester, username, log);
-
-                log.LogInformation($"Friendship accepted in the DB. requester: {requester}, username: {username}");
+                
+                result = new OkObjectResult("Friend request accepted");
             }
             catch (Exception ex)
             {
@@ -47,7 +47,7 @@ namespace Notify.Functions.Friends
                 result = new ExceptionResult(ex, false);
             }
 
-            return (IActionResult)result ?? new OkResult();
+            return result;
         }
 
         private static async Task createFriendship(string requester, string username, ILogger log)
