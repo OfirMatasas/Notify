@@ -12,9 +12,9 @@ using MongoDB.Driver;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using Notify.Functions.Core;
-using Notify.Functions.NotifyFunctions.AzureHTTPClients;
+using Notify.Functions.HTTPClients;
 
-namespace Notify.Functions.NotifyFunctions.Database
+namespace Notify.Functions.NotifyFunctions.Notification
 {
     public static class CreateNotification
     {

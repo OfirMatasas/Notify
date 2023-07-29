@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Android.Net;
 using Android.Net.Wifi;
@@ -21,13 +23,13 @@ namespace Notify.Droid.Managers
     public class AndroidWiFiManager : IWiFiManager
     {
         private static readonly LoggerService r_Logger = LoggerService.Instance;
-        private readonly string m_AndroidWiFi = "\"AndroidWifi\"";
         private static readonly object m_NotificationsLock = new object();
 
         public AndroidWiFiManager()
         {
             retrieveDestinations();
         }        
+        
         public void PrintConnectedWiFi(object sender, ConnectivityChangedEventArgs e)
         {
             ConnectivityManager connectivityManager = (ConnectivityManager)Application.Context.GetSystemService(Context.ConnectivityService);
@@ -37,19 +39,12 @@ namespace Notify.Droid.Managers
             {
                 WifiManager wifiManager = (WifiManager)Application.Context.GetSystemService(Context.WifiService);
                 string ssid = wifiManager.ConnectionInfo.SSID;
-        
-                if (ssid == m_AndroidWiFi)
-                {
-                    r_Logger.LogInformation($"You have just connected to your wifi network: {ssid}!");
-                }
-                else
-                {
-                    r_Logger.LogInformation($"Error with ssid: SSID: {ssid} \nPre define SSID: {m_AndroidWiFi}");
-                }
+                
+                r_Logger.LogInformation($"Connected to Wi-Fi network: {ssid}");
             }
             else
             {
-                r_Logger.LogInformation("Disconnected from wifi network!");
+                r_Logger.LogInformation("Disconnected from Wi-Fi network!");
             }
         }
 
@@ -74,20 +69,24 @@ namespace Notify.Droid.Managers
             List<Notification> notifications;
             List<Destination> destinations;
             
-            if (checkIfTheDeviceIsConnectedToWiFi())
+            notificationsJson = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
+            destinationJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, string.Empty);
+
+            if (!notificationsJson.Equals(string.Empty) && !destinationJson.Equals(string.Empty))
             {
-                wifiManager = (WifiManager)Application.Context.GetSystemService(Context.WifiService);
-                ssid = wifiManager.ConnectionInfo.SSID.Trim('"');
+                notifications = JsonConvert.DeserializeObject<List<Notification>>(notificationsJson);
+                destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationJson);
                 
-                notificationsJson = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
-                destinationJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, string.Empty);
-                
-                if (!notificationsJson.Equals(string.Empty) && !destinationJson.Equals(string.Empty))
+                if (checkIfConnectedToWiFi())
                 {
-                    notifications = JsonConvert.DeserializeObject<List<Notification>>(notificationsJson);
-                    destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationJson);
+                    wifiManager = (WifiManager)Application.Context.GetSystemService(Context.WifiService);
+                    ssid = wifiManager.ConnectionInfo.SSID.Trim('"');
                     
                     sendAllRelevantWiFiNotifications(destinations, ssid, notifications);
+                }
+                else
+                {
+                    sendNotificationsForLeaveDestinations(notifications, destinations);
                 }
             }
         }
@@ -106,36 +105,78 @@ namespace Notify.Droid.Managers
         {
             lock (m_NotificationsLock)
             {
-                r_Logger.LogDebug("Sending notifications");
+                r_Logger.LogInformation("Sending Wi-Fi notifications");
+                
+                List<Notification> locationNotifications = notifications.FindAll(notification => notification.Type.Equals(NotificationType.Location));
+                List<Destination> sameSSIDDestinations = destinations.FindAll(destination => ssid.Equals(destination.SSID));
+                List<Destination> differentSSIDDestinations = destinations.Except(sameSSIDDestinations).ToList();
 
-                foreach (Destination destination in destinations)
-                {
-                    if (destination.SSID.Equals(ssid))
-                    {
-                        r_Logger.LogDebug($"Found a destination with SSID of {ssid}");
+                sendNotificationsForArrivalDestinations(locationNotifications, sameSSIDDestinations);
+                sendNotificationsForLeaveDestinations(locationNotifications, differentSSIDDestinations);
 
-                        foreach (Notification notification in notifications)
-                        {
-                            if (notification.Type.Equals(NotificationType.Location) &&
-                                notification.TypeInfo.Equals(destination.Name) &&
-                                notification.Status.Equals(Constants.NOTIFICATION_STATUS_ACTIVE))
-                            {
-                                notification.Status = Constants.NOTIFICATION_STATUS_EXPIRED;
-                                r_Logger.LogDebug($"Sending notification with name: {notification.Name} and description: {notification.Description}");
-                                DependencyService.Get<INotificationManager>()
-                                    .SendNotification(notification.Name, notification.Description);
-
-                            }
-                        }
-                    }
-                }
-
-                r_Logger.LogDebug("Finished sending notifications");
+                r_Logger.LogInformation("Finished sending Wi-Fi notifications");
                 Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
             }
         }
+        
+        private static void sendNotificationsForArrivalDestinations(List<Notification> notifications, List<Destination> destinations)
+        {
+            bool isDestinationNotification, isArrivalNotification, isActive;
 
-        private bool checkIfTheDeviceIsConnectedToWiFi()
+            r_Logger.LogInformation("Sending Wi-Fi notifications for arrival destinations");
+
+            foreach (Destination destination in destinations)
+            {
+                foreach (Notification notification in notifications)
+                {
+                    isDestinationNotification = notification.TypeInfo.Equals(destination.Name);
+                    isActive = notification.Status.Equals(Constants.NOTIFICATION_STATUS_ACTIVE);
+                    isArrivalNotification = notification.Activation.Equals(Constants.NOTIFICATION_ACTIVATION_ARRIVAL);
+
+                    if (isDestinationNotification && isActive)
+                    {
+                        if (isArrivalNotification)
+                        {
+                            r_Logger.LogInformation($"Sending notification for arrival notification: {notification.Name}");
+                            DependencyService.Get<INotificationManager>().SendNotification(notification);
+                        }
+                        else
+                        {
+                            notification.Status = Constants.NOTIFICATION_STATUS_ARRIVED;
+                        }
+                    }
+                }
+            }
+            
+            r_Logger.LogInformation("Finished sending Wi-Fi notifications for arrival destinations");
+        }
+
+        private static void sendNotificationsForLeaveDestinations(List<Notification> notifications, List<Destination> destinations)
+        {
+            bool isDestinationNotification, isLeaveNotification, isArrived;
+
+            r_Logger.LogInformation("Sending Wi-Fi notifications for leave destinations");
+
+            foreach (Destination destination in destinations)
+            {
+                foreach (Notification notification in notifications)
+                {
+                    isDestinationNotification = notification.TypeInfo.Equals(destination.Name);
+                    isLeaveNotification = notification.Activation.Equals(Constants.NOTIFICATION_ACTIVATION_LEAVE);
+                    isArrived = notification.Status.Equals(Constants.NOTIFICATION_STATUS_ARRIVED);
+
+                    if (isDestinationNotification && isLeaveNotification && isArrived)
+                    {
+                        r_Logger.LogInformation($"Sending notification for leave notification: {notification.Name}");
+                        DependencyService.Get<INotificationManager>().SendNotification(notification);
+                    }
+                }
+            }
+            
+            r_Logger.LogInformation("Finished sending Wi-Fi notifications for leave destinations");
+        }
+
+        private bool checkIfConnectedToWiFi()
         {
             bool isConnectedToWiFi;
             
@@ -145,7 +186,7 @@ namespace Notify.Droid.Managers
                 connectivityManager.GetNetworkCapabilities(connectivityManager.ActiveNetwork);
             
             isConnectedToWiFi = capabilities.HasTransport(TransportType.Wifi);
-            r_Logger.LogInformation($"Connected to wifi: {isConnectedToWiFi}");
+            r_Logger.LogInformation($"Connected to Wi-Fi: {isConnectedToWiFi}");
             
             return isConnectedToWiFi;
         }

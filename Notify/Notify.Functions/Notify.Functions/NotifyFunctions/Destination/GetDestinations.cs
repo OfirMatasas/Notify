@@ -10,10 +10,10 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Notify.Functions.Core;
-using Notify.Functions.NotifyFunctions.AzureHTTPClients;
+using Notify.Functions.HTTPClients;
 using Notify.Functions.Utils;
 
-namespace Notify.Functions.Destinations
+namespace Notify.Functions.NotifyFunctions.Destination
 {
     public static class GetDestinations
     {

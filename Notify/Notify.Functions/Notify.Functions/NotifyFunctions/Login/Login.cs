@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +11,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using Notify.Functions.Core;
-using Notify.Functions.NotifyFunctions.AzureHTTPClients;
+using Notify.Functions.HTTPClients;
 
 namespace Notify.Functions.NotifyFunctions.Login
 {

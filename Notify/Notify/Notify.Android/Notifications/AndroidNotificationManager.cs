@@ -6,6 +6,8 @@ using Android.OS;
 using AndroidX.Core.App;
 using Notify.Notifications;
 using Xamarin.Forms;
+using Notify.Helpers;
+using Notify.Services;
 using AndroidApp = Android.App.Application;
 
 [assembly: Dependency(typeof(Notify.Droid.Notifications.AndroidNotificationManager))]
@@ -13,6 +15,7 @@ namespace Notify.Droid.Notifications
 {
     public class AndroidNotificationManager : INotificationManager
     {
+        private readonly LoggerService r_Logger = LoggerService.Instance;
         private const string channelId = "default";
         private const string channelName = "Default";
         private const string channelDescription = "The default channel for notifications.";
@@ -32,6 +35,26 @@ namespace Notify.Droid.Notifications
             {
                 CreateNotificationChannel();
                 Instance = this;
+            }
+        }
+        
+        public void SendNotification(Notify.Core.Notification notification)
+        {
+            string fallbackStatus = notification.Status;
+            
+            notification.Status = Constants.NOTIFICATION_STATUS_SENDING;
+            r_Logger.LogDebug(
+                $"Sending notification with name: {notification.Name} and description: {notification.Description}");
+            try
+            {
+                DependencyService.Get<INotificationManager>()
+                    .SendNotification(notification.Name, notification.Description);
+                notification.Status = Constants.NOTIFICATION_STATUS_EXPIRED;
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error sending notification: {ex.Message}");
+                notification.Status = fallbackStatus;
             }
         }
 

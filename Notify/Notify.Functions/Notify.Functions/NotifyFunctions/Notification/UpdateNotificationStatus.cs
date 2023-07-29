@@ -13,10 +13,10 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using Notify.Functions.Core;
-using Notify.Functions.NotifyFunctions.AzureHTTPClients;
+using Notify.Functions.HTTPClients;
 using Notify.Functions.Utils;
 
-namespace Notify.Functions.NotifyFunctions.Database
+namespace Notify.Functions.NotifyFunctions.Notification
 {
     public static class UpdateNotificationStatus
     {

@@ -1,7 +1,8 @@
 using MongoDB.Driver;
 using Notify.Functions.Core;
+using Notify.Functions.NotifyFunctions.AzureVault;
 
-namespace Notify.Functions.NotifyFunctions.AzureHTTPClients
+namespace Notify.Functions.HTTPClients
 {
     public sealed class AzureDatabaseClient
     {
@@ -11,7 +12,7 @@ namespace Notify.Functions.NotifyFunctions.AzureHTTPClients
         
         private AzureDatabaseClient()
         {
-            MongoClientSettings settings = MongoClientSettings.FromUrl(new MongoUrl(AzureVault.AzureVault.GetSecretFromVault(Constants.DATABASE_CONNECTION_STRING).Result));
+            MongoClientSettings settings = MongoClientSettings.FromUrl(new MongoUrl(AzureVault.GetSecretFromVault(Constants.DATABASE_CONNECTION_STRING).Result));
             m_MongoClient = new MongoClient(settings);
         }
 

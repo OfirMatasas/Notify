@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -14,16 +13,16 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using Notify.Functions.Core;
-using Notify.Functions.NotifyFunctions.AzureHTTPClients;
+using Notify.Functions.HTTPClients;
 
-namespace Notify.Functions.Friends
+namespace Notify.Functions.NotifyFunctions.Friends
 {
     public static class CreateFriendRequest
     {
         [FunctionName("CreateFriendRequest")]
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", "put", Route = "friends/request")]
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", "put", Route = "friend/request")]
             HttpRequest req, ILogger log)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
