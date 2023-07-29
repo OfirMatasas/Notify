@@ -51,7 +51,7 @@ namespace Notify.Core
             set => m_LastUpdatedLocation = value;
         }
         
-        private bool IsDynamic
+        public bool IsDynamic
         {
             get => m_IsDynamic;
             set => m_IsDynamic = value;
@@ -89,6 +89,11 @@ namespace Notify.Core
 
             LoggerService.Instance.LogDebug($"Destination {Name} is arrived: {isArrived}");
             return isArrived;
+        }
+
+        public bool IsLeft(Location location)
+        {
+            return !IsArrived(location);
         }
 
         public bool ShouldDynamicLocationsBeUpdated(Location location)

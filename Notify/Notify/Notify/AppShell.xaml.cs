@@ -20,6 +20,7 @@ namespace Notify
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AppShell
     {
+        private readonly LoggerService r_Logger = LoggerService.Instance;
         private readonly INotificationManager notificationManager = DependencyService.Get<INotificationManager>();
         private readonly IWiFiManager m_WiFiManager = DependencyService.Get<IWiFiManager>();
         private static readonly object m_NotificationsLock = new object();
@@ -125,7 +126,7 @@ namespace Notify
                 LoggerService.Instance.LogDebug($"Location: latitude: {location.Latitude}, longitude: {location.Longitude}");
                 
                 checkIfDynamicLocationNotificationShouldBeUpdated(location);
-                checkIfThereAreNotificationsThatShouldBeTriggered(location);
+                sendAllRelevantLocationNotifications(location);
             });
         }
         
@@ -148,59 +149,18 @@ namespace Notify
             Preferences.Set(Constants.PREFERENCES_DESTINATIONS, JsonConvert.SerializeObject(destinations));
         }
 
-        private void checkIfThereAreNotificationsThatShouldBeTriggered(Location location)
+        private void sendAllRelevantLocationNotifications(Location location)
         {
-            List<string> destinationsArrived = new List<string>();
-            List<Notification> arrivedLocationNotifications;
-            List<Notification> elapsedTimeNotification;
+            List<Notification> sentNotifications = new List<Notification>(), arrivedNotifications = new List<Notification>();
             
-            destinationsArrived = getAllArrivedDestinations(location);
-            elapsedTimeNotification = getAllElapsedTimeNotifications();
-            
-            if (destinationsArrived.Count > 0 || elapsedTimeNotification.Count > 0)
+            lock (m_NotificationsLock)
             {
-                lock (m_NotificationsLock)
-                {
-                    arrivedLocationNotifications = getAllArrivedLocationNotifications(destinationsArrived);
+                getAllNotificationsForArrivalDestinations(location, sentNotifications, arrivedNotifications);
+                getAllNotificationsForLeaveDestinations(location, sentNotifications);
+                getAllNotificationsForElapsedTime(sentNotifications);
 
-                    Device.BeginInvokeOnMainThread(() =>
-                    {
-                        try
-                        {
-                            announceNotification(arrivedLocationNotifications, "You've arrived at your destination!");
-                            announceNotification(elapsedTimeNotification, "Time elapsed for a notification!");
-                            updateStatusOfSentNotifications(arrivedLocationNotifications, elapsedTimeNotification);
-                        }
-                        catch (Exception ex)
-                        {
-                            LoggerService.Instance.LogError($"Failed in checkIfThereAreNotificationsThatShouldBeTriggered: {ex.Message}");
-                        }
-                    });
-                }
-            }
-        }
-
-        private static void updateStatusOfSentNotifications(params List<Notification>[] sentNotificationLists)
-        {
-            string json = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
-            List<Notification> notifications = JsonConvert.DeserializeObject<List<Notification>>(json);
-
-            notifications.ForEach(notification =>
-            {
-                foreach (List<Notification> sentNotificationsList in sentNotificationLists)
-                {
-                    if (sentNotificationsList.Any(sentNotification => sentNotification.ID.Equals(notification.ID)))
-                    {
-                        notification.Status = Constants.NOTIFICATION_STATUS_EXPIRED;
-                        LoggerService.Instance.LogDebug($"Updated status of notification {notification.ID} to {Constants.NOTIFICATION_STATUS_EXPIRED}");
-                    }
-                }
-            });
-
-            Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
-            foreach (List<Notification> sentNotificationsList in sentNotificationLists)
-            {
-                AzureHttpClient.Instance.UpdateNotificationsStatus(sentNotificationsList, Constants.NOTIFICATION_STATUS_EXPIRED);
+                updateStatusOfNotifications(Constants.NOTIFICATION_STATUS_EXPIRED, sentNotifications);
+                updateStatusOfNotifications(Constants.NOTIFICATION_STATUS_ARRIVED, arrivedNotifications);
             }
         }
 
@@ -219,69 +179,161 @@ namespace Notify
                 }
             }
 
-            LoggerService.Instance.LogDebug($"Arrived to {destinationsArrived.Count} destinations of out {destinations.Count}:");
+            LoggerService.Instance.LogDebug($"Arrived to {destinationsArrived.Count} destinations out of {destinations.Count}:");
             LoggerService.Instance.LogDebug($"- {string.Join($"{Environment.NewLine}- ", destinationsArrived)}");
             
             return destinationsArrived;
+        }
+        
+        private void getAllNotificationsForArrivalDestinations(Location location, List<Notification> sentNotifications, List<Notification> arrivedNotifications)
+        {
+            string notificationsJson = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
+            List<Notification> notifications = JsonConvert.DeserializeObject<List<Notification>>(notificationsJson);
+            List<string> destinationsArrived = getAllArrivedDestinations(location);
+            bool isRelevantType, isArrivalNotification, isDestinationArrived, isActive;
+
+            r_Logger.LogInformation("Sending location notifications for arrival destinations");
+
+            foreach (Notification notification in notifications)
+            {
+                isRelevantType = notification.Type is NotificationType.Location || notification.Type is NotificationType.Dynamic;
+                isDestinationArrived = destinationsArrived.Contains(notification.TypeInfo.ToString());
+                isArrivalNotification = notification.Activation.Equals(Constants.NOTIFICATION_ACTIVATION_ARRIVAL);
+                isActive = notification.Status.Equals(Constants.NOTIFICATION_STATUS_ACTIVE);
+
+                if (isRelevantType && isActive && isDestinationArrived)
+                {
+                    if (isArrivalNotification)
+                    {
+                        r_Logger.LogInformation($"Sending notification for arrival notification: {notification.Name}");
+                        DependencyService.Get<INotificationManager>().SendNotification(notification);
+                        sentNotifications.Add(notification);
+                    }
+                    else
+                    {
+                        r_Logger.LogInformation($"Updating notification {notification.Name} status to {Constants.NOTIFICATION_STATUS_ARRIVED}");
+                        notification.Status = Constants.NOTIFICATION_STATUS_ARRIVED;
+                        arrivedNotifications.Add(notification);
+                    }
+                }
+            }
+            
+            r_Logger.LogInformation("Finished sending location notifications for arrival destinations");
+        }
+        
+        private List<string> getAllLeftDestinations(Location location)
+        {
+            string destinationsJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, string.Empty);
+            List<Destination> destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationsJson);
+            List<string> destinationsLeft = new List<string>();
+
+            foreach (Destination destination in destinations)
+            {
+                if (!destination.IsDynamic && destination.IsLeft(location))
+                {
+                    destinationsLeft.Add(destination.Name);
+                    LoggerService.Instance.LogDebug($"Added {destination.Name} to destinations left list");
+                }
+            }
+
+            LoggerService.Instance.LogDebug($"Left {destinationsLeft.Count} destinations out of {destinations.Count}:");
+            LoggerService.Instance.LogDebug($"- {string.Join($"{Environment.NewLine}- ", destinationsLeft)}");
+            
+            return destinationsLeft;
+        }
+        
+        private void getAllNotificationsForLeaveDestinations(Location location, List<Notification> sentNotifications)
+        {
+            string notificationsJson = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
+            List<Notification> notifications = JsonConvert.DeserializeObject<List<Notification>>(notificationsJson);
+            List<string> destinationsLeft = getAllLeftDestinations(location);
+            bool isLocationType, isDestinationLeft, isArrived, isLeaveNotification;
+
+            r_Logger.LogInformation("Sending location notifications for leave destinations");
+
+            foreach (Notification notification in notifications)
+            {
+                isLocationType = notification.Type is NotificationType.Location;
+                isDestinationLeft = destinationsLeft.Contains(notification.TypeInfo.ToString());
+                isLeaveNotification = notification.Activation.Equals(Constants.NOTIFICATION_ACTIVATION_LEAVE);
+                isArrived = notification.Status.Equals(Constants.NOTIFICATION_STATUS_ARRIVED);
+
+                if (isLocationType && isDestinationLeft && isLeaveNotification && isArrived)
+                {
+                    r_Logger.LogInformation($"Sending notification for leave notification: {notification.Name}");
+                    DependencyService.Get<INotificationManager>().SendNotification(notification);
+                    sentNotifications.Add(notification);
+                }
+            }
+            
+            r_Logger.LogInformation("Finished sending location notifications for arrival destinations");
         }
 
         private List<Notification> getAllElapsedTimeNotifications()
         {
             string notificationsJson = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
             List<Notification> notifications = JsonConvert.DeserializeObject<List<Notification>>(notificationsJson);
-            List<Notification> elapsedTimeNotifications;
+            List<Notification> elapsedTimeNotifications = new List<Notification>();
+            bool isActive, isTimeNotification, isTimeElapsed;
             
             LoggerService.Instance.LogInformation("Getting all elapsed time notifications");
             
-            elapsedTimeNotifications = notifications
-                .FindAll(
-                    notification =>
-                    {
-                        bool isTimeNotification = notification.Type is NotificationType.Time;
-                        bool isTimeElapsed = false;
-                        
-                        if (notification.TypeInfo is DateTime notificationTime)
-                        {
-                            isTimeElapsed = notificationTime <= DateTime.Now;
-                        }
-                        
-                        bool isNewNotification = notification.Status.Equals(Constants.NOTIFICATION_STATUS_ACTIVE);
-
-                        if (isTimeNotification && isTimeElapsed && isNewNotification)
-                            LoggerService.Instance.LogInformation($"Found a notification {notification.ID} that it's time elapsed");
-                        
-                        return isTimeNotification && isTimeElapsed && isNewNotification;
-                    });
-
+            foreach (Notification notification in notifications)
+            {
+                isTimeElapsed = false;
+                isActive = notification.Status.Equals(Constants.NOTIFICATION_STATUS_ACTIVE);
+                isTimeNotification = notification.Type is NotificationType.Time;
+                
+                if (notification.TypeInfo is DateTime notificationTime)
+                {
+                    isTimeElapsed = notificationTime <= DateTime.Now;
+                }
+                
+                if (isTimeNotification && isTimeElapsed && isActive)
+                {
+                    elapsedTimeNotifications.Add(notification);
+                    LoggerService.Instance.LogInformation($"Found a notification {notification.ID} that its time elapsed");
+                }
+            }
+            
             LoggerService.Instance.LogInformation($"Found a total of {elapsedTimeNotifications.Count} elapsed time notifications");
             updateAndSaveNotificationsInPrefrences(notifications, elapsedTimeNotifications);
             
             return elapsedTimeNotifications;
         }
-        
-        private List<Notification> getAllArrivedLocationNotifications(List<string> destinationsArrived)
+
+        private void getAllNotificationsForElapsedTime(List<Notification> sentNotifications)
         {
-            string notificationsJson = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
-            List<Notification> notifications = JsonConvert.DeserializeObject<List<Notification>>(notificationsJson);
-            List<Notification> arrivedLocationNotifications;
-
-            arrivedLocationNotifications = notifications
-                .FindAll(
-                    notification =>
-                    {
-                        bool isRelevantType = notification.Type is NotificationType.Location || notification.Type is NotificationType.Dynamic;
-                        bool isArrivedLocationNotification = destinationsArrived.Contains(notification.TypeInfo.ToString());
-                        bool isNewNotification = notification.Status.Equals(Constants.NOTIFICATION_STATUS_ACTIVE);
-
-                        if (isRelevantType && isArrivedLocationNotification && isNewNotification)
-                            LoggerService.Instance.LogDebug($"Found arrived location notification: {notification.ID}");
-                        
-                        return isRelevantType && isArrivedLocationNotification && isNewNotification;
-                    });
-
-            LoggerService.Instance.LogDebug($"Found {arrivedLocationNotifications.Count} arrived location notifications");
+            List<Notification> elapsedTimeNotification = getAllElapsedTimeNotifications();
             
-            return arrivedLocationNotifications;
+            LoggerService.Instance.LogInformation("Sending elapsed time notifications");
+
+            foreach (Notification notification in elapsedTimeNotification)
+            {
+                LoggerService.Instance.LogInformation($"Sending notification {notification.ID}");
+                DependencyService.Get<INotificationManager>().SendNotification(notification);
+                sentNotifications.Add(notification);
+            }
+            
+            LoggerService.Instance.LogInformation("Finished sending elapsed time notifications");
+        }
+        
+        private void updateStatusOfNotifications(string newStatus, List<Notification> sentNotifications)
+        {
+            string json = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
+            List<Notification> notifications = JsonConvert.DeserializeObject<List<Notification>>(json);
+
+            foreach (Notification notification in notifications)
+            {
+                if (sentNotifications.Any(sentNotification => sentNotification.ID.Equals(notification.ID)))
+                {
+                    notification.Status = newStatus;
+                    LoggerService.Instance.LogDebug($"Updated status of notification {notification.ID} to {newStatus}");
+                }
+            }
+
+            Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
+            AzureHttpClient.Instance.UpdateNotificationsStatus(sentNotifications, newStatus);
         }
         
         private void updateAndSaveNotificationsInPrefrences(List<Notification> allNotifications, List<Notification> toUpdateNotifications)
@@ -297,20 +349,7 @@ namespace Notify
             
             Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(allNotifications));
         }
-        
-        private void announceNotification(List<Notification> notifications, string logMessage)
-        {
-            notifications.ForEach(notification =>
-            {
-                notificationManager.SendNotification(
-                    title: notification.Name,
-                    message: $"{notification.Description}{Environment.NewLine}- {notification.Creator}");
 
-                LoggerService.Instance.LogDebug(logMessage);
-                LoggerService.Instance.LogDebug($"Notification: {notification.Name}, {notification.Description}, {notification.Creator}");
-            });
-        }
-        
         private void setNoficicationManagerNotificationReceived()
         {
             notificationManager.NotificationReceived += (sender, eventArgs) =>

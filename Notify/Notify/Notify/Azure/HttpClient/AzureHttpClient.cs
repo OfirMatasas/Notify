@@ -460,6 +460,12 @@ namespace Notify.Azure.HttpClient
             string json;
             HttpResponseMessage response;
             
+            if(notificationsIds.Count == 0)
+            {
+                r_Logger.LogDebug($"No notifications to update");
+                return;
+            }
+            
             try
             {
                 request = new JObject
