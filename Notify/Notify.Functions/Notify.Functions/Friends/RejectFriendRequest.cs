@@ -12,7 +12,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using Notify.Functions.Core;
-using Notify.Functions.NotifyFunctions.AzureHTTPClients;
+using Notify.Functions.HTTPClients;
 
 namespace Notify.Functions.Friends
 {

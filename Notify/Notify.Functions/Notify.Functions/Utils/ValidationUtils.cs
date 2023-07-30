@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Notify.Functions.Core;
-using Notify.Functions.NotifyFunctions.AzureHTTPClients;
+using Notify.Functions.HTTPClients;
 
 namespace Notify.Functions.Utils
 {
