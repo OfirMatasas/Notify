@@ -3,37 +3,104 @@
     NavigationPage.HasNavigationBar="True"
     x:Class="Notify.Views.ProfilePage"
     xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:views="http://xamarin.com/schemas/2020/toolkit"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
-    <ContentPage.Content>
-        <Grid
-            BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor},
-                                              Dark={StaticResource DarkPageBackgroundColor}}"
-            Column="2"
-            ColumnDefinitions="*, *"
-            RowDefinitions="Auto, Auto, Auto, *, Auto, Auto, *">
+    <Grid RowDefinitions="*, 2*, Auto">
+        <BoxView Grid.RowSpan="3">
+            <BoxView.Background>
+                <LinearGradientBrush>
+                    <GradientStopCollection>
+                        <GradientStop Color="#161616" Offset="0" />
+                        <GradientStop Color="#30343F" Offset="1" />
+                    </GradientStopCollection>
+                </LinearGradientBrush>
+            </BoxView.Background>
+        </BoxView>
+        <Grid>
+            <Path
+                Aspect="Fill"
+                Data="M0,0H375V262.033s-9.025,4.813-55.426-10.71-70.141-83.047-130.3-83.22-83.544,67.7-130.893,83.22S0,262.033,0,262.033Z"
+                Fill="#FFBE00" />
             <Image
-                Grid.ColumnSpan="2"
-                Grid.Row="0"
-                HeightRequest="150"
-                Margin="0,50,0,20"
-                Source="ofir_profile_image.png"
-                WidthRequest="100" />
-            <Label
-                Grid.Column="0"
-                Grid.Row="1"
-                HorizontalTextAlignment="End"
-                Style="{StaticResource Body1FontSize_ExoRegular}"
-                Text="Hello,"
-                TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
-                                            Dark={StaticResource DarkPrimaryTextColor}}" />
-            <Label
-                Grid.Column="1"
-                Grid.Row="1"
-                HorizontalTextAlignment="Start"
-                Style="{StaticResource Body1FontSize_ExoBold}"
-                Text="{Binding UserName}"
-                TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
-                                            Dark={StaticResource DarkPrimaryTextColor}}" />
+                HeightRequest="20"
+                HorizontalOptions="Start"
+                Margin="25"
+                Source="menu.png"
+                VerticalOptions="Start"
+                WidthRequest="20" />
         </Grid>
-    </ContentPage.Content>
+        <StackLayout
+            Grid.Row="1"
+            HorizontalOptions="Center"
+            Margin="0,-140,0,0"
+            Spacing="30">
+            <Frame
+                BackgroundColor="Transparent"
+                BorderColor="White"
+                CornerRadius="105"
+                Grid.Row="1"
+                HeightRequest="210"
+                HorizontalOptions="Center"
+                IsClippedToBounds="True"
+                Padding="0"
+                VerticalOptions="Center"
+                WidthRequest="210">
+                <Image
+                    Aspect="AspectFill"
+                    HorizontalOptions="FillAndExpand"
+                    Source="ofir_profile_image.jpg"
+                    VerticalOptions="FillAndExpand" />
+            </Frame>
+            <StackLayout HorizontalOptions="Center" Spacing="15">
+                <Label
+                    FontSize="18"
+                    HorizontalOptions="Center"
+                    Text="Hello, linkimos"
+                    TextColor="White" />
+            </StackLayout>
+        </StackLayout>
+        <StackLayout
+            Grid.Row="2"
+            Margin="25,0,0,25"
+            Spacing="10">
+            <ScrollView HorizontalScrollBarVisibility="Never" Orientation="Horizontal">
+                <StackLayout
+                    BindableLayout.ItemsSource="{Binding Picks}"
+                    Orientation="Horizontal"
+                    Spacing="30">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="Auto, Auto" ColumnSpacing="15">
+                                <Rectangle
+                                    Fill="#A5A5A5"
+                                    HeightRequest="40"
+                                    VerticalOptions="Center"
+                                    WidthRequest="87" />
+                                <Image
+                                    HeightRequest="75"
+                                    HorizontalOptions="Center"
+                                    Source="{Binding Image}"
+                                    VerticalOptions="Center"
+                                    WidthRequest="75" />
+                                <StackLayout
+                                    Grid.Column="1"
+                                    Spacing="5"
+                                    WidthRequest="115">
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontSize="12"
+                                        Text="{Binding Title}"
+                                        TextColor="White" />
+                                    <Label
+                                        FontSize="10"
+                                        Text="{Binding Description}"
+                                        TextColor="White" />
+                                </StackLayout>
+                            </Grid>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </StackLayout>
+            </ScrollView>
+        </StackLayout>
+    </Grid>
 </ContentPage>

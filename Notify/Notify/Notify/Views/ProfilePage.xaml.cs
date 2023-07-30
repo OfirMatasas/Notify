@@ -11,5 +11,10 @@ namespace Notify.Views
             InitializeComponent();
             BindingContext = new ViewModels.ProfilePageViewModel();
         }
+        
+        private void CarouselView_OnPositionChanged(object sender, PositionChangedEventArgs e)
+        {
+           
+        }
     }
 }
