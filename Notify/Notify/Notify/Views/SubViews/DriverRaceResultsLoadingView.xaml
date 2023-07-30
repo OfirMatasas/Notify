@@ -4,7 +4,7 @@
     Padding="20,5"
     RowDefinitions="Auto, Auto"
     RowSpacing="5"
-    x:Class="Notify.Views.Views.DriverRaceResultsLoadingView"
+    x:Class="Notify.Views.SubViews.DriverRaceResultsLoadingView"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:controls="clr-namespace:Notify.Controls;assembly=Notify"
     xmlns:notify="clr-namespace:Notify;assembly=Notify"

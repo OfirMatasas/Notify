@@ -27,26 +27,27 @@ namespace Notify.Functions.NotifyFunctions.Friends
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
-            string requester, username;
+            string requester, username, requestDate;
             ObjectResult result;
 
             try
             {
                 requester = Convert.ToString(data.requester);
                 username = Convert.ToString(data.userName);
+                requestDate = Convert.ToString(data.requestDate);
                 result = friendRequestShouldBeCreated(requester, username, log);
                 
                 if (result is null)
                 {
-                    throw new Exception("Unpredicted error occurred");
+                    throw new Exception("Unexpected error occurred");
                 }
                 
                 if (result is OkObjectResult)
                 {
                     log.LogInformation($"Creating friend request from {requester} to {username}");
-                    await createFriendRequest(requester, username);
+                    await createFriendRequest(requester, username, requestDate);
 
-                    log.LogInformation($"Friend request created");
+                    log.LogInformation($"$Friend request created. requester: {requester}, username: {username}, requestDate: {requestDate}");
                 }
             }
             catch (Exception ex)
@@ -170,7 +171,7 @@ namespace Notify.Functions.NotifyFunctions.Friends
             return numberOfUsersFound.Equals(2);
         }
         
-        private static async Task createFriendRequest(string requester, string username)
+        private static async Task createFriendRequest(string requester, string username, string requestDate)
         {
             IMongoCollection<BsonDocument> friendRequestsCollection;
             BsonDocument friendRequestDocument;
@@ -182,9 +183,10 @@ namespace Notify.Functions.NotifyFunctions.Friends
             friendRequestDocument = new BsonDocument
                 {
                     { "requester", requester },
-                    { "userName", username }
+                    { "userName", username },
+                    { "requestDate", requestDate },
                 };
-
+            
             await friendRequestsCollection.InsertOneAsync(friendRequestDocument);
         }
     }

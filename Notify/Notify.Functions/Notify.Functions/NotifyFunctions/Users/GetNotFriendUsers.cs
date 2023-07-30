@@ -33,7 +33,7 @@ namespace Notify.Functions.NotifyFunctions.Users
             {
                 result = new BadRequestObjectResult("Missing username parameter in query string");
             }
-            else if (!await usernameExists(username))
+            else if (!await ValidationUtils.DoesUsernameExist(username))
             {
                 result = new BadRequestObjectResult("User does not exist");
             }
@@ -46,24 +46,7 @@ namespace Notify.Functions.NotifyFunctions.Users
 
             return result;
         }
-
-        private static async Task<bool> usernameExists(string username)
-        {
-            IMongoCollection<BsonDocument> collection;
-            FilterDefinition<BsonDocument> filterUsername;
-            long countUsername;
-
-            collection = AzureDatabaseClient.Instance
-                .GetCollection<BsonDocument>(
-                    databaseName: Constants.DATABASE_NOTIFY_MTA,
-                    collectionName: Constants.COLLECTION_USER);
-            filterUsername = Builders<BsonDocument>.Filter.Regex("userName",
-                new BsonRegularExpression($"^{Regex.Escape(Convert.ToString(username))}$", "i"));
-
-            countUsername = await collection.CountDocumentsAsync(filterUsername);
-            return countUsername > 0;
-        }
-
+        
         private static async Task<List<BsonDocument>> getAllUsersWhichAreNotFriendsOfUser(string username, ILogger log)
         {
             List<string> friendsUsernamesList;

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    NavigationPage.HasNavigationBar="True"
+    x:Class="Notify.Views.SubViews.FriendRequestPage"
+    x:Name="FriendReqPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:materialDesignControls="clr-namespace:Plugin.MaterialDesignControls;assembly=Plugin.MaterialDesignControls"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <ContentPage.Content>
+        <Grid
+            BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor},
+                                              Dark={StaticResource DarkPageBackgroundColor}}"
+            Column="1"
+            RowDefinitions="auto, auto, *, auto"
+            RowSpacing="0">
+            <materialDesignControls:MaterialLabel
+                FontAttributes="Bold"
+                FontSize="Large"
+                Grid.Row="0"
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                Text="Friend Request"
+                TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                            Dark={StaticResource DarkPrimaryTextColor}}"
+                VerticalOptions="Center" />
+            <Button
+                Background="Transparent"
+                BackgroundColor="Transparent"
+                Command="{Binding BackCommand}"
+                FontAttributes="Bold"
+                FontSize="30"
+                Grid.Row="0"
+                HorizontalOptions="Start"
+                Text="❮"
+                TextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
+                                            Dark={StaticResource LightEntryBackgroundColor}}"
+                VerticalOptions="Center" />
+
+            <materialDesignControls:MaterialEntry
+                Grid.Row="1"
+                Margin="20,10,20,0"
+                Placeholder="Search by username or phone number"
+                PlaceholderColor="{AppThemeBinding Light={StaticResource LightPlaceholderTextColor},
+                                                   Dark={StaticResource DarkPlaceholderTextColor}}"
+                ReturnType="Next"
+                Text="{Binding SearchText}"
+                TextChanged="SearchEntry_OnTextChanged"
+                Type="Filled"
+                VerticalOptions="Start" />
+
+            <ScrollView Grid.Row="2">
+                <StackLayout>
+                    <CollectionView
+                        EmptyView="No users found"
+                        HorizontalOptions="Center"
+                        ItemsSource="{Binding UsersSelectionList}"
+                        Margin="20,10,20,0">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid
+                                    ColumnDefinitions="*, *"
+                                    ColumnSpacing="0"
+                                    Margin="0,20,0,20"
+                                    RowDefinitions="auto">
+                                    <materialDesignControls:MaterialLabel
+                                        FontAttributes="Bold"
+                                        FontSize="Medium"
+                                        Grid.Column="0"
+                                        HorizontalOptions="StartAndExpand"
+                                        HorizontalTextAlignment="Start"
+                                        Style="{StaticResource Body1FontSize_ExoBold}"
+                                        Text="{Binding UserName}"
+                                        VerticalOptions="CenterAndExpand"
+                                        VerticalTextAlignment="Center">
+                                        <materialDesignControls:MaterialLabel.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Path=BindingContext.ShowFriendDetailsCommand, Source={x:Reference Name=FriendReqPage}}" CommandParameter="{Binding .}" />
+                                        </materialDesignControls:MaterialLabel.GestureRecognizers>
+                                    </materialDesignControls:MaterialLabel>
+                                    <ImageButton
+                                        BackgroundColor="Transparent"
+                                        Command="{Binding Path=BindingContext.SendRequestCommand, Source={x:Reference Name=FriendReqPage}}"
+                                        CommandParameter="{Binding .}"
+                                        Grid.Column="1"
+                                        HeightRequest="30"
+                                        HorizontalOptions="End"
+                                        Source="add_friend.png"
+                                        VerticalOptions="Center" />
+                                </Grid>
+                            </DataTemplate>
+
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </StackLayout>
+            </ScrollView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

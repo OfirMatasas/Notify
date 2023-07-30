@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using Notify.Azure.HttpClient;
@@ -14,8 +15,8 @@ namespace Notify.ViewModels
     {
         public Command BackCommand { get; set; }
         public Command SearchTextChangedCommand { get; set; }
-        
-        public Command SendRequestCommand { get; set; }
+        public Command<Friend> SendRequestCommand { get; set; }
+        public Command<Friend> ShowFriendDetailsCommand { get; set; }
 
         private string m_SearchText;
         public string SearchText
@@ -39,21 +40,13 @@ namespace Notify.ViewModels
         }
 
         private Friend m_SelectedUserName;
-        public Friend SelectedUserName
-        {
-            get => m_SelectedUserName;
-            set
-            {
-                m_SelectedUserName = value;
-                OnPropertyChanged(nameof(SelectedUserName));
-            }
-        }
 
         public FriendRequestPageViewModel()
         {
             BackCommand = new Command(onBackButtonClicked);
-            SendRequestCommand = new Command(onSendRequestButtonClicked);
+            SendRequestCommand = new Command<Friend>(onSendRequestButtonClicked);
             SearchTextChangedCommand = new Command(onSearchTextChanged);
+            ShowFriendDetailsCommand = new Command<Friend>(onFriendClicked);
             PopulateUsersList();
         }
 
@@ -83,17 +76,22 @@ namespace Notify.ViewModels
             UsersList = JsonConvert.DeserializeObject<List<Friend>>(usersListJson);
             UsersSelectionList = UsersList = await AzureHttpClient.Instance.GetNotFriendsUsers();
         }
-
-        private void onSendRequestButtonClicked()
+        
+        private void onFriendClicked(Friend friend)
         {
-            if (SelectedUserName is null)
+            if (!(friend is null))
             {
-                App.Current.MainPage.DisplayAlert("Error", "Please select a user to send a request to", "OK");
+                App.Current.MainPage.DisplayAlert("Friend Details", $"Name: {friend.Name}\nUsername: {friend.UserName}\nTelephone: {friend.Telephone}", "OK");
             }
-            else
+        }
+
+        private void onSendRequestButtonClicked(Friend friend)
+        {
+            if (!(friend is null))
             {
-                AzureHttpClient.Instance.SendFriendRequest(SelectedUserName.UserName);
-                App.Current.MainPage.DisplayAlert("Friend Request Sent", $"Friend request sent to {SelectedUserName.UserName}", "OK");
+                AzureHttpClient.Instance.SendFriendRequest(friend.UserName);
+                App.Current.MainPage.DisplayAlert("Friend Request Sent", $"Friend request sent to {friend.UserName}",
+                    "OK");
             }
         }
 
@@ -109,12 +107,11 @@ namespace Notify.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        private void SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
         {
-            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+            if (EqualityComparer<T>.Default.Equals(field, value)) return;
             field = value;
             OnPropertyChanged(propertyName);
-            return true;
         }
     }
 }

@@ -143,6 +143,8 @@ namespace Notify.Helpers
         public static readonly string AZURE_FUNCTIONS_PATTERN_FRIEND_REQUEST = AZURE_FUNCTIONS_PATTERN_FRIEND + "/request";
         public static readonly string AZURE_FUNCTIONS_PATTERN_CHECK_USER_EXISTS = "checkUserExists";
         public static readonly string AZURE_FUNCTIONS_PATTERN_DYNAMIC_DESTINATION = AZURE_FUNCTIONS_PATTERN_DESTINATION + "/dynamic";
+        public static readonly string AZURE_FUNCTIONS_PATTERN_REJECT_FRIEND_REQUEST = AZURE_FUNCTIONS_PATTERN_FRIEND + "/reject";
+        public static readonly string AZURE_FUNCTIONS_PATTERN_ACCEPT_FRIEND_REQUEST = AZURE_FUNCTIONS_PATTERN_FRIEND + "/accept";
 
         #endregion
 
@@ -186,6 +188,7 @@ namespace Notify.Helpers
         public static readonly string PREFERENCES_NOTIFICATIONS = "Notifications";
         public static readonly string PREFERENCES_DESTINATIONS = "Destinations";
         public static readonly string PREFERENCES_FRIENDS = "Friends";
+        public static readonly string PREFERENCES_PENDING_FRIEND_REQUESTS = "PendingFriendRequests";
         public static readonly string PREFERENCES_USERNAME = "NotifyUserName";
         public static readonly string PREFERENCES_PASSWORD = "NotifyPassword";
         public static readonly string PREFERENCES_NOT_FRIENDS_USERS = "NotFriendsUsers";
