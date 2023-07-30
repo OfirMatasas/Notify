@@ -57,6 +57,38 @@
                     HorizontalOptions="Center"
                     Text="Hello, linkimos"
                     TextColor="White" />
+                <Frame
+                    CornerRadius="20"
+                    Grid.Row="3"
+                    HasShadow="True"
+                    HeightRequest="90"
+                    Margin="0,10,0,0">
+                    <Grid ColumnDefinitions="*,2,*,2,*" VerticalOptions="Center">
+                        <ImageButton
+                            BackgroundColor="Transparent"
+                            Grid.Column="0"
+                            Grid.Row="0"
+                            Source="home.png" />
+                        <BoxView
+                            BackgroundColor="#A5A5A5"
+                            Grid.Column="1"
+                            Grid.Row="0" />
+                        <ImageButton
+                            BackgroundColor="Transparent"
+                            Grid.Column="2"
+                            Grid.Row="0"
+                            Source="bluetooth.png" />
+                        <BoxView
+                            BackgroundColor="#A5A5A5"
+                            Grid.Column="3"
+                            Grid.Row="0" />
+                        <ImageButton
+                            BackgroundColor="Transparent"
+                            Grid.Column="4"
+                            Grid.Row="0"
+                            Source="wifi.png" />
+                    </Grid>
+                </Frame>
             </StackLayout>
         </StackLayout>
         <StackLayout
