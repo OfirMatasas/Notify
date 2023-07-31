@@ -44,7 +44,7 @@
             </Frame>
             <StackLayout HorizontalOptions="Center" Spacing="15">
                 <Label
-                    FontSize="18"
+                    FontSize="Large"
                     HorizontalOptions="Center"
                     Text="Hello, linkimos"
                     TextColor="White" />
@@ -53,37 +53,40 @@
                     HorizontalOptions="CenterAndExpand"
                     Padding="0,10">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="50" />
-                        <ColumnDefinition Width="50" />
-                        <ColumnDefinition Width="50" />
-                        <ColumnDefinition Width="50" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="55" />
+                        <ColumnDefinition Width="55" />
+                        <ColumnDefinition Width="55" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="50" />
+                        <RowDefinition Height="55" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <Button
-                        BackgroundColor="#ebedf0"
-                        CornerRadius="30"
-                        Grid.Column="0"
-                        Grid.Row="0"
-                        WidthRequest="50" />
-                    <Button
+                    <ImageButton
                         BackgroundColor="#ebedf0"
                         CornerRadius="30"
                         Grid.Column="1"
-                        Grid.Row="0" />
-                    <Label Grid.Column="1" Grid.Row="1" />
-                    <Button
+                        Grid.Row="0"
+                        Opacity="0.3"
+                        Source="location_icon.png"
+                        WidthRequest="50" />
+                    <ImageButton
                         BackgroundColor="#ebedf0"
                         CornerRadius="30"
                         Grid.Column="2"
-                        Grid.Row="0" />
-                    <Button
+                        Grid.Row="0"
+                        Opacity="0.3"
+                        Source="bluetooth_icon.png"
+                        WidthRequest="50" />
+                    <ImageButton
                         BackgroundColor="#ebedf0"
                         CornerRadius="30"
                         Grid.Column="3"
-                        Grid.Row="0" />
+                        Grid.Row="0"
+                        Opacity="0.3"
+                        Source="wifi_icon.png"
+                        WidthRequest="50" />
                 </Grid>
             </StackLayout>
         </StackLayout>
