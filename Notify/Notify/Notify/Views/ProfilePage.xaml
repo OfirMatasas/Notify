@@ -65,6 +65,7 @@
                     </Grid.RowDefinitions>
                     <ImageButton
                         BackgroundColor="#ebedf0"
+                        Command="{Binding LocationButtonCommand}"
                         CornerRadius="30"
                         Grid.Column="1"
                         Grid.Row="0"
@@ -76,6 +77,7 @@
                         x:Name="locationButton" />
                     <ImageButton
                         BackgroundColor="#ebedf0"
+                        Command="{Binding BlueToothButtonCommand}"
                         CornerRadius="30"
                         Grid.Column="2"
                         Grid.Row="0"
@@ -87,6 +89,7 @@
                         x:Name="blueToothButton" />
                     <ImageButton
                         BackgroundColor="#ebedf0"
+                        Command="{Binding WifiButtonCommand}"
                         CornerRadius="30"
                         Grid.Column="3"
                         Grid.Row="0"
