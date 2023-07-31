@@ -69,24 +69,33 @@
                         Grid.Column="1"
                         Grid.Row="0"
                         Opacity="0.3"
+                        Pressed="LocationButton_OnPressed"
+                        Released="LocationButton_OnReleased"
                         Source="location_icon.png"
-                        WidthRequest="50" />
+                        WidthRequest="50"
+                        x:Name="locationButton" />
                     <ImageButton
                         BackgroundColor="#ebedf0"
                         CornerRadius="30"
                         Grid.Column="2"
                         Grid.Row="0"
                         Opacity="0.3"
+                        Pressed="BlueToothButton_OnPressed"
+                        Released="BlueToothButton_OnReleased"
                         Source="bluetooth_icon.png"
-                        WidthRequest="50" />
+                        WidthRequest="50"
+                        x:Name="blueToothButton" />
                     <ImageButton
                         BackgroundColor="#ebedf0"
                         CornerRadius="30"
                         Grid.Column="3"
                         Grid.Row="0"
                         Opacity="0.3"
+                        Pressed="WifiButton_OnPressed"
+                        Released="WifiButton_OnReleased"
                         Source="wifi_icon.png"
-                        WidthRequest="50" />
+                        WidthRequest="50"
+                        x:Name="wifiButton" />
                 </Grid>
             </StackLayout>
         </StackLayout>
