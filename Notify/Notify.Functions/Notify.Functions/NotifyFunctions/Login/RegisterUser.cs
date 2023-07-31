@@ -40,7 +40,7 @@ namespace Notify.Functions.NotifyFunctions.Login
                 log.LogInformation(
                     $"Got reference to {Constants.COLLECTION_USER} collection on {Constants.DATABASE_NOTIFY_MTA} database");
 
-                await MongoUtils.CreatePropertyIndexes(collection, "userName", "telephone");
+                await MongoUtils.CreatePropertyIndexesAsync(collection, "userName", "telephone");
 
                 requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 data = JsonConvert.DeserializeObject(requestBody);

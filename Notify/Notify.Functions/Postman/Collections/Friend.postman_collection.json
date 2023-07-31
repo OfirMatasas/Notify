@@ -13,12 +13,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{HTTP}}/friends?username=matasas",
+					"raw": "{{HTTP}}/friend?username=matasas",
 					"host": [
 						"{{HTTP}}"
 					],
 					"path": [
-						"friends"
+						"friend"
 					],
 					"query": [
 						{
@@ -31,10 +31,43 @@
 			"response": []
 		},
 		{
-			"name": "Add friend",
+			"name": "Get all potential friends",
 			"request": {
-				"method": "POST",
+				"method": "GET",
 				"header": [],
+				"url": {
+					"raw": "{{HTTP}}/user/notfriends?username=matasas",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"user",
+						"notfriends"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "matasas"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete friend",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"MaTaSaS\",\n    \"friendName\": \"linkimos\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
 					"raw": "{{HTTP}}/friend",
 					"host": [

@@ -12,7 +12,7 @@ namespace Notify.Functions.Utils
 {
     public static class ValidationUtils
     {
-        public static bool ValidateUserName(HttpRequest req, ILogger log)
+        public static bool ValidateUsername(HttpRequest req, ILogger log)
         {
             bool valid = false;
 
@@ -28,7 +28,7 @@ namespace Notify.Functions.Utils
             return valid;
         }
         
-        public static async Task<bool> DoesUsernameExist(string username)
+        public static async Task<bool> CheckIfUserExistsAsync(string username)
         {
             IMongoCollection<BsonDocument> collection;
             FilterDefinition<BsonDocument> filterUsername;

@@ -66,7 +66,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{ \n    \"name\": \"Ofir\",\n    \"userName\": \"matasas\",\n    \"password\": \"123\",\n    \"telephone\": \"+972542001818\"\n}",
+					"raw": "{ \n    \"name\": \"Talia\",\n    \"userName\": \"TaliaEz\",\n    \"password\": \"123\",\n    \"telephone\": \"0542003455\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"

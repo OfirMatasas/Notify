@@ -1,0 +1,116 @@
+{
+	"info": {
+		"_postman_id": "b1e8fcf7-4dc5-4b5e-ab65-712a0822d426",
+		"name": "Friend Request",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26136776",
+		"_collection_link": "https://warped-shadow-814178.postman.co/workspace/My-Workspace~54429c37-4045-4a7c-8a63-dc888dec1345/collection/26136776-b1e8fcf7-4dc5-4b5e-ab65-712a0822d426?action=share&creator=26136776&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Get friend requests",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HTTP}}/friend/request?username=linkimos",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"friend",
+						"request"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "linkimos"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create friend request",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\": \"linkimos\",\n    \"requester\": \"MaTaSaS\",\n    \"requestDate\": \"23/06/2023\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HTTP}}/friend/request",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"friend",
+						"request"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Accept friend request",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"requester\": \"matasas\",\n    \"userName\": \"linkimos\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HTTP}}/friend/accept",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"friend",
+						"accept"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reject friend request",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"requester\": \"matasas\",\n    \"userName\": \"linkimos\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HTTP}}/friend/reject",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"friend",
+						"reject"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
