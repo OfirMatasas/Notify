@@ -31,6 +31,10 @@ namespace Notify.Azure.HttpClient
             {
                 activation = (string)notification.notification.activation;
             }
+            else if (notificationType.Equals(NotificationType.Dynamic))
+            {
+                activation = Constants.NOTIFICATION_ACTIVATION_ARRIVAL;
+            }
 
             return new Notification(
                 id: (string)notification.id,
