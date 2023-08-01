@@ -14,7 +14,7 @@ namespace Notify.ViewModels
         public Command BlueToothButtonCommand { get; set; }
         public Command WifiButtonCommand { get; set; }
         
-        Preferences.
+        //Preferences.
         
         private string m_UserName;
         public string UserName 
