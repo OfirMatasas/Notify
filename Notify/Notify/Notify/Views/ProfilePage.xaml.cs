@@ -12,5 +12,10 @@ namespace Notify.Views
             InitializeComponent();
             BindingContext = new ViewModels.ProfilePageViewModel();
         }
+
+        private void TapGestureRecognizer_OnTapped(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -17,10 +17,11 @@ namespace Notify.ViewModels
         public Command LocationButtonCommand { get; set; }
         public Command BlueToothButtonCommand { get; set; }
         public Command WifiButtonCommand { get; set; }
+        public Command LoadProfilePictureCommand { get; set; }
 
         private string destinationsJson;
-        public List<Destination> Destinations { get; private set; }
-        
+        private List<Destination> Destinations { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
         
         private string m_UserName;
@@ -41,9 +42,34 @@ namespace Notify.ViewModels
             LocationButtonCommand = new Command(onLocationButtonPressed);
             BlueToothButtonCommand = new Command(onBlueToothButtonPressed);
             WifiButtonCommand = new Command(onWifiButtonPressed);
+            LoadProfilePictureCommand = new Command(onLoadProfilePicture);
             
             destinationsJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, String.Empty);
             Destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationsJson);
+        }
+
+        private async void onLoadProfilePicture()
+        {
+            Debug.WriteLine("Load profile picture");
+            string action = await App.Current.MainPage.DisplayActionSheet("Profile Picture", "Cancel", null, "Upload New Picture", "Clear picture");
+            if (action == "Upload new picture")
+            {
+                uploadNewProfilePicture();
+            }
+            else if (action == "Clear picture")
+            {
+                clearProfilePicture();
+            }
+        }
+
+        private void uploadNewProfilePicture()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void clearProfilePicture()
+        {
+            throw new NotImplementedException();
         }
 
         private void onWifiButtonPressed()

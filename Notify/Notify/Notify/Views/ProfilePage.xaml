@@ -39,8 +39,12 @@
                 <Image
                     Aspect="AspectFill"
                     HorizontalOptions="FillAndExpand"
-                    Source="ofir_profile_image.jpg"
-                    VerticalOptions="FillAndExpand" />
+                    Source="{Binding ProfilePicture}"
+                    VerticalOptions="FillAndExpand">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding LoadProfilePictureCommand}" />
+                    </Image.GestureRecognizers>
+                </Image>
             </Frame>
             <StackLayout HorizontalOptions="Center" Spacing="15">
                 <Label

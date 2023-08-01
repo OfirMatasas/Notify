@@ -99,6 +99,7 @@
     <AndroidResource Include="Resources\drawable\avatar.png" />
     <AndroidResource Include="Resources\drawable\back.png" />
     <AndroidResource Include="Resources\drawable\backButton.png" />
+    <AndroidResource Include="Resources\drawable\blank_profile_picture.png" />
     <AndroidResource Include="Resources\drawable\bluetooth.png" />
     <AndroidResource Include="Resources\drawable\bluetooth_icon.png" />
     <AndroidResource Include="Resources\drawable\facebook.png" />
