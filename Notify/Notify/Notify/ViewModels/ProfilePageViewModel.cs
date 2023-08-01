@@ -1,20 +1,27 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using Newtonsoft.Json;
+using Notify.Core;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Constants = Notify.Helpers.Constants;
 
 namespace Notify.ViewModels
 {
-    public class ProfilePageViewModel : INotifyPropertyChanged
+    public sealed class ProfilePageViewModel : INotifyPropertyChanged
     {
         public Command LocationButtonCommand { get; set; }
         public Command BlueToothButtonCommand { get; set; }
         public Command WifiButtonCommand { get; set; }
+
+        private string destinationsJson;
+        public List<Destination> Destinations { get; private set; }
         
-        //Preferences.
+        public event PropertyChangedEventHandler PropertyChanged;
         
         private string m_UserName;
         public string UserName 
@@ -34,30 +41,38 @@ namespace Notify.ViewModels
             LocationButtonCommand = new Command(onLocationButtonPressed);
             BlueToothButtonCommand = new Command(onBlueToothButtonPressed);
             WifiButtonCommand = new Command(onWifiButtonPressed);
+            
+            destinationsJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, String.Empty);
+            Destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationsJson);
         }
 
         private void onWifiButtonPressed()
         {
+            App.Current.MainPage.DisplayAlert("Wifi Network", $"{Destinations.First().SSID}", "OK");
         }
 
         private void onBlueToothButtonPressed()
         {
-            
+            App.Current.MainPage.DisplayAlert("Bluetooth Device", $"{Destinations.First().Bluetooth}", "OK");
         }
 
-        private void onLocationButtonPressed()
+        private async void onLocationButtonPressed()
         {
-            
+            IEnumerable<string> destinationNames;
+            string message;
+
+            destinationNames = Destinations.Select(d => d.Name);
+            message = string.Join(", ", destinationNames);
+
+            await App.Current.MainPage.DisplayAlert("Destinations", message, "OK");
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        private bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
         {
             if (EqualityComparer<T>.Default.Equals(field, value)) return false;
             field = value;
