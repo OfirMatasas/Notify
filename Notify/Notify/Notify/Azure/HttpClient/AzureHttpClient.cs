@@ -243,10 +243,10 @@ namespace Notify.Azure.HttpClient
         }
         
         public bool CreateLocationNotification(string notificationName, string description, string notificationType, 
-            string location, string activation, List<string> users)
+            string location, string activation, List<string> users, bool isPermanent)
         {
             return createNotification(notificationName, description, notificationType, "location", location, users, 
-                Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_LOCATION, activation);
+                Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_LOCATION, activation, isPermanent);
         }
 
         public bool CreateDynamicNotification(string notificationName, string description, string notificationType, 
@@ -257,7 +257,7 @@ namespace Notify.Azure.HttpClient
         }
 
         private bool createNotification(string notificationName, string description, string notificationType, 
-            string key, JToken value, List<string> users, string uri, string activation = null)
+            string key, JToken value, List<string> users, string uri, string activation = null, bool isPermanent = false)
         {
             string json;
             HttpResponseMessage response;
@@ -265,7 +265,7 @@ namespace Notify.Azure.HttpClient
 
             try
             {
-                json = createJsonOfNotificationRequest(notificationName, description, notificationType, key, value , users, activation);
+                json = createJsonOfNotificationRequest(notificationName, description, notificationType, key, value , users, activation, isPermanent);
                 r_Logger.LogInformation($"request:{Environment.NewLine}{json}");
 
                 response = postAsync(uri, createJsonStringContent(json)).Result;
@@ -284,7 +284,7 @@ namespace Notify.Azure.HttpClient
         }
 
         private string createJsonOfNotificationRequest(string notificationName, string description, string notificationType,
-            string key, JToken value, List<string> users, string activation)
+            string key, JToken value, List<string> users, string activation, bool isPermanent)
         {
             string userName = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
             dynamic request = new JObject
@@ -296,7 +296,8 @@ namespace Notify.Azure.HttpClient
                     {
                         { "name", notificationName?.Trim() },
                         { "type", notificationType },
-                        { key, value }
+                        { key, value },
+                        { "permanent", isPermanent }
                     }
                 },
                 { "users", JToken.FromObject(users) }

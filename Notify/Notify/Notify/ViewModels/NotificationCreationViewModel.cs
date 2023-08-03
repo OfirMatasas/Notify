@@ -86,6 +86,13 @@ namespace Notify.ViewModels
             get => m_SelectedDynamicOption;
             set => m_SelectedDynamicOption = value;
         }
+        
+        public bool m_IsPermanent;
+        public bool IsPermanent
+        {
+            get => m_IsPermanent;
+            set => m_IsPermanent = value;
+        }
 
         private List<Friend> m_Friends;
         public List<Friend> Friends 
@@ -152,7 +159,7 @@ namespace Notify.ViewModels
                         SelectedNotificationOption,
                         SelectedLocationOption,
                         SelectedActivationOption,
-                        selectedRecipients);
+                        selectedRecipients, IsPermanent);
                 }
                 else if (IsDynamicOptionSelected)
                 {
