@@ -38,7 +38,7 @@
                 Column="2"
                 ColumnDefinitions="auto, auto"
                 Margin="20,20,20,0"
-                RowDefinitions="auto, auto, auto, auto, auto, auto, auto, auto, auto">
+                RowDefinitions="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto">
                 <Label
                     FontAttributes="Bold"
                     FontSize="Medium"
@@ -54,6 +54,7 @@
                     Text="{Binding Name}"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
+
                 <Label
                     FontAttributes="Bold"
                     FontSize="Medium"
@@ -69,6 +70,7 @@
                     Text="{Binding Description}"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
+
                 <Label
                     FontAttributes="Bold"
                     FontSize="Medium"
@@ -85,6 +87,7 @@
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
 
+
                 <Label
                     FontAttributes="Bold"
                     FontSize="Medium"
@@ -100,6 +103,7 @@
                     Text="{Binding Creator}"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
+
                 <Label
                     FontAttributes="Bold"
                     FontSize="Medium"
@@ -115,6 +119,7 @@
                     Text="{Binding CreationDateTime}"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
+
                 <Label
                     FontAttributes="Bold"
                     FontSize="Medium"
@@ -130,6 +135,7 @@
                     Text="{Binding Type}"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
+
                 <Label
                     FontAttributes="Bold"
                     FontSize="Medium"
@@ -145,6 +151,7 @@
                     Text="{Binding TypeInfo}"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
+
                 <Label
                     FontAttributes="Bold"
                     FontSize="Medium"
@@ -162,18 +169,37 @@
                     Text="{Binding Activation}"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
+
                 <Label
                     FontAttributes="Bold"
                     FontSize="Medium"
                     Grid.Column="0"
                     Grid.Row="8"
-                    Text="Target user:"
+                    IsVisible="{Binding IsLocationType}"
+                    Text="Permanent:"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontSize="Medium"
                     Grid.Column="1"
                     Grid.Row="8"
+                    IsVisible="{Binding IsLocationType}"
+                    Text="{Binding Permanent}"
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
+
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="Medium"
+                    Grid.Column="0"
+                    Grid.Row="9"
+                    Text="Target user:"
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
+                <Label
+                    FontSize="Medium"
+                    Grid.Column="1"
+                    Grid.Row="9"
                     Text="{Binding Target}"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />

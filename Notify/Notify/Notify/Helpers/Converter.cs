@@ -47,6 +47,7 @@ namespace Notify.Azure.HttpClient
                 type: notificationType,
                 typeInfo: notificationTypeValue,
                 activation: activation,
+                permanent: notification.notification.permanent != null && (bool)notification.notification.permanent,
                 target: (string)notification.user);
         }
         
