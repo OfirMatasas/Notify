@@ -1,4 +1,5 @@
 ﻿using System;
+using Notify.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -10,12 +11,11 @@ namespace Notify.Views
         public ProfilePage()
         {
             InitializeComponent();
-            BindingContext = new ViewModels.ProfilePageViewModel();
+            BindingContext = new ProfilePageViewModel();
+            ((ProfilePageViewModel)BindingContext).LocationButtonCommand.CanExecuteChanged += (s, e) => profileCarouselView.IsVisible = true;
+            ((ProfilePageViewModel)BindingContext).BlueToothButtonCommand.CanExecuteChanged += (s, e) => profileCarouselView.IsVisible = true;
+            ((ProfilePageViewModel)BindingContext).WifiButtonCommand.CanExecuteChanged += (s, e) => profileCarouselView.IsVisible = true;
         }
 
-        private void TapGestureRecognizer_OnTapped(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

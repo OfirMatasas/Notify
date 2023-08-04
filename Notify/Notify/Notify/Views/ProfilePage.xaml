@@ -40,11 +40,7 @@
                     Aspect="AspectFill"
                     HorizontalOptions="FillAndExpand"
                     Source="{Binding ProfilePicture}"
-                    VerticalOptions="FillAndExpand">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding LoadProfilePictureCommand}" />
-                    </Image.GestureRecognizers>
-                </Image>
+                    VerticalOptions="FillAndExpand" />
             </Frame>
             <StackLayout HorizontalOptions="Center" Spacing="15">
                 <Label
@@ -58,8 +54,8 @@
                     Grid.Row="3"
                     HasShadow="True"
                     HeightRequest="70"
-                    Margin="0,10,0,0"
-                    Opacity="0.2"
+                    Margin="20,30,20,0"
+                    Opacity="0.8"
                     WidthRequest="300">
                     <Grid ColumnDefinitions="*,2,*,2,*" VerticalOptions="Center">
                         <ImageButton
@@ -92,8 +88,35 @@
                             Source="wifi_icon.png" />
                     </Grid>
                 </Frame>
-
+                <CarouselView
+                    BackgroundColor="transparent"
+                    HeightRequest="140"
+                    IsVisible="True"
+                    ItemsSource="{Binding ScrollViewContent}"
+                    Margin="20,30,20,0"
+                    Opacity="0.8"
+                    x:Name="profileCarouselView">
+                    <CarouselView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame
+                                BackgroundColor="#EEEEEE"
+                                CornerRadius="30"
+                                HeightRequest="{OnPlatform Android=120,
+                                                           iOS=140}"
+                                Padding="0">
+                                <StackLayout>
+                                    <Label
+                                        FontSize="Large"
+                                        HorizontalOptions="Center"
+                                        Text="{Binding .}"
+                                        TextColor="#393E46" />
+                                </StackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CarouselView.ItemTemplate>
+                </CarouselView>
             </StackLayout>
         </StackLayout>
     </Grid>
 </ContentPage>
+

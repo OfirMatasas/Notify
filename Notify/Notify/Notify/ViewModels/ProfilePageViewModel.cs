@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -17,11 +18,20 @@ namespace Notify.ViewModels
         public Command LocationButtonCommand { get; set; }
         public Command BlueToothButtonCommand { get; set; }
         public Command WifiButtonCommand { get; set; }
-        public Command LoadProfilePictureCommand { get; set; }
+        //public Command LoadProfilePictureCommand { get; set; }
 
         private string destinationsJson;
         private List<Destination> Destinations { get; set; }
-
+        private ObservableCollection<string> _scrollViewContent;
+        public ObservableCollection<string> ScrollViewContent
+        {
+            get => _scrollViewContent;
+            set
+            {
+                _scrollViewContent = value;
+                OnPropertyChanged(nameof(ScrollViewContent));
+            }
+        }        
         public event PropertyChangedEventHandler PropertyChanged;
         
         private string m_UserName;
@@ -42,25 +52,27 @@ namespace Notify.ViewModels
             LocationButtonCommand = new Command(onLocationButtonPressed);
             BlueToothButtonCommand = new Command(onBlueToothButtonPressed);
             WifiButtonCommand = new Command(onWifiButtonPressed);
-            LoadProfilePictureCommand = new Command(onLoadProfilePicture);
+            //LoadProfilePictureCommand = new Command(onLoadProfilePicture);
+            
+            ScrollViewContent = new ObservableCollection<string>();
             
             destinationsJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, String.Empty);
             Destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationsJson);
         }
 
-        private async void onLoadProfilePicture()
-        {
-            Debug.WriteLine("Load profile picture");
-            string action = await App.Current.MainPage.DisplayActionSheet("Profile Picture", "Cancel", null, "Upload New Picture", "Clear picture");
-            if (action == "Upload new picture")
-            {
-                uploadNewProfilePicture();
-            }
-            else if (action == "Clear picture")
-            {
-                clearProfilePicture();
-            }
-        }
+        // private async void onLoadProfilePicture()
+        // {
+        //     Debug.WriteLine("Load profile picture");
+        //     string action = await App.Current.MainPage.DisplayActionSheet("Profile Picture", "Cancel", null, "Upload New Picture", "Clear picture");
+        //     if (action == "Upload new picture")
+        //     {
+        //         uploadNewProfilePicture();
+        //     }
+        //     else if (action == "Clear picture")
+        //     {
+        //         clearProfilePicture();
+        //     }
+        // }
 
         private void uploadNewProfilePicture()
         {
@@ -72,25 +84,30 @@ namespace Notify.ViewModels
             throw new NotImplementedException();
         }
 
-        private void onWifiButtonPressed()
+        private void onLocationButtonPressed()
         {
-            App.Current.MainPage.DisplayAlert("Wifi Network", $"{Destinations.First().SSID}", "OK");
+            ScrollViewContent.Clear();
+            IEnumerable<string> destinationNames = Destinations.Select(d => d.Name);
+            foreach (var name in destinationNames)
+            {
+                ScrollViewContent.Add(name);
+                Debug.WriteLine("Added " + name + " to ScrollViewContent");
+            }
+            OnPropertyChanged(nameof(ScrollViewContent));
         }
 
         private void onBlueToothButtonPressed()
         {
-            App.Current.MainPage.DisplayAlert("Bluetooth Device", $"{Destinations.First().Bluetooth}", "OK");
+            ScrollViewContent.Clear();
+            ScrollViewContent.Add("Bluetooth Data 1");
+            ScrollViewContent.Add("Bluetooth Data 2");
         }
 
-        private async void onLocationButtonPressed()
+        private void onWifiButtonPressed()
         {
-            IEnumerable<string> destinationNames;
-            string message;
-
-            destinationNames = Destinations.Select(d => d.Name);
-            message = string.Join(", ", destinationNames);
-
-            await App.Current.MainPage.DisplayAlert("Destinations", message, "OK");
+            ScrollViewContent.Clear();
+            ScrollViewContent.Add("Wifi Data 1");
+            ScrollViewContent.Add("Wifi Data 2");
         }
         
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
