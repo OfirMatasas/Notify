@@ -22,8 +22,8 @@ namespace Notify.ViewModels
 
         private string destinationsJson;
         private List<Destination> Destinations { get; set; }
-        private ObservableCollection<string> _scrollViewContent;
-        public ObservableCollection<string> ScrollViewContent
+        private ObservableCollection<Destination> _scrollViewContent;
+        public ObservableCollection<Destination> ScrollViewContent
         {
             get => _scrollViewContent;
             set
@@ -54,7 +54,7 @@ namespace Notify.ViewModels
             WifiButtonCommand = new Command(onWifiButtonPressed);
             //LoadProfilePictureCommand = new Command(onLoadProfilePicture);
             
-            ScrollViewContent = new ObservableCollection<string>();
+            ScrollViewContent = new ObservableCollection<Destination>();
             
             destinationsJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, String.Empty);
             Destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationsJson);
@@ -87,27 +87,52 @@ namespace Notify.ViewModels
         private void onLocationButtonPressed()
         {
             ScrollViewContent.Clear();
-            IEnumerable<string> destinationNames = Destinations.Select(d => d.Name);
-            foreach (var name in destinationNames)
+            
+            foreach (var destination in Destinations)
             {
-                ScrollViewContent.Add(name);
-                Debug.WriteLine("Added " + name + " to ScrollViewContent");
+                ScrollViewContent.Add(new Destination(destination.Name, destination.IsDynamic)
+                {
+                    LastUpdatedLocation = destination.LastUpdatedLocation,
+                });
             }
+
             OnPropertyChanged(nameof(ScrollViewContent));
         }
 
         private void onBlueToothButtonPressed()
         {
             ScrollViewContent.Clear();
-            ScrollViewContent.Add("Bluetooth Data 1");
-            ScrollViewContent.Add("Bluetooth Data 2");
+            
+            foreach (var destination in Destinations)
+            {
+                if (!string.IsNullOrWhiteSpace(destination.Bluetooth))
+                {
+                    ScrollViewContent.Add(new Destination(destination.Name)
+                    {
+                        Bluetooth = destination.Bluetooth
+                    });
+                }
+            }
+            
+            OnPropertyChanged(nameof(ScrollViewContent));
         }
 
         private void onWifiButtonPressed()
         {
             ScrollViewContent.Clear();
-            ScrollViewContent.Add("Wifi Data 1");
-            ScrollViewContent.Add("Wifi Data 2");
+            
+            foreach (var destination in Destinations)
+            {
+                if (!string.IsNullOrWhiteSpace(destination.SSID))
+                {
+                    ScrollViewContent.Add(new Destination(destination.Name)
+                    {
+                        SSID = destination.SSID
+                    });
+                }
+            }
+            
+            OnPropertyChanged(nameof(ScrollViewContent));
         }
         
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)

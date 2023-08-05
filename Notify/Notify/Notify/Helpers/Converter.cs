@@ -1,10 +1,28 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Notify.Core;
-using Notify.Helpers;
+using Xamarin.Forms;
 
-namespace Notify.Azure.HttpClient
+namespace Notify.Helpers
 {
+    public class NullOrEmptyToBoolConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is string strValue)
+            {
+                return !string.IsNullOrEmpty(strValue);
+            }
+            return false;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    
     public static class Converter
     {
         public static Notification ToNotification(dynamic notification)

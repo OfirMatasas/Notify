@@ -3,7 +3,13 @@
     NavigationPage.HasNavigationBar="True"
     x:Class="Notify.Views.ProfilePage"
     xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:converters="clr-namespace:Notify.Helpers"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:NullOrEmptyToBoolConverter x:Key="NullOrEmptyToBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <Grid RowDefinitions="*, 2*, Auto">
         <BoxView Grid.RowSpan="3">
             <BoxView.Background>
@@ -106,15 +112,34 @@
                                 Padding="0">
                                 <StackLayout>
                                     <Label
-                                        FontSize="Large"
+                                        FontSize="Medium"
                                         HorizontalOptions="Center"
-                                        Text="{Binding .}"
+                                        Text="{Binding Name, StringFormat='Name: {0}'}"
+                                        TextColor="#393E46" />
+                                    <Label
+                                        FontSize="Medium"
+                                        HorizontalOptions="Center"
+                                        IsVisible="{Binding SSID, Converter={StaticResource NullOrEmptyToBoolConverter}}"
+                                        Text="{Binding SSID, StringFormat='SSID: {0}'}"
+                                        TextColor="#393E46" />
+                                    <Label
+                                        FontSize="Medium"
+                                        HorizontalOptions="Center"
+                                        IsVisible="{Binding Bluetooth, Converter={StaticResource NullOrEmptyToBoolConverter}}"
+                                        Text="{Binding Bluetooth, StringFormat='Bluetooth: {0}'}"
+                                        TextColor="#393E46" />
+                                    <Label
+                                        FontSize="Medium"
+                                        HorizontalOptions="Center"
+                                        IsVisible="{Binding IsDynamic}"
+                                        Text="{Binding LastUpdatedLocation, StringFormat='Location: {0}'}"
                                         TextColor="#393E46" />
                                 </StackLayout>
                             </Frame>
                         </DataTemplate>
                     </CarouselView.ItemTemplate>
                 </CarouselView>
+
             </StackLayout>
         </StackLayout>
     </Grid>
