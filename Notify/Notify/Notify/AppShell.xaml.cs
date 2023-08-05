@@ -222,8 +222,6 @@ namespace Notify
                     }
                     else
                     {
-                        r_Logger.LogInformation($"Updating notification {notification.Name} status to {Constants.NOTIFICATION_STATUS_ARRIVED}");
-                        notification.Status = Constants.NOTIFICATION_STATUS_ARRIVED;
                         arrivedNotifications.Add(notification);
                     }
                 }

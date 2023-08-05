@@ -159,7 +159,8 @@ namespace Notify.ViewModels
                         SelectedNotificationOption,
                         SelectedLocationOption,
                         SelectedActivationOption,
-                        selectedRecipients, IsPermanent);
+                        selectedRecipients,
+                        IsPermanent);
                 }
                 else if (IsDynamicOptionSelected)
                 {
