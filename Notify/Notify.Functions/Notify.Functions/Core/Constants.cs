@@ -11,7 +11,7 @@ namespace Notify.Functions.Core
         public static readonly string COLLECTION_GROUP = "Group";
         public static readonly string ENCRYPT_OPERATION = "encrypt";
         public static readonly string DECRYPT_OPERATION = "decrypt";
-        public static readonly string AZURE_BLOB_CONTAINER_NAME = "notifyblobstorage";
+        public static readonly string AZURE_BLOB_CONTAINER_NAME = "notifycontainer";
 
         #region AzureSecretsAndKeys
         
