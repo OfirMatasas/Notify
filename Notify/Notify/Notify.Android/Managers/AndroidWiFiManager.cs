@@ -68,6 +68,8 @@ namespace Notify.Droid.Managers
             string notificationsJson, ssid, destinationJson;
             List<Notification> notifications;
             List<Destination> destinations;
+            List<Notification> sentNotifications = new List<Notification>();
+            List<Notification> permanentNotifications = new List<Notification>();
             
             notificationsJson = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
             destinationJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, string.Empty);
@@ -86,7 +88,9 @@ namespace Notify.Droid.Managers
                 }
                 else
                 {
-                    sendNotificationsForLeaveDestinations(notifications, destinations);
+                    sendNotificationsForLeaveDestinations(notifications, destinations, ref sentNotifications, ref permanentNotifications);
+                    Utils.updateNotificationsStatus(sentNotifications, Constants.NOTIFICATION_STATUS_EXPIRED);
+                    Utils.updateNotificationsStatus(permanentNotifications, Constants.NOTIFICATION_STATUS_ACTIVE);
                 }
             }
         }
@@ -110,16 +114,22 @@ namespace Notify.Droid.Managers
                 List<Notification> locationNotifications = notifications.FindAll(notification => notification.Type.Equals(NotificationType.Location));
                 List<Destination> sameSSIDDestinations = destinations.FindAll(destination => ssid.Equals(destination.SSID));
                 List<Destination> differentSSIDDestinations = destinations.Except(sameSSIDDestinations).ToList();
+                List<Notification> sentNotifications = new List<Notification>();
+                List<Notification> arrivedNotifications = new List<Notification>();
+                List<Notification> permanentNotifications = new List<Notification>();
 
-                sendNotificationsForArrivalDestinations(locationNotifications, sameSSIDDestinations);
-                sendNotificationsForLeaveDestinations(locationNotifications, differentSSIDDestinations);
+                sendNotificationsForArrivalDestinations(locationNotifications, sameSSIDDestinations, ref sentNotifications, ref arrivedNotifications);
+                sendNotificationsForLeaveDestinations(locationNotifications, differentSSIDDestinations, ref sentNotifications, ref permanentNotifications);
 
                 r_Logger.LogInformation("Finished sending Wi-Fi notifications");
-                Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
+                
+                Utils.updateNotificationsStatus(sentNotifications, Constants.NOTIFICATION_STATUS_EXPIRED);
+                Utils.updateNotificationsStatus(arrivedNotifications, Constants.NOTIFICATION_STATUS_ARRIVED);
+                Utils.updateNotificationsStatus(permanentNotifications, Constants.NOTIFICATION_STATUS_ACTIVE);
             }
         }
         
-        private static void sendNotificationsForArrivalDestinations(List<Notification> notifications, List<Destination> destinations)
+        private static void sendNotificationsForArrivalDestinations(List<Notification> notifications, List<Destination> destinations, ref List<Notification> sentNotifications, ref List<Notification> arrivedNotifications)
         {
             bool isDestinationNotification, isArrivalNotification, isActive;
 
@@ -139,10 +149,19 @@ namespace Notify.Droid.Managers
                         {
                             r_Logger.LogInformation($"Sending notification for arrival notification: {notification.Name}");
                             DependencyService.Get<INotificationManager>().SendNotification(notification);
+                            
+                            if (notification.IsPermanent)
+                            {
+                                arrivedNotifications.Add(notification);
+                            }
+                            else
+                            {
+                                sentNotifications.Add(notification);
+                            }
                         }
                         else
                         {
-                            notification.Status = Constants.NOTIFICATION_STATUS_ARRIVED;
+                            arrivedNotifications.Add(notification);
                         }
                     }
                 }
@@ -151,7 +170,7 @@ namespace Notify.Droid.Managers
             r_Logger.LogInformation("Finished sending Wi-Fi notifications for arrival destinations");
         }
 
-        private static void sendNotificationsForLeaveDestinations(List<Notification> notifications, List<Destination> destinations)
+        private static void sendNotificationsForLeaveDestinations(List<Notification> notifications, List<Destination> destinations, ref List<Notification> sentNotifications, ref List<Notification> permanentNotifications)
         {
             bool isDestinationNotification, isLeaveNotification, isArrived;
 
@@ -165,10 +184,26 @@ namespace Notify.Droid.Managers
                     isLeaveNotification = notification.Activation.Equals(Constants.NOTIFICATION_ACTIVATION_LEAVE);
                     isArrived = notification.Status.Equals(Constants.NOTIFICATION_STATUS_ARRIVED);
 
-                    if (isDestinationNotification && isLeaveNotification && isArrived)
+                    if (isDestinationNotification && isArrived)
                     {
-                        r_Logger.LogInformation($"Sending notification for leave notification: {notification.Name}");
-                        DependencyService.Get<INotificationManager>().SendNotification(notification);
+                        if (isLeaveNotification)
+                        {
+                            r_Logger.LogInformation($"Sending notification for leave notification: {notification.Name}");
+                            DependencyService.Get<INotificationManager>().SendNotification(notification);
+                            
+                            if(notification.IsPermanent)
+                            {
+                                permanentNotifications.Add(notification);
+                            }
+                            else
+                            {
+                                sentNotifications.Add(notification);
+                            }
+                        }
+                        else if(notification.IsPermanent)
+                        {
+                            permanentNotifications.Add(notification);
+                        }
                     }
                 }
             }

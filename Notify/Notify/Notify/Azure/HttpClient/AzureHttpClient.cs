@@ -11,7 +11,9 @@ using Newtonsoft.Json.Linq;
 using Notify.Core;
 using Notify.Helpers;
 using Notify.Services;
+using Notify.WiFi;
 using Xamarin.Essentials;
+using Xamarin.Forms;
 using Location = Notify.Core.Location;
 
 namespace Notify.Azure.HttpClient
@@ -395,6 +397,7 @@ namespace Notify.Azure.HttpClient
                 converter: Converter.ToNotification);
 
             createNewDynamicDestinations(notifications);
+            DependencyService.Get<IWiFiManager>().SendNotifications(null, null);
 
             return notifications;
         }
