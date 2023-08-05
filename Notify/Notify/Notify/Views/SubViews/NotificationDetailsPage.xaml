@@ -184,7 +184,7 @@
                     Grid.Column="1"
                     Grid.Row="8"
                     IsVisible="{Binding IsLocationType}"
-                    Text="{Binding Permanent}"
+                    Text="{Binding IsPermanent}"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
 

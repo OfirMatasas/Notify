@@ -19,7 +19,7 @@ namespace Notify.ViewModels
         public string Type { get; set; }
         public object TypeInfo { get; set; }
         public string Activation { get; set; }
-        public bool Permanent { get; set; }
+        public bool IsPermanent { get; set; }
         public DateTime CreationDateTime { get; set; }
 
         private bool m_IsActivationType;
@@ -68,7 +68,7 @@ namespace Notify.ViewModels
             TypeInfo = notification.TypeInfo;
             Activation = notification.Activation;
             IsActivationType = Activation != string.Empty;
-            Permanent = notification.Permanent;
+            IsPermanent = notification.IsPermanent;
             IsLocationType = notification.Type == NotificationType.Location;
             CreationDateTime = notification.CreationDateTime;
         }
