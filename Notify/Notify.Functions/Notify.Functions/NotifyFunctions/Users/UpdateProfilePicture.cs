@@ -75,12 +75,13 @@ namespace Notify.Functions.NotifyFunctions.Users
         {
             UpdateDefinitionBuilder<BsonDocument> updateBuilder = Builders<BsonDocument>.Update;
 
-            if (data.profilePictureUrl != null)
+            if (string.IsNullOrEmpty(data.profilePictureUrl))
             {
-                return updateBuilder.Set("profilePicture", Convert.ToString(data.profilePictureUrl));
+                data.profilePictureUrl = Constants.BLOB_DEFAULT_PROFILE_IMAGE;
+                
             }
 
-            return null;
+            return updateBuilder.Set("profilePicture", Convert.ToString(data.profilePictureUrl));
         }
     }
 }

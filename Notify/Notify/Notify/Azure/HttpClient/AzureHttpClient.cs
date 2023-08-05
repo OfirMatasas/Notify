@@ -672,7 +672,7 @@ namespace Notify.Azure.HttpClient
             dynamic userData = new JObject
             {
                 { "userName", userName },
-                { "imageUrl", imageUrl }
+                { "profilePicture", imageUrl }
             };
             
             HttpResponseMessage response;

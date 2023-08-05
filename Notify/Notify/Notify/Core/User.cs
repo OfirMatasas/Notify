@@ -13,7 +13,7 @@ namespace Notify.Core
         private string m_UserName;
         private string m_Telephone;
         private bool m_IsSelected;
-        private ImageSource m_ProfilePicture;
+        private string m_ProfilePicture;
 
         #endregion
 
@@ -84,7 +84,7 @@ namespace Notify.Core
             }
         }
 
-        public ImageSource ProfilePicture
+        public string ProfilePicture
         {
             get => m_ProfilePicture;
             set

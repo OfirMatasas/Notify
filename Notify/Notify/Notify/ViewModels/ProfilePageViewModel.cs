@@ -56,10 +56,22 @@ namespace Notify.ViewModels
             }
         }
         
+        public ImageSource ProfilePicture
+        {
+            get => m_ProfilePicture;
+            set
+            {
+                if (m_ProfilePicture != value)
+                {
+                    m_ProfilePicture = value;
+                    OnPropertyChanged(nameof(ProfilePicture));
+                }
+            }
+        }
+        
         public ProfilePageViewModel()
         {
             UserName = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
-            currentUser = AzureHttpClient.Instance.GetUserByUserNameAsync(UserName);
             
             LocationButtonCommand = new Command(onLocationButtonPressed);
             BlueToothButtonCommand = new Command(onBlueToothButtonPressed);
@@ -82,7 +94,7 @@ namespace Notify.ViewModels
                     uploadNewProfilePicture();
                     break;
                 case "Clear picture":
-                    clearProfilePicture();
+                    await clearProfilePicture();
                     break;
             }
         }
@@ -101,28 +113,34 @@ namespace Notify.ViewModels
                     PickerTitle = "Pick an image"
                 });
 
-                if (fileResult != null)
+
+                if (fileResult == null)
                 {
-                    stream = await fileResult.OpenReadAsync();
-                    currentUser.Result.ProfilePicture = ImageSource.FromStream(() => stream);
+                    r_Logger.LogInformation("No file was picked.");
+                    return;
+                }
+                
+                stream = await fileResult.OpenReadAsync();
+                
+                using (var memoryStream = new MemoryStream())
+                {
+                    await stream.CopyToAsync(memoryStream);
+                    var imageBytes = memoryStream.ToArray();
+                    var base64String = Convert.ToBase64String(imageBytes);
 
-                    using (var memoryStream = new MemoryStream())
+                    imageUrl = await AzureHttpClient.Instance.UploadProfilePictureToBLOB(base64String);
+
+                    if (!string.IsNullOrEmpty(imageUrl))
                     {
-                        await stream.CopyToAsync(memoryStream);
-                        var imageBytes = memoryStream.ToArray();
-                        var base64String = Convert.ToBase64String(imageBytes);
-
-                        imageUrl = await AzureHttpClient.Instance.UploadProfilePictureToBLOB(base64String);
-
-                        if (!string.IsNullOrEmpty(imageUrl))
-                        {
-                            r_Logger.LogInformation("Profile picture uploaded successfully");
-                            await AzureHttpClient.Instance.UpdateUserProfilePictureAsync(currentUser.Result.Name, imageUrl);
-                        }
-                        else
-                        {
-                            r_Logger.LogError("Profile picture upload failed");
-                        }
+                        r_Logger.LogInformation("Profile picture uploaded successfully");
+                        await AzureHttpClient.Instance.UpdateUserProfilePictureAsync(UserName, imageUrl);
+                        
+                        currentUser = AzureHttpClient.Instance.GetUserByUserNameAsync(UserName);
+                        ProfilePicture = ImageSource.FromUri(new Uri(currentUser.Result.ProfilePicture));
+                    }
+                    else
+                    {
+                        r_Logger.LogError("Profile picture upload failed");
                     }
                 }
             }
@@ -132,9 +150,11 @@ namespace Notify.ViewModels
             }
         }
         
-        private void clearProfilePicture()
+        private async Task clearProfilePicture()
         {
-            currentUser.Result.ProfilePicture = string.Empty;
+            await AzureHttpClient.Instance.UpdateUserProfilePictureAsync(UserName, string.Empty);
+            currentUser = AzureHttpClient.Instance.GetUserByUserNameAsync(UserName);
+            ProfilePicture = ImageSource.FromUri(new Uri(currentUser.Result.ProfilePicture));
         }
 
         private void onLocationButtonPressed()
