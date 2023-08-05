@@ -29,11 +29,11 @@ namespace Notify.Functions.NotifyFunctions.Users
             List<BsonDocument> userDocuments;
             ObjectResult result;
 
-            if (!ValidationUtils.ValidateUserName(req, log))
+            if (!ValidationUtils.ValidateUsername(req, log))
             {
                 result = new BadRequestObjectResult("Missing username parameter in query string");
             }
-            else if (!await ValidationUtils.DoesUsernameExist(username))
+            else if (!await ValidationUtils.CheckIfUserExistsAsync(username))
             {
                 result = new BadRequestObjectResult("User does not exist");
             }

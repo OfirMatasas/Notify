@@ -26,7 +26,7 @@ namespace Notify.Functions.NotifyFunctions.Notification
             string username, notifications;
             ObjectResult result;
 
-            if (!ValidationUtils.ValidateUserName(req, log))
+            if (!ValidationUtils.ValidateUsername(req, log))
             {
                 result = new BadRequestObjectResult("Invalid username provided");
             }

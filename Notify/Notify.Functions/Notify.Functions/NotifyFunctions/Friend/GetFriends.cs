@@ -13,7 +13,7 @@ using MongoDB.Driver;
 using Notify.Functions.HTTPClients;
 using Constants = Notify.Functions.Core.Constants;
 
-namespace Notify.Functions.NotifyFunctions.Friends
+namespace Notify.Functions.NotifyFunctions.Friend
 {
     public static class GetFriends
     {

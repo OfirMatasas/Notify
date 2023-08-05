@@ -28,7 +28,7 @@ namespace Notify.Functions.NotifyFunctions.Destination
 
             try
             {
-                if (!ValidationUtils.ValidateUserName(req, log))
+                if (!ValidationUtils.ValidateUsername(req, log))
                 {
                     result = new BadRequestObjectResult("Invalid username provided");
                 }

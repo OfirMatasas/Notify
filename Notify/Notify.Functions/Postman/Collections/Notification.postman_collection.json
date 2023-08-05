@@ -8,13 +8,48 @@
 	},
 	"item": [
 		{
+			"name": "Get notifications",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"creator\": \"Ofir\",\n  \"creation_timestamp\": 45235235,\n  \"notification\": {\n    \"name\": \"Testing\",\n    \"type\": \"Location\",\n    \"location\": \"Home\"\n  },\n  \"users\": [\n    \"Dekel\",\n    \"Lin\"\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HTTP}}/notification?username=matasas",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"notification"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "matasas"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Create location notification",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"creator\":\"Ofir\",\n    \"description\":\"null\",\n    \"notification\":{\n        \"name\":\"Testing\",\n        \"type\":\"Location\",\n        \"location\":\"Home\"\n        },\n    \"users\":[\"linkimos\"]\n}\n",
+					"raw": "{\n    \"creator\":\"MaTaSaS\",\n    \"description\":\"Arrival destination\",\n    \"notification\":{\n        \"name\":\"Location Arrival Notification\",\n        \"type\":\"Location\",\n        \"location\":\"Home\",\n        \"activation\":\"Arrival\"\n        },\n    \"users\":[\"MaTaSaS\"]\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -41,7 +76,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"creator\":\"Ofir\",\n    \"description\": \"This is a time notification\",\n    \"notification\":{\n        \"name\":\"Timer Notification\",\n        \"type\":\"Time\",\n        \"timestamp\":1683999900\n        },\n    \"users\":[\"linkimos\"]\n}\n",
+					"raw": "{\n    \"creator\":\"MaTaSaS\",\n    \"description\": \"This is a time notification\",\n    \"notification\":{\n        \"name\":\"Timer Notification\",\n        \"type\":\"Time\",\n        \"timestamp\":1683999900\n        },\n    \"users\":[\"MaTaSaS\"]\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -62,16 +97,13 @@
 			"response": []
 		},
 		{
-			"name": "Get notifications",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
+			"name": "Dynamic notification",
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"creator\": \"Ofir\",\n  \"creation_timestamp\": 45235235,\n  \"notification\": {\n    \"name\": \"Testing\",\n    \"type\": \"Location\",\n    \"location\": \"Home\"\n  },\n  \"users\": [\n    \"Dekel\",\n    \"Lin\"\n  ]\n}",
+					"raw": "{\n    \"creator\":\"linkimos\",\n    \"description\":\"This is a test\",\n    \"notification\":\n    {\n        \"name\":\"Dynamic testing\",\n        \"type\":\"Dynamic\",\n        \"location\":\"Supermarket\"\n    },\n    \"users\":[\"linkimos\"]\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -79,18 +111,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{HTTP}}/notification?username=Dekelr",
+					"raw": "{{HTTP}}/notification/dynamic",
 					"host": [
 						"{{HTTP}}"
 					],
 					"path": [
-						"notification"
-					],
-					"query": [
-						{
-							"key": "username",
-							"value": "Dekelr"
-						}
+						"notification",
+						"dynamic"
 					]
 				}
 			},
@@ -125,13 +152,13 @@
 			"response": []
 		},
 		{
-			"name": "Dynamic notification",
+			"name": "Delete notification",
 			"request": {
-				"method": "POST",
+				"method": "DELETE",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"creator\":\"linkimos\",\n    \"description\":\"This is a test\",\n    \"notification\":\n    {\n        \"name\":\"Dynamic testing\",\n        \"type\":\"Dynamic\",\n        \"location\":\"Supermarket\"\n    },\n    \"users\":[\"linkimos\"]\n}\n",
+					"raw": "{\n    \"user\": \"MaTaSaS\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -139,13 +166,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{HTTP}}/notification/dynamic",
+					"raw": "{{HTTP}}/notification",
 					"host": [
 						"{{HTTP}}"
 					],
 					"path": [
-						"notification",
-						"dynamic"
+						"notification"
 					]
 				}
 			},
