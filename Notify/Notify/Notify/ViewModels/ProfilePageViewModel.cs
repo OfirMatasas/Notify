@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Notify.Azure.HttpClient;
 using Notify.Core;
@@ -24,6 +25,7 @@ namespace Notify.ViewModels
         private string m_UserName;
         private ImageSource m_ProfilePicture;
         private ObservableCollection<Destination> _scrollViewContent;
+        private Task<User> currentUser;
         
         public Command LocationButtonCommand { get; set; }
         public Command BlueToothButtonCommand { get; set; }
@@ -54,22 +56,10 @@ namespace Notify.ViewModels
             }
         }
         
-        public ImageSource ProfilePicture
-        {
-            get => m_ProfilePicture ?? ImageSource.FromFile("blank_profile_picture.png");
-            set
-            {
-                if (m_ProfilePicture != value)
-                {
-                    m_ProfilePicture = value;
-                    OnPropertyChanged(nameof(ProfilePicture));
-                }
-            }
-        }
-        
         public ProfilePageViewModel()
         {
             UserName = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
+            currentUser = AzureHttpClient.Instance.GetUserByUserNameAsync(UserName);
             
             LocationButtonCommand = new Command(onLocationButtonPressed);
             BlueToothButtonCommand = new Command(onBlueToothButtonPressed);
@@ -84,24 +74,24 @@ namespace Notify.ViewModels
 
         private async void onLoadProfilePicture()
         {
-            r_Logger.LogInformation("load profile picture pressed");
             string action = await App.Current.MainPage.DisplayActionSheet("Profile Picture", "Cancel", null, "Upload new picture", "Clear picture");
-            if (action == "Upload new picture")
+            
+            switch (action)
             {
-                uploadNewProfilePicture();
-            }
-            else if (action == "Clear picture")
-            {
-                clearProfilePicture();
+                case "Upload new picture":
+                    uploadNewProfilePicture();
+                    break;
+                case "Clear picture":
+                    clearProfilePicture();
+                    break;
             }
         }
 
         private async void uploadNewProfilePicture()
         {
-            r_Logger.LogInformation("upload new profile picture pressed");
             Stream stream;
             FileResult fileResult;
-            bool successfulUpload;
+            string imageUrl;
                 
             try
             {
@@ -114,7 +104,7 @@ namespace Notify.ViewModels
                 if (fileResult != null)
                 {
                     stream = await fileResult.OpenReadAsync();
-                    ProfilePicture = ImageSource.FromStream(() => stream);
+                    currentUser.Result.ProfilePicture = ImageSource.FromStream(() => stream);
 
                     using (var memoryStream = new MemoryStream())
                     {
@@ -122,11 +112,12 @@ namespace Notify.ViewModels
                         var imageBytes = memoryStream.ToArray();
                         var base64String = Convert.ToBase64String(imageBytes);
 
-                        successfulUpload = AzureHttpClient.Instance.UploadProfilePictureToBLOB(base64String);
+                        imageUrl = await AzureHttpClient.Instance.UploadProfilePictureToBLOB(base64String);
 
-                        if (successfulUpload)
+                        if (!string.IsNullOrEmpty(imageUrl))
                         {
                             r_Logger.LogInformation("Profile picture uploaded successfully");
+                            await AzureHttpClient.Instance.UpdateUserProfilePictureAsync(currentUser.Result.Name, imageUrl);
                         }
                         else
                         {
@@ -143,8 +134,7 @@ namespace Notify.ViewModels
         
         private void clearProfilePicture()
         {
-            r_Logger.LogInformation("clear profile picture pressed");
-            ProfilePicture = ImageSource.FromFile("blank_profile_picture.png");
+            currentUser.Result.ProfilePicture = string.Empty;
         }
 
         private void onLocationButtonPressed()

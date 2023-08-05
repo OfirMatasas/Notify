@@ -16,7 +16,7 @@ namespace Notify.ViewModels
 
         public Command BackCommand { get; set; }
         
-        public FriendDetailsPageViewModel(Friend selectedFriend)
+        public FriendDetailsPageViewModel(User selectedFriend)
         {
             BackCommand = new Command(onBackButtonClicked);
             Task.Run(() => setSelectedFriendDetails(selectedFriend));
@@ -27,12 +27,12 @@ namespace Notify.ViewModels
             await Shell.Current.Navigation.PopAsync();
         }
 
-        private void setSelectedFriendDetails(Friend friend)
+        private void setSelectedFriendDetails(User friend)
         {
             Name = friend.Name;
             UserName = friend.UserName;
             Telephone = friend.Telephone;
-            ProfileImage = friend.ProfileImage;
+            ProfileImage = friend.ProfilePicture;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

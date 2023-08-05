@@ -69,9 +69,9 @@ namespace Notify.Helpers
                 target: (string)notification.user);
         }
         
-        public static Friend ToFriend(dynamic friend)
+        public static User ToFriend(dynamic friend)
         {
-            return new Friend(
+            return new User(
                 name: (string)friend.name, 
                 userName: (string)friend.userName, 
                 telephone: (string)friend.telephone);

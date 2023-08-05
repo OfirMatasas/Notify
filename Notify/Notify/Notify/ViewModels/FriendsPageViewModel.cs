@@ -30,8 +30,8 @@ namespace Notify.ViewModels
 
         #region Members
 
-        public List<Friend> Friends { get; set; }
-        public Friend SelectedFriend { get; set; }
+        public List<User> Friends { get; set; }
+        public User SelectedFriend { get; set; }
 
         #endregion
         
@@ -59,7 +59,7 @@ namespace Notify.ViewModels
                 if (!friendsJson.Equals(string.Empty))
                 {
                     r_Logger.LogDebug("Friends found in preferences");
-                    Friends = JsonConvert.DeserializeObject<List<Friend>>(friendsJson);
+                    Friends = JsonConvert.DeserializeObject<List<User>>(friendsJson);
                 }
             }
             catch (Exception ex)

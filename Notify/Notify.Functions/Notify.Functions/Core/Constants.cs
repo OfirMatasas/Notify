@@ -1,3 +1,5 @@
+using Twilio.Rest.Api.V2010.Account.AvailablePhoneNumberCountry;
+
 namespace Notify.Functions.Core
 {
     public static class Constants
@@ -12,6 +14,7 @@ namespace Notify.Functions.Core
         public static readonly string ENCRYPT_OPERATION = "encrypt";
         public static readonly string DECRYPT_OPERATION = "decrypt";
         public static readonly string AZURE_BLOB_CONTAINER_NAME = "notifycontainer";
+        public static readonly string BLOB_DEFAULT_PROFILE_IMAGE = "https://notifyblobstorage.blob.core.windows.net/notifycontainer/4199b89b-48e4-477c-9496-50c340ccd882.jpg";
 
         #region AzureSecretsAndKeys
         

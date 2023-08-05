@@ -431,7 +431,7 @@ namespace Notify.Azure.HttpClient
             Preferences.Set(Constants.PREFERENCES_DESTINATIONS, JsonConvert.SerializeObject(destinations));
         }
 
-        public async Task<List<Friend>> GetFriends()
+        public async Task<List<User>> GetFriends()
         {
             return await GetData(
                 endpoint: Constants.AZURE_FUNCTIONS_PATTERN_FRIEND, 
@@ -545,7 +545,7 @@ namespace Notify.Azure.HttpClient
             return suggestions;
         }
 
-        public async Task<List<Friend>> GetNotFriendsUsers()
+        public async Task<List<User>> GetNotFriendsUsers()
         {
             return await GetData(
                 endpoint: Constants.AZURE_FUNCTIONS_PATTERN_USERS_NOT_FRIENDS, 
@@ -633,12 +633,12 @@ namespace Notify.Azure.HttpClient
             r_Logger.LogInformation($"Friend request from {requester} to {userName} was accepted");
         }
         
-        public bool UploadProfilePictureToBLOB(string base64Image)
+        public async Task<string> UploadProfilePictureToBLOB(string base64Image)
         {
             dynamic data = new JObject();
             string json;
             HttpResponseMessage response;
-            bool isSuccess;
+            string imageUrl = null;
 
             try
             {
@@ -647,22 +647,80 @@ namespace Notify.Azure.HttpClient
                 json = JsonConvert.SerializeObject(data);
                 r_Logger.LogInformation($"request:{Environment.NewLine}{data}");
 
-                response = postAsync(
+                response = await postAsync(
                     requestUri: Constants.AZURE_FUNCTIONS_PATTERN_UPLOAD_PROFILE_PICTURE_TO_BLOB,
-                    content: createJsonStringContent(json)
-                ).Result;
+                    content: createJsonStringContent(json));
 
                 response.EnsureSuccessStatusCode();
-                r_Logger.LogInformation($"Successful status code from Azure Function from UploadProfilePicture");
-                isSuccess = true;
+        
+                var responseBody = await response.Content.ReadAsStringAsync();
+                var responseObject = JsonConvert.DeserializeObject<dynamic>(responseBody);
+                imageUrl = responseObject.imageUrl;
+        
+                r_Logger.LogInformation($"Successful status code from Azure Function from UploadProfilePicture. Image URL: {imageUrl}");
             }
             catch (Exception ex)
             {
                 r_Logger.LogError($"Error occurred on UploadProfilePicture: {Environment.NewLine}{ex.Message}");
-                isSuccess = false;
             }
 
-            return isSuccess;
+            return imageUrl;
+        }
+        
+        public async Task UpdateUserProfilePictureAsync(string userName, string imageUrl)
+        {
+            dynamic userData = new JObject
+            {
+                { "userName", userName },
+                { "imageUrl", imageUrl }
+            };
+            
+            HttpResponseMessage response;
+            string json = JsonConvert.SerializeObject(userData);
+
+            r_Logger.LogInformation($"Updating user profile picture");
+
+            try
+            {
+                response = await postAsync(
+                    requestUri: Constants.AZURE_FUNCTIONS_PATTERN_UPDATE_USER,
+                    content: createJsonStringContent(json));
+
+                response.EnsureSuccessStatusCode();
+                r_Logger.LogInformation($"Successfully updated profile picture for username: {userData.userName}");
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error occurred on UpdateUserProfilePictureAsync: {Environment.NewLine}{ex.Message}");
+            }
+        }
+        
+        public async Task<User> GetUserByUserNameAsync(string userName)
+        {
+            string requestUri, responseJson;
+            HttpResponseMessage response;
+            User user;
+
+            try
+            {
+                requestUri = Constants.AZURE_FUNCTIONS_PATTERN_USER + $"/{userName}";
+                r_Logger.LogInformation($"Requesting user profile for username: {requestUri}");
+        
+                response = await m_HttpClient.GetAsync(requestUri);
+                response.EnsureSuccessStatusCode();
+
+                responseJson = await response.Content.ReadAsStringAsync();
+                user = JsonConvert.DeserializeObject<User>(responseJson);
+        
+                r_Logger.LogInformation($"Successfully retrieved user for username: {userName}");
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error occurred on GetUserProfileByUserNameAsync: {Environment.NewLine}{ex.Message}");
+                user = null;
+            }
+
+            return user;
         }
         
         public async Task<List<Location>> GetNearbyPlaces(string destination, Location location)

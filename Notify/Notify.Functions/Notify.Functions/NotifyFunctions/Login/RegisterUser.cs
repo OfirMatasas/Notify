@@ -66,9 +66,9 @@ namespace Notify.Functions.NotifyFunctions.Login
                         { "name", Convert.ToString(data.name) },
                         { "userName", Convert.ToString(data.userName) },
                         { "password", Convert.ToString(data.password) },
-                        { "telephone", Convert.ToString(data.telephone) }
+                        { "telephone", Convert.ToString(data.telephone) },
+                        { "profilePicture", Constants.BLOB_DEFAULT_PROFILE_IMAGE }
                     };
-                    
                     
                     await collection.InsertOneAsync(userDocument);
                     log.LogInformation(

@@ -15,8 +15,8 @@ namespace Notify.ViewModels
     {
         public Command BackCommand { get; set; }
         public Command SearchTextChangedCommand { get; set; }
-        public Command<Friend> SendRequestCommand { get; set; }
-        public Command<Friend> ShowFriendDetailsCommand { get; set; }
+        public Command<User> SendRequestCommand { get; set; }
+        public Command<User> ShowFriendDetailsCommand { get; set; }
 
         private string m_SearchText;
         public string SearchText
@@ -25,11 +25,11 @@ namespace Notify.ViewModels
             set => SetField(ref m_SearchText, value);
         }
 
-        private List<Friend> UsersList { get; set; }
+        private List<User> UsersList { get; set; }
         
-        private List<Friend> m_UsersSelectionList;
+        private List<User> m_UsersSelectionList;
 
-        public List<Friend> UsersSelectionList
+        public List<User> UsersSelectionList
         {
             get => m_UsersSelectionList;
             set
@@ -39,14 +39,14 @@ namespace Notify.ViewModels
             }
         }
 
-        private Friend m_SelectedUserName;
+        private User m_SelectedUserName;
 
         public FriendRequestPageViewModel()
         {
             BackCommand = new Command(onBackButtonClicked);
-            SendRequestCommand = new Command<Friend>(onSendRequestButtonClicked);
+            SendRequestCommand = new Command<User>(onSendRequestButtonClicked);
             SearchTextChangedCommand = new Command(onSearchTextChanged);
-            ShowFriendDetailsCommand = new Command<Friend>(onFriendClicked);
+            ShowFriendDetailsCommand = new Command<User>(onFriendClicked);
             PopulateUsersList();
         }
 
@@ -73,11 +73,11 @@ namespace Notify.ViewModels
         {
             string usersListJson = Preferences.Get(Constants.PREFERENCES_NOT_FRIENDS_USERS, "");
             
-            UsersList = JsonConvert.DeserializeObject<List<Friend>>(usersListJson);
+            UsersList = JsonConvert.DeserializeObject<List<User>>(usersListJson);
             UsersSelectionList = UsersList = await AzureHttpClient.Instance.GetNotFriendsUsers();
         }
         
-        private void onFriendClicked(Friend friend)
+        private void onFriendClicked(User friend)
         {
             if (!(friend is null))
             {
@@ -85,7 +85,7 @@ namespace Notify.ViewModels
             }
         }
 
-        private void onSendRequestButtonClicked(Friend friend)
+        private void onSendRequestButtonClicked(User friend)
         {
             if (!(friend is null))
             {

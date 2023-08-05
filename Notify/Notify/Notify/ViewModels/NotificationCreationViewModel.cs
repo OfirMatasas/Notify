@@ -94,8 +94,8 @@ namespace Notify.ViewModels
             set => m_IsPermanent = value;
         }
 
-        private List<Friend> m_Friends;
-        public List<Friend> Friends 
+        private List<User> m_Friends;
+        public List<User> Friends 
         { 
             get => m_Friends;
             set
@@ -126,10 +126,10 @@ namespace Notify.ViewModels
             }
             else
             {
-                Friends = JsonConvert.DeserializeObject<List<Friend>>(friendsJson);
+                Friends = JsonConvert.DeserializeObject<List<User>>(friendsJson);
             }
 
-            Friends.Add(new Friend(string.Empty, myUsername, string.Empty));
+            Friends.Add(new User(string.Empty, myUsername, string.Empty));
             Friends.Sort((friend1, friend2) => string.Compare(friend1.Name, friend2.Name, StringComparison.Ordinal));
         }
 

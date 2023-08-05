@@ -127,6 +127,7 @@ namespace Notify.Helpers
 
         public static readonly string AZURE_FUNCTIONS_APP_BASE_URL = "https://notifymta.azurewebsites.net/api/";
         public static readonly string AZURE_FUNCTIONS_PATTERN_USER = "user";
+        public static readonly string AZURE_FUNCTIONS_PATTERN_UPDATE_USER = AZURE_FUNCTIONS_PATTERN_USER + "/profilePicture";
         public static readonly string AZURE_FUNCTIONS_PATTERN_USERS_NOT_FRIENDS = AZURE_FUNCTIONS_PATTERN_USER + "/notFriends";
         public static readonly string AZURE_FUNCTIONS_PATTERN_NOTIFICATION = "notification";
         public static readonly string AZURE_FUNCTIONS_PATTERN_NOTIFICATION_TIME = $"{AZURE_FUNCTIONS_PATTERN_NOTIFICATION}/time";
