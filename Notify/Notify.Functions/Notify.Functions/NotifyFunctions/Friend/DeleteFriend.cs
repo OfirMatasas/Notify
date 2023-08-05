@@ -33,7 +33,7 @@ namespace Notify.Functions.NotifyFunctions.Friend
             log.LogInformation($"Got client's HTTP request to delete friend");
 
             collection = MongoUtils.GetCollection(Constants.COLLECTION_FRIEND);
-            data = await ConversionUtils.ExtractBodyContent(req);
+            data = await ConversionUtils.ExtractBodyContentAsync(req);
             
             username = data.username;
             friendName = data.friendName;

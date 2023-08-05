@@ -94,12 +94,15 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\.DS_Store" />
+    <AndroidResource Include="Resources\drawable\renew_button.png" />
+    <AndroidResource Include="Resources\drawable\edit_button.png" />
     <AndroidResource Include="Resources\drawable\accept_button.png" />
     <AndroidResource Include="Resources\drawable\add_friend.png" />
     <AndroidResource Include="Resources\drawable\avatar.png" />
     <AndroidResource Include="Resources\drawable\back.png" />
     <AndroidResource Include="Resources\drawable\backButton.png" />
     <AndroidResource Include="Resources\drawable\bluetooth.png" />
+    <AndroidResource Include="Resources\drawable\delete_button.jpg" />
     <AndroidResource Include="Resources\drawable\facebook.png" />
     <AndroidResource Include="Resources\drawable\friends.png" />
     <AndroidResource Include="Resources\drawable\friend_request.png" />

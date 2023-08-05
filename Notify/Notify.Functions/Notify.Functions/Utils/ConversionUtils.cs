@@ -37,7 +37,7 @@ namespace Notify.Functions.Utils
             return jsonArray.ToString();
         }
 
-        public static async Task<dynamic> ExtractBodyContent(HttpRequest request)
+        public static async Task<dynamic> ExtractBodyContentAsync(HttpRequest request)
         {
             string requestBody = await new StreamReader(request.Body).ReadToEndAsync();
             return JsonConvert.DeserializeObject(requestBody);

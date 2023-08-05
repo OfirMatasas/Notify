@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
@@ -669,6 +670,53 @@ namespace Notify.Azure.HttpClient
             }
             
             return nearbyPlaces;
+        }
+
+        public async Task<bool> DeleteNotificationAsync(string id)
+        {
+            HttpResponseMessage response;
+            bool isDeleted;
+            string json;
+            List<Notification> notifications;
+            dynamic data = new JObject
+            {
+                { "id", id }
+            };
+            
+            try
+            {
+                response = await deleteAsync(
+                    requestUri: Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION,
+                    content: createJsonStringContent(JsonConvert.SerializeObject(data)));
+
+                response.EnsureSuccessStatusCode();
+                LoggerService.Instance.LogDebug($"Notification with id {id} was deleted");
+                isDeleted = true;
+
+                json = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
+                notifications = JsonConvert.DeserializeObject<List<Notification>>(json);
+                notifications.RemoveAll(notification => notification.ID == id);
+                Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
+            }
+            catch (Exception ex)
+            {
+                LoggerService.Instance.LogError($"Error occured on DeleteNotificationAsync: {ex.Message}");
+                isDeleted = false;
+            }
+            
+            return isDeleted;
+        }
+        
+        private async Task<HttpResponseMessage> deleteAsync(string requestUri, StringContent content)
+        {
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Delete, requestUri)
+            {
+                Content = content
+            };
+            
+            r_Logger.LogInformation($"request:{Environment.NewLine}{request}");
+
+            return await m_HttpClient.SendAsync(request);
         }
     }
 }

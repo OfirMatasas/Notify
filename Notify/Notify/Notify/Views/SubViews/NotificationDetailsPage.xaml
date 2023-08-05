@@ -35,21 +35,23 @@
             </Grid>
 
             <Grid
-                Column="2"
-                ColumnDefinitions="auto, auto"
+                Column="7"
+                ColumnDefinitions="*, auto, *, auto, *, auto, *"
                 Margin="20,20,20,0"
-                RowDefinitions="auto, auto, auto, auto, auto, auto, auto, auto, auto">
+                RowDefinitions="auto, auto, auto, auto, auto, auto, auto, auto, *, auto">
                 <Label
                     FontAttributes="Bold"
                     FontSize="Medium"
                     Grid.Column="0"
+                    Grid.ColumnSpan="3"
                     Grid.Row="0"
                     Text="Notification name:"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontSize="Medium"
-                    Grid.Column="1"
+                    Grid.Column="3"
+                    Grid.ColumnSpan="4"
                     Grid.Row="0"
                     Text="{Binding Name}"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
@@ -58,13 +60,15 @@
                     FontAttributes="Bold"
                     FontSize="Medium"
                     Grid.Column="0"
+                    Grid.ColumnSpan="3"
                     Grid.Row="1"
                     Text="Description:"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontSize="Medium"
-                    Grid.Column="1"
+                    Grid.Column="3"
+                    Grid.ColumnSpan="4"
                     Grid.Row="1"
                     Text="{Binding Description}"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
@@ -73,13 +77,15 @@
                     FontAttributes="Bold"
                     FontSize="Medium"
                     Grid.Column="0"
+                    Grid.ColumnSpan="3"
                     Grid.Row="2"
                     Text="Status:"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontSize="Medium"
-                    Grid.Column="1"
+                    Grid.Column="3"
+                    Grid.ColumnSpan="4"
                     Grid.Row="2"
                     Text="{Binding Status}"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
@@ -89,13 +95,15 @@
                     FontAttributes="Bold"
                     FontSize="Medium"
                     Grid.Column="0"
+                    Grid.ColumnSpan="3"
                     Grid.Row="3"
                     Text="Creator:"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontSize="Medium"
-                    Grid.Column="1"
+                    Grid.Column="3"
+                    Grid.ColumnSpan="4"
                     Grid.Row="3"
                     Text="{Binding Creator}"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
@@ -104,13 +112,15 @@
                     FontAttributes="Bold"
                     FontSize="Medium"
                     Grid.Column="0"
+                    Grid.ColumnSpan="3"
                     Grid.Row="4"
                     Text="Creation date:"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontSize="Medium"
-                    Grid.Column="1"
+                    Grid.Column="3"
+                    Grid.ColumnSpan="4"
                     Grid.Row="4"
                     Text="{Binding CreationDateTime}"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
@@ -119,13 +129,15 @@
                     FontAttributes="Bold"
                     FontSize="Medium"
                     Grid.Column="0"
+                    Grid.ColumnSpan="3"
                     Grid.Row="5"
                     Text="Type:"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontSize="Medium"
-                    Grid.Column="1"
+                    Grid.Column="3"
+                    Grid.ColumnSpan="4"
                     Grid.Row="5"
                     Text="{Binding Type}"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
@@ -134,13 +146,15 @@
                     FontAttributes="Bold"
                     FontSize="Medium"
                     Grid.Column="0"
+                    Grid.ColumnSpan="3"
                     Grid.Row="6"
                     Text="Type info:"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontSize="Medium"
-                    Grid.Column="1"
+                    Grid.Column="3"
+                    Grid.ColumnSpan="4"
                     Grid.Row="6"
                     Text="{Binding TypeInfo}"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
@@ -149,6 +163,7 @@
                     FontAttributes="Bold"
                     FontSize="Medium"
                     Grid.Column="0"
+                    Grid.ColumnSpan="3"
                     Grid.Row="7"
                     IsVisible="{Binding IsActivationType}"
                     Text="Activate on:"
@@ -156,7 +171,8 @@
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontSize="Medium"
-                    Grid.Column="1"
+                    Grid.Column="3"
+                    Grid.ColumnSpan="4"
                     Grid.Row="7"
                     IsVisible="{Binding IsActivationType}"
                     Text="{Binding Activation}"
@@ -166,17 +182,55 @@
                     FontAttributes="Bold"
                     FontSize="Medium"
                     Grid.Column="0"
+                    Grid.ColumnSpan="3"
                     Grid.Row="8"
                     Text="Target user:"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
                 <Label
                     FontSize="Medium"
-                    Grid.Column="1"
+                    Grid.Column="3"
+                    Grid.ColumnSpan="4"
                     Grid.Row="8"
                     Text="{Binding Target}"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
+
+                <ImageButton
+                    BackgroundColor="Transparent"
+                    Command="{Binding DeleteNotificationCommand}"
+                    Grid.Column="1"
+                    Grid.Row="10"
+                    HeightRequest="50"
+                    IsEnabled="{Binding IsDeletable}"
+                    Margin="0,20"
+                    Source="delete_button.png"
+                    VerticalOptions="End"
+                    WidthRequest="50" />
+
+                <ImageButton
+                    BackgroundColor="Transparent"
+                    Command="{Binding EditNotificationCommand}"
+                    Grid.Column="3"
+                    Grid.Row="10"
+                    HeightRequest="50"
+                    IsEnabled="{Binding IsEditable}"
+                    Margin="0,20"
+                    Source="edit_button.png"
+                    VerticalOptions="End"
+                    WidthRequest="50" />
+
+                <ImageButton
+                    BackgroundColor="Transparent"
+                    Command="{Binding RenewNotificationCommand}"
+                    Grid.Column="5"
+                    Grid.Row="10"
+                    HeightRequest="50"
+                    IsEnabled="{Binding IsRenewable}"
+                    Margin="0,20"
+                    Source="renew_button.png"
+                    VerticalOptions="End"
+                    WidthRequest="50" />
             </Grid>
 
         </StackLayout>
