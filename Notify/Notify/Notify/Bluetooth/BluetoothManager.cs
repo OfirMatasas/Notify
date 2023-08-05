@@ -88,7 +88,18 @@ namespace Notify.Bluetooth
         {
             string notificationsJson, destinationsJson;
             List<Destination> destinations;
-            List<Notification> notifications, sentNotifications = new List<Notification>();
+            List<Notification> notifications;
+            List<Notification> sentNotifications = new List<Notification>();
+            List<Notification> permanentNotifications = new List<Notification>();
+
+            if (e is DeviceEventArgs args)
+            {
+                BluetoothSelectionList.Remove(args.Device.Name);
+            }
+            else if (e is DeviceErrorEventArgs errorArgs)
+            {
+                BluetoothSelectionList.Remove(errorArgs.Device.Name);
+            }
 
             notificationsJson = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
             destinationsJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, string.Empty);
@@ -98,9 +109,10 @@ namespace Notify.Bluetooth
                 notifications = JsonConvert.DeserializeObject<List<Notification>>(notificationsJson);
                 destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationsJson);
 
-                sendNotificationsForLeaveDestinations(notifications, destinations, ref sentNotifications);
-                Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
-                updateNotificationsStatus(sentNotifications, Constants.NOTIFICATION_STATUS_EXPIRED);
+                sendNotificationsForLeaveDestinations(notifications, destinations, ref sentNotifications, ref permanentNotifications);
+                
+                Utils.updateNotificationsStatus(sentNotifications, Constants.NOTIFICATION_STATUS_EXPIRED);
+                Utils.updateNotificationsStatus(permanentNotifications, Constants.NOTIFICATION_STATUS_ACTIVE);
             }
         }
 
@@ -173,15 +185,18 @@ namespace Notify.Bluetooth
                 List<Notification> locationNotifications = notifications.FindAll(notification => notification.Type.Equals(NotificationType.Location));
                 List<Destination> sameBluetoothDestinations = destinations.FindAll(destination => deviceName.Equals(destination.Bluetooth));
                 List<Destination> differentBluetoothDestinations = destinations.Except(sameBluetoothDestinations).ToList();
-                List<Notification> sentNotifications = new List<Notification>(), arrivedNotifications = new List<Notification>();
+                List<Notification> sentNotifications = new List<Notification>();
+                List<Notification> arrivedNotifications = new List<Notification>();
+                List<Notification> permanentNotifications = new List<Notification>();
 
                 sendNotificationsForArrivalDestinations(locationNotifications, sameBluetoothDestinations, ref sentNotifications, ref arrivedNotifications);
-                sendNotificationsForLeaveDestinations(locationNotifications, differentBluetoothDestinations, ref sentNotifications);
+                sendNotificationsForLeaveDestinations(locationNotifications, differentBluetoothDestinations, ref sentNotifications, ref permanentNotifications);
                 
                 r_Logger.LogInformation("Finished sending bluetooth notifications");
 
-                updateNotificationsStatus(sentNotifications, Constants.NOTIFICATION_STATUS_EXPIRED);
-                updateNotificationsStatus(arrivedNotifications, Constants.NOTIFICATION_STATUS_ARRIVED);
+                Utils.updateNotificationsStatus(sentNotifications, Constants.NOTIFICATION_STATUS_EXPIRED);
+                Utils.updateNotificationsStatus(arrivedNotifications, Constants.NOTIFICATION_STATUS_ARRIVED);
+                Utils.updateNotificationsStatus(permanentNotifications, Constants.NOTIFICATION_STATUS_ACTIVE);
             }
         }
 
@@ -207,7 +222,15 @@ namespace Notify.Bluetooth
                         {
                             r_Logger.LogInformation($"Sending notification for arrival notification: {notification.Name}");
                             DependencyService.Get<INotificationManager>().SendNotification(notification);
-                            sentNotifications.Add(notification);
+
+                            if (notification.IsPermanent)
+                            {
+                                arrivedNotifications.Add(notification);
+                            }
+                            else
+                            {
+                                sentNotifications.Add(notification);
+                            }
                         }
                         else
                         {
@@ -222,7 +245,7 @@ namespace Notify.Bluetooth
         }
         
         private void sendNotificationsForLeaveDestinations(List<Notification> notifications,
-            List<Destination> destinations, ref List<Notification> sentNotifications)
+            List<Destination> destinations, ref List<Notification> sentNotifications, ref List<Notification> permanentNotifications)
         {
             bool isDestinationNotification, isLeaveNotification, isArrived;
 
@@ -236,34 +259,31 @@ namespace Notify.Bluetooth
                     isLeaveNotification = notification.Activation.Equals(Constants.NOTIFICATION_ACTIVATION_LEAVE);
                     isArrived = notification.Status.Equals(Constants.NOTIFICATION_STATUS_ARRIVED);
 
-                    if (isDestinationNotification && isLeaveNotification && isArrived)
+                    if (isDestinationNotification && isArrived)
                     {
-                        r_Logger.LogInformation($"Sending notification for leave notification: {notification.Name}");
-                        DependencyService.Get<INotificationManager>().SendNotification(notification);
-                        sentNotifications.Add(notification);
+                        if (isLeaveNotification)
+                        {
+                            r_Logger.LogInformation($"Sending notification for leave notification: {notification.Name}");
+                            DependencyService.Get<INotificationManager>().SendNotification(notification);
+                            
+                            if(notification.IsPermanent)
+                            {
+                                permanentNotifications.Add(notification);
+                            }
+                            else
+                            {
+                                sentNotifications.Add(notification);
+                            }
+                        }
+                        else if(notification.IsPermanent)
+                        {
+                            permanentNotifications.Add(notification);
+                        }
                     }
                 }
             }
             
             r_Logger.LogInformation("Finished sending bluetooth notifications for leave destinations");
-        }
-
-        private static void updateNotificationsStatus(List<Notification> notificationsToUpdate, string newStatus)
-        {
-            string json = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
-            List<Notification> notifications = JsonConvert.DeserializeObject<List<Notification>>(json);
-
-            notifications.ForEach(notification =>
-            {
-                if (notificationsToUpdate.Any(arrivedNotification => arrivedNotification.ID.Equals(notification.ID)))
-                {
-                    notification.Status = newStatus;
-                    r_Logger.LogDebug($"Updated status of notification {notification.ID} to '{newStatus}'");
-                }
-            });
-
-            Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
-            AzureHttpClient.Instance.UpdateNotificationsStatus(notificationsToUpdate, newStatus);
         }
     }
 }
