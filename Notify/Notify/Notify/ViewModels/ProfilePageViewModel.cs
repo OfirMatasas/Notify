@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
+using Notify.Azure.HttpClient;
 using Notify.Core;
 using Notify.Services;
 using Xamarin.Essentials;
@@ -100,7 +101,8 @@ namespace Notify.ViewModels
             r_Logger.LogInformation("upload new profile picture pressed");
             Stream stream;
             FileResult fileResult;
-            
+            bool successfulUpload;
+                
             try
             {
                 fileResult = await FilePicker.PickAsync(new PickOptions
@@ -113,6 +115,24 @@ namespace Notify.ViewModels
                 {
                     stream = await fileResult.OpenReadAsync();
                     ProfilePicture = ImageSource.FromStream(() => stream);
+
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await stream.CopyToAsync(memoryStream);
+                        var imageBytes = memoryStream.ToArray();
+                        var base64String = Convert.ToBase64String(imageBytes);
+
+                        successfulUpload = AzureHttpClient.Instance.UploadProfilePictureToBLOB(base64String);
+
+                        if (successfulUpload)
+                        {
+                            r_Logger.LogInformation("Profile picture uploaded successfully");
+                        }
+                        else
+                        {
+                            r_Logger.LogError("Profile picture upload failed");
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -120,8 +140,7 @@ namespace Notify.ViewModels
                 r_Logger.LogError("An error occurred while picking the file: " + ex.Message);
             }
         }
-
-
+        
         private void clearProfilePicture()
         {
             r_Logger.LogInformation("clear profile picture pressed");

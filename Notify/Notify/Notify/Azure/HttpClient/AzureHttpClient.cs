@@ -632,7 +632,39 @@ namespace Notify.Azure.HttpClient
 
             r_Logger.LogInformation($"Friend request from {requester} to {userName} was accepted");
         }
+        
+        public bool UploadProfilePictureToBLOB(string base64Image)
+        {
+            dynamic data = new JObject();
+            string json;
+            HttpResponseMessage response;
+            bool isSuccess;
 
+            try
+            {
+                data.image = base64Image;
+
+                json = JsonConvert.SerializeObject(data);
+                r_Logger.LogInformation($"request:{Environment.NewLine}{data}");
+
+                response = postAsync(
+                    requestUri: Constants.AZURE_FUNCTIONS_PATTERN_UPLOAD_PROFILE_PICTURE_TO_BLOB,
+                    content: createJsonStringContent(json)
+                ).Result;
+
+                response.EnsureSuccessStatusCode();
+                r_Logger.LogInformation($"Successful status code from Azure Function from UploadProfilePicture");
+                isSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error occurred on UploadProfilePicture: {Environment.NewLine}{ex.Message}");
+                isSuccess = false;
+            }
+
+            return isSuccess;
+        }
+        
         public async Task<List<Location>> GetNearbyPlaces(string destination, Location location)
         {
             List<Location> nearbyPlaces = new List<Location>();

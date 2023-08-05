@@ -19,5 +19,4 @@ public class AzureBlob
 
         return blockBlob.Uri.AbsoluteUri;
     }
-
 }

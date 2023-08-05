@@ -145,6 +145,7 @@ namespace Notify.Helpers
         public static readonly string AZURE_FUNCTIONS_PATTERN_DYNAMIC_DESTINATION = AZURE_FUNCTIONS_PATTERN_DESTINATION + "/dynamic";
         public static readonly string AZURE_FUNCTIONS_PATTERN_REJECT_FRIEND_REQUEST = AZURE_FUNCTIONS_PATTERN_FRIEND + "/reject";
         public static readonly string AZURE_FUNCTIONS_PATTERN_ACCEPT_FRIEND_REQUEST = AZURE_FUNCTIONS_PATTERN_FRIEND + "/accept";
+        public static readonly string AZURE_FUNCTIONS_PATTERN_UPLOAD_PROFILE_PICTURE_TO_BLOB = "uploadProfilePicture";
 
         #endregion
 
