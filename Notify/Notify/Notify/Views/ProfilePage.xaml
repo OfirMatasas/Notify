@@ -46,7 +46,11 @@
                     Aspect="AspectFill"
                     HorizontalOptions="FillAndExpand"
                     Source="{Binding ProfilePicture}"
-                    VerticalOptions="FillAndExpand" />
+                    VerticalOptions="FillAndExpand">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding LoadProfilePictureCommand}" NumberOfTapsRequired="1" />
+                    </Image.GestureRecognizers>
+                </Image>
             </Frame>
             <StackLayout HorizontalOptions="Center" Spacing="15">
                 <Label
@@ -139,7 +143,6 @@
                         </DataTemplate>
                     </CarouselView.ItemTemplate>
                 </CarouselView>
-
             </StackLayout>
         </StackLayout>
     </Grid>

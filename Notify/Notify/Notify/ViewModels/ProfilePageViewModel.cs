@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using Notify.Core;
+using Notify.Services;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Constants = Notify.Helpers.Constants;
@@ -15,14 +17,20 @@ namespace Notify.ViewModels
 {
     public sealed class ProfilePageViewModel : INotifyPropertyChanged
     {
+        
+        private readonly LoggerService r_Logger = LoggerService.Instance;
+        private string destinationsJson;
+        private string m_UserName;
+        private ImageSource m_ProfilePicture;
+        private ObservableCollection<Destination> _scrollViewContent;
+        
         public Command LocationButtonCommand { get; set; }
         public Command BlueToothButtonCommand { get; set; }
         public Command WifiButtonCommand { get; set; }
-        //public Command LoadProfilePictureCommand { get; set; }
-
-        private string destinationsJson;
+        public Command LoadProfilePictureCommand { get; set; }
+        
         private List<Destination> Destinations { get; set; }
-        private ObservableCollection<Destination> _scrollViewContent;
+  
         public ObservableCollection<Destination> ScrollViewContent
         {
             get => _scrollViewContent;
@@ -31,10 +39,10 @@ namespace Notify.ViewModels
                 _scrollViewContent = value;
                 OnPropertyChanged(nameof(ScrollViewContent));
             }
-        }        
+        }       
+        
         public event PropertyChangedEventHandler PropertyChanged;
         
-        private string m_UserName;
         public string UserName 
         { 
             get => m_UserName;
@@ -45,6 +53,19 @@ namespace Notify.ViewModels
             }
         }
         
+        public ImageSource ProfilePicture
+        {
+            get => m_ProfilePicture ?? ImageSource.FromFile("blank_profile_picture.png");
+            set
+            {
+                if (m_ProfilePicture != value)
+                {
+                    m_ProfilePicture = value;
+                    OnPropertyChanged(nameof(ProfilePicture));
+                }
+            }
+        }
+        
         public ProfilePageViewModel()
         {
             UserName = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
@@ -52,7 +73,7 @@ namespace Notify.ViewModels
             LocationButtonCommand = new Command(onLocationButtonPressed);
             BlueToothButtonCommand = new Command(onBlueToothButtonPressed);
             WifiButtonCommand = new Command(onWifiButtonPressed);
-            //LoadProfilePictureCommand = new Command(onLoadProfilePicture);
+            LoadProfilePictureCommand = new Command(onLoadProfilePicture);
             
             ScrollViewContent = new ObservableCollection<Destination>();
             
@@ -60,28 +81,51 @@ namespace Notify.ViewModels
             Destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationsJson);
         }
 
-        // private async void onLoadProfilePicture()
-        // {
-        //     Debug.WriteLine("Load profile picture");
-        //     string action = await App.Current.MainPage.DisplayActionSheet("Profile Picture", "Cancel", null, "Upload New Picture", "Clear picture");
-        //     if (action == "Upload new picture")
-        //     {
-        //         uploadNewProfilePicture();
-        //     }
-        //     else if (action == "Clear picture")
-        //     {
-        //         clearProfilePicture();
-        //     }
-        // }
-
-        private void uploadNewProfilePicture()
+        private async void onLoadProfilePicture()
         {
-            throw new NotImplementedException();
+            r_Logger.LogInformation("load profile picture pressed");
+            string action = await App.Current.MainPage.DisplayActionSheet("Profile Picture", "Cancel", null, "Upload new picture", "Clear picture");
+            if (action == "Upload new picture")
+            {
+                uploadNewProfilePicture();
+            }
+            else if (action == "Clear picture")
+            {
+                clearProfilePicture();
+            }
         }
+
+        private async void uploadNewProfilePicture()
+        {
+            r_Logger.LogInformation("upload new profile picture pressed");
+            Stream stream;
+            FileResult fileResult;
+            
+            try
+            {
+                fileResult = await FilePicker.PickAsync(new PickOptions
+                {
+                    FileTypes = FilePickerFileType.Images,
+                    PickerTitle = "Pick an image"
+                });
+
+                if (fileResult != null)
+                {
+                    stream = await fileResult.OpenReadAsync();
+                    ProfilePicture = ImageSource.FromStream(() => stream);
+                }
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError("An error occurred while picking the file: " + ex.Message);
+            }
+        }
+
 
         private void clearProfilePicture()
         {
-            throw new NotImplementedException();
+            r_Logger.LogInformation("clear profile picture pressed");
+            ProfilePicture = ImageSource.FromFile("blank_profile_picture.png");
         }
 
         private void onLocationButtonPressed()

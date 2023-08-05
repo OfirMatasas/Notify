@@ -11,6 +11,7 @@ namespace Notify.Functions.Core
         public static readonly string COLLECTION_GROUP = "Group";
         public static readonly string ENCRYPT_OPERATION = "encrypt";
         public static readonly string DECRYPT_OPERATION = "decrypt";
+        public static readonly string AZURE_BLOB_CONTAINER_NAME = "notifyblobstorage";
 
         #region AzureSecretsAndKeys
         
@@ -21,6 +22,7 @@ namespace Notify.Functions.Core
         public static readonly string TWILIO_AUTH_TOKEN = "TWILIO-AUTH-TOKEN";
         public static readonly string TWILIO_PHONE_NUMBER = "TWILIO-PHONE-NUMBER";
         public static readonly string PASSWORD_ENCRYPTION_KEY = "NotifyPasswordEncryptionKey";
+        public static readonly string AZURE_BLOB_CONNECTION_STRING = "AZURE-BLOB-CONNECTION-STRING";
 
         #endregion
 
