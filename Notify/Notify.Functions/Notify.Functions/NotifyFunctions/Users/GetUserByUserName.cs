@@ -25,6 +25,7 @@ namespace Notify.Functions.NotifyFunctions.Users
             FilterDefinition<BsonDocument> userFilter;
             BsonDocument user;
             ObjectResult result;
+            ProjectionDefinition<BsonDocument> projection;
 
             try
             {
@@ -33,9 +34,11 @@ namespace Notify.Functions.NotifyFunctions.Users
                 collection = AzureDatabaseClient.Instance.GetCollection<BsonDocument>(
                     databaseName: Constants.DATABASE_NOTIFY_MTA,
                     collectionName: Constants.COLLECTION_USER);
-                
+
                 userFilter = Builders<BsonDocument>.Filter.Eq("userName", userName);
-                user = await collection.Find(userFilter).FirstOrDefaultAsync();
+
+                projection = Builders<BsonDocument>.Projection.Exclude("_id").Exclude("password");
+                user = await collection.Find(userFilter).Project(projection).FirstOrDefaultAsync();
 
                 if (user != null)
                 {
@@ -51,7 +54,8 @@ namespace Notify.Functions.NotifyFunctions.Users
             catch (Exception ex)
             {
                 log.LogError($"Failed to get user details. Reason: {ex.Message}");
-                result = new BadRequestObjectResult($"Failed to get user details.{Environment.NewLine}Error: {ex.Message}");
+                result = new BadRequestObjectResult(
+                    $"Failed to get user details.{Environment.NewLine}Error: {ex.Message}");
             }
 
             return result;
