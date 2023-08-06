@@ -71,7 +71,7 @@ namespace Notify.ViewModels
         {
             UserName = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
             currentUser = AzureHttpClient.Instance.GetUserByUserNameAsync(UserName);
-            SetProfilePictureAsync();
+            SetProfilePictureAsync(); // TODO save the entire user object in preferences
 
             LocationButtonCommand = new Command(onLocationButtonPressed);
             BlueToothButtonCommand = new Command(onBlueToothButtonPressed);
