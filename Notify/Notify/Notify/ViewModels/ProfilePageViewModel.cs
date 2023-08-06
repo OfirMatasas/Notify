@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -72,7 +70,9 @@ namespace Notify.ViewModels
         public ProfilePageViewModel()
         {
             UserName = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
-            
+            currentUser = AzureHttpClient.Instance.GetUserByUserNameAsync(UserName); // TODO save user in preferences
+            UpdateProfilePicture(currentUser.Result.ProfilePicture);
+
             LocationButtonCommand = new Command(onLocationButtonPressed);
             BlueToothButtonCommand = new Command(onBlueToothButtonPressed);
             WifiButtonCommand = new Command(onWifiButtonPressed);
@@ -82,6 +82,18 @@ namespace Notify.ViewModels
             
             destinationsJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, String.Empty);
             Destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationsJson);
+        }
+        
+        private void UpdateProfilePicture(string imageUrl)
+        {
+            if (!string.IsNullOrEmpty(imageUrl))
+            {
+                ProfilePicture = ImageSource.FromUri(new Uri(imageUrl));
+            }
+            else
+            {
+                ProfilePicture = ImageSource.FromUri(new Uri(currentUser.Result.ProfilePicture)); // Assuming this points to a blank image
+            }
         }
 
         private async void onLoadProfilePicture()
