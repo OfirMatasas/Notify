@@ -20,7 +20,7 @@ namespace Notify.Functions.NotifyFunctions.Users
         [FunctionName("UpdateProfilePicture")]
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "user/profilePicture")]
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", "post", Route = "user/profilePicture")]
             HttpRequest req, ILogger log)
         {
             IMongoCollection<BsonDocument> collection;

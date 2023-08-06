@@ -657,7 +657,7 @@ namespace Notify.Azure.HttpClient
                 var responseObject = JsonConvert.DeserializeObject<dynamic>(responseBody);
                 imageUrl = responseObject.imageUrl;
         
-                r_Logger.LogInformation($"Successful status code from Azure Function from UploadProfilePicture. Image URL: {imageUrl}");
+                r_Logger.LogInformation($"Successful status code from Azure Function from UploadProfilePicture.");
             }
             catch (Exception ex)
             {
