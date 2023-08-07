@@ -25,7 +25,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>Notify</string>
 	<key>CFBundleIdentifier</key>
-	<string>nl.versluis.XFBackgroundLocationSample</string>
+	<string>Notify</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>UILaunchStoryboardName</key>

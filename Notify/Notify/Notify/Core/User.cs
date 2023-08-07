@@ -5,7 +5,7 @@ using Xamarin.Forms;
 
 namespace Notify.Core
 {
-    public sealed class Friend : INotifyPropertyChanged
+    public sealed class User : INotifyPropertyChanged
     {
         #region Members
 
@@ -13,21 +13,21 @@ namespace Notify.Core
         private string m_UserName;
         private string m_Telephone;
         private bool m_IsSelected;
-        private string m_ProfileImage;
+        private string m_ProfilePicture;
 
         #endregion
 
         #region Constructor
 
-        public Friend(string name, string userName, string telephone)
+        public User(string name, string username, string telephone)
         {
             Name = name;
-            UserName = userName;
+            UserName = username;
             Telephone = telephone;
             IsSelected = false;
-            ProfileImage = "profile.png"; // Set a default image
+            ProfilePicture = string.Empty;
         }
-        
+
         #endregion
 
         #region Properties
@@ -84,14 +84,14 @@ namespace Notify.Core
             }
         }
 
-        public string ProfileImage
+        public string ProfilePicture
         {
-            get => m_ProfileImage;
+            get => m_ProfilePicture;
             set
             {
-                if (m_ProfileImage != value)
+                if (m_ProfilePicture != value)
                 {
-                    m_ProfileImage = value;
+                    m_ProfilePicture = value;
                     OnPropertyChanged();
                 }
             }
@@ -104,22 +104,6 @@ namespace Notify.Core
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public ImageSource GetProfileImageSource()
-        {
-            if (string.IsNullOrEmpty(ProfileImage))
-            {
-                return ImageSource.FromFile("profile.png"); // Return the default image if no image is set
-            }
-            else if (ProfileImage.StartsWith("http"))
-            {
-                return ImageSource.FromUri(new Uri(ProfileImage)); // Load the image from a URL if it's a remote image
-            }
-            else
-            {
-                return ImageSource.FromFile(ProfileImage); // Load the image from a local file if it's a file path
-            }
         }
     }
 }

@@ -26,8 +26,8 @@ namespace Notify.Views
             IEnumerable<object> removedItems = e.PreviousSelection.Except(e.CurrentSelection);
             IEnumerable<object> addedItems = e.CurrentSelection.Except(e.PreviousSelection);
 
-            removedItems.ToList().ForEach(item => ((Friend)item).IsSelected = false);
-            addedItems.ToList().ForEach(item => ((Friend)item).IsSelected = true);
+            removedItems.ToList().ForEach(item => ((User)item).IsSelected = false);
+            addedItems.ToList().ForEach(item => ((User)item).IsSelected = true);
         }
 
         protected override void OnAppearing()

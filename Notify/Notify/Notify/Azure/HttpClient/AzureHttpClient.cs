@@ -12,7 +12,9 @@ using Newtonsoft.Json.Linq;
 using Notify.Core;
 using Notify.Helpers;
 using Notify.Services;
+using Notify.WiFi;
 using Xamarin.Essentials;
+using Xamarin.Forms;
 using Location = Notify.Core.Location;
 
 namespace Notify.Azure.HttpClient
@@ -244,10 +246,10 @@ namespace Notify.Azure.HttpClient
         }
         
         public bool CreateLocationNotification(string notificationName, string description, string notificationType, 
-            string location, string activation, List<string> users)
+            string location, string activation, List<string> users, bool isPermanent)
         {
             return createNotification(notificationName, description, notificationType, "location", location, users, 
-                Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_LOCATION, activation);
+                Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_LOCATION, activation, isPermanent);
         }
 
         public bool CreateDynamicNotification(string notificationName, string description, string notificationType, 
@@ -258,7 +260,7 @@ namespace Notify.Azure.HttpClient
         }
 
         private bool createNotification(string notificationName, string description, string notificationType, 
-            string key, JToken value, List<string> users, string uri, string activation = null)
+            string key, JToken value, List<string> users, string uri, string activation = null, bool isPermanent = false)
         {
             string json;
             HttpResponseMessage response;
@@ -266,7 +268,7 @@ namespace Notify.Azure.HttpClient
 
             try
             {
-                json = createJsonOfNotificationRequest(notificationName, description, notificationType, key, value , users, activation);
+                json = createJsonOfNotificationRequest(notificationName, description, notificationType, key, value , users, activation, isPermanent);
                 r_Logger.LogInformation($"request:{Environment.NewLine}{json}");
 
                 response = postAsync(uri, createJsonStringContent(json)).Result;
@@ -285,7 +287,7 @@ namespace Notify.Azure.HttpClient
         }
 
         private string createJsonOfNotificationRequest(string notificationName, string description, string notificationType,
-            string key, JToken value, List<string> users, string activation)
+            string key, JToken value, List<string> users, string activation, bool isPermanent)
         {
             string userName = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
             dynamic request = new JObject
@@ -297,7 +299,8 @@ namespace Notify.Azure.HttpClient
                     {
                         { "name", notificationName?.Trim() },
                         { "type", notificationType },
-                        { key, value }
+                        { key, value },
+                        { "permanent", isPermanent }
                     }
                 },
                 { "users", JToken.FromObject(users) }
@@ -395,6 +398,7 @@ namespace Notify.Azure.HttpClient
                 converter: Converter.ToNotification);
 
             createNewDynamicDestinations(notifications);
+            DependencyService.Get<IWiFiManager>().SendNotifications(null, null);
 
             return notifications;
         }
@@ -428,7 +432,7 @@ namespace Notify.Azure.HttpClient
             Preferences.Set(Constants.PREFERENCES_DESTINATIONS, JsonConvert.SerializeObject(destinations));
         }
 
-        public async Task<List<Friend>> GetFriends()
+        public async Task<List<User>> GetFriends()
         {
             return await GetData(
                 endpoint: Constants.AZURE_FUNCTIONS_PATTERN_FRIEND, 
@@ -542,7 +546,7 @@ namespace Notify.Azure.HttpClient
             return suggestions;
         }
 
-        public async Task<List<Friend>> GetNotFriendsUsers()
+        public async Task<List<User>> GetNotFriendsUsers()
         {
             return await GetData(
                 endpoint: Constants.AZURE_FUNCTIONS_PATTERN_USERS_NOT_FRIENDS, 
@@ -629,7 +633,99 @@ namespace Notify.Azure.HttpClient
 
             r_Logger.LogInformation($"Friend request from {requester} to {userName} was accepted");
         }
+        
+        public async Task<string> UploadProfilePictureToBLOB(string base64Image)
+        {
+            dynamic data = new JObject();
+            dynamic responseObject;
+            string json, responseBody;
+            HttpResponseMessage response;
+            string imageUrl = null;
 
+            try
+            {
+                data.image = base64Image;
+
+                json = JsonConvert.SerializeObject(data);
+                r_Logger.LogInformation($"request:{Environment.NewLine}{data}");
+
+                response = await postAsync(
+                    requestUri: Constants.AZURE_FUNCTIONS_PATTERN_UPLOAD_PROFILE_PICTURE_TO_BLOB,
+                    content: createJsonStringContent(json));
+
+                response.EnsureSuccessStatusCode();
+        
+                responseBody = await response.Content.ReadAsStringAsync();
+                responseObject = JsonConvert.DeserializeObject<dynamic>(responseBody);
+                imageUrl = responseObject.imageUrl;
+        
+                r_Logger.LogInformation($"Successful status code from Azure Function from UploadProfilePicture.");
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error occurred on UploadProfilePicture: {Environment.NewLine}{ex.Message}");
+            }
+
+            return imageUrl;
+        }
+        
+        public async Task UpdateUserProfilePictureAsync(string username, string imageUrl)
+        {
+            string json;
+            dynamic userData = new JObject
+            {
+                { "userName", username },
+                { "profilePicture", imageUrl }
+            };
+            
+            HttpResponseMessage response;
+            json = JsonConvert.SerializeObject(userData);
+
+            r_Logger.LogInformation($"Updating user profile picture");
+
+            try
+            {
+                response = await postAsync(
+                    requestUri: Constants.AZURE_FUNCTIONS_PATTERN_UPDATE_USER,
+                    content: createJsonStringContent(json));
+
+                response.EnsureSuccessStatusCode();
+                r_Logger.LogInformation($"Successfully updated profile picture for username: {userData.userName}");
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error occurred on UpdateUserProfilePictureAsync: {Environment.NewLine}{ex.Message}");
+            }
+        }
+        
+        public async Task<User> GetUserByUsernameAsync(string username)
+        {
+            string requestUri, responseJson;
+            HttpResponseMessage response;
+            User user;
+
+            try
+            {
+                requestUri = Constants.AZURE_FUNCTIONS_PATTERN_USER + $"/{username}";
+                r_Logger.LogInformation($"Requesting user profile for username: {requestUri}");
+        
+                response = await m_HttpClient.GetAsync(requestUri);
+                response.EnsureSuccessStatusCode();
+
+                responseJson = await response.Content.ReadAsStringAsync();
+                user = JsonConvert.DeserializeObject<User>(responseJson);
+        
+                r_Logger.LogInformation($"Successfully retrieved user for username: {username}");
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error occurred on GetUserByUsernameAsync: {Environment.NewLine}{ex.Message}");
+                user = null;
+            }
+
+            return user;
+        }
+        
         public async Task<List<Location>> GetNearbyPlaces(string destination, Location location)
         {
             List<Location> nearbyPlaces = new List<Location>();

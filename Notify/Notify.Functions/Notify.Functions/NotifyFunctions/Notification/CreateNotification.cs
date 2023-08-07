@@ -91,6 +91,7 @@ namespace Notify.Functions.NotifyFunctions.Notification
                 if (type.ToLower().Equals("location"))
                 {
                     document["notification"]["activation"] = json["notification"]["activation"].ToString();
+                    document["notification"]["permanent"] = json["notification"]["permanent"].ToString();
                 }
 
                 documentsList.Add(document);

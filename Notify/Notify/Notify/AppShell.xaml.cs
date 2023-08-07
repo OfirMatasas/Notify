@@ -151,16 +151,19 @@ namespace Notify
 
         private void sendAllRelevantLocationNotifications(Location location)
         {
-            List<Notification> sentNotifications = new List<Notification>(), arrivedNotifications = new List<Notification>();
+            List<Notification> sentNotifications = new List<Notification>();
+            List<Notification> arrivedNotifications = new List<Notification>();
+            List<Notification> permanentNotifications = new List<Notification>();
             
             lock (m_NotificationsLock)
             {
-                getAllNotificationsForArrivalDestinations(location, sentNotifications, arrivedNotifications);
-                getAllNotificationsForLeaveDestinations(location, sentNotifications);
-                getAllNotificationsForElapsedTime(sentNotifications);
+                getAllNotificationsForArrivalDestinations(location, ref sentNotifications, ref arrivedNotifications);
+                getAllNotificationsForLeaveDestinations(location, ref sentNotifications, ref permanentNotifications);
+                getAllNotificationsForElapsedTime(ref sentNotifications);
 
                 updateStatusOfNotifications(Constants.NOTIFICATION_STATUS_EXPIRED, sentNotifications);
                 updateStatusOfNotifications(Constants.NOTIFICATION_STATUS_ARRIVED, arrivedNotifications);
+                updateStatusOfNotifications(Constants.NOTIFICATION_STATUS_ACTIVE, permanentNotifications);
             }
         }
 
@@ -185,7 +188,7 @@ namespace Notify
             return destinationsArrived;
         }
         
-        private void getAllNotificationsForArrivalDestinations(Location location, List<Notification> sentNotifications, List<Notification> arrivedNotifications)
+        private void getAllNotificationsForArrivalDestinations(Location location, ref List<Notification> sentNotifications, ref List<Notification> arrivedNotifications)
         {
             string notificationsJson = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
             List<Notification> notifications = JsonConvert.DeserializeObject<List<Notification>>(notificationsJson);
@@ -207,12 +210,18 @@ namespace Notify
                     {
                         r_Logger.LogInformation($"Sending notification for arrival notification: {notification.Name}");
                         DependencyService.Get<INotificationManager>().SendNotification(notification);
-                        sentNotifications.Add(notification);
+
+                        if (notification.IsPermanent)
+                        {
+                            arrivedNotifications.Add(notification);
+                        }
+                        else
+                        {
+                            sentNotifications.Add(notification);
+                        }
                     }
                     else
                     {
-                        r_Logger.LogInformation($"Updating notification {notification.Name} status to {Constants.NOTIFICATION_STATUS_ARRIVED}");
-                        notification.Status = Constants.NOTIFICATION_STATUS_ARRIVED;
                         arrivedNotifications.Add(notification);
                     }
                 }
@@ -242,7 +251,7 @@ namespace Notify
             return destinationsLeft;
         }
         
-        private void getAllNotificationsForLeaveDestinations(Location location, List<Notification> sentNotifications)
+        private void getAllNotificationsForLeaveDestinations(Location location, ref List<Notification> sentNotifications, ref List<Notification> permanentNotifications)
         {
             string notificationsJson = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
             List<Notification> notifications = JsonConvert.DeserializeObject<List<Notification>>(notificationsJson);
@@ -258,11 +267,26 @@ namespace Notify
                 isLeaveNotification = notification.Activation.Equals(Constants.NOTIFICATION_ACTIVATION_LEAVE);
                 isArrived = notification.Status.Equals(Constants.NOTIFICATION_STATUS_ARRIVED);
 
-                if (isLocationType && isDestinationLeft && isLeaveNotification && isArrived)
+                if (isLocationType && isDestinationLeft && isArrived)
                 {
-                    r_Logger.LogInformation($"Sending notification for leave notification: {notification.Name}");
-                    DependencyService.Get<INotificationManager>().SendNotification(notification);
-                    sentNotifications.Add(notification);
+                    if (isLeaveNotification)
+                    {
+                        r_Logger.LogInformation($"Sending notification for leave notification: {notification.Name}");
+                        DependencyService.Get<INotificationManager>().SendNotification(notification);
+                        
+                        if(notification.IsPermanent)
+                        {
+                            permanentNotifications.Add(notification);
+                        }
+                        else
+                        {
+                            sentNotifications.Add(notification);
+                        }
+                    }
+                    else if(notification.IsPermanent)
+                    {
+                        permanentNotifications.Add(notification);
+                    }
                 }
             }
             
@@ -302,7 +326,7 @@ namespace Notify
             return elapsedTimeNotifications;
         }
 
-        private void getAllNotificationsForElapsedTime(List<Notification> sentNotifications)
+        private void getAllNotificationsForElapsedTime(ref List<Notification> sentNotifications)
         {
             List<Notification> elapsedTimeNotification = getAllElapsedTimeNotifications();
             

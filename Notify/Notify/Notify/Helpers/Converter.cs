@@ -1,10 +1,24 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Notify.Core;
-using Notify.Helpers;
+using Xamarin.Forms;
 
-namespace Notify.Azure.HttpClient
+namespace Notify.Helpers
 {
+    public class NullOrEmptyToBoolConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value is string strValue && !string.IsNullOrEmpty(strValue);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
+    
     public static class Converter
     {
         public static Notification ToNotification(dynamic notification)
@@ -47,14 +61,15 @@ namespace Notify.Azure.HttpClient
                 type: notificationType,
                 typeInfo: notificationTypeValue,
                 activation: activation,
+                permanent: notification.notification.permanent != null && (bool)notification.notification.permanent,
                 target: (string)notification.user);
         }
         
-        public static Friend ToFriend(dynamic friend)
+        public static User ToFriend(dynamic friend)
         {
-            return new Friend(
+            return new User(
                 name: (string)friend.name, 
-                userName: (string)friend.userName, 
+                username: (string)friend.userName, 
                 telephone: (string)friend.telephone);
         }
         

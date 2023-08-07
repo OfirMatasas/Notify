@@ -21,6 +21,7 @@ namespace Notify.ViewModels
         public string Type { get; set; }
         public object TypeInfo { get; set; }
         public string Activation { get; set; }
+        public bool IsPermanent { get; set; }
         public DateTime CreationDateTime { get; set; }
 
         private bool m_IsActivationType;
@@ -31,6 +32,17 @@ namespace Notify.ViewModels
             {
                 m_IsActivationType = value;
                 OnPropertyChanged(nameof(IsActivationType));
+            }
+        }
+
+        private bool m_IsLocationType;
+        public bool IsLocationType
+        {
+            get => m_IsLocationType;
+            set
+            {
+                m_IsLocationType = value;
+                OnPropertyChanged(nameof(IsLocationType));
             }
         }
 
@@ -96,6 +108,8 @@ namespace Notify.ViewModels
             TypeInfo = notification.TypeInfo;
             Activation = notification.Activation;
             IsActivationType = Activation != string.Empty;
+            IsPermanent = notification.IsPermanent;
+            IsLocationType = notification.Type == NotificationType.Location;
             CreationDateTime = notification.CreationDateTime;
         }
         
