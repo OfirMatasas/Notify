@@ -718,7 +718,7 @@ namespace Notify.Azure.HttpClient
             }
             catch (Exception ex)
             {
-                r_Logger.LogError($"Error occurred on GetUserProfileByUserNameAsync: {Environment.NewLine}{ex.Message}");
+                r_Logger.LogError($"Error occurred on GetUserByUsernameAsync: {Environment.NewLine}{ex.Message}");
                 user = null;
             }
 
