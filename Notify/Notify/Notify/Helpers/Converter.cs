@@ -12,6 +12,11 @@ namespace Notify.Helpers
         {
             return value is string strValue && !string.IsNullOrEmpty(strValue);
         }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
     }
     
     public static class Converter
