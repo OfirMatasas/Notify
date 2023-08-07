@@ -10,16 +10,7 @@ namespace Notify.Helpers
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is string strValue)
-            {
-                return !string.IsNullOrEmpty(strValue);
-            }
-            return false;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
+            return value is string strValue && !string.IsNullOrEmpty(strValue);
         }
     }
     
@@ -73,7 +64,7 @@ namespace Notify.Helpers
         {
             return new User(
                 name: (string)friend.name, 
-                userName: (string)friend.userName, 
+                username: (string)friend.userName, 
                 telephone: (string)friend.telephone);
         }
         

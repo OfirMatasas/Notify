@@ -29,6 +29,7 @@ namespace Notify.Functions.NotifyFunctions.Users
             FilterDefinition<BsonDocument> filter;
             UpdateDefinition<BsonDocument> update;
             ObjectResult result;
+            UpdateResult updateResult;
 
             log.LogInformation("Received request to update user profile picture");
 
@@ -49,7 +50,7 @@ namespace Notify.Functions.NotifyFunctions.Users
                     return new BadRequestObjectResult("No updates provided.");
                 }
 
-                var updateResult = await collection.UpdateOneAsync(filter, update);
+                updateResult = await collection.UpdateOneAsync(filter, update);
 
                 if (updateResult.ModifiedCount > 0)
                 {

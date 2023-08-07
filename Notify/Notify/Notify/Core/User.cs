@@ -19,10 +19,10 @@ namespace Notify.Core
 
         #region Constructor
 
-        public User(string name, string userName, string telephone)
+        public User(string name, string username, string telephone)
         {
             Name = name;
-            UserName = userName;
+            UserName = username;
             Telephone = telephone;
             IsSelected = false;
             ProfilePicture = string.Empty;

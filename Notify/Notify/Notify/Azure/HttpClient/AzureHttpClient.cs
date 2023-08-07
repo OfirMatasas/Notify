@@ -636,7 +636,8 @@ namespace Notify.Azure.HttpClient
         public async Task<string> UploadProfilePictureToBLOB(string base64Image)
         {
             dynamic data = new JObject();
-            string json;
+            dynamic responseObject;
+            string json, responseBody;
             HttpResponseMessage response;
             string imageUrl = null;
 
@@ -653,8 +654,8 @@ namespace Notify.Azure.HttpClient
 
                 response.EnsureSuccessStatusCode();
         
-                var responseBody = await response.Content.ReadAsStringAsync();
-                var responseObject = JsonConvert.DeserializeObject<dynamic>(responseBody);
+                responseBody = await response.Content.ReadAsStringAsync();
+                responseObject = JsonConvert.DeserializeObject<dynamic>(responseBody);
                 imageUrl = responseObject.imageUrl;
         
                 r_Logger.LogInformation($"Successful status code from Azure Function from UploadProfilePicture.");
@@ -667,16 +668,17 @@ namespace Notify.Azure.HttpClient
             return imageUrl;
         }
         
-        public async Task UpdateUserProfilePictureAsync(string userName, string imageUrl)
+        public async Task UpdateUserProfilePictureAsync(string username, string imageUrl)
         {
+            string json;
             dynamic userData = new JObject
             {
-                { "userName", userName },
+                { "userName", username },
                 { "profilePicture", imageUrl }
             };
             
             HttpResponseMessage response;
-            string json = JsonConvert.SerializeObject(userData);
+            json = JsonConvert.SerializeObject(userData);
 
             r_Logger.LogInformation($"Updating user profile picture");
 
@@ -695,7 +697,7 @@ namespace Notify.Azure.HttpClient
             }
         }
         
-        public async Task<User> GetUserByUserNameAsync(string userName)
+        public async Task<User> GetUserByUsernameAsync(string username)
         {
             string requestUri, responseJson;
             HttpResponseMessage response;
@@ -703,7 +705,7 @@ namespace Notify.Azure.HttpClient
 
             try
             {
-                requestUri = Constants.AZURE_FUNCTIONS_PATTERN_USER + $"/{userName}";
+                requestUri = Constants.AZURE_FUNCTIONS_PATTERN_USER + $"/{username}";
                 r_Logger.LogInformation($"Requesting user profile for username: {requestUri}");
         
                 response = await m_HttpClient.GetAsync(requestUri);
@@ -712,7 +714,7 @@ namespace Notify.Azure.HttpClient
                 responseJson = await response.Content.ReadAsStringAsync();
                 user = JsonConvert.DeserializeObject<User>(responseJson);
         
-                r_Logger.LogInformation($"Successfully retrieved user for username: {userName}");
+                r_Logger.LogInformation($"Successfully retrieved user for username: {username}");
             }
             catch (Exception ex)
             {

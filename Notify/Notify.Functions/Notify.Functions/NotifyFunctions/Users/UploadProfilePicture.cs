@@ -19,13 +19,11 @@ namespace Notify.Functions.NotifyFunctions.Users
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "uploadProfilePicture")]
             HttpRequest req, ILogger log)
         {
-            string requestBody;
+            string requestBody, base64Image, fileName, imageUrl;
             dynamic data;
-            string base64Image;
             ObjectResult result;
             Stream imageStream;
-            string fileName;
-            string imageUrl;
+            byte[] imageBytes;
 
             log.LogInformation("Got client's HTTP request to upload profile picture to BLOB storage");
 
@@ -41,10 +39,10 @@ namespace Notify.Functions.NotifyFunctions.Users
                     return new BadRequestObjectResult("Image is required.");
                 }
 
-                byte[] imageBytes = Convert.FromBase64String(base64Image);
+                imageBytes = Convert.FromBase64String(base64Image);
                 imageStream = new MemoryStream(imageBytes);
 
-                fileName = Guid.NewGuid() + ".jpg";
+                fileName = $"{Guid.NewGuid()}.jpg";
 
                 imageUrl = await AzureBlob.AzureBlob.UploadImageToBlobStorage(imageStream, fileName);
 

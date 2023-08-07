@@ -22,8 +22,8 @@ namespace Notify.ViewModels
         private string destinationsJson;
         private string m_UserName;
         private ImageSource m_ProfilePicture;
-        private ObservableCollection<Destination> _scrollViewContent;
-        private Task<User> currentUser;
+        private ObservableCollection<Destination> m_ScrollViewContent;
+        private Task<User> m_CurrentUser;
         
         public Command LocationButtonCommand { get; set; }
         public Command BlueToothButtonCommand { get; set; }
@@ -34,10 +34,10 @@ namespace Notify.ViewModels
   
         public ObservableCollection<Destination> ScrollViewContent
         {
-            get => _scrollViewContent;
+            get => m_ScrollViewContent;
             set
             {
-                _scrollViewContent = value;
+                m_ScrollViewContent = value;
                 OnPropertyChanged(nameof(ScrollViewContent));
             }
         }       
@@ -70,7 +70,7 @@ namespace Notify.ViewModels
         public ProfilePageViewModel()
         {
             UserName = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
-            currentUser = AzureHttpClient.Instance.GetUserByUserNameAsync(UserName);
+            m_CurrentUser = AzureHttpClient.Instance.GetUserByUsernameAsync(UserName);
             SetProfilePictureAsync(); // TODO save the entire user object in preferences
 
             LocationButtonCommand = new Command(onLocationButtonPressed);
@@ -86,7 +86,7 @@ namespace Notify.ViewModels
         
         private async Task SetProfilePictureAsync()
         {
-            User user = await currentUser;
+            User user = await m_CurrentUser;
             ProfilePicture = ImageSource.FromUri(new Uri(user.ProfilePicture));
         }
         
@@ -109,7 +109,9 @@ namespace Notify.ViewModels
         {
             Stream stream;
             FileResult fileResult;
-            string imageUrl;
+            string imageUrl, base64String;
+            MemoryStream memoryStream;
+            byte[] imageBytes;
                 
             try
             {
@@ -118,8 +120,7 @@ namespace Notify.ViewModels
                     FileTypes = FilePickerFileType.Images,
                     PickerTitle = "Pick an image"
                 });
-
-
+                
                 if (fileResult == null)
                 {
                     r_Logger.LogInformation("No file was picked.");
@@ -128,11 +129,11 @@ namespace Notify.ViewModels
                 
                 stream = await fileResult.OpenReadAsync();
                 
-                using (var memoryStream = new MemoryStream())
+                using (memoryStream = new MemoryStream())
                 {
                     await stream.CopyToAsync(memoryStream);
-                    var imageBytes = memoryStream.ToArray();
-                    var base64String = Convert.ToBase64String(imageBytes);
+                    imageBytes = memoryStream.ToArray();
+                    base64String = Convert.ToBase64String(imageBytes);
 
                     imageUrl = await AzureHttpClient.Instance.UploadProfilePictureToBLOB(base64String);
 
@@ -141,7 +142,7 @@ namespace Notify.ViewModels
                         r_Logger.LogInformation("Profile picture uploaded successfully");
                         await AzureHttpClient.Instance.UpdateUserProfilePictureAsync(UserName, imageUrl);
                         
-                        currentUser = AzureHttpClient.Instance.GetUserByUserNameAsync(UserName);
+                        m_CurrentUser = AzureHttpClient.Instance.GetUserByUsernameAsync(UserName);
                         SetProfilePictureAsync();
                     }
                     else
@@ -159,7 +160,7 @@ namespace Notify.ViewModels
         private async Task clearProfilePicture()
         {
             await AzureHttpClient.Instance.UpdateUserProfilePictureAsync(UserName, string.Empty);
-            currentUser = AzureHttpClient.Instance.GetUserByUserNameAsync(UserName);
+            m_CurrentUser = AzureHttpClient.Instance.GetUserByUsernameAsync(UserName);
             SetProfilePictureAsync();
         }
 
@@ -167,7 +168,7 @@ namespace Notify.ViewModels
         {
             ScrollViewContent.Clear();
             
-            foreach (var destination in Destinations)
+            foreach (Destination destination in Destinations)
             {
                 ScrollViewContent.Add(new Destination(destination.Name, destination.IsDynamic)
                 {
@@ -182,7 +183,7 @@ namespace Notify.ViewModels
         {
             ScrollViewContent.Clear();
             
-            foreach (var destination in Destinations)
+            foreach (Destination destination in Destinations)
             {
                 if (!string.IsNullOrWhiteSpace(destination.Bluetooth))
                 {
@@ -200,7 +201,7 @@ namespace Notify.ViewModels
         {
             ScrollViewContent.Clear();
             
-            foreach (var destination in Destinations)
+            foreach (Destination destination in Destinations)
             {
                 if (!string.IsNullOrWhiteSpace(destination.SSID))
                 {

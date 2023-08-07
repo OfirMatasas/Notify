@@ -8,14 +8,14 @@ namespace Notify.Functions.NotifyFunctions.AzureBlob;
 
 public class AzureBlob
 {
-    public static async Task<string> UploadImageToBlobStorage(Stream imageStream, string filename)
+    public static async Task<string> UploadImageToBlobStorage(Stream imageStream, string fileName)
     {
         string connectionString = AzureVault.AzureVault.GetSecretFromVault(Constants.AZURE_BLOB_CONNECTION_STRING).Result;
         
         CloudStorageAccount account = CloudStorageAccount.Parse(connectionString);
         CloudBlobClient client = account.CreateCloudBlobClient();
         CloudBlobContainer container = client.GetContainerReference(Constants.AZURE_BLOB_CONTAINER_NAME);
-        CloudBlockBlob blockBlob = container.GetBlockBlobReference(filename);
+        CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);
 
         await blockBlob.UploadFromStreamAsync(imageStream);
 
