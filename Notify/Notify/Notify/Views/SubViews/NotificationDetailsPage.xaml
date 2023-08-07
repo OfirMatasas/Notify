@@ -232,9 +232,20 @@
                     HeightRequest="50"
                     IsEnabled="{Binding IsDeletable}"
                     Margin="0,20"
-                    Source="delete_button.png"
                     VerticalOptions="End"
-                    WidthRequest="50" />
+                    WidthRequest="50">
+                    <ImageButton.Source>
+                        <FileImageSource File="delete_button.png" />
+                    </ImageButton.Source>
+                    <ImageButton.Triggers>
+                        <DataTrigger
+                            Binding="{Binding IsDeletable}"
+                            TargetType="ImageButton"
+                            Value="False">
+                            <Setter Property="Source" Value="delete_button_disabled.png" />
+                        </DataTrigger>
+                    </ImageButton.Triggers>
+                </ImageButton>
 
                 <ImageButton
                     BackgroundColor="Transparent"
@@ -244,9 +255,20 @@
                     HeightRequest="50"
                     IsEnabled="{Binding IsEditable}"
                     Margin="0,20"
-                    Source="edit_button.png"
                     VerticalOptions="End"
-                    WidthRequest="50" />
+                    WidthRequest="50">
+                    <ImageButton.Source>
+                        <FileImageSource File="edit_button.png" />
+                    </ImageButton.Source>
+                    <ImageButton.Triggers>
+                        <DataTrigger
+                            Binding="{Binding IsEditable}"
+                            TargetType="ImageButton"
+                            Value="False">
+                            <Setter Property="Source" Value="edit_button_disabled.png" />
+                        </DataTrigger>
+                    </ImageButton.Triggers>
+                </ImageButton>
 
                 <ImageButton
                     BackgroundColor="Transparent"
@@ -256,9 +278,20 @@
                     HeightRequest="50"
                     IsEnabled="{Binding IsRenewable}"
                     Margin="0,20"
-                    Source="renew_button.png"
                     VerticalOptions="End"
-                    WidthRequest="50" />
+                    WidthRequest="50">
+                    <ImageButton.Source>
+                        <FileImageSource File="renew_button.png" />
+                    </ImageButton.Source>
+                    <ImageButton.Triggers>
+                        <DataTrigger
+                            Binding="{Binding IsRenewable}"
+                            TargetType="ImageButton"
+                            Value="False">
+                            <Setter Property="Source" Value="renew_button_disabled.png" />
+                        </DataTrigger>
+                    </ImageButton.Triggers>
+                </ImageButton>
             </Grid>
 
         </StackLayout>

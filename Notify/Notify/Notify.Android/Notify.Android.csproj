@@ -94,6 +94,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\.DS_Store" />
+    <AndroidResource Include="Resources\drawable\delete_button_disabled.png" />
+    <AndroidResource Include="Resources\drawable\edit_button_disabled.png" />
+    <AndroidResource Include="Resources\drawable\renew_button_disabled.png" />
     <AndroidResource Include="Resources\drawable\renew_button.png" />
     <AndroidResource Include="Resources\drawable\edit_button.png" />
     <AndroidResource Include="Resources\drawable\accept_button.png" />
