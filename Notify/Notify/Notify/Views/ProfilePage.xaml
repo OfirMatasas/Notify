@@ -56,7 +56,7 @@
                 <Label
                     FontSize="Large"
                     HorizontalOptions="Center"
-                    Text="Hello, linkimos"
+                    Text="{Binding UserName, StringFormat='Hello, {0}'}"
                     TextColor="White" />
                 <Frame
                     BackgroundColor="#EEEEEE"
