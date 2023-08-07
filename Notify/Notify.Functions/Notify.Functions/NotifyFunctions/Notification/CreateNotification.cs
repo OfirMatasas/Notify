@@ -21,7 +21,7 @@ namespace Notify.Functions.NotifyFunctions.Notification
         [FunctionName("CreateNotification")]
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "notification/{type}")]
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "notification/create/{type}")]
             HttpRequest request, ILogger log, string type)
         {
             IMongoCollection<BsonDocument> collection;
@@ -106,9 +106,13 @@ namespace Notify.Functions.NotifyFunctions.Notification
             {
                 extraElement = new BsonElement("location", json["notification"]["location"].ToString());
             }
-            else
+            else if(lowerCasedType.Equals("time"))
             {
                 extraElement = new BsonElement("timestamp", int.Parse(json["notification"]["timestamp"].ToString()));
+            }
+            else
+            {
+                throw new ArgumentException($"Type {type} is not supported");
             }
         }
     }

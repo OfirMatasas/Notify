@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Notify.Azure.HttpClient;
 using Notify.Core;
 using Notify.Helpers;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Notify.ViewModels
@@ -86,9 +87,32 @@ namespace Notify.ViewModels
             throw new NotImplementedException();
         }
 
-        private void onRenewNotificationButtonClicked()
+        private async void onRenewNotificationButtonClicked()
         {
-            throw new NotImplementedException();
+            string username, messageBody;
+            bool isRenewed;
+            bool isConfirmed = await App.Current.MainPage.DisplayAlert("Notification Renewal", 
+                "Are you sure you want to renew this notification?", 
+                "Yes", "No");
+
+            if (isConfirmed)
+            {
+                username = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
+                isRenewed = await AzureHttpClient.Instance.RenewNotificationAsync(username , ID);
+                
+                if (isRenewed)
+                {
+                    messageBody = $"Notification {Name} renewed successfully";
+                }
+                else
+                {
+                    messageBody = $"Failed to renew notification {Name}";
+                }
+                
+                await App.Current.MainPage.DisplayAlert("Notification Renewal", 
+                    messageBody, 
+                    "OK");
+            }
         }
 
         private async void onBackButtonClicked()
@@ -117,23 +141,9 @@ namespace Notify.ViewModels
         public Command EditNotificationCommand { get; set; }
         public Command RenewNotificationCommand { get; set; }
 
-        public bool IsRenewable
-        {
-            get => Status == "Expired";
-            set => OnPropertyChanged(nameof(IsRenewable));
-        }
-        
-        public bool IsEditable
-        {
-            get => Status != "Expired";
-            set => OnPropertyChanged(nameof(IsEditable));
-        }
-        
-        public bool IsDeletable
-        {
-            get => Status != "Expired";
-            set => OnPropertyChanged(nameof(IsDeletable));
-        }
+        public bool IsRenewable => Status == "Expired" && Type != Constants.TIME;
+        public bool IsEditable => Status != "Expired";
+        public bool IsDeletable => Status != "Expired";
 
         public event PropertyChangedEventHandler PropertyChanged;
 

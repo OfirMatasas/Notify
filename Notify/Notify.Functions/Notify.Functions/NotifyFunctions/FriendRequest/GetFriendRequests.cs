@@ -12,7 +12,7 @@ using Notify.Functions.Core;
 using Notify.Functions.HTTPClients;
 using Notify.Functions.Utils;
 
-namespace Notify.Functions.FriendRequest
+namespace Notify.Functions.NotifyFunctions.FriendRequest
 {
     public static class GetFriendRequests
     {

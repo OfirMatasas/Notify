@@ -768,7 +768,7 @@ namespace Notify.Azure.HttpClient
             return nearbyPlaces;
         }
 
-        public async Task<bool> DeleteNotificationAsync(string id)
+        public async Task<bool> DeleteNotificationAsync(string notificationID)
         {
             HttpResponseMessage response;
             bool isDeleted;
@@ -776,7 +776,7 @@ namespace Notify.Azure.HttpClient
             List<Notification> notifications;
             dynamic data = new JObject
             {
-                { "id", id }
+                { "id", notificationID }
             };
             
             try
@@ -786,12 +786,12 @@ namespace Notify.Azure.HttpClient
                     content: createJsonStringContent(JsonConvert.SerializeObject(data)));
 
                 response.EnsureSuccessStatusCode();
-                LoggerService.Instance.LogDebug($"Notification with id {id} was deleted");
+                LoggerService.Instance.LogDebug($"Notification with id {notificationID} was deleted");
                 isDeleted = true;
 
                 json = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
                 notifications = JsonConvert.DeserializeObject<List<Notification>>(json);
-                notifications.RemoveAll(notification => notification.ID == id);
+                notifications.RemoveAll(notification => notification.ID == notificationID);
                 Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
             }
             catch (Exception ex)
@@ -813,6 +813,34 @@ namespace Notify.Azure.HttpClient
             r_Logger.LogInformation($"request:{Environment.NewLine}{request}");
 
             return await m_HttpClient.SendAsync(request);
+        }
+
+        public async Task<bool> RenewNotificationAsync(string creator, string notificationID)
+        {
+            bool isRenewed;
+            HttpResponseMessage response;
+            dynamic json = new JObject
+            {
+                { "creator", creator },
+                { "id", notificationID }
+            };
+
+            try
+            {
+                r_Logger.LogInformation($"request:{Environment.NewLine}{json}");
+                
+                response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_RENEW, createJsonStringContent(json)).Result;
+                response.EnsureSuccessStatusCode();
+                r_Logger.LogDebug($"Successful status code from Azure Function from createNotification");
+                isRenewed = true;
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error occured on createNotification: {ex.Message}");
+                isRenewed = false;
+            }
+
+            return isRenewed;
         }
     }
 }
