@@ -24,7 +24,7 @@ namespace Notify.Functions.NotifyFunctions.Users
             string base64Image;
             ObjectResult result;
             Stream imageStream;
-            string filename;
+            string fileName;
             string imageUrl;
 
             log.LogInformation("Got client's HTTP request to upload profile picture to BLOB storage");
@@ -44,9 +44,9 @@ namespace Notify.Functions.NotifyFunctions.Users
                 byte[] imageBytes = Convert.FromBase64String(base64Image);
                 imageStream = new MemoryStream(imageBytes);
 
-                filename = Guid.NewGuid() + ".jpg";
+                fileName = Guid.NewGuid() + ".jpg";
 
-                imageUrl = await AzureBlob.AzureBlob.UploadImageToBlobStorage(imageStream, filename);
+                imageUrl = await AzureBlob.AzureBlob.UploadImageToBlobStorage(imageStream, fileName);
 
                 log.LogInformation($"Profile picture uploaded successfully to {imageUrl}");
 

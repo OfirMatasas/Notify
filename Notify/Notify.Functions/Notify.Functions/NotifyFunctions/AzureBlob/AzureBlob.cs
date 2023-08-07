@@ -10,7 +10,9 @@ public class AzureBlob
 {
     public static async Task<string> UploadImageToBlobStorage(Stream imageStream, string filename)
     {
-        CloudStorageAccount account = CloudStorageAccount.Parse(AzureVault.AzureVault.GetSecretFromVault(Constants.AZURE_BLOB_CONNECTION_STRING).Result);
+        string connectionString = AzureVault.AzureVault.GetSecretFromVault(Constants.AZURE_BLOB_CONNECTION_STRING).Result;
+        
+        CloudStorageAccount account = CloudStorageAccount.Parse(connectionString);
         CloudBlobClient client = account.CreateCloudBlobClient();
         CloudBlobContainer container = client.GetContainerReference(Constants.AZURE_BLOB_CONTAINER_NAME);
         CloudBlockBlob blockBlob = container.GetBlockBlobReference(filename);
