@@ -45,7 +45,7 @@
                 <Image
                     Aspect="AspectFill"
                     HorizontalOptions="FillAndExpand"
-                    Source="{Binding ProfilePicture}"
+                    Source="{Binding ProfilePicture, FallbackValue='blank_profile_picture.png'}"
                     VerticalOptions="FillAndExpand">
                     <Image.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding LoadProfilePictureCommand}" NumberOfTapsRequired="1" />
