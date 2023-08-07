@@ -49,7 +49,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"user\": \"linkimos\",\n  \"location\": {\n    \"name\": \"Home\",\n    \"type\": \"WiFi\",\n    \"ssid\": \"AndroidWifi\",\n    //\"type\": \"Location\",\n    \"longitude\": 33.22,\n    \"latitude\": 11.22\n  }\n}",
+					"raw": "{\n    \"user\": \"linkimos\",\n    \"location\": {\n        \"name\": \"Home\",\n        \"type\": \"WiFi\",\n        \"ssid\": \"AndroidWifi\",\n        //\"type\": \"Location\",\n        \"longitude\": 33.22,\n        \"latitude\": 11.22\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"

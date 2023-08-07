@@ -49,7 +49,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"creator\":\"MaTaSaS\",\n    \"description\":\"Arrival destination\",\n    \"notification\":{\n        \"name\":\"Location Arrival Notification\",\n        \"type\":\"Location\",\n        \"location\":\"Home\",\n        \"activation\":\"Arrival\"\n        },\n    \"users\":[\"MaTaSaS\"]\n}\n",
+					"raw": "{\n    \"creator\": \"MaTaSaS\",\n    \"description\": \"Leave destination\",\n    \"notification\": {\n        \"name\": \"Location Leave Notification\",\n        \"type\": \"Location\",\n        \"location\": \"Home\",\n        \"activation\": \"Leave\",\n        \"permanent\": \"false\"\n    },\n    \"users\": [\n        \"MaTaSaS\"\n    ]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -76,7 +76,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"creator\":\"MaTaSaS\",\n    \"description\": \"This is a time notification\",\n    \"notification\":{\n        \"name\":\"Timer Notification\",\n        \"type\":\"Time\",\n        \"timestamp\":1683999900\n        },\n    \"users\":[\"MaTaSaS\"]\n}\n",
+					"raw": "{\n    \"creator\": \"MaTaSaS\",\n    \"description\": \"This is a time notification\",\n    \"notification\": {\n        \"name\": \"Timer Notification\",\n        \"type\": \"Time\",\n        \"timestamp\": 1683999900\n    },\n    \"users\": [\n        \"MaTaSaS\"\n    ]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -103,7 +103,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"creator\":\"linkimos\",\n    \"description\":\"This is a test\",\n    \"notification\":\n    {\n        \"name\":\"Dynamic testing\",\n        \"type\":\"Dynamic\",\n        \"location\":\"Supermarket\"\n    },\n    \"users\":[\"linkimos\"]\n}\n",
+					"raw": "{\n    \"creator\": \"linkimos\",\n    \"description\": \"This is a test\",\n    \"notification\": {\n        \"name\": \"Dynamic testing\",\n        \"type\": \"Dynamic\",\n        \"location\": \"Supermarket\"\n    },\n    \"users\": [\n        \"linkimos\"\n    ]\n}",
 					"options": {
 						"raw": {
 							"language": "json"

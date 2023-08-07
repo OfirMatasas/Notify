@@ -22,9 +22,10 @@ namespace Notify.Core
         public NotificationType Type { get; set; }
         public object TypeInfo { get; set; }
         public string Activation { get; set; }
+        public bool IsPermanent { get; set; }
         public string Target { get; set; }
 
-        public Notification(string id, string name, string description, DateTime creationDateTime, string status, string creator, NotificationType type, object typeInfo, string target, string activation)
+        public Notification(string id, string name, string description, DateTime creationDateTime, string status, string creator, NotificationType type, object typeInfo, string target, string activation, bool permanent)
         {
             ID = id;
             Name = name;
@@ -35,6 +36,7 @@ namespace Notify.Core
             Type = type;
             TypeInfo = typeInfo;
             Activation = activation;
+            IsPermanent = permanent;
             Target = target;
         }
     }
