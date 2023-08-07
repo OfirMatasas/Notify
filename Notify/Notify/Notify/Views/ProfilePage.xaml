@@ -3,37 +3,148 @@
     NavigationPage.HasNavigationBar="True"
     x:Class="Notify.Views.ProfilePage"
     xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:converters="clr-namespace:Notify.Helpers"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
-    <ContentPage.Content>
-        <Grid
-            BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor},
-                                              Dark={StaticResource DarkPageBackgroundColor}}"
-            Column="2"
-            ColumnDefinitions="*, *"
-            RowDefinitions="Auto, Auto, Auto, *, Auto, Auto, *">
-            <Image
-                Grid.ColumnSpan="2"
-                Grid.Row="0"
-                HeightRequest="150"
-                Margin="0,50,0,20"
-                Source="ofir_profile_image.png"
-                WidthRequest="100" />
-            <Label
-                Grid.Column="0"
-                Grid.Row="1"
-                HorizontalTextAlignment="End"
-                Style="{StaticResource Body1FontSize_ExoRegular}"
-                Text="Hello,"
-                TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
-                                            Dark={StaticResource DarkPrimaryTextColor}}" />
-            <Label
-                Grid.Column="1"
-                Grid.Row="1"
-                HorizontalTextAlignment="Start"
-                Style="{StaticResource Body1FontSize_ExoBold}"
-                Text="{Binding UserName}"
-                TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
-                                            Dark={StaticResource DarkPrimaryTextColor}}" />
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:NullOrEmptyToBoolConverter x:Key="NullOrEmptyToBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid RowDefinitions="*, 2*, Auto">
+        <BoxView Grid.RowSpan="3">
+            <BoxView.Background>
+                <LinearGradientBrush>
+                    <GradientStopCollection>
+                        <GradientStop Color="#161616" Offset="0" />
+                        <GradientStop Color="#30343F" Offset="1" />
+                    </GradientStopCollection>
+                </LinearGradientBrush>
+            </BoxView.Background>
+        </BoxView>
+        <Grid>
+            <Path
+                Aspect="Fill"
+                Data="M0,0H375V262.033s-9.025,4.813-55.426-10.71-70.141-83.047-130.3-83.22-83.544,67.7-130.893,83.22S0,262.033,0,262.033Z"
+                Fill="#FFBE00" />
         </Grid>
-    </ContentPage.Content>
+        <StackLayout
+            Grid.Row="1"
+            HorizontalOptions="Center"
+            Margin="0,-140,0,0"
+            Spacing="30">
+            <Frame
+                BackgroundColor="Transparent"
+                BorderColor="White"
+                CornerRadius="105"
+                HeightRequest="210"
+                HorizontalOptions="Center"
+                IsClippedToBounds="True"
+                Padding="0"
+                VerticalOptions="Center"
+                WidthRequest="210">
+                <Image
+                    Aspect="AspectFill"
+                    HorizontalOptions="FillAndExpand"
+                    Source="{Binding ProfilePicture}"
+                    VerticalOptions="FillAndExpand">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding LoadProfilePictureCommand}" NumberOfTapsRequired="1" />
+                    </Image.GestureRecognizers>
+                </Image>
+            </Frame>
+            <StackLayout HorizontalOptions="Center" Spacing="15">
+                <Label
+                    FontSize="Large"
+                    HorizontalOptions="Center"
+                    Text="{Binding UserName, StringFormat='Hello, {0}'}"
+                    TextColor="White" />
+                <Frame
+                    BackgroundColor="#EEEEEE"
+                    CornerRadius="20"
+                    Grid.Row="3"
+                    HasShadow="True"
+                    HeightRequest="70"
+                    Margin="20,30,20,0"
+                    Opacity="0.8"
+                    WidthRequest="300">
+                    <Grid ColumnDefinitions="*,2,*,2,*" VerticalOptions="Center">
+                        <ImageButton
+                            BackgroundColor="Transparent"
+                            Command="{Binding LocationButtonCommand}"
+                            Grid.Column="0"
+                            Grid.Row="0"
+                            Source="location_icon.png" />
+                        <BoxView
+                            BackgroundColor="#393E46"
+                            Grid.Column="1"
+                            Grid.Row="0"
+                            Opacity="0.3" />
+                        <ImageButton
+                            BackgroundColor="Transparent"
+                            Command="{Binding BlueToothButtonCommand}"
+                            Grid.Column="2"
+                            Grid.Row="0"
+                            Source="bluetooth_icon.png" />
+                        <BoxView
+                            BackgroundColor="#393E46"
+                            Grid.Column="3"
+                            Grid.Row="0"
+                            Opacity="0.3" />
+                        <ImageButton
+                            BackgroundColor="Transparent"
+                            Command="{Binding WifiButtonCommand}"
+                            Grid.Column="4"
+                            Grid.Row="0"
+                            Source="wifi_icon.png" />
+                    </Grid>
+                </Frame>
+                <CarouselView
+                    BackgroundColor="transparent"
+                    HeightRequest="140"
+                    IsVisible="True"
+                    ItemsSource="{Binding ScrollViewContent}"
+                    Margin="20,30,20,0"
+                    Opacity="0.8"
+                    x:Name="profileCarouselView">
+                    <CarouselView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame
+                                BackgroundColor="#EEEEEE"
+                                CornerRadius="30"
+                                HeightRequest="{OnPlatform Android=120,
+                                                           iOS=140}"
+                                Padding="0">
+                                <StackLayout>
+                                    <Label
+                                        FontSize="Medium"
+                                        HorizontalOptions="Center"
+                                        Text="{Binding Name, StringFormat='Name: {0}'}"
+                                        TextColor="#393E46" />
+                                    <Label
+                                        FontSize="Medium"
+                                        HorizontalOptions="Center"
+                                        IsVisible="{Binding SSID, Converter={StaticResource NullOrEmptyToBoolConverter}}"
+                                        Text="{Binding SSID, StringFormat='SSID: {0}'}"
+                                        TextColor="#393E46" />
+                                    <Label
+                                        FontSize="Medium"
+                                        HorizontalOptions="Center"
+                                        IsVisible="{Binding Bluetooth, Converter={StaticResource NullOrEmptyToBoolConverter}}"
+                                        Text="{Binding Bluetooth, StringFormat='Bluetooth: {0}'}"
+                                        TextColor="#393E46" />
+                                    <Label
+                                        FontSize="Medium"
+                                        HorizontalOptions="Center"
+                                        IsVisible="{Binding IsDynamic}"
+                                        Text="{Binding LastUpdatedLocation, StringFormat='Location: {0}'}"
+                                        TextColor="#393E46" />
+                                </StackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CarouselView.ItemTemplate>
+                </CarouselView>
+            </StackLayout>
+        </StackLayout>
+    </Grid>
 </ContentPage>
+

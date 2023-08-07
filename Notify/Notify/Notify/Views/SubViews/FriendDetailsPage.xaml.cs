@@ -8,7 +8,7 @@ namespace Notify.Views.Views
     public partial class FriendDetailsPage : ContentPage
     {
         
-        public FriendDetailsPage(Friend selectedFriend)
+        public FriendDetailsPage(User selectedFriend)
         {
             InitializeComponent();
             BindingContext = new ViewModels.FriendDetailsPageViewModel(selectedFriend);

@@ -1,4 +1,6 @@
-﻿using Xamarin.Forms;
+﻿using System;
+using Notify.ViewModels;
+using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace Notify.Views
@@ -9,7 +11,11 @@ namespace Notify.Views
         public ProfilePage()
         {
             InitializeComponent();
-            BindingContext = new ViewModels.ProfilePageViewModel();
+            BindingContext = new ProfilePageViewModel();
+            ((ProfilePageViewModel)BindingContext).LocationButtonCommand.CanExecuteChanged += (s, e) => profileCarouselView.IsVisible = true;
+            ((ProfilePageViewModel)BindingContext).BlueToothButtonCommand.CanExecuteChanged += (s, e) => profileCarouselView.IsVisible = true;
+            ((ProfilePageViewModel)BindingContext).WifiButtonCommand.CanExecuteChanged += (s, e) => profileCarouselView.IsVisible = true;
         }
+
     }
 }

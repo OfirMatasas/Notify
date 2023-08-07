@@ -15,12 +15,15 @@ namespace Notify.Core
         private Location m_LastUpdatedLocation = new Location(0, 0);
         private bool m_IsDynamic;
 
-        public Destination(string name, bool isDynamic = false)
+        public Destination(string name, bool isDynamic = false, string ssid = null, string bluetooth = null, Location lastUpdatedLocation = null)
         {
             Name = name;
             IsDynamic = isDynamic || Constants.DYNAMIC_PLACE_LIST.Any(destination => destination.Equals(name));
+            SSID = ssid;
+            Bluetooth = bluetooth;
+            LastUpdatedLocation = lastUpdatedLocation ?? m_LastUpdatedLocation;
         }
-
+        
         public string Name
         {
             get => m_Name;
