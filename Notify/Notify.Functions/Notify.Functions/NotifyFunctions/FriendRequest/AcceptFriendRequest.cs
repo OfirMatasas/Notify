@@ -13,6 +13,7 @@ using MongoDB.Driver;
 using Newtonsoft.Json;
 using Notify.Functions.Core;
 using Notify.Functions.HTTPClients;
+using Notify.Functions.Utils;
 using MongoUtils = Notify.Functions.Utils.MongoUtils;
 
 namespace Notify.Functions.NotifyFunctions.FriendRequest
@@ -25,13 +26,13 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "friend/accept")]
             HttpRequest req, ILogger log)
         {
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
             string requester, username;
             ObjectResult result;
+            dynamic data;
 
             try
             {
+                data = await ConversionUtils.ExtractBodyContent(req);
                 requester = Convert.ToString(data.requester);
                 username = Convert.ToString(data.userName);
                 

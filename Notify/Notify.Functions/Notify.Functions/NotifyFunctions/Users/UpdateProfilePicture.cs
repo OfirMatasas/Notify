@@ -12,6 +12,7 @@ using MongoDB.Driver;
 using Newtonsoft.Json;
 using Notify.Functions.Core;
 using Notify.Functions.HTTPClients;
+using Notify.Functions.Utils;
 using MongoUtils = Notify.Functions.Utils.MongoUtils;
 
 namespace Notify.Functions.NotifyFunctions.Users
@@ -37,9 +38,8 @@ namespace Notify.Functions.NotifyFunctions.Users
             try
             {
                 collection = MongoUtils.GetCollection(Constants.COLLECTION_USER);
-
-                requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                data = JsonConvert.DeserializeObject(requestBody);
+                
+                data = await ConversionUtils.ExtractBodyContent(req);
 
                 filter = Builders<BsonDocument>.Filter.Eq("userName", Convert.ToString(data.userName));
                 update = BuildUpdateDefinition(data);

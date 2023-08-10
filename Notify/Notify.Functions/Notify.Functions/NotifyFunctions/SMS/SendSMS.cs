@@ -10,6 +10,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Notify.Functions.Core;
+using Notify.Functions.Utils;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
@@ -31,11 +32,10 @@ public static class SendSMS
         ObjectResult result;
 
         log.LogInformation("Got client's HTTP request to send SMS");
-
-        requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-        data = JsonConvert.DeserializeObject(requestBody);
-
+        
+        data = await ConversionUtils.ExtractBodyContent(req);
         log.LogInformation($"Data:{Environment.NewLine}{data}");
+        
         try
         {
             telephoneNumber = data.telephone;

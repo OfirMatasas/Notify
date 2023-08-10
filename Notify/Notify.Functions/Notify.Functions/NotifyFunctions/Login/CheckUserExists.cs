@@ -13,6 +13,7 @@ using MongoDB.Driver;
 using Newtonsoft.Json;
 using Notify.Functions.Core;
 using Notify.Functions.HTTPClients;
+using Notify.Functions.Utils;
 
 namespace Notify.Functions.NotifyFunctions.Login
 {
@@ -38,9 +39,8 @@ namespace Notify.Functions.NotifyFunctions.Login
                 collection = Utils.MongoUtils.GetCollection(Constants.COLLECTION_USER);
                 log.LogInformation(
                     $"Got reference to {Constants.COLLECTION_USER} collection on {Constants.DATABASE_NOTIFY_MTA} database");
-
-                requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                data = JsonConvert.DeserializeObject(requestBody);
+                
+                data = await ConversionUtils.ExtractBodyContent(req);
                 log.LogInformation($"Data:{Environment.NewLine}{data}");
 
                 if (data.userName == null || data.telephone == null)
