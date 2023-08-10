@@ -8,6 +8,7 @@ using Notify.Azure.HttpClient;
 using Notify.Core;
 using Notify.Helpers;
 using Notify.Services;
+using Notify.Views;
 using Notify.Views.Views;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -53,7 +54,7 @@ namespace Notify.ViewModels
 
         private async void onCreateNotificationClicked()
         {
-            await Shell.Current.GoToAsync(Constants.SHELL_NAVIGATION_CREATE_NOTIFICATION);
+            await Shell.Current.Navigation.PushAsync(new NotificationCreationPage());
         }
 
         #endregion

@@ -19,7 +19,7 @@ namespace Notify.Functions.NotifyFunctions.Notification
         [FunctionName("RenewNotification")]
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "notification/renew")]
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", "post", Route = "notification/renew")]
             HttpRequest req, ILogger log)
         {
             string notificationID, creator;

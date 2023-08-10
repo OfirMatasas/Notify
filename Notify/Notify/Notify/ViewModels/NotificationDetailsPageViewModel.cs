@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Notify.Azure.HttpClient;
 using Notify.Core;
 using Notify.Helpers;
+using Notify.Views;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -13,6 +14,7 @@ namespace Notify.ViewModels
 {
     public class NotificationDetailsPageViewModel: INotifyPropertyChanged
     {
+        private Notification SelectedNotification { get; set; }
         private string ID { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -35,7 +37,7 @@ namespace Notify.ViewModels
                 OnPropertyChanged(nameof(IsActivationType));
             }
         }
-
+        
         private bool m_IsLocationType;
         public bool IsLocationType
         {
@@ -56,6 +58,7 @@ namespace Notify.ViewModels
             RenewNotificationCommand = new Command(onRenewNotificationButtonClicked);
             EditNotificationCommand = new Command(onEditNotificationButtonClicked);
             DeleteNotificationCommand = new Command(onDeleteNotificationButtonClicked);
+            SelectedNotification = selectedNotification;
         }
 
         private async void onDeleteNotificationButtonClicked()
@@ -82,9 +85,9 @@ namespace Notify.ViewModels
             }
         }
 
-        private void onEditNotificationButtonClicked()
+        private async void onEditNotificationButtonClicked()
         {
-            throw new NotImplementedException();
+            Shell.Current.Navigation.PushAsync(new NotificationCreationPage(SelectedNotification));
         }
 
         private async void onRenewNotificationButtonClicked()

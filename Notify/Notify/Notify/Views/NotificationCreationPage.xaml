@@ -22,7 +22,7 @@
                 HorizontalOptions="Center"
                 HorizontalTextAlignment="Center"
                 Margin="0,0,0,0"
-                Text="Notification Creation"
+                Text="{Binding PageTitle}"
                 TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                             Dark={StaticResource DarkPrimaryTextColor}}"
                 VerticalOptions="Center"
@@ -86,15 +86,16 @@
                 Grid.Column="2"
                 Grid.ColumnSpan="2"
                 Grid.Row="3"
-                ItemsSource="{Binding NotificationOptions}"
-                SelectedItem="{Binding SelectedNotificationOption}"
+                IsEnabled="{Binding IsCreating}"
+                ItemsSource="{Binding NotificationTypes}"
+                SelectedItem="{Binding SelectedNotificationType}"
                 Style="{StaticResource Body1FontSize_ExoBold}" />
 
             <Label
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Grid.Row="4"
-                IsVisible="{Binding IsTimeOptionSelected}"
+                IsVisible="{Binding IsTimeTypeSelected}"
                 Style="{StaticResource Body1FontSize_ExoBold}"
                 Text="Time Option"
                 VerticalOptions="Center" />
@@ -102,18 +103,18 @@
                 Format="hh:mm tt"
                 Grid.Column="2"
                 Grid.Row="4"
-                IsVisible="{Binding IsTimeOptionSelected}"
+                IsVisible="{Binding IsTimeTypeSelected}"
                 PropertyChanged="TimePicker_OnPropertyChanged"
                 Style="{StaticResource Body1FontSize_ExoBold}"
-                Time="{Binding SelectedTimeOption}"
+                Time="{Binding SelectedTime}"
                 x:Name="TimePicker" />
             <DatePicker
-                Date="{Binding SelectedDateOption}"
+                Date="{Binding SelectedDate}"
                 DateSelected="DatePicker_OnDateSelected"
                 Format="dd/MM/yyyy"
                 Grid.Column="3"
                 Grid.Row="4"
-                IsVisible="{Binding IsTimeOptionSelected}"
+                IsVisible="{Binding IsTimeTypeSelected}"
                 Style="{StaticResource Body1FontSize_ExoBold}"
                 x:Name="DatePicker" />
 
@@ -121,7 +122,7 @@
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Grid.Row="4"
-                IsVisible="{Binding IsLocationOptionSelected}"
+                IsVisible="{Binding IsLocationTypeSelected}"
                 Style="{StaticResource Body1FontSize_ExoBold}"
                 Text="Location Option"
                 VerticalOptions="Center" />
@@ -129,7 +130,7 @@
                 Grid.Column="2"
                 Grid.ColumnSpan="2"
                 Grid.Row="4"
-                IsVisible="{Binding IsLocationOptionSelected}"
+                IsVisible="{Binding IsLocationTypeSelected}"
                 ItemsSource="{Binding LocationOptions}"
                 SelectedItem="{Binding SelectedLocationOption}"
                 Style="{StaticResource Body1FontSize_ExoBold}" />
@@ -138,15 +139,15 @@
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Grid.Row="4"
-                IsVisible="{Binding IsDynamicOptionSelected}"
+                IsVisible="{Binding IsDynamicTypeSelected}"
                 Style="{StaticResource Body1FontSize_ExoBold}"
-                Text="Place Type Option"
+                Text="Place Option"
                 VerticalOptions="Center" />
             <Picker
                 Grid.Column="2"
                 Grid.ColumnSpan="2"
                 Grid.Row="4"
-                IsVisible="{Binding IsDynamicOptionSelected}"
+                IsVisible="{Binding IsDynamicTypeSelected}"
                 ItemsSource="{Binding DynamicOptions}"
                 SelectedItem="{Binding SelectedDynamicOption}"
                 Style="{StaticResource Body1FontSize_ExoBold}" />
@@ -173,7 +174,7 @@
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Grid.Row="6"
-                IsVisible="{Binding IsLocationOptionSelected}"
+                IsVisible="{Binding IsLocationTypeSelected}"
                 Style="{StaticResource Body1FontSize_ExoBold}"
                 Text="Permanent" />
             <CheckBox
@@ -181,15 +182,17 @@
                 Grid.ColumnSpan="2"
                 Grid.Row="6"
                 IsChecked="{Binding IsPermanent}"
-                IsVisible="{Binding IsLocationOptionSelected}" />
+                IsVisible="{Binding IsLocationTypeSelected}" />
 
             <Label
+                IsVisible="{Binding IsCreating}"
                 Grid.Column="0"
                 Grid.ColumnSpan="4"
                 Grid.Row="7"
                 Style="{StaticResource Body1FontSize_ExoBold}"
                 Text="Friends" />
             <CollectionView
+                IsVisible="{Binding IsCreating}"
                 Grid.Column="0"
                 Grid.ColumnSpan="4"
                 Grid.Row="8"
@@ -206,11 +209,23 @@
         </Grid>
 
         <Button
+            IsVisible="{Binding IsCreating}"
             BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
                                               Dark={StaticResource DarkButtonColor}}"
             Command="{Binding CreateNotificationCommand}"
             Style="{StaticResource Button_ExoRegular}"
             Text="Create"
+            TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
+                                        Dark={StaticResource DarkButtonTextColor}}"
+            VerticalOptions="End" />
+        
+        <Button
+            IsVisible="{Binding IsEditing}"
+            BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
+                                              Dark={StaticResource DarkButtonColor}}"
+            Command="{Binding UpdateNotificationCommand}"
+            Style="{StaticResource Button_ExoRegular}"
+            Text="Update"
             TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
                                         Dark={StaticResource DarkButtonTextColor}}"
             VerticalOptions="End" />

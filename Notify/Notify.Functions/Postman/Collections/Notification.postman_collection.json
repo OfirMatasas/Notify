@@ -17,7 +17,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"creator\": \"Ofir\",\n  \"creation_timestamp\": 45235235,\n  \"notification\": {\n    \"name\": \"Testing\",\n    \"type\": \"Location\",\n    \"location\": \"Home\"\n  },\n  \"users\": [\n    \"Dekel\",\n    \"Lin\"\n  ]\n}",
+					"raw": "{\n    \"creator\": \"Ofir\",\n    \"creation_timestamp\": 45235235,\n    \"notification\": {\n        \"name\": \"Testing\",\n        \"type\": \"Location\",\n        \"location\": \"Home\"\n    },\n    \"users\": [\n        \"Dekel\",\n        \"Lin\"\n    ]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -49,7 +49,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"creator\": \"MaTaSaS\",\n    \"description\": \"Leave destination\",\n    \"notification\": {\n        \"name\": \"Location Leave Notification\",\n        \"type\": \"Location\",\n        \"location\": \"Home\",\n        \"activation\": \"Leave\",\n        \"permanent\": \"false\"\n    },\n    \"users\": [\n        \"MaTaSaS\"\n    ]\n}",
+					"raw": "{\n    \"creator\": \"MaTaSaS\",\n    \"description\": \"Perm Arrival destination\",\n    \"notification\": {\n        \"name\": \"Perm Location Arrival Notification\",\n        \"type\": \"Location\",\n        \"location\": \"Work\",\n        \"activation\": \"Arrival\",\n        \"permanent\": \"true\"\n    },\n    \"users\": [\n        \"MaTaSaS\"\n    ]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -57,13 +57,42 @@
 					}
 				},
 				"url": {
-					"raw": "{{HTTP}}/notification/location",
+					"raw": "{{HTTP}}/notification/create/location",
 					"host": [
 						"{{HTTP}}"
 					],
 					"path": [
 						"notification",
+						"create",
 						"location"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create dynamic notification",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"creator\": \"MaTaSaS\",\n    \"description\": \"This is a test\",\n    \"notification\": {\n        \"name\": \"Dynamic testing\",\n        \"type\": \"Dynamic\",\n        \"location\": \"Supermarket\"\n    },\n    \"users\": [\n        \"MaTaSaS\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HTTP}}/notification/create/dynamic",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"notification",
+						"create",
+						"dynamic"
 					]
 				}
 			},
@@ -84,40 +113,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{HTTP}}/notification/time",
+					"raw": "{{HTTP}}/notification/create/time",
 					"host": [
 						"{{HTTP}}"
 					],
 					"path": [
 						"notification",
+						"create",
 						"time"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Dynamic notification",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"creator\": \"linkimos\",\n    \"description\": \"This is a test\",\n    \"notification\": {\n        \"name\": \"Dynamic testing\",\n        \"type\": \"Dynamic\",\n        \"location\": \"Supermarket\"\n    },\n    \"users\": [\n        \"linkimos\"\n    ]\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{HTTP}}/notification/dynamic",
-					"host": [
-						"{{HTTP}}"
-					],
-					"path": [
-						"notification",
-						"dynamic"
 					]
 				}
 			},
@@ -130,7 +133,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"notifications\": [\n        \"645deb953b532818048d5844\"\n    ],\n    \"status\": \"New\"\n}",
+					"raw": "{\n    \"notifications\": [\n        \"64d52b18c77b86c624ff4e74\"\n    ],\n    \"status\": \"Active\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -138,13 +141,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{HTTP}}/notification/update/status",
+					"raw": "{{HTTP}}/notification/status",
 					"host": [
 						"{{HTTP}}"
 					],
 					"path": [
 						"notification",
-						"update",
 						"status"
 					]
 				}
@@ -152,7 +154,34 @@
 			"response": []
 		},
 		{
-			"name": "Delete notification",
+			"name": "Renew notification",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"64ce3377a806e6131069f213\",\n    \"creator\": \"MaTaSaS\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HTTP}}/notification/renew",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"notification",
+						"renew"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete all notifications",
 			"request": {
 				"method": "DELETE",
 				"header": [],
@@ -172,6 +201,116 @@
 					],
 					"path": [
 						"notification"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete notification",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"64ce3366a806e6131069f212\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HTTP}}/notification",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"notification"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update location notification",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"64d134de73541d2b4f26bc40\",\n    \"name\": \"Normal Location Leave Notification\",\n    \"description\": \"Normal Leave destination\",\n    \"type\": \"Location\",\n    \"location\": \"Work\",\n    \"activation\": \"Leave\",\n    \"permanent\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HTTP}}/notification/update/location",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"notification",
+						"update",
+						"location"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update dynamic notification",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"64d52985960df17c4bb698f2\",\n    \"name\": \"Normal Location Leave Notification\",\n    \"description\": \"Normal Leave destination\",\n    \"type\": \"Dynamic\",\n    \"location\": \"Bank\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HTTP}}/notification/update/dynamic",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"notification",
+						"update",
+						"dynamic"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update time notification",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"64d52b18c77b86c624ff4e74\",\n    \"name\": \"Timer Notification 1\",\n    \"description\": \"This is a time notification\",\n    \"type\": \"Time\",\n    \"timestamp\": 37346306400\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HTTP}}/notification/update/time",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"notification",
+						"update",
+						"time"
 					]
 				}
 			},

@@ -242,21 +242,21 @@ namespace Notify.Azure.HttpClient
             long timestamp = ((DateTimeOffset)dateTime).ToUnixTimeSeconds();
 
             return createNotification(notificationName, description, notificationType, "timestamp", timestamp, users, 
-                Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_TIME);
+                Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_CREATION_TIME);
         }
         
         public bool CreateLocationNotification(string notificationName, string description, string notificationType, 
             string location, string activation, List<string> users, bool isPermanent)
         {
             return createNotification(notificationName, description, notificationType, "location", location, users, 
-                Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_LOCATION, activation, isPermanent);
+                Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_CREATION_LOCATION, activation, isPermanent);
         }
 
         public bool CreateDynamicNotification(string notificationName, string description, string notificationType, 
             string dynamicLocation, List<string> users)
         {
             return createNotification(notificationName, description, notificationType, "location", dynamicLocation, users, 
-                Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_DYNAMIC);
+                Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_CREATION_DYNAMIC);
         }
 
         private bool createNotification(string notificationName, string description, string notificationType, 
@@ -268,7 +268,7 @@ namespace Notify.Azure.HttpClient
 
             try
             {
-                json = createJsonOfNotificationRequest(notificationName, description, notificationType, key, value , users, activation, isPermanent);
+                json = createJsonOfNotificationCreationRequest(notificationName, description, notificationType, key, value , users, activation, isPermanent);
                 r_Logger.LogInformation($"request:{Environment.NewLine}{json}");
 
                 response = postAsync(uri, createJsonStringContent(json)).Result;
@@ -286,7 +286,7 @@ namespace Notify.Azure.HttpClient
             return created;
         }
 
-        private string createJsonOfNotificationRequest(string notificationName, string description, string notificationType,
+        private string createJsonOfNotificationCreationRequest(string notificationName, string description, string notificationType,
             string key, JToken value, List<string> users, string activation, bool isPermanent)
         {
             string userName = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
@@ -829,7 +829,7 @@ namespace Notify.Azure.HttpClient
             {
                 r_Logger.LogInformation($"request:{Environment.NewLine}{json}");
                 
-                response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_RENEW, createJsonStringContent(json)).Result;
+                response = await postAsync(Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_RENEW, createJsonStringContent(json));
                 response.EnsureSuccessStatusCode();
                 r_Logger.LogDebug($"Successful status code from Azure Function from createNotification");
                 isRenewed = true;
@@ -841,6 +841,63 @@ namespace Notify.Azure.HttpClient
             }
 
             return isRenewed;
+        }
+
+        public async Task<bool> UpdateTimeNotificationAsync(string ID, string name, string description, string type, DateTime dateTime)
+        {
+            long timestamp = ((DateTimeOffset)dateTime).ToUnixTimeSeconds();
+
+            return await updateNotification(ID, name, description, type, "timestamp", timestamp, 
+                Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_UPDATE_TIME);
+        }
+        
+        public async Task<bool> UpdateLocationNotificationAsync(string ID, string name, string description, string type, string location, string activation, bool permanent)
+        {
+            return await updateNotification(ID, name, description, type, "location", location, Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_UPDATE_LOCATION, activation, permanent);
+        }
+        
+        public async Task<bool> UpdateDynamicNotificationAsync(string ID, string name, string description, string type, string location)
+        {
+            return await updateNotification(ID, name, description, type, "location", location, Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_UPDATE_DYNAMIC);
+        }
+        
+        private async Task<bool> updateNotification(string ID, string name, string description, string type, string key, JToken value, string requestUri, string activation = "", bool permanent = false)
+        {
+            string json;
+            bool isUpdated;
+            HttpResponseMessage response;
+            dynamic data = new JObject
+            {
+                { "id", ID },
+                { "name", name },
+                { "description", description },
+                { "type", type },
+                { key, value }
+            };
+            
+            if (type.Equals(Constants.LOCATION))
+            {
+                data.activation = activation;
+                data.permanent = permanent;
+            }
+
+            try
+            {
+                json = JsonConvert.SerializeObject(data);
+                r_Logger.LogInformation($"request:{Environment.NewLine}{json}");
+                
+                response = await postAsync(requestUri, createJsonStringContent(json));
+                response.EnsureSuccessStatusCode();
+                r_Logger.LogDebug($"Successful status code from Azure Function from updateNotification");
+                isUpdated = true;
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error occured on updateNotification: {ex.Message}");
+                isUpdated = false;
+            }
+
+            return isUpdated;
         }
     }
 }
