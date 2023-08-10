@@ -4,135 +4,124 @@
     x:Class="Notify.Views.NotificationsPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
-
-    <StackLayout BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor}, Dark={StaticResource DarkPageBackgroundColor}}">
-        <Label
-            FontAttributes="Bold"
-            FontSize="25"
-            HorizontalOptions="Center"
-            Margin="10"
-            Style="{StaticResource Body1FontSize_ExoBold}"
-            Text="Notifications"
-            VerticalOptions="Start"
-            VerticalTextAlignment="Center" />
-
-        <Grid Column="3" ColumnDefinitions="auto, *, auto">
-            <Image
-                Aspect="AspectFit"
-                Grid.Column="0"
-                HeightRequest="50"
-                HorizontalOptions="Start"
+    <RefreshView Command="{Binding RefreshNotificationsCommand}" IsRefreshing="{Binding IsRefreshing}">
+        <StackLayout BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor}, Dark={StaticResource DarkPageBackgroundColor}}">
+            <Label
+                FontAttributes="Bold"
+                FontSize="25"
+                HorizontalOptions="Center"
                 Margin="10"
-                Source="refresh_icon.png">
-                <Image.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding RefreshNotificationsCommand}" />
-                </Image.GestureRecognizers>
-            </Image>
+                Style="{StaticResource Body1FontSize_ExoBold}"
+                Text="Notifications"
+                VerticalOptions="Start"
+                VerticalTextAlignment="Center" />
 
-            <Image
-                Aspect="AspectFit"
-                Grid.Column="2"
-                HeightRequest="50"
-                HorizontalOptions="End"
-                Margin="10"
-                Source="add_icon.png">
-                <Image.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding CreateNotificationCommand}" />
-                </Image.GestureRecognizers>
-            </Image>
-        </Grid>
+            <Grid Column="3" ColumnDefinitions="auto, *, auto">
+                <Image
+                    Aspect="AspectFit"
+                    Grid.Column="2"
+                    HeightRequest="50"
+                    HorizontalOptions="End"
+                    Margin="10"
+                    Source="add_icon.png">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding CreateNotificationCommand}" />
+                    </Image.GestureRecognizers>
+                </Image>
+            </Grid>
 
-        <ScrollView>
-            <CollectionView
-                EmptyView="No notifications found"
-                ItemsSource="{Binding Notifications}"
-                SelectedItem="{Binding SelectedNotification}"
-                SelectionChangedCommand="{Binding NotificationSelectedCommand}"
-                SelectionMode="Single">
-                <CollectionView.Header>
-                    <Grid ColumnDefinitions="*, *, *, *" Margin="0,0,0,10">
-                        <Label
-                            FontAttributes="Bold"
-                            FontSize="Default"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            HorizontalOptions="CenterAndExpand"
-                            Style="{StaticResource Body1FontSize_ExoBold}"
-                            Text="Name"
-                            VerticalOptions="Center"
-                            VerticalTextAlignment="Center" />
-                        <Label
-                            FontAttributes="Bold"
-                            FontSize="Default"
-                            Grid.Column="2"
-                            HorizontalOptions="CenterAndExpand"
-                            Style="{StaticResource Body1FontSize_ExoBold}"
-                            Text="Type"
-                            VerticalOptions="Center"
-                            VerticalTextAlignment="Center" />
-                        <Label
-                            FontAttributes="Bold"
-                            FontSize="Default"
-                            Grid.Column="3"
-                            HorizontalOptions="CenterAndExpand"
-                            Style="{StaticResource Body1FontSize_ExoBold}"
-                            Text="Status"
-                            VerticalOptions="Center"
-                            VerticalTextAlignment="Center" />
-                    </Grid>
-                </CollectionView.Header>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid
-                            Column="3"
-                            ColumnDefinitions="*, *, *, *"
-                            HorizontalOptions="Center"
-                            Margin="10"
-                            RowDefinitions="auto">
+            <ScrollView>
+                <CollectionView
+                    EmptyView="No notifications found"
+                    ItemsSource="{Binding Notifications}"
+                    SelectedItem="{Binding SelectedNotification}"
+                    SelectionChangedCommand="{Binding NotificationSelectedCommand}"
+                    SelectionMode="Single">
+                    <CollectionView.Header>
+                        <Grid ColumnDefinitions="*, *, *, *" Margin="0,0,0,10">
                             <Label
+                                FontAttributes="Bold"
                                 FontSize="Default"
                                 Grid.Column="0"
                                 Grid.ColumnSpan="2"
-                                HorizontalOptions="Center"
-                                HorizontalTextAlignment="Center"
-                                LineBreakMode="TailTruncation"
-                                MaxLines="2"
+                                HorizontalOptions="CenterAndExpand"
                                 Style="{StaticResource Body1FontSize_ExoBold}"
-                                Text="{Binding Name}"
+                                Text="Name"
                                 VerticalOptions="Center"
                                 VerticalTextAlignment="Center" />
                             <Label
+                                FontAttributes="Bold"
                                 FontSize="Default"
                                 Grid.Column="2"
-                                HorizontalOptions="Center"
-                                HorizontalTextAlignment="Center"
+                                HorizontalOptions="CenterAndExpand"
                                 Style="{StaticResource Body1FontSize_ExoBold}"
-                                Text="{Binding Type}"
+                                Text="Type"
                                 VerticalOptions="Center"
                                 VerticalTextAlignment="Center" />
                             <Label
+                                FontAttributes="Bold"
                                 FontSize="Default"
                                 Grid.Column="3"
-                                HorizontalOptions="Center"
-                                HorizontalTextAlignment="Center"
+                                HorizontalOptions="CenterAndExpand"
                                 Style="{StaticResource Body1FontSize_ExoBold}"
-                                Text="{Binding Status}"
+                                Text="Status"
                                 VerticalOptions="Center"
                                 VerticalTextAlignment="Center" />
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup Name="CommonStates">
-                                    <VisualState Name="Normal" />
-                                    <VisualState Name="Selected">
-                                        <VisualState.Setters>
-                                            <Setter Property="BackgroundColor" Value="Gray" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
                         </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </ScrollView>
-    </StackLayout>
+                    </CollectionView.Header>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid
+                                Column="3"
+                                ColumnDefinitions="*, *, *, *"
+                                HorizontalOptions="Center"
+                                Margin="10"
+                                RowDefinitions="auto">
+                                <Label
+                                    FontSize="Default"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    HorizontalOptions="Center"
+                                    HorizontalTextAlignment="Center"
+                                    LineBreakMode="TailTruncation"
+                                    MaxLines="2"
+                                    Style="{StaticResource Body1FontSize_ExoBold}"
+                                    Text="{Binding Name}"
+                                    VerticalOptions="Center"
+                                    VerticalTextAlignment="Center" />
+                                <Label
+                                    FontSize="Default"
+                                    Grid.Column="2"
+                                    HorizontalOptions="Center"
+                                    HorizontalTextAlignment="Center"
+                                    Style="{StaticResource Body1FontSize_ExoBold}"
+                                    Text="{Binding Type}"
+                                    VerticalOptions="Center"
+                                    VerticalTextAlignment="Center" />
+                                <Label
+                                    FontSize="Default"
+                                    Grid.Column="3"
+                                    HorizontalOptions="Center"
+                                    HorizontalTextAlignment="Center"
+                                    Style="{StaticResource Body1FontSize_ExoBold}"
+                                    Text="{Binding Status}"
+                                    VerticalOptions="Center"
+                                    VerticalTextAlignment="Center" />
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup Name="CommonStates">
+                                        <VisualState Name="Normal" />
+                                        <VisualState Name="Selected">
+                                            <VisualState.Setters>
+                                                <Setter Property="BackgroundColor" Value="Gray" />
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </ScrollView>
+        </StackLayout>
+    </RefreshView>
 </ContentPage>

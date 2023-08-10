@@ -18,6 +18,18 @@ namespace Notify.ViewModels
     public sealed class NotificationsPageViewModel : INotifyPropertyChanged
     {
         private readonly LoggerService r_Logger = LoggerService.Instance;
+        private bool m_IsRefreshing;
+        public bool IsRefreshing
+        {
+            set => SetField(ref m_IsRefreshing, value);
+        }
+
+        #region Singleton
+
+        private static readonly Lazy<NotificationsPageViewModel> lazy = new Lazy<NotificationsPageViewModel>(() => new NotificationsPageViewModel());
+        public static NotificationsPageViewModel Instance => lazy.Value;
+
+        #endregion
 
         #region Constructor
 
@@ -65,8 +77,12 @@ namespace Notify.ViewModels
 
         private async void onNotificationsRefreshClicked()
         {
+            IsRefreshing = true;
+            
             await Task.Run(() => Notifications = AzureHttpClient.Instance.GetNotifications().Result);
             Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(Notifications));
+            
+            IsRefreshing = false;
         }
 
         #endregion
