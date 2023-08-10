@@ -8,7 +8,7 @@ namespace Notify.Notifications
         event EventHandler NotificationReceived;
         void Initialize();
         void SendNotification(Notification notification);
-        void SendNotification(string title, string message, DateTime? notifyTime = null);
-        void ReceiveNotification(string title, string message);
+        void SendNotification(string title, string message, Notification notification, DateTime? notifyTime = null);
+        void ReceiveNotification(string title, string message, Notification notification);
     }
 }

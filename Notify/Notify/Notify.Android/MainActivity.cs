@@ -8,6 +8,7 @@ using Notify.Droid.Notifications;
 using Notify.Helpers;
 using Notify.Notifications;
 using Notify.Services;
+using Notify.Views.Views;
 using Xamarin.Forms;
 using Xamarin.Essentials;
 using Environment = System.Environment;
@@ -124,8 +125,11 @@ namespace Notify.Droid
             {
                 string title = intent.GetStringExtra(AndroidNotificationManager.titleKey);
                 string message = intent.GetStringExtra(AndroidNotificationManager.messageKey);
+                string data = intent.GetStringExtra(AndroidNotificationManager.dataKey);
+                Core.Notification notification = Newtonsoft.Json.JsonConvert.DeserializeObject<Core.Notification>(data);
 
-                DependencyService.Get<INotificationManager>().ReceiveNotification(title, message);
+                DependencyService.Get<INotificationManager>().ReceiveNotification(title, message, notification);
+                App.Current.MainPage.Navigation.PushAsync(new NotificationDetailsPage(notification));
             }
         }
     }
