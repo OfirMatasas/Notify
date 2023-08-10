@@ -35,8 +35,8 @@ namespace Notify.Functions.NotifyFunctions.Login
 
             try
             {
-                collection = AzureDatabaseClient.Instance.GetCollection<BsonDocument>(Constants.DATABASE_NOTIFY_MTA,
-                    Constants.COLLECTION_USER);
+                collection = MongoUtils.GetCollection(Constants.COLLECTION_USER);
+                
                 log.LogInformation(
                     $"Got reference to {Constants.COLLECTION_USER} collection on {Constants.DATABASE_NOTIFY_MTA} database");
 

@@ -12,6 +12,7 @@ using MongoDB.Driver;
 using Notify.Functions.Core;
 using Notify.Functions.HTTPClients;
 using Notify.Functions.Utils;
+using MongoUtils = Notify.Functions.Utils.MongoUtils;
 
 namespace Notify.Functions.NotifyFunctions.Notification
 {
@@ -59,9 +60,8 @@ namespace Notify.Functions.NotifyFunctions.Notification
 
             log.LogInformation($"Getting all notifications of user {username}");
 
-            collection = AzureDatabaseClient.Instance.GetCollection<BsonDocument>(
-                databaseName: Constants.DATABASE_NOTIFY_MTA,
-                collectionName: Constants.COLLECTION_NOTIFICATION);
+            collection = MongoUtils.GetCollection(Constants.COLLECTION_NOTIFICATION);
+            
             userFilter = Builders<BsonDocument>.Filter
                 .Where(doc => doc["user"].ToString().ToLower().Equals(username));
             notifications = await collection.Find(userFilter).ToListAsync();

@@ -13,6 +13,7 @@ using MongoDB.Driver;
 using Newtonsoft.Json;
 using Notify.Functions.Core;
 using Notify.Functions.HTTPClients;
+using MongoUtils = Notify.Functions.Utils.MongoUtils;
 
 namespace Notify.Functions.NotifyFunctions.FriendRequest
 {
@@ -53,9 +54,7 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
             IMongoCollection<BsonDocument> friendRequestsCollection;
             FilterDefinition<BsonDocument> friendRequestsFilter;
 
-            friendRequestsCollection = AzureDatabaseClient.Instance.GetCollection<BsonDocument>(
-                Constants.DATABASE_NOTIFY_MTA, 
-                Constants.COLLECTION_FRIEND_REQUEST);
+            friendRequestsCollection = MongoUtils.GetCollection(Constants.COLLECTION_FRIEND_REQUEST);
 
             friendRequestsFilter = Builders<BsonDocument>.Filter.And(
                 Builders<BsonDocument>.Filter.Eq("requester", requester),

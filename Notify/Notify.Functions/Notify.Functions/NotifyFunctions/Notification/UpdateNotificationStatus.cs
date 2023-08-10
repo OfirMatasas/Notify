@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using Notify.Functions.Core;
 using Notify.Functions.HTTPClients;
 using Notify.Functions.Utils;
+using MongoUtils = Notify.Functions.Utils.MongoUtils;
 
 namespace Notify.Functions.NotifyFunctions.Notification
 {
@@ -63,9 +64,7 @@ namespace Notify.Functions.NotifyFunctions.Notification
             UpdateResult result;
             string response;
 
-            notificationCollection = AzureDatabaseClient.Instance.GetCollection<BsonDocument>(
-                databaseName: Constants.DATABASE_NOTIFY_MTA,
-                collectionName: Constants.COLLECTION_NOTIFICATION);
+            notificationCollection = MongoUtils.GetCollection(Constants.COLLECTION_NOTIFICATION);
 
             notificationsFilter = Builders<BsonDocument>.Filter.In(
                 field: "_id",

@@ -10,6 +10,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using Notify.Functions.Core;
 using Notify.Functions.HTTPClients;
+using MongoUtils = Notify.Functions.Utils.MongoUtils;
 
 namespace Notify.Functions.NotifyFunctions.Users
 {
@@ -31,9 +32,7 @@ namespace Notify.Functions.NotifyFunctions.Users
             {
                 log.LogInformation($"Received request to get user profile for username: {userName}");
 
-                collection = AzureDatabaseClient.Instance.GetCollection<BsonDocument>(
-                    databaseName: Constants.DATABASE_NOTIFY_MTA,
-                    collectionName: Constants.COLLECTION_USER);
+                collection = MongoUtils.GetCollection(Constants.COLLECTION_USER);
 
                 userFilter = Builders<BsonDocument>.Filter.Eq("userName", userName);
 

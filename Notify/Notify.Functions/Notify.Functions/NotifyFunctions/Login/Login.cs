@@ -12,6 +12,7 @@ using MongoDB.Driver;
 using Newtonsoft.Json;
 using Notify.Functions.Core;
 using Notify.Functions.HTTPClients;
+using MongoUtils = Notify.Functions.Utils.MongoUtils;
 
 namespace Notify.Functions.NotifyFunctions.Login
 {
@@ -36,8 +37,7 @@ namespace Notify.Functions.NotifyFunctions.Login
 
             try
             {
-                collection = AzureDatabaseClient.Instance.GetCollection<BsonDocument>(Constants.DATABASE_NOTIFY_MTA,
-                    Constants.COLLECTION_USER);
+                collection = MongoUtils.GetCollection(Constants.COLLECTION_USER);
                 log.LogInformation(
                     $"Got reference to {Constants.COLLECTION_USER} collection on {Constants.DATABASE_NOTIFY_MTA} database");
 

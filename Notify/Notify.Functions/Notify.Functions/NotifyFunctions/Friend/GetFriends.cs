@@ -12,6 +12,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using Notify.Functions.HTTPClients;
 using Constants = Notify.Functions.Core.Constants;
+using MongoUtils = Notify.Functions.Utils.MongoUtils;
 
 namespace Notify.Functions.NotifyFunctions.Friend
 {
@@ -99,9 +100,8 @@ namespace Notify.Functions.NotifyFunctions.Friend
             FilterDefinition<BsonDocument> userFilter;
             List<BsonDocument> userDocuments;
     
-            userCollection = AzureDatabaseClient.Instance.GetCollection<BsonDocument>(
-                databaseName: Constants.DATABASE_NOTIFY_MTA, 
-                collectionName: Constants.COLLECTION_USER);
+            userCollection = MongoUtils.GetCollection(Constants.COLLECTION_USER);
+            
             userFilter = Builders<BsonDocument>.Filter.In("userName", friendUsernames);
             userDocuments = await userCollection.Find(userFilter)
                 .Project(Builders<BsonDocument>.Projection.Exclude("_id").Exclude("password"))

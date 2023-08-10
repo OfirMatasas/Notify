@@ -12,6 +12,7 @@ using MongoDB.Driver;
 using Notify.Functions.Core;
 using Notify.Functions.HTTPClients;
 using Notify.Functions.Utils;
+using MongoUtils = Notify.Functions.Utils.MongoUtils;
 
 namespace Notify.Functions.NotifyFunctions.Destination
 {
@@ -58,10 +59,8 @@ namespace Notify.Functions.NotifyFunctions.Destination
             string response;
 
             log.LogInformation($"Getting all destinations of user {lowerCasedUsername}");
-
-            collection = AzureDatabaseClient.Instance.GetCollection<BsonDocument>(
-                databaseName: Constants.DATABASE_NOTIFY_MTA,
-                collectionName: Constants.COLLECTION_DESTINATION);
+            
+            collection = MongoUtils.GetCollection(Constants.COLLECTION_DESTINATION);
             userFilter = Builders<BsonDocument>.Filter
                 .Where(doc => doc["user"].ToString().ToLower().Equals(lowerCasedUsername));
             destinations = await collection.Find(userFilter)

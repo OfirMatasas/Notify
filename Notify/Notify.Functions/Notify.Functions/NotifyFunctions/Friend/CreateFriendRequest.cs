@@ -14,6 +14,7 @@ using MongoDB.Driver;
 using Newtonsoft.Json;
 using Notify.Functions.Core;
 using Notify.Functions.HTTPClients;
+using MongoUtils = Notify.Functions.Utils.MongoUtils;
 
 namespace Notify.Functions.NotifyFunctions.Friend
 {
@@ -102,9 +103,7 @@ namespace Notify.Functions.NotifyFunctions.Friend
             FilterDefinition<BsonDocument> friendRequestsFilter;
             long documentsFoundCount;
 
-            friendRequestsCollection = AzureDatabaseClient.Instance.GetCollection<BsonDocument>(
-                Constants.DATABASE_NOTIFY_MTA, 
-                Constants.COLLECTION_FRIEND_REQUEST);
+            friendRequestsCollection = MongoUtils.GetCollection(Constants.COLLECTION_FRIEND_REQUEST);
 
             friendRequestsFilter = Builders<BsonDocument>.Filter.Or(
                 Builders<BsonDocument>.Filter.And(
@@ -130,9 +129,7 @@ namespace Notify.Functions.NotifyFunctions.Friend
             FilterDefinition<BsonDocument> friendsFilter;
             long documentsFoundCount;
 
-            friendsCollection = AzureDatabaseClient.Instance.GetCollection<BsonDocument>(
-                Constants.DATABASE_NOTIFY_MTA, 
-                Constants.COLLECTION_FRIEND);
+            friendsCollection = MongoUtils.GetCollection(Constants.COLLECTION_FRIEND);
 
             friendsFilter = Builders<BsonDocument>.Filter.Or(
                 Builders<BsonDocument>.Filter.And(
@@ -159,9 +156,7 @@ namespace Notify.Functions.NotifyFunctions.Friend
             FilterDefinition<BsonDocument> usersFilter;
             long numberOfUsersFound;
 
-            usersCollection = AzureDatabaseClient.Instance.GetCollection<BsonDocument>(
-                Constants.DATABASE_NOTIFY_MTA, 
-                Constants.COLLECTION_USER);
+            usersCollection = MongoUtils.GetCollection(Constants.COLLECTION_USER);
             usersFilter = Builders<BsonDocument>.Filter.Regex("userName", 
                               new BsonRegularExpression($"^{Regex.Escape(username)}$", "i")) | 
                           Builders<BsonDocument>.Filter.Regex("userName", 
@@ -176,9 +171,7 @@ namespace Notify.Functions.NotifyFunctions.Friend
             IMongoCollection<BsonDocument> friendRequestsCollection;
             BsonDocument friendRequestDocument;
 
-            friendRequestsCollection = AzureDatabaseClient.Instance.GetCollection<BsonDocument>(
-                Constants.DATABASE_NOTIFY_MTA, 
-                Constants.COLLECTION_FRIEND_REQUEST);
+            friendRequestsCollection = MongoUtils.GetCollection(Constants.COLLECTION_FRIEND_REQUEST);
 
             friendRequestDocument = new BsonDocument
                 {
