@@ -1,4 +1,7 @@
 using Android.Content;
+using Newtonsoft.Json;
+using Notify.Core;
+using Notify.Views.Views;
 
 namespace Notify.Droid.Notifications
 {
@@ -11,9 +14,13 @@ namespace Notify.Droid.Notifications
             {
                 string title = intent.GetStringExtra(AndroidNotificationManager.titleKey);
                 string message = intent.GetStringExtra(AndroidNotificationManager.messageKey);
+                string data = intent.GetStringExtra(AndroidNotificationManager.dataKey);
+                Notification notification = JsonConvert.DeserializeObject<Notification>(data);
                 AndroidNotificationManager manager = AndroidNotificationManager.Instance ?? new AndroidNotificationManager();
 
-                manager.Show(title, message);
+                manager.Show(title, message, notification);
+
+                App.Current.MainPage.Navigation.PushAsync(new NotificationDetailsPage(notification));
             }
         }
     }

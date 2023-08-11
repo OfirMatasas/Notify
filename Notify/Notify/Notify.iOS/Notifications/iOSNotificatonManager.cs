@@ -34,7 +34,7 @@ namespace Notify.iOS.Notifications
             try
             {
                 DependencyService.Get<INotificationManager>()
-                    .SendNotification(notification.Name, notification.Description);
+                    .SendNotification(notification.Name, notification.Description, notification);
                 notification.Status = Constants.NOTIFICATION_STATUS_EXPIRED;
             }
             catch (Exception)
@@ -43,16 +43,16 @@ namespace Notify.iOS.Notifications
             }
         }
 
-        public void SendNotification(string title, string message, DateTime? notifyTime = null)
+        public void SendNotification(string title, string message, Notification notification, DateTime? notifyTime = null)
         {
-            UILocalNotification notification = new UILocalNotification();
-            notification.FireDate = NSDate.FromTimeIntervalSinceNow(0);
-            notification.AlertAction = title;
-            notification.AlertBody = message;
-            UIApplication.SharedApplication.ScheduleLocalNotification(notification);
+            UILocalNotification localNotification = new UILocalNotification();
+            localNotification.FireDate = NSDate.FromTimeIntervalSinceNow(0);
+            localNotification.AlertAction = title;
+            localNotification.AlertBody = message;
+            UIApplication.SharedApplication.ScheduleLocalNotification(localNotification);
         }
 
-        public void ReceiveNotification(string title, string message)
+        public void ReceiveNotification(string title, string message, Notification notification)
         {
             NotificationEventArgs args = new NotificationEventArgs
             {

@@ -4,12 +4,11 @@ using Android.Content;
 using Android.Graphics;
 using Android.OS;
 using AndroidX.Core.App;
+using Newtonsoft.Json;
 using Notify.Helpers;
 using Notify.Notifications;
 using Notify.Services;
 using Xamarin.Forms;
-using Notify.Helpers;
-using Notify.Services;
 using AndroidApp = Android.App.Application;
 
 [assembly: Dependency(typeof(Notify.Droid.Notifications.AndroidNotificationManager))]
@@ -23,6 +22,7 @@ namespace Notify.Droid.Notifications
         private const string channelDescription = "The default channel for notifications.";
         public const string titleKey = "title";
         public const string messageKey = "message";
+        public const string dataKey = "data";
         private bool channelInitialized = false;
         private int messageId = 0;
         private int pendingIntentId = 0;
@@ -40,7 +40,7 @@ namespace Notify.Droid.Notifications
             }
         }
         
-        public void SendNotification(Notify.Core.Notification notification)
+        public void SendNotification(Core.Notification notification)
         {
             string fallbackStatus = notification.Status;
             
@@ -50,7 +50,7 @@ namespace Notify.Droid.Notifications
             try
             {
                 DependencyService.Get<INotificationManager>()
-                    .SendNotification(notification.Name, notification.Description);
+                    .SendNotification(notification.Name, notification.Description, notification);
                 notification.Status = Constants.NOTIFICATION_STATUS_EXPIRED;
             }
             catch (Exception ex)
@@ -60,7 +60,7 @@ namespace Notify.Droid.Notifications
             }
         }
 
-        public void SendNotification(string title, string message, DateTime? notifyTime = null)
+        public void SendNotification(string title, string message, Core.Notification notification, DateTime? notifyTime = null)
         {
             if (!channelInitialized)
             {
@@ -78,6 +78,7 @@ namespace Notify.Droid.Notifications
 
                 intent.PutExtra(titleKey, title);
                 intent.PutExtra(messageKey, message);
+                intent.PutExtra("data", JsonConvert.SerializeObject(notification));
 
                 pendingIntent = PendingIntent.GetBroadcast(AndroidApp.Context, pendingIntentId++, intent, pendingIntentFlags);
                 triggerTime = GetNotifyTime(notifyTime.Value);
@@ -86,11 +87,11 @@ namespace Notify.Droid.Notifications
             }
             else
             {
-                Show(title, message);
+                Show(title, message, notification);
             }
         }
 
-        public void ReceiveNotification(string title, string message)
+        public void ReceiveNotification(string title, string message, Core.Notification notification)
         {
             NotificationEventArgs args = new NotificationEventArgs()
             {
@@ -101,7 +102,7 @@ namespace Notify.Droid.Notifications
             NotificationReceived?.Invoke(null, args);
         }
 
-        public void Show(string title, string message)
+        public void Show(string title, string message, Core.Notification data)
         {
             Intent intent = new Intent(AndroidApp.Context, typeof(MainActivity));
             PendingIntentFlags pendingIntentFlags = PendingIntentFlags.UpdateCurrent | PendingIntentFlags.Immutable |
@@ -111,6 +112,7 @@ namespace Notify.Droid.Notifications
 
             intent.PutExtra(titleKey, title);
             intent.PutExtra(messageKey, message);
+            intent.PutExtra("data", JsonConvert.SerializeObject(data));
 
             pendingIntent = PendingIntent.GetActivity(AndroidApp.Context, pendingIntentId++, intent, pendingIntentFlags);
             notification = buildNotification(title, message, pendingIntent);
@@ -124,6 +126,7 @@ namespace Notify.Droid.Notifications
                 .SetContentIntent(pendingIntent)
                 .SetContentTitle(title)
                 .SetContentText(message)
+                .SetAutoCancel(true)
                 .SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources, Resource.Drawable.notification_icon_background))
                 .SetSmallIcon(Resource.Drawable.notification_icon_background)
                 .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate);

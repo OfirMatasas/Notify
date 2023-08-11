@@ -14,6 +14,7 @@ using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Location = Notify.Core.Location;
+using NotificationEventArgs = Notify.Notifications.NotificationEventArgs;
 
 namespace Notify
 {

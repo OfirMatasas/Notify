@@ -21,6 +21,7 @@ namespace Notify.Droid.Notifications
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, foregroundChannelId)
                 .SetContentTitle("Notify tracking location service")
                 .SetContentText("Your location is being tracked")
+                .SetAutoCancel(true)
                 .SetOngoing(true)
                 .SetContentIntent(pendingIntent);
 
@@ -60,6 +61,7 @@ namespace Notify.Droid.Notifications
                 .SetContentTitle("Ofir testing")
                 .SetContentText("You've arrived your destination!")
                 .SetSmallIcon(Resource.Drawable.notification_icon_background)
+                .SetAutoCancel(true)
                 .SetOngoing(true)
                 .SetContentIntent(pendingIntent);
 
