@@ -59,6 +59,13 @@ namespace Notify.ViewModels
                 applyFilterAndSearch();
             }
         }
+
+        private Color m_Color;
+        public Color Color
+        {
+            get => m_Color;
+            set => SetField(ref m_Color, value);
+        }
         
         public string SelectedFilter
         {
