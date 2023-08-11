@@ -12,7 +12,7 @@ using MongoDB.Driver;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using Notify.Functions.Core;
-using Notify.Functions.HTTPClients;
+using MongoUtils = Notify.Functions.Utils.MongoUtils;
 
 namespace Notify.Functions.NotifyFunctions.Notification
 {
@@ -21,20 +21,19 @@ namespace Notify.Functions.NotifyFunctions.Notification
         [FunctionName("CreateNotification")]
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "notification/{type}")]
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "notification/create/{type}")]
             HttpRequest request, ILogger log, string type)
         {
             IMongoCollection<BsonDocument> collection;
             JToken json;
             List<BsonDocument> documentsList = new List<BsonDocument>();
+            ActionResult result;
 
             log.LogInformation($"Got client's HTTP request to create notification based on {type}");
 
             try
             {
-                getCollection(out collection);
-                log.LogInformation(
-                    $"Got reference to {Constants.COLLECTION_DESTINATION} collection on {Constants.DATABASE_NOTIFY_MTA} database");
+                collection = MongoUtils.GetCollection(Constants.COLLECTION_NOTIFICATION);
 
                 json = convertRequestBodyIntoJsonAsync(request).Result;
                 log.LogInformation($"Data:{Environment.NewLine}{json}");
@@ -45,20 +44,15 @@ namespace Notify.Functions.NotifyFunctions.Notification
                 await collection.InsertManyAsync(documentsList);
                 log.LogInformation($"{documentsList.Count} documents inserted successfully");
 
-                return new OkResult();
+                result = new OkResult();
             }
             catch (Exception ex)
             {
                 log.LogError(ex.Message);
-
-                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+                result = new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }
-        }
-
-        private static void getCollection(out IMongoCollection<BsonDocument> collection)
-        {
-            IMongoDatabase database = AzureDatabaseClient.Instance.GetDatabase(Constants.DATABASE_NOTIFY_MTA);
-            collection = database.GetCollection<BsonDocument>(Constants.COLLECTION_NOTIFICATION);
+            
+            return result;
         }
 
         private static async Task<JToken> convertRequestBodyIntoJsonAsync(HttpRequest request)
@@ -112,9 +106,13 @@ namespace Notify.Functions.NotifyFunctions.Notification
             {
                 extraElement = new BsonElement("location", json["notification"]["location"].ToString());
             }
-            else
+            else if(lowerCasedType.Equals("time"))
             {
                 extraElement = new BsonElement("timestamp", int.Parse(json["notification"]["timestamp"].ToString()));
+            }
+            else
+            {
+                throw new ArgumentException($"Type {type} is not supported");
             }
         }
     }

@@ -29,7 +29,7 @@ namespace Notify.Helpers
             
             if(notification.notification.location != null)
             {
-                notificationTypeValue = notification.notification.location;
+                notificationTypeValue = Convert.ToString(notification.notification.location);
                 notificationTypeAsString = Convert.ToString(notification.notification.type);
                 notificationType = notificationTypeAsString.Equals(Constants.DYNAMIC)
                     ? NotificationType.Dynamic

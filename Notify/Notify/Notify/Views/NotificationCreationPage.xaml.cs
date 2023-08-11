@@ -13,11 +13,11 @@ namespace Notify.Views
     public partial class NotificationCreationPage : ContentPage
     {
         private NotificationCreationViewModel m_NotificationCreationViewModel;
-        
-        public NotificationCreationPage()
+
+        public NotificationCreationPage(Notification notification = null)
         {
             InitializeComponent();
-            m_NotificationCreationViewModel = new NotificationCreationViewModel();
+            m_NotificationCreationViewModel = new NotificationCreationViewModel(notification);
             BindingContext = m_NotificationCreationViewModel;
         }
 
@@ -46,7 +46,7 @@ namespace Notify.Views
                 DisplayAlert("Invalid Date", "Please select a time in the future", "OK");
             }
             
-            NotificationCreationViewModel.SelectedDateOption = e.NewDate;
+            NotificationCreationViewModel.SelectedDate = e.NewDate;
         }
 
         private void TimePicker_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -62,7 +62,7 @@ namespace Notify.Views
                     DisplayAlert("Error", "Please select a time in the future.", "OK");
                 }
 
-                NotificationCreationViewModel.SelectedTimeOption = TimePicker.Time;
+                NotificationCreationViewModel.SelectedTime = TimePicker.Time;
             }
         }
     }

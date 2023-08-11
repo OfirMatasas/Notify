@@ -23,7 +23,7 @@ namespace Notify.Functions.NotifyFunctions.Notification
         [FunctionName("UpdateNotificationStatus")]
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "put", "post", Route = "notification/update/status")]
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", "post", Route = "notification/status")]
             HttpRequest req, ILogger log)
         {
             string requestBody, newStatus, response;

@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,9 +8,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using Newtonsoft.Json;
 using Notify.Functions.Core;
-using Notify.Functions.HTTPClients;
+using Notify.Functions.Utils;
+using MongoUtils = Notify.Functions.Utils.MongoUtils;
 
 namespace Notify.Functions.NotifyFunctions.Notification
 {
@@ -23,31 +22,42 @@ namespace Notify.Functions.NotifyFunctions.Notification
             [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "notification")]
             HttpRequest req, ILogger log)
         {
-            IMongoDatabase database;
             IMongoCollection<BsonDocument> collection;
-            string requestBody;
             dynamic data;
             FilterDefinition<BsonDocument> filter;
-            DeleteResult result;
+            DeleteResult deleteResult;
+            ActionResult result;
 
             log.LogInformation($"Got client's HTTP request to delete notifications");
 
-            database = AzureDatabaseClient.Instance.GetDatabase(Constants.DATABASE_NOTIFY_MTA);
-            collection = database.GetCollection<BsonDocument>(Constants.COLLECTION_NOTIFICATION);
-            
-            log.LogInformation($"Got reference to {Constants.COLLECTION_NOTIFICATION} collection on {Constants.DATABASE_NOTIFY_MTA} database");
-            
-            requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            data = JsonConvert.DeserializeObject(requestBody);
+            collection = MongoUtils.GetCollection(Constants.COLLECTION_NOTIFICATION);
+            data = await ConversionUtils.ExtractBodyContentAsync(req);
 
             log.LogInformation($"Data:{Environment.NewLine}{data}");
 
-            filter = Builders<BsonDocument>.Filter.Eq("user", Convert.ToString(data.user));
-            
-            result = collection.DeleteMany(filter);
-            log.LogInformation($"Deleted {result.DeletedCount} documents");
+            if(null != data.user)
+            {
+                filter = Builders<BsonDocument>.Filter.Eq("user", Convert.ToString(data.user));
+                deleteResult = collection.DeleteMany(filter);
+            }
+            else
+            {
+                filter = Builders<BsonDocument>.Filter.Eq("_id", ObjectId.Parse(Convert.ToString(data.id)));
+                deleteResult = collection.DeleteOne(filter);
+            }
 
-            return new OkResult();
+            if (deleteResult.DeletedCount.Equals(0))
+            {
+                log.LogError("No documents were deleted");
+                result = new NotFoundResult();
+            }
+            else
+            {
+                log.LogInformation($"Deleted {deleteResult.DeletedCount} documents");
+                result = new OkResult();
+            }
+
+            return result;
         }
     }
 }

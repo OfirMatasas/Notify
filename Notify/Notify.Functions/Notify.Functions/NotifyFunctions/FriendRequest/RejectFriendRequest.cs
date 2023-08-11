@@ -14,7 +14,7 @@ using Newtonsoft.Json;
 using Notify.Functions.Core;
 using Notify.Functions.HTTPClients;
 
-namespace Notify.Functions.FriendRequest
+namespace Notify.Functions.NotifyFunctions.FriendRequest
 {
     public static class RejectFriendRequest
     {

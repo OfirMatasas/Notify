@@ -3,14 +3,19 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Notify.Azure.HttpClient;
 using Notify.Core;
 using Notify.Helpers;
+using Notify.Views;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Notify.ViewModels
 {
     public class NotificationDetailsPageViewModel: INotifyPropertyChanged
     {
+        private Notification SelectedNotification { get; set; }
+        private string ID { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Status { get; set; }
@@ -32,7 +37,7 @@ namespace Notify.ViewModels
                 OnPropertyChanged(nameof(IsActivationType));
             }
         }
-
+        
         private bool m_IsLocationType;
         public bool IsLocationType
         {
@@ -50,8 +55,69 @@ namespace Notify.ViewModels
         {
             BackCommand = new Command(onBackButtonClicked);
             Task.Run(() => setSelectedNotificationDetails(selectedNotification));
+            RenewNotificationCommand = new Command(onRenewNotificationButtonClicked);
+            EditNotificationCommand = new Command(onEditNotificationButtonClicked);
+            DeleteNotificationCommand = new Command(onDeleteNotificationButtonClicked);
+            SelectedNotification = selectedNotification;
         }
-        
+
+        private async void onDeleteNotificationButtonClicked()
+        {
+            bool isDeleted;
+            bool isConfirmed = await App.Current.MainPage.DisplayAlert("Notification Deletion", 
+                "Are you sure you want to delete this notification?", 
+                "Yes", "No");
+            
+            if (isConfirmed)
+            {
+                isDeleted = await AzureHttpClient.Instance.DeleteNotificationAsync(ID);
+
+                if (isDeleted)
+                {
+                    await Shell.Current.Navigation.PopAsync();
+                }
+                else
+                {
+                    await App.Current.MainPage.DisplayAlert("Notification Deletion", 
+                        "Failed to delete notification", 
+                        "OK");
+                }
+            }
+        }
+
+        private async void onEditNotificationButtonClicked()
+        {
+            Shell.Current.Navigation.PushAsync(new NotificationCreationPage(SelectedNotification));
+        }
+
+        private async void onRenewNotificationButtonClicked()
+        {
+            string username, messageBody;
+            bool isRenewed;
+            bool isConfirmed = await App.Current.MainPage.DisplayAlert("Notification Renewal", 
+                "Are you sure you want to renew this notification?", 
+                "Yes", "No");
+
+            if (isConfirmed)
+            {
+                username = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
+                isRenewed = await AzureHttpClient.Instance.RenewNotificationAsync(username , ID);
+                
+                if (isRenewed)
+                {
+                    messageBody = $"Notification {Name} renewed successfully";
+                }
+                else
+                {
+                    messageBody = $"Failed to renew notification {Name}";
+                }
+                
+                await App.Current.MainPage.DisplayAlert("Notification Renewal", 
+                    messageBody, 
+                    "OK");
+            }
+        }
+
         private async void onBackButtonClicked()
         {
             await Shell.Current.Navigation.PopAsync();
@@ -59,6 +125,7 @@ namespace Notify.ViewModels
 
         private void setSelectedNotificationDetails(Notification notification)
         {
+            ID = notification.ID;
             Name = notification.Name;
             Description = notification.Description;
             Status = notification.Status;
@@ -72,6 +139,14 @@ namespace Notify.ViewModels
             IsLocationType = notification.Type == NotificationType.Location;
             CreationDateTime = notification.CreationDateTime;
         }
+        
+        public Command DeleteNotificationCommand { get; set; }
+        public Command EditNotificationCommand { get; set; }
+        public Command RenewNotificationCommand { get; set; }
+
+        public bool IsRenewable => Status == "Expired" && Type != Constants.TIME;
+        public bool IsEditable => Status != "Expired";
+        public bool IsDeletable => Status != "Expired";
 
         public event PropertyChangedEventHandler PropertyChanged;
 

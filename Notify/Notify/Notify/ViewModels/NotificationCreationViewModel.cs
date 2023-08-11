@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Input;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Notify.Azure.HttpClient;
@@ -16,82 +15,126 @@ namespace Notify.ViewModels
     public class NotificationCreationViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-    
+        
+        public string PageTitle => IsCreating ? "Create Notification" : "Edit Notification";
         public Command BackCommand { get; set; }
-        public string NotificationName { get; set; }
 
-        public List<string> NotificationOptions { get; set; } = Constants.NOTIFICATION_OPTIONS_LIST;
-    
-        private string m_SelectedNotificationOption;
-        public string SelectedNotificationOption
+        private string NotificationID { get; set; }
+        private string m_NotificationName;
+        public string NotificationName
         {
-            get => m_SelectedNotificationOption;
+            get => m_NotificationName;
             set
             {
-                m_SelectedNotificationOption = value;
-                OnPropertyChanged(nameof(IsTimeOptionSelected));
-                OnPropertyChanged(nameof(IsLocationOptionSelected));
-                OnPropertyChanged(nameof(IsDynamicOptionSelected));
+                m_NotificationName = value;
+                OnPropertyChanged(nameof(NotificationName));
+            }
+        }
+
+        public List<string> NotificationTypes { get; set; } = Constants.NOTIFICATION_OPTIONS_LIST;
+    
+        private string m_SelectedNotificationType;
+        public string SelectedNotificationType
+        {
+            get => m_SelectedNotificationType;
+            set
+            {
+                m_SelectedNotificationType = value;
+                OnPropertyChanged(nameof(IsTimeTypeSelected));
+                OnPropertyChanged(nameof(IsLocationTypeSelected));
+                OnPropertyChanged(nameof(IsDynamicTypeSelected));
                 OnPropertyChanged(nameof(ShowActivationOptions));
             }
         }
         
-        public bool IsTimeOptionSelected => SelectedNotificationOption == Constants.TIME;
-        public bool IsLocationOptionSelected => SelectedNotificationOption == Constants.LOCATION;
-        public bool IsDynamicOptionSelected => SelectedNotificationOption == Constants.DYNAMIC;
-        public bool ShowActivationOptions => IsLocationOptionSelected;
+        public bool IsTimeTypeSelected => SelectedNotificationType == Constants.TIME;
+        public bool IsLocationTypeSelected => SelectedNotificationType == Constants.LOCATION;
+        public bool IsDynamicTypeSelected => SelectedNotificationType == Constants.DYNAMIC;
+        public bool ShowActivationOptions => IsLocationTypeSelected;
         
         public List<string> LocationOptions { get; set; } = Constants.LOCATIONS_LIST;
         public List<string> DynamicOptions { get; set; } = Constants.DYNAMIC_PLACE_LIST;
         public List<string> ActivationOptions { get; set; } = Constants.ACTIVATION_OPTIONS_LIST;
         
+        private bool m_IsEditing;
+        public bool IsEditing
+        {
+            get => m_IsEditing;
+            set
+            {
+                m_IsEditing = value;
+                OnPropertyChanged(nameof(IsEditing));
+            }
+        }
+        
+        private bool m_IsCreating;
+        public bool IsCreating
+        {
+            get => m_IsCreating;
+            set
+            {
+                m_IsCreating = value;
+                OnPropertyChanged(nameof(m_IsCreating));
+            }
+        }
+        
         private string m_NotificationDescription;
         public string NotificationDescription
         {
             get => m_NotificationDescription;
-            set => m_NotificationDescription = value;
+            set
+            {
+                m_NotificationDescription = value;
+                OnPropertyChanged(nameof(NotificationDescription));
+            }
         }
-    
-        private static TimeSpan m_SelectedTimeOption = DateTime.Today.TimeOfDay;
-        public static TimeSpan SelectedTimeOption
-        {
-            get => m_SelectedTimeOption;
-            set => m_SelectedTimeOption = value;
-        }
+
+        public static TimeSpan SelectedTime { get; set; } = DateTime.Today.TimeOfDay;
 
         private string m_SelectedActivationOption = string.Empty;
         public string SelectedActivationOption
         {
             get => m_SelectedActivationOption;
-            set => m_SelectedActivationOption = value;
+            set
+            {
+                m_SelectedActivationOption = value;
+                OnPropertyChanged(nameof(SelectedActivationOption));
+            }
         }
-        
-        private static DateTime m_SelectedDateOption = DateTime.Today;
-        public static DateTime SelectedDateOption
-        {
-            get => m_SelectedDateOption;
-            set => m_SelectedDateOption = value;
-        }
-        
+
+        public static DateTime SelectedDate { get; set; } = DateTime.Today;
+
         private string m_SelectedLocationOption;
         public string SelectedLocationOption
         {
             get => m_SelectedLocationOption;
-            set => m_SelectedLocationOption = value;
+            set
+            {
+                m_SelectedLocationOption = value;
+                OnPropertyChanged(nameof(SelectedLocationOption));
+            }
         }
         
         private string m_SelectedDynamicOption;
         public string SelectedDynamicOption
         {
             get => m_SelectedDynamicOption;
-            set => m_SelectedDynamicOption = value;
+            set
+            {
+                m_SelectedDynamicOption = value;
+                OnPropertyChanged(nameof(SelectedDynamicOption));
+            }
         }
         
         public bool m_IsPermanent;
         public bool IsPermanent
         {
             get => m_IsPermanent;
-            set => m_IsPermanent = value;
+            set
+            {
+                m_IsPermanent = value;
+                OnPropertyChanged(nameof(IsPermanent));
+            }
         }
 
         private List<User> m_Friends;
@@ -105,14 +148,103 @@ namespace Notify.ViewModels
             }
         }
 
-        public ICommand CreateNotificationCommand { get; set; }
+        public Command CreateNotificationCommand { get; set; }
+        public Command UpdateNotificationCommand { get; set; }
     
-        public NotificationCreationViewModel()
+        public NotificationCreationViewModel(Notification notificationToEdit = null)
         {
             CreateNotificationCommand = new Command(OnCreateNotification);
+            UpdateNotificationCommand = new Command(OnUpdateNotification);
             BackCommand = new Command(onBackClicked);
+            IsCreating = notificationToEdit is null;
+            IsEditing = !IsCreating;
             
+            if (IsEditing)
+            {
+                NotificationID = notificationToEdit.ID;
+                populateNotificationFields(notificationToEdit);
+            }
+
             RefreshFriendsList();
+        }
+
+        private async void OnUpdateNotification()
+        {
+            bool isUpdated;
+            
+            if(NotificationName.IsNullOrEmpty() || NotificationDescription.IsNullOrEmpty())
+            {
+                App.Current.MainPage.DisplayAlert("Error", "Please fill all fields", "OK");
+            }
+            else if(IsTimeTypeSelected && SelectedDate.Date.Add(SelectedTime) < DateTime.Now)
+            {
+                App.Current.MainPage.DisplayAlert("Error", "You must choose a time in the future", "OK");
+            }
+            else
+            {
+                if (IsTimeTypeSelected)
+                {
+                    isUpdated = await AzureHttpClient.Instance.UpdateTimeNotificationAsync(
+                        NotificationID,
+                        NotificationName,
+                        NotificationDescription,
+                        SelectedNotificationType,
+                        SelectedDate.Date.Add(SelectedTime));
+                }
+                else if (IsLocationTypeSelected)
+                {
+                    isUpdated = await AzureHttpClient.Instance.UpdateLocationNotificationAsync(
+                        NotificationID,
+                        NotificationName,
+                        NotificationDescription,
+                        SelectedNotificationType,
+                        SelectedLocationOption,
+                        SelectedActivationOption,
+                        IsPermanent);
+                }
+                else if (IsDynamicTypeSelected)
+                {
+                    isUpdated = await AzureHttpClient.Instance.UpdateDynamicNotificationAsync(
+                        NotificationID,
+                        NotificationName,
+                        NotificationDescription,
+                        SelectedNotificationType,
+                        SelectedDynamicOption);
+                }
+                else
+                {
+                    await App.Current.MainPage.DisplayAlert("Invalid notification update", "Something went wrong...", "OK");
+                    isUpdated = false;
+                }
+
+                if (isUpdated)
+                {
+                    await App.Current.MainPage.DisplayAlert("Notification updated", $"Notification {NotificationName} updated updated!", "OK");
+                }
+            }
+        }
+
+        private void populateNotificationFields(Notification notificationToEdit)
+        {
+            NotificationName = notificationToEdit.Name;
+            SelectedNotificationType = notificationToEdit.Type.ToString();
+            NotificationDescription = notificationToEdit.Description;
+
+            if (notificationToEdit.Type.Equals(NotificationType.Time))
+            {
+                SelectedDate = notificationToEdit.TypeInfo as DateTime? ?? DateTime.Today;
+                SelectedTime = notificationToEdit.TypeInfo as TimeSpan? ?? DateTime.Today.TimeOfDay;
+            }
+            else if (notificationToEdit.Type.Equals(NotificationType.Location))
+            {
+                SelectedActivationOption = notificationToEdit.Activation;
+                SelectedLocationOption = notificationToEdit.TypeInfo as string;
+                IsPermanent = notificationToEdit.IsPermanent;
+            }
+            else if (notificationToEdit.Type.Equals(NotificationType.Dynamic))
+            {
+                SelectedDynamicOption = notificationToEdit.TypeInfo as string;
+            }
         }
 
         public async void RefreshFriendsList()
@@ -137,49 +269,53 @@ namespace Notify.ViewModels
         {
             List<string> selectedRecipients, errorMessages;
             string completeErrorMessage;
-            DateTime selectedDateTime = SelectedDateOption.Date.Add(SelectedTimeOption);
+            DateTime selectedDateTime = SelectedDate.Date.Add(SelectedTime);
             bool isCreated;
 
             if (checkIfRecipientSelectionsIsValid(out selectedRecipients, out errorMessages))
             {
-                if (IsTimeOptionSelected)
+                if (IsTimeTypeSelected)
                 {
                     isCreated = AzureHttpClient.Instance.CreateTimeNotification(
                         NotificationName,
                         NotificationDescription,
-                        SelectedNotificationOption,
+                        SelectedNotificationType,
                         selectedDateTime,
                         selectedRecipients);
                 }
-                else if (IsLocationOptionSelected)
+                else if (IsLocationTypeSelected)
                 {
                     isCreated = AzureHttpClient.Instance.CreateLocationNotification(
                         NotificationName,
                         NotificationDescription,
-                        SelectedNotificationOption,
+                        SelectedNotificationType,
                         SelectedLocationOption,
                         SelectedActivationOption,
                         selectedRecipients,
                         IsPermanent);
                 }
-                else if (IsDynamicOptionSelected)
+                else if (IsDynamicTypeSelected)
                 {
                     isCreated = AzureHttpClient.Instance.CreateDynamicNotification(
                         NotificationName,
                         NotificationDescription,
-                        SelectedNotificationOption,
+                        SelectedNotificationType,
                         SelectedDynamicOption,
                         selectedRecipients);
                 }
                 else
                 {
-                    await App.Current.MainPage.DisplayAlert("Invalid notification creation", "Something went wrong...", "OK");
+                    await App.Current.MainPage.DisplayAlert("Invalid notification creation", "Invalid notification type", "OK");
                     isCreated = false;
                 }
 
                 if (isCreated)
                 {
                     await App.Current.MainPage.DisplayAlert("Notification created", $"Notification {NotificationName} created successfully!", "OK");
+                }
+                else
+                {
+                    await App.Current.MainPage.DisplayAlert("Invalid notification creation", "Something went wrong...", "OK");
                 }
             }
             else
@@ -214,14 +350,14 @@ namespace Notify.ViewModels
 
         private void addErrorMessagesAccordingToNotificationType(ref List<string> errorMessages)
         {
-            if (IsTimeOptionSelected)
+            if (IsTimeTypeSelected)
             {
-                if (SelectedDateOption.Date.Add(SelectedTimeOption) < DateTime.Now)
+                if (SelectedDate.Date.Add(SelectedTime) < DateTime.Now)
                 {
                     errorMessages.Add("You must choose a time in the future");
                 }
             }
-            else if (IsLocationOptionSelected)
+            else if (IsLocationTypeSelected)
             {
                 if (m_SelectedLocationOption.IsNullOrEmpty())
                 {
@@ -232,7 +368,7 @@ namespace Notify.ViewModels
                     errorMessages.Add("You must choose an activation option");
                 }
             }
-            else if (IsDynamicOptionSelected)
+            else if (IsDynamicTypeSelected)
             {
                 if (m_SelectedDynamicOption.IsNullOrEmpty())
                 {
