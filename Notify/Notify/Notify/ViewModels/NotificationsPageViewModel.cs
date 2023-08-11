@@ -23,14 +23,7 @@ namespace Notify.ViewModels
         {
             set => SetField(ref m_IsRefreshing, value);
         }
-
-        // #region Singleton
-        //
-        //private static readonly Lazy<NotificationsPageViewModel> lazy = new Lazy<NotificationsPageViewModel>(() => new NotificationsPageViewModel());
-        //public static NotificationsPageViewModel Instance => lazy.Value;
-        //
-        // #endregion
-
+        
         #region Constructor
 
         public NotificationsPageViewModel()
