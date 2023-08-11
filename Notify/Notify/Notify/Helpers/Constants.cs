@@ -118,7 +118,6 @@ namespace Notify.Helpers
         public static readonly string NOTIFICATION_STATUS_ACTIVE = "Active";
         public static readonly string NOTIFICATION_STATUS_DECLINED = "Declined";
         public static readonly string NOTIFICATION_STATUS_ARRIVED = "Arrived";
-        public static readonly string NOTIFICATION_STATUS_SENDING = "Sending";
         public static readonly string NOTIFICATION_STATUS_EXPIRED = "Expired";
 
         #endregion

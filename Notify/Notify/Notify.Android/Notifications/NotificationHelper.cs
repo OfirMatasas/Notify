@@ -60,7 +60,7 @@ namespace Notify.Droid.Notifications
             notificationBuilder = new NotificationCompat.Builder(context, foregroundChannelId)
                 .SetContentTitle("Ofir testing")
                 .SetContentText("You've arrived your destination!")
-                .SetSmallIcon(Resource.Drawable.notification_icon_background)
+                .SetSmallIcon(Resource.Mipmap.icon_round)
                 .SetAutoCancel(true)
                 .SetOngoing(true)
                 .SetContentIntent(pendingIntent);
