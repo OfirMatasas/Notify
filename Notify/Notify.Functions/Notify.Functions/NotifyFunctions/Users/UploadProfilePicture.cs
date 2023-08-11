@@ -8,6 +8,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Notify.Functions.Utils;
 
 namespace Notify.Functions.NotifyFunctions.Users
 {
@@ -29,8 +30,7 @@ namespace Notify.Functions.NotifyFunctions.Users
 
             try
             {
-                requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                data = JsonConvert.DeserializeObject(requestBody);
+                data = await ConversionUtils.ExtractBodyContent(req);
                 log.LogInformation($"Data:{Environment.NewLine}{data}");
 
                 base64Image = Convert.ToString(data.image);

@@ -13,6 +13,8 @@ using MongoDB.Driver;
 using Newtonsoft.Json;
 using Notify.Functions.Core;
 using Notify.Functions.HTTPClients;
+using Notify.Functions.Utils;
+using MongoUtils = Notify.Functions.Utils.MongoUtils;
 
 namespace Notify.Functions.NotifyFunctions.FriendRequest
 {
@@ -24,13 +26,13 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "friend/accept")]
             HttpRequest req, ILogger log)
         {
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
             string requester, username;
             ObjectResult result;
+            dynamic data;
 
             try
             {
+                data = await ConversionUtils.ExtractBodyContent(req);
                 requester = Convert.ToString(data.requester);
                 username = Convert.ToString(data.userName);
                 
@@ -54,10 +56,8 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
             IMongoCollection<BsonDocument> friendsCollection;
             BsonDocument friendDocument;
 
-            friendsCollection = AzureDatabaseClient.Instance.GetCollection<BsonDocument>(
-                Constants.DATABASE_NOTIFY_MTA, 
-                Constants.COLLECTION_FRIEND);
-
+            friendsCollection = Utils.MongoUtils.GetCollection(Constants.COLLECTION_FRIEND);
+            
             friendDocument = new BsonDocument
                 {
                     { "userName1", requester },
@@ -76,9 +76,7 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
             IMongoCollection<BsonDocument> friendRequestsCollection;
             FilterDefinition<BsonDocument> friendRequestsFilter;
 
-            friendRequestsCollection = AzureDatabaseClient.Instance.GetCollection<BsonDocument>(
-                Constants.DATABASE_NOTIFY_MTA, 
-                Constants.COLLECTION_FRIEND_REQUEST);
+            friendRequestsCollection = MongoUtils.GetCollection(Constants.COLLECTION_FRIEND_REQUEST);
 
             friendRequestsFilter = Builders<BsonDocument>.Filter.And(
                 Builders<BsonDocument>.Filter.Eq("requester", requester),

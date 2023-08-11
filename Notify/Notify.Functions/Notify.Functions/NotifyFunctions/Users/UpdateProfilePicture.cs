@@ -12,6 +12,8 @@ using MongoDB.Driver;
 using Newtonsoft.Json;
 using Notify.Functions.Core;
 using Notify.Functions.HTTPClients;
+using Notify.Functions.Utils;
+using MongoUtils = Notify.Functions.Utils.MongoUtils;
 
 namespace Notify.Functions.NotifyFunctions.Users
 {
@@ -35,11 +37,9 @@ namespace Notify.Functions.NotifyFunctions.Users
 
             try
             {
-                collection = AzureDatabaseClient.Instance.GetCollection<BsonDocument>(Constants.DATABASE_NOTIFY_MTA,
-                    Constants.COLLECTION_USER);
-
-                requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                data = JsonConvert.DeserializeObject(requestBody);
+                collection = MongoUtils.GetCollection(Constants.COLLECTION_USER);
+                
+                data = await ConversionUtils.ExtractBodyContent(req);
 
                 filter = Builders<BsonDocument>.Filter.Eq("userName", Convert.ToString(data.userName));
                 update = BuildUpdateDefinition(data);

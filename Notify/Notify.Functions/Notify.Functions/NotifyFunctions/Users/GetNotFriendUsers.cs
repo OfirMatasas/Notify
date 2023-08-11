@@ -14,6 +14,7 @@ using MongoDB.Driver;
 using Notify.Functions.HTTPClients;
 using Notify.Functions.Utils;
 using Constants = Notify.Functions.Core.Constants;
+using MongoUtils = Notify.Functions.Utils.MongoUtils;
 
 namespace Notify.Functions.NotifyFunctions.Users
 {
@@ -96,9 +97,8 @@ namespace Notify.Functions.NotifyFunctions.Users
             IMongoCollection<BsonDocument> userCollection;
             FilterDefinition<BsonDocument> userFilter;
 
-            userCollection = AzureDatabaseClient.Instance.GetCollection<BsonDocument>(
-                databaseName: Constants.DATABASE_NOTIFY_MTA,
-                collectionName: Constants.COLLECTION_USER);
+            userCollection = MongoUtils.GetCollection(Constants.COLLECTION_USER);
+            
             userFilter = Builders<BsonDocument>.Filter
                 .Where(doc => !friendsUsernames.Contains(doc["userName"].AsString));
             
