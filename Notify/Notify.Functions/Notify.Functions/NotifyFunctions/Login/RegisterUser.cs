@@ -37,10 +37,7 @@ namespace Notify.Functions.NotifyFunctions.Login
             try
             {
                 collection = MongoUtils.GetCollection(Constants.COLLECTION_USER);
-                
-                log.LogInformation(
-                    $"Got reference to {Constants.COLLECTION_USER} collection on {Constants.DATABASE_NOTIFY_MTA} database");
-
+           
                 await MongoUtils.CreatePropertyIndexesAsync(collection, "userName", "telephone");
                 
                 data = await ConversionUtils.ExtractBodyContent(req);
