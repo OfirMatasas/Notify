@@ -23,6 +23,13 @@ namespace Notify.ViewModels
         {
             set => SetField(ref m_IsRefreshing, value);
         }
+
+        private Color m_Color;
+        public Color Color
+        {
+            get => m_Color;
+            set => SetField(ref m_Color, value);
+        }
         
         #region Constructor
 

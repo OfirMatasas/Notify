@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using Notify.Core;
 using Xamarin.Forms;
@@ -18,6 +19,39 @@ namespace Notify.Helpers
             return null;
         }
     }
+    
+    public class TypeToColorConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            Color notificationColor = Color.Default;
+            
+            if (value is NotificationType type)
+            {
+                switch (type)
+                {
+                    case NotificationType.Location:
+                        notificationColor = Constants.LOCATION_NOTIFICATION_COLOR;
+                        break;
+                    case NotificationType.Dynamic:
+                        notificationColor = Constants.DYNAMIC_NOTIFICATION_COLOR;
+                        break;
+                    case NotificationType.Time:
+                        notificationColor = Constants.TIME_NOTIFICAATION_COLOR;
+                        break;
+                }
+            }
+
+            return notificationColor;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
+
+
     
     public static class Converter
     {

@@ -207,6 +207,9 @@ namespace Notify.Helpers
 
         public static readonly Color VALID_COLOR = Color.SeaGreen;
         public static readonly Color INVALID_COLOR = Color.Red;
+        public static readonly Color LOCATION_NOTIFICATION_COLOR = Color.FromHex("#B96CBD");
+        public static readonly Color DYNAMIC_NOTIFICATION_COLOR = Color.FromHex("#49A24D");
+        public static readonly Color TIME_NOTIFICAATION_COLOR = Color.FromHex("#FDA838");
 
         #endregion
 
