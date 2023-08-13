@@ -63,8 +63,12 @@ namespace Notify.ViewModels
         private Color m_Color;
         public Color Color
         {
-            get => m_Color;
-            set => SetField(ref m_Color, value);
+            get => m_IsLocationType;
+            set
+            {
+                m_IsLocationType = value;
+                OnPropertyChanged(nameof(IsLocationType));
+            }
         }
         
         public string SelectedFilter
@@ -110,6 +114,10 @@ namespace Notify.ViewModels
             EditNotificationCommand = new Command<Notification>(onEditNotificationButtonClicked);
             RenewNotificationCommand = new Command<Notification>(onRenewNotificationButtonClicked);
             ExecuteSearchCommand = new Command(applyFilterAndSearch);
+
+            DeleteNotificationCommand = new Command(onDeleteNotificationButtonClicked);
+            EditNotificationCommand = new Command(onEditNotificationButtonClicked);
+            RenewNotificationCommand = new Command(onRenewNotificationButtonClicked);
 
             try
             {
@@ -282,7 +290,16 @@ namespace Notify.ViewModels
         
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
+            Debug.WriteLine("edit notification button clicked");
+            Shell.Current.Navigation.PushAsync(new NotificationCreationPage(SelectedNotification));
+        }
+        
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
+
+        
+
