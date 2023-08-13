@@ -103,10 +103,35 @@
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <pancakeView:PancakeView
-                            BackgroundColor="White"
-                            HorizontalOptions="FillAndExpand"
-                            VerticalOptions="StartAndExpand">
+                        <SwipeView>
+                            <SwipeView.LeftItems>
+                                <SwipeItems>
+                                    <SwipeItem 
+                                        Text="Delete"
+                                        BackgroundColor="#DD4A48"
+                                        IconImageSource="delete_button.png">
+                                    </SwipeItem>
+                                </SwipeItems>
+                            </SwipeView.LeftItems>
+                            <SwipeView.RightItems>
+                                <SwipeItems Mode="Reveal">
+                                    <SwipeItem 
+                                        Text="Edit"
+                                        BackgroundColor="#068FFF"
+                                        IconImageSource="edit_button.png">
+                                    </SwipeItem>
+                                    <SwipeItem 
+                                        Text="Renew"
+                                        BackgroundColor="#03C988"
+                                        IconImageSource="renew_button.png">
+                                    </SwipeItem>
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+                            <SwipeView.Content>
+                                <pancakeView:PancakeView
+                                            BackgroundColor="White"
+                                            HorizontalOptions="FillAndExpand"
+                                            VerticalOptions="StartAndExpand">
                             <Grid HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -219,11 +244,12 @@
                                                 Text="{Binding Target, StringFormat='Target User: {0}'}"
                                                 TextColor="#2F3246" />
                                         </StackLayout>
-
                                     </Grid>
                                 </views:Expander>
                             </Grid>
                         </pancakeView:PancakeView>
+                            </SwipeView.Content>
+                        </SwipeView>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

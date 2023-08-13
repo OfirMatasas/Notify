@@ -94,11 +94,6 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\.DS_Store" />
-    <AndroidResource Include="Resources\drawable\delete_button_disabled.png" />
-    <AndroidResource Include="Resources\drawable\edit_button_disabled.png" />
-    <AndroidResource Include="Resources\drawable\renew_button_disabled.png" />
-    <AndroidResource Include="Resources\drawable\renew_button.png" />
-    <AndroidResource Include="Resources\drawable\edit_button.png" />
     <AndroidResource Include="Resources\drawable\accept_button.png" />
     <AndroidResource Include="Resources\drawable\add_friend.png" />
     <AndroidResource Include="Resources\drawable\avatar.png" />
@@ -107,8 +102,11 @@
     <AndroidResource Include="Resources\drawable\blank_profile_picture.png" />
     <AndroidResource Include="Resources\drawable\bluetooth.png" />
     <AndroidResource Include="Resources\drawable\bluetooth_icon.png" />
+    <AndroidResource Include="Resources\drawable\delete_button.png" />
+    <AndroidResource Include="Resources\drawable\delete_button_disabled.png" />
     <AndroidResource Include="Resources\drawable\dynamic_location_colored_icon.png" />
-    <AndroidResource Include="Resources\drawable\delete_button.jpg" />
+    <AndroidResource Include="Resources\drawable\edit_button.png" />
+    <AndroidResource Include="Resources\drawable\edit_button_disabled.png" />
     <AndroidResource Include="Resources\drawable\facebook.png" />
     <AndroidResource Include="Resources\drawable\friends.png" />
     <AndroidResource Include="Resources\drawable\friend_request.png" />
@@ -129,6 +127,8 @@
     <AndroidResource Include="Resources\drawable\NotifyLanding.png" />
     <AndroidResource Include="Resources\drawable\add_icon.png" />
     <AndroidResource Include="Resources\drawable\reject_button.png" />
+    <AndroidResource Include="Resources\drawable\renew_button.png" />
+    <AndroidResource Include="Resources\drawable\renew_button_disabled.png" />
     <AndroidResource Include="Resources\drawable\settings.png" />
     <AndroidResource Include="Resources\drawable\time_colored_icon.png" />
     <AndroidResource Include="Resources\drawable\wifi.png" />
