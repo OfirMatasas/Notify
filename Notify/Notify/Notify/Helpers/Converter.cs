@@ -50,9 +50,36 @@ namespace Notify.Helpers
             return null;
         }
     }
-
-
     
+    public class TypeToIconConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is NotificationType type)
+            {
+                switch (type)
+                {
+                    case NotificationType.Location:
+                        return ImageSource.FromFile("location_colored_icon"); 
+                    case NotificationType.Dynamic:
+                        return ImageSource.FromFile("dynamic_location_colored_icon");
+                    case NotificationType.Time:
+                        return ImageSource.FromFile("time_colored_icon");
+                    default:
+                        return null; 
+                }
+            }
+            
+            Debug.WriteLine($"Unexpected value in TypeToIconConverter: {value?.GetType()} - {value}");
+            return null;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
+
     public static class Converter
     {
         public static Notification ToNotification(dynamic notification)

@@ -10,6 +10,7 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <helpers:TypeToColorConverter x:Key="TypeToColorConverter" />
+            <helpers:TypeToIconConverter x:Key="TypeToIconConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -25,7 +26,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid
-                BackgroundColor="#455399"
+                BackgroundColor="#F3F5F9"
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions="FillAndExpand">
                 <StackLayout
@@ -42,7 +43,8 @@
                                     <Span
                                         FontAttributes="Bold"
                                         FontSize="40"
-                                        Text="Notifications" />
+                                        Text="Notifications"
+                                        TextColor="#222831" />
                                 </FormattedString.Spans>
                             </FormattedString>
                         </Label.FormattedText>
@@ -93,7 +95,7 @@
                 <CollectionView.Header>
                     <Label
                         FontSize="Large"
-                        Text="Notifications"
+                        Text="All Notifications"
                         TextColor="Black" />
                 </CollectionView.Header>
                 <CollectionView.ItemsLayout>
@@ -124,12 +126,11 @@
                                                 <ColumnDefinition Width="3.5*" />
                                             </Grid.ColumnDefinitions>
                                             <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                                                <Label
-                                                    FontAttributes="Bold"
-                                                    FontSize="Medium"
+                                                <Image
+                                                    Aspect="AspectFill"
+                                                    HeightRequest="30"
                                                     HorizontalOptions="Center"
-                                                    Text="{Binding Type}"
-                                                    TextColor="Black" />
+                                                    Source="{Binding Type, Converter={StaticResource TypeToIconConverter}}" />
                                             </StackLayout>
                                             <BoxView
                                                 BackgroundColor="#F2F4F8"
