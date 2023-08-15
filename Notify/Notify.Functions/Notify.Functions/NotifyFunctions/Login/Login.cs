@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,9 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using Newtonsoft.Json;
 using Notify.Functions.Core;
-using Notify.Functions.HTTPClients;
 using Notify.Functions.Utils;
 using MongoUtils = Notify.Functions.Utils.MongoUtils;
 
@@ -26,21 +23,17 @@ namespace Notify.Functions.NotifyFunctions.Login
             HttpRequest req, ILogger log)
         {
             IMongoCollection<BsonDocument> collection;
-            string requestBody;
             dynamic data;
             FilterDefinition<BsonDocument> filter;
             ObjectResult result;
-            string decryptedPassword;
-            string storedEncryptedPassword;
+            string decryptedPassword, storedEncryptedPassword;
             BsonDocument user;
 
             log.LogInformation("Got client's HTTP request to login");
 
             try
             {
-                collection = MongoUtils.GetCollection(Constants.COLLECTION_USER);
-
-                data = await ConversionUtils.ExtractBodyContent(req);
+                data = await ConversionUtils.ExtractBodyContentAsync(req);
                 log.LogInformation($"Data:{Environment.NewLine}{data}");
 
                 filter = Builders<BsonDocument>.Filter.And(
@@ -48,6 +41,7 @@ namespace Notify.Functions.NotifyFunctions.Login
                         new BsonRegularExpression(Convert.ToString(data.userName), "i"))
                 );
 
+                collection = MongoUtils.GetCollection(Constants.COLLECTION_USER);
                 user = await collection.Find(filter).FirstOrDefaultAsync();
 
                 if (user.IsBsonNull)

@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +10,6 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using Notify.Functions.Core;
-using Notify.Functions.HTTPClients;
 using Notify.Functions.Utils;
 using MongoUtils = Notify.Functions.Utils.MongoUtils;
 
@@ -26,7 +24,6 @@ namespace Notify.Functions.NotifyFunctions.Users
             HttpRequest req, ILogger log)
         {
             IMongoCollection<BsonDocument> collection;
-            string requestBody;
             dynamic data;
             FilterDefinition<BsonDocument> filter;
             UpdateDefinition<BsonDocument> update;
@@ -37,9 +34,7 @@ namespace Notify.Functions.NotifyFunctions.Users
 
             try
             {
-                collection = MongoUtils.GetCollection(Constants.COLLECTION_USER);
-                
-                data = await ConversionUtils.ExtractBodyContent(req);
+                data = await ConversionUtils.ExtractBodyContentAsync(req);
 
                 filter = Builders<BsonDocument>.Filter.Eq("userName", Convert.ToString(data.userName));
                 update = BuildUpdateDefinition(data);
@@ -50,6 +45,7 @@ namespace Notify.Functions.NotifyFunctions.Users
                     return new BadRequestObjectResult("No updates provided.");
                 }
 
+                collection = MongoUtils.GetCollection(Constants.COLLECTION_USER);
                 updateResult = await collection.UpdateOneAsync(filter, update);
 
                 if (updateResult.ModifiedCount > 0)

@@ -109,7 +109,7 @@
                     <CarouselView.ItemTemplate>
                         <DataTemplate>
                             <Frame
-                                BackgroundColor="#EEEEEE"
+                                BackgroundColor="#FFFFFF"
                                 CornerRadius="30"
                                 HeightRequest="{OnPlatform Android=120,
                                                            iOS=140}"
@@ -137,6 +137,12 @@
                                         HorizontalOptions="Center"
                                         IsVisible="{Binding IsDynamic}"
                                         Text="{Binding LastUpdatedLocation, StringFormat='Location: {0}'}"
+                                        TextColor="#393E46" />
+                                    <Label
+                                        FontSize="Medium"
+                                        HorizontalOptions="Center"
+                                        IsVisible="{Binding Address, Converter={StaticResource NullOrEmptyToBoolConverter}}"
+                                        Text="{Binding Address, StringFormat='Location: {0}'}"
                                         TextColor="#393E46" />
                                 </StackLayout>
                             </Frame>

@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -12,7 +11,6 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using Notify.Functions.Core;
-using Notify.Functions.HTTPClients;
 using Notify.Functions.Utils;
 
 namespace Notify.Functions.NotifyFunctions.Login
@@ -26,7 +24,6 @@ namespace Notify.Functions.NotifyFunctions.Login
             HttpRequest req, ILogger log)
         {
             IMongoCollection<BsonDocument> collection;
-            string requestBody;
             dynamic data;
             ObjectResult result;
             FilterDefinition<BsonDocument> filterUsername, filterTelephone;
@@ -36,9 +33,7 @@ namespace Notify.Functions.NotifyFunctions.Login
 
             try
             {
-                collection = Utils.MongoUtils.GetCollection(Constants.COLLECTION_USER);
-
-                data = await ConversionUtils.ExtractBodyContent(req);
+                data = await ConversionUtils.ExtractBodyContentAsync(req);
                 log.LogInformation($"Data:{Environment.NewLine}{data}");
 
                 if (data.userName == null || data.telephone == null)
@@ -51,6 +46,7 @@ namespace Notify.Functions.NotifyFunctions.Login
                         new BsonRegularExpression($"^{Regex.Escape(Convert.ToString(data.userName))}$", "i"));
                     filterTelephone = Builders<BsonDocument>.Filter.Eq("telephone", Convert.ToString(data.telephone));
 
+                    collection = Utils.MongoUtils.GetCollection(Constants.COLLECTION_USER);
                     countUsername = await collection.CountDocumentsAsync(filterUsername);
                     countTelephone = await collection.CountDocumentsAsync(filterTelephone);
 

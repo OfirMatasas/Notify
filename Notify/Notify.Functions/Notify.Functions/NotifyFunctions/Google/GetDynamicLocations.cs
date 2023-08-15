@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +7,6 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Notify.Functions.Core;
 using Notify.Functions.HTTPClients;
 using Notify.Functions.Utils;
@@ -23,7 +21,6 @@ namespace Notify.Functions.NotifyFunctions.Google
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "destination/dynamic")]
             HttpRequest req, ILogger log)
         {
-            string requestBody;
             dynamic data;
             double longitude, latitude;
             string type;
@@ -32,7 +29,7 @@ namespace Notify.Functions.NotifyFunctions.Google
             try
             {
                 
-                data = await ConversionUtils.ExtractBodyContent(req);
+                data = await ConversionUtils.ExtractBodyContentAsync(req);
                 log.LogInformation($"Data:{Environment.NewLine}{data}");
                 
                 longitude = Convert.ToDouble(data.longitude);
@@ -45,7 +42,8 @@ namespace Notify.Functions.NotifyFunctions.Google
                     longitude: longitude, 
                     latitude: latitude, 
                     radius: Constants.GOOGLE_API_RADIUS, 
-                    type: type);
+                    type: type,
+                    logger: log);
 
                 return new OkObjectResult(results);
             }

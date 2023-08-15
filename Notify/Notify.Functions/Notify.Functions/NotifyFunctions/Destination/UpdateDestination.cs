@@ -14,6 +14,7 @@ using Notify.Functions.Core;
 using Notify.Functions.HTTPClients;
 using Notify.Functions.Utils;
 using static MongoDB.Driver.Builders<MongoDB.Bson.BsonDocument>;
+using MongoUtils = Notify.Functions.Utils.MongoUtils;
 
 namespace Notify.Functions.NotifyFunctions.Destination
 {
@@ -25,9 +26,7 @@ namespace Notify.Functions.NotifyFunctions.Destination
             [HttpTrigger(AuthorizationLevel.Anonymous, "put", "post", Route = "destination/update")]
             HttpRequest req, ILogger log)
         {
-            IMongoDatabase database;
             IMongoCollection<BsonDocument> collection;
-            string requestBody;
             dynamic data;
             string userName, locationName;
             FilterDefinition<BsonDocument> filter;
@@ -35,13 +34,8 @@ namespace Notify.Functions.NotifyFunctions.Destination
             ObjectResult result;
             
             log.LogInformation($"Got client's updated destination location HTTP request");
-
-            database = AzureDatabaseClient.Instance.GetDatabase(Constants.DATABASE_NOTIFY_MTA);
-            collection = database.GetCollection<BsonDocument>(Constants.COLLECTION_DESTINATION);
             
-            log.LogInformation($"Got reference to {Constants.COLLECTION_DESTINATION} collection on {Constants.DATABASE_NOTIFY_MTA} database");
-
-            data = await ConversionUtils.ExtractBodyContent(req);
+            data = await ConversionUtils.ExtractBodyContentAsync(req);
             log.LogInformation($"Data:{Environment.NewLine}{data}");
 
             try
@@ -54,6 +48,8 @@ namespace Notify.Functions.NotifyFunctions.Destination
                     Filter.Eq("user", userName), 
                     Filter.Eq("location.name", locationName)
                 );
+                
+                collection = MongoUtils.GetCollection(Constants.COLLECTION_DESTINATION);
                 document = await collection.Find(filter).FirstOrDefaultAsync();
                 
                 if (document != null)
@@ -84,8 +80,12 @@ namespace Notify.Functions.NotifyFunctions.Destination
 
             if (type.Equals("Location"))
             {
-                document["location"].AsBsonDocument["latitude"] = Convert.ToDouble(data.location.latitude);
-                document["location"].AsBsonDocument["longitude"] = Convert.ToDouble(data.location.longitude);
+                double latitude = Convert.ToDouble(data.location.latitude), longitude = Convert.ToDouble(data.location.longitude);
+                string address = GoogleHttpClient.Instance.GetAddressFromCoordinatesAsync(latitude, longitude, log).Result;
+
+                document["location"].AsBsonDocument["latitude"] = latitude;
+                document["location"].AsBsonDocument["longitude"] = longitude;
+                document["location"].AsBsonDocument["address"] = address;
             }
             else if (type.Equals("WiFi"))
             {
@@ -123,8 +123,12 @@ namespace Notify.Functions.NotifyFunctions.Destination
 
             if (type.Equals("Location"))
             {
-                document["location"].AsBsonDocument.Add("latitude", Convert.ToDouble(data.location.latitude));
-                document["location"].AsBsonDocument.Add("longitude", Convert.ToDouble(data.location.longitude));
+                double latitude = Convert.ToDouble(data.location.latitude), longitude = Convert.ToDouble(data.location.longitude);
+                string address = GoogleHttpClient.Instance.GetAddressFromCoordinatesAsync(latitude, longitude, log).Result;
+                
+                document["location"].AsBsonDocument.Add("latitude", latitude);
+                document["location"].AsBsonDocument.Add("longitude", longitude);
+                document["location"].AsBsonDocument.Add("address", address);
             }
             else if (type.Equals("WiFi"))
             {

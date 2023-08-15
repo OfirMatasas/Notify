@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -54,7 +53,7 @@ namespace Notify.Functions.HTTPClients
             }
         }
 
-        private async Task<string> GetAsync(string uri)
+        private async Task<string> GetAsync(string uri, ILogger logger)
         {
             string googleAPIkey = await AzureVault.GetSecretFromVault(Constants.GOOGLE_API_KEY);
             string content = null;
@@ -69,7 +68,7 @@ namespace Notify.Functions.HTTPClients
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error occured on GetAsync: {Environment.NewLine}{ex.Message}");
+                logger.LogError($"Error occured on GetAsync: {Environment.NewLine}{ex.Message}");
             }
             
             return content;
@@ -86,7 +85,7 @@ namespace Notify.Functions.HTTPClients
 
             try
             {
-                response = await GetAsync(requestUri);
+                response = await GetAsync(requestUri, logger);
                 responseJson = JObject.Parse(response);
                 predictions = responseJson["predictions"];
 
@@ -113,7 +112,7 @@ namespace Notify.Functions.HTTPClients
 
             try
             {
-                response = await GetAsync(requestUri);
+                response = await GetAsync(requestUri, logger);
                 geocodingResponse = JsonConvert.DeserializeObject<GeocodingResponse>(response);
                 
                 if (geocodingResponse.Results.Count > 0)
@@ -130,7 +129,7 @@ namespace Notify.Functions.HTTPClients
             return coordinates;
         }
         
-        public async Task<string> GetAddressFromCoordinatesAsync(double latitude, double longitude)
+        public async Task<string> GetAddressFromCoordinatesAsync(double latitude, double longitude, ILogger logger)
         {
             string googleAPIkey = await AzureVault.GetSecretFromVault(Constants.GOOGLE_API_KEY);
             string requestUri = $"geocode/json?key={googleAPIkey}&latlng={latitude},{longitude}";
@@ -140,7 +139,7 @@ namespace Notify.Functions.HTTPClients
     
             try
             {
-                response = await GetAsync(requestUri);
+                response = await GetAsync(requestUri, logger);
                 result = JsonConvert.DeserializeObject<GoogleMapsApiResult>(response);
 
                 if (result == null || result.GoogleMapsResults.Length == 0)
@@ -152,17 +151,17 @@ namespace Notify.Functions.HTTPClients
                     address = result.GoogleMapsResults[0].FormattedAddress;
                 }
                 
-                Debug.WriteLine($"Address from coordinates provided: {address}");
+                logger.LogInformation($"Address from coordinates provided: {address}");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error occured on GetAddressFromCoordinatesAsync: {Environment.NewLine}{ex.Message}");
+                logger.LogError($"Error occured on GetAddressFromCoordinatesAsync: {Environment.NewLine}{ex.Message}");
             }
 
             return address;
         }
         
-        public async Task<List<Place>> SearchPlacesNearby(double latitude, double longitude, int radius, string type)
+        public async Task<List<Place>> SearchPlacesNearby(double latitude, double longitude, int radius, string type, ILogger logger)
         {
             string googleAPIkey = await AzureVault.GetSecretFromVault(Constants.GOOGLE_API_KEY);
             string requestUri = $"place/nearbysearch/json?key={googleAPIkey}&location={latitude},{longitude}&radius={radius}&type={type.ToLower()}";
@@ -174,7 +173,7 @@ namespace Notify.Functions.HTTPClients
 
             try
             {
-                response = await GetAsync(requestUri);
+                response = await GetAsync(requestUri, logger);
                 responseJson = JObject.Parse(response);
                 results = responseJson["results"];
                 
@@ -190,7 +189,7 @@ namespace Notify.Functions.HTTPClients
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error occured on SearchPlacesNearby: {Environment.NewLine}{ex.Message}");
+                logger.LogError($"Error occured on SearchPlacesNearby: {Environment.NewLine}{ex.Message}");
             }
 
             return places;
