@@ -2,6 +2,8 @@ using Xamarin.Forms;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
+using Android.Content;
+using Android.Content.PM;
 using Notify.Azure.HttpClient;
 using Notify.Core;
 using Notify.Helpers;
@@ -109,6 +111,9 @@ namespace Notify.ViewModels
             {
                 await App.Current.MainPage.DisplayAlert("Error", errorMessage, "OK");
             }
+            
+            // DEKEL - only for testing - open the google maps app directly from Notify app
+            GoogleMapsHandler.GetInstance().OpenGoogleMapsNavigation(latitude, longitude);
         }
 
         private async Task updateLocation(double latitude, double longitude)
