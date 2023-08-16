@@ -109,7 +109,12 @@
                                     <SwipeItem 
                                         Text="Delete"
                                         BackgroundColor="#DD4A48"
-                                        IconImageSource="delete_button.png">
+                                        Command="{Binding Path=BindingContext.DeleteNotificationCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
+                                        IsEnabled="{Binding IsDeletable}">
+            
+                                        <SwipeItem.Icon>
+                                            <FileImageSource File="delete_button.png" />
+                                        </SwipeItem.Icon>
                                     </SwipeItem>
                                 </SwipeItems>
                             </SwipeView.LeftItems>

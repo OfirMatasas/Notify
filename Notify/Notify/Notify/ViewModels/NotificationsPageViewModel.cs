@@ -24,6 +24,7 @@ namespace Notify.ViewModels
         public List<Notification> Notifications { get; set; }
         public Notification SelectedNotification { get; set; }
         public string Name { get; set; }
+        public string ID { get; set; }
         public string Status { get; set; }
         public string Type { get; set; }
         public bool IsRenewable => Status == "Expired" && Type != Constants.TIME;
@@ -134,13 +135,13 @@ namespace Notify.ViewModels
 
             if (isConfirmed)
             {
-                //isDeleted = await AzureHttpClient.Instance.DeleteNotificationAsync(ID);
+                isDeleted = await AzureHttpClient.Instance.DeleteNotificationAsync(ID);
 
-                //if (isDeleted)
+                if (isDeleted)
                 {
                     await Shell.Current.Navigation.PopAsync();
                 }
-                //else
+                else
                 {
                     await App.Current.MainPage.DisplayAlert("Notification Deletion",
                         "Failed to delete notification",
