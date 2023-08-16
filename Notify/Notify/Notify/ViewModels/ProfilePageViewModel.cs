@@ -19,7 +19,6 @@ namespace Notify.ViewModels
     {
         
         private readonly LoggerService r_Logger = LoggerService.Instance;
-        private string destinationsJson;
         private string m_UserName;
         private ImageSource m_ProfilePicture;
         private ObservableCollection<Destination> m_ScrollViewContent;
@@ -80,7 +79,7 @@ namespace Notify.ViewModels
             
             ScrollViewContent = new ObservableCollection<Destination>();
             
-            destinationsJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, String.Empty);
+            string destinationsJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, String.Empty);
             Destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationsJson);
         }
         
@@ -173,6 +172,8 @@ namespace Notify.ViewModels
                 ScrollViewContent.Add(new Destination(destination.Name, destination.IsDynamic)
                 {
                     LastUpdatedLocation = destination.LastUpdatedLocation,
+                    Locations = destination.IsDynamic ? null : destination.Locations,
+                    Address = destination.Address
                 });
             }
 

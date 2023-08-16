@@ -14,6 +14,7 @@ namespace Notify.Core
         private string m_Bluetooth;
         private Location m_LastUpdatedLocation = new Location(0, 0);
         private bool m_IsDynamic;
+        private string m_Address;
 
         public Destination(string name, bool isDynamic = false, string ssid = null, string bluetooth = null, Location lastUpdatedLocation = null)
         {
@@ -33,7 +34,14 @@ namespace Notify.Core
         public List<Location> Locations
         {
             get => m_Locations;
-            set => m_Locations = value;
+            set
+            {
+                m_Locations = value;
+                if (m_Locations != null && m_Locations.Count == 1 && !IsDynamic)
+                {
+                    Address = m_Locations[0].ToString();
+                }
+            }
         }
 
         public string SSID
@@ -58,6 +66,12 @@ namespace Notify.Core
         {
             get => m_IsDynamic;
             set => m_IsDynamic = value;
+        }
+        
+        public string Address
+        {
+            get => m_Address;
+            set => m_Address = value;
         }
 
         public bool IsArrived(Location currentLocation)

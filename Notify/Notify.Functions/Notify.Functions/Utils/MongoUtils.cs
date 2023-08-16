@@ -1,5 +1,5 @@
-using System.Diagnostics;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Notify.Functions.Core;
@@ -9,7 +9,7 @@ namespace Notify.Functions.Utils
 {
     public static class MongoUtils
     {
-        public static async Task CreatePropertyIndexesAsync(IMongoCollection<BsonDocument> collection,
+        public static async Task CreatePropertyIndexesAsync(IMongoCollection<BsonDocument> collection, ILogger logger,
             params string[] propertiesToIndex)
         {
             foreach (string propertyToIndex in propertiesToIndex)
@@ -21,17 +21,15 @@ namespace Notify.Functions.Utils
                 IndexKeysDefinition<BsonDocument> indexKeys =
                     Builders<BsonDocument>.IndexKeys.Ascending(propertyToIndex);
                 await collection.Indexes.CreateOneAsync(new CreateIndexModel<BsonDocument>(indexKeys, indexOptions));
-                Debug.WriteLine(
+                logger.LogInformation(
                     $"Index created for property '{propertyToIndex}' in collection '{collection.CollectionNamespace.CollectionName}'");
             }
         }
         
         public static IMongoCollection<BsonDocument> GetCollection(string collectionName)
         {
-            IMongoDatabase database;
-
-            database = AzureDatabaseClient.Instance.GetDatabase(Constants.DATABASE_NOTIFY_MTA);
-            return  database.GetCollection<BsonDocument>(collectionName);
+            IMongoDatabase database = AzureDatabaseClient.Instance.GetDatabase(Constants.DATABASE_NOTIFY_MTA);
+            return database.GetCollection<BsonDocument>(collectionName);
         }
     }
 }

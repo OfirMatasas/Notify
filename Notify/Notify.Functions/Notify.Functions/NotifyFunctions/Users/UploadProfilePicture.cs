@@ -7,7 +7,6 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Notify.Functions.Utils;
 
 namespace Notify.Functions.NotifyFunctions.Users
@@ -20,7 +19,7 @@ namespace Notify.Functions.NotifyFunctions.Users
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "uploadProfilePicture")]
             HttpRequest req, ILogger log)
         {
-            string requestBody, base64Image, fileName, imageUrl;
+            string base64Image, fileName, imageUrl;
             dynamic data;
             ObjectResult result;
             Stream imageStream;
@@ -30,7 +29,7 @@ namespace Notify.Functions.NotifyFunctions.Users
 
             try
             {
-                data = await ConversionUtils.ExtractBodyContent(req);
+                data = await ConversionUtils.ExtractBodyContentAsync(req);
                 log.LogInformation($"Data:{Environment.NewLine}{data}");
 
                 base64Image = Convert.ToString(data.image);
@@ -60,4 +59,3 @@ namespace Notify.Functions.NotifyFunctions.Users
         }
     }
 }
-

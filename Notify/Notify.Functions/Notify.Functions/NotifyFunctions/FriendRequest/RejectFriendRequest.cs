@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNetCore.Authorization;
@@ -10,9 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using Newtonsoft.Json;
 using Notify.Functions.Core;
-using Notify.Functions.HTTPClients;
 using Notify.Functions.Utils;
 using MongoUtils = Notify.Functions.Utils.MongoUtils;
 
@@ -32,7 +29,7 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
 
             try
             {
-                data = await ConversionUtils.ExtractBodyContent(req);
+                data = await ConversionUtils.ExtractBodyContentAsync(req);
                 requester = Convert.ToString(data.requester);
                 username = Convert.ToString(data.userName);
                 

@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +10,6 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using Notify.Functions.Core;
-using Notify.Functions.HTTPClients;
 using Notify.Functions.Utils;
 using MongoUtils = Notify.Functions.Utils.MongoUtils;
 
@@ -26,7 +24,6 @@ namespace Notify.Functions.NotifyFunctions.Login
             HttpRequest req, ILogger log)
         {
             IMongoCollection<BsonDocument> collection;
-            string requestBody;
             dynamic data;
             FilterDefinition<BsonDocument> filter;
             long usersCount;
@@ -37,10 +34,9 @@ namespace Notify.Functions.NotifyFunctions.Login
             try
             {
                 collection = MongoUtils.GetCollection(Constants.COLLECTION_USER);
-           
-                await MongoUtils.CreatePropertyIndexesAsync(collection, "userName", "telephone");
+                await MongoUtils.CreatePropertyIndexesAsync(collection, log, "userName", "telephone");
                 
-                data = await ConversionUtils.ExtractBodyContent(req);
+                data = await ConversionUtils.ExtractBodyContentAsync(req);
                 log.LogInformation($"Data:{Environment.NewLine}{data}");
 
                 filter = Builders<BsonDocument>.Filter.Regex("userName",

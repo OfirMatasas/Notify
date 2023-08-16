@@ -75,16 +75,19 @@ namespace Notify.Helpers
         
         public static Destination ToDestination(dynamic destination)
         {
+            Console.WriteLine("Address: " + (string)(destination.location.address ?? "null"));
             return new Destination((string)destination.location.name)
             {
                 Locations = new List<Location>
                 {
                     new Location(
                         longitude: (double)(destination.location.longitude ?? 0),
-                        latitude: (double)(destination.location.latitude ?? 0))
+                        latitude: (double)(destination.location.latitude ?? 0),
+                        address: (string)(destination.location.address ?? ""))
                 },
                 SSID = (string)(destination.location.ssid ?? ""),
-                Bluetooth = (string)(destination.location.device ?? "")
+                Bluetooth = (string)(destination.location.device ?? ""),
+                Address = (string)(destination.location.address ?? "")
             };
         }
     }

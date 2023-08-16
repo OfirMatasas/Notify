@@ -17,7 +17,7 @@ namespace Notify.Core
 
         public override string ToString()
         {
-            return $"Longitude: {Longitude}, Latitude: {Latitude}";
+            return Address ?? $"{Latitude}, {Longitude}";
         }
     }
 }
