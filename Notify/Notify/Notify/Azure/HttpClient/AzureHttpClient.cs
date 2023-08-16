@@ -817,9 +817,10 @@ namespace Notify.Azure.HttpClient
 
         public async Task<bool> RenewNotificationAsync(string creator, string notificationID)
         {
+            string json;
             bool isRenewed;
             HttpResponseMessage response;
-            dynamic json = new JObject
+            dynamic data = new JObject
             {
                 { "creator", creator },
                 { "id", notificationID }
@@ -827,9 +828,12 @@ namespace Notify.Azure.HttpClient
 
             try
             {
-                r_Logger.LogInformation($"request:{Environment.NewLine}{json}");
+                r_Logger.LogInformation($"request:{Environment.NewLine}{data}");
                 
-                response = await postAsync(Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_RENEW, createJsonStringContent(json));
+                json = JsonConvert.SerializeObject(data);
+                response = await postAsync(
+                    requestUri: Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_RENEW, 
+                    content: createJsonStringContent(json));
                 response.EnsureSuccessStatusCode();
                 r_Logger.LogDebug($"Successful status code from Azure Function from createNotification");
                 isRenewed = true;

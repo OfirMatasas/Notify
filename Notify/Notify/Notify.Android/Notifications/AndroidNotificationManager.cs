@@ -44,14 +44,13 @@ namespace Notify.Droid.Notifications
         {
             string fallbackStatus = notification.Status;
             
-            notification.Status = Constants.NOTIFICATION_STATUS_SENDING;
+            notification.Status = Constants.NOTIFICATION_STATUS_EXPIRED;
             r_Logger.LogDebug(
                 $"Sending notification with name: {notification.Name} and description: {notification.Description}");
             try
             {
                 DependencyService.Get<INotificationManager>()
                     .SendNotification(notification.Name, notification.Description, notification);
-                notification.Status = Constants.NOTIFICATION_STATUS_EXPIRED;
             }
             catch (Exception ex)
             {
@@ -127,8 +126,7 @@ namespace Notify.Droid.Notifications
                 .SetContentTitle(title)
                 .SetContentText(message)
                 .SetAutoCancel(true)
-                .SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources, Resource.Drawable.notification_icon_background))
-                .SetSmallIcon(Resource.Drawable.notification_icon_background)
+                .SetSmallIcon(Resource.Mipmap.icon_round)
                 .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate);
 
             return builder.Build();

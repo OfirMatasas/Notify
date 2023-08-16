@@ -322,8 +322,6 @@ namespace Notify
             }
             
             LoggerService.Instance.LogInformation($"Found a total of {elapsedTimeNotifications.Count} elapsed time notifications");
-            updateAndSaveNotificationsInPrefrences(notifications, elapsedTimeNotifications);
-            
             return elapsedTimeNotifications;
         }
 
@@ -359,20 +357,6 @@ namespace Notify
 
             Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
             AzureHttpClient.Instance.UpdateNotificationsStatus(sentNotifications, newStatus);
-        }
-        
-        private void updateAndSaveNotificationsInPrefrences(List<Notification> allNotifications, List<Notification> toUpdateNotifications)
-        {
-            allNotifications.ForEach(notification =>
-            {
-                if (toUpdateNotifications.Contains(notification))
-                {
-                    notification.Status = Constants.NOTIFICATION_STATUS_SENDING;
-                    LoggerService.Instance.LogInformation($"Updated status of notification {notification.ID} to '{Constants.NOTIFICATION_STATUS_SENDING}'");
-                }
-            });
-            
-            Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(allNotifications));
         }
 
         private void setNoficicationManagerNotificationReceived()
