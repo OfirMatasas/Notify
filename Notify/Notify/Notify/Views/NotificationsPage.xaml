@@ -85,12 +85,13 @@
                         WidthRequest="7" />
                 </Grid>
             </pancakeView:PancakeView>
-            <CollectionView
+            <CollectionView 
                 Grid.Row="2"
                 HorizontalOptions="FillAndExpand"
                 ItemsSource="{Binding Notifications}"
                 Margin="15,-10,15,0"
                 SelectionMode="None"
+                VerticalScrollBarVisibility="Always"
                 VerticalOptions="FillAndExpand">
                 <CollectionView.Header>
                     <Label
@@ -267,6 +268,9 @@
                         </SwipeView>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
+                <CollectionView.Footer>
+                    <BoxView HeightRequest="15" BackgroundColor="Transparent" />
+                </CollectionView.Footer>
             </CollectionView>
         </Grid>
     </RefreshView>
