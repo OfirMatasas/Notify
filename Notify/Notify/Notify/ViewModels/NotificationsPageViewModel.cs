@@ -117,12 +117,11 @@ namespace Notify.ViewModels
             await Shell.Current.Navigation.PushAsync(new NotificationDetailsPage(SelectedNotification));
         }
         
-        private bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        private void SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
         {
-            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+            if (EqualityComparer<T>.Default.Equals(field, value)) return;
             field = value;
             OnPropertyChanged(propertyName);
-            return true;
         }
         
         private async void onDeleteNotificationButtonClicked()
@@ -174,13 +173,13 @@ namespace Notify.ViewModels
             if (isConfirmed)
             {
                 username = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
-                //isRenewed = await AzureHttpClient.Instance.RenewNotificationAsync(username, ID);
+                isRenewed = await AzureHttpClient.Instance.RenewNotificationAsync(username, ID);
 
-                //if (isRenewed)
+                if (isRenewed)
                 {
                     messageBody = $"Notification {Name} renewed successfully";
                 }
-                //else
+                else
                 {
                     messageBody = $"Failed to renew notification {Name}";
                 }

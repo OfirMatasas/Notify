@@ -111,10 +111,9 @@
                                         BackgroundColor="#DD4A48"
                                         Command="{Binding Path=BindingContext.DeleteNotificationCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
                                         IsEnabled="{Binding IsDeletable}">
-            
-                                        <SwipeItem.Icon>
+                                        <SwipeItem.IconImageSource>
                                             <FileImageSource File="delete_button.png" />
-                                        </SwipeItem.Icon>
+                                        </SwipeItem.IconImageSource>
                                     </SwipeItem>
                                 </SwipeItems>
                             </SwipeView.LeftItems>
@@ -123,12 +122,20 @@
                                     <SwipeItem 
                                         Text="Edit"
                                         BackgroundColor="#068FFF"
-                                        IconImageSource="edit_button.png">
+                                        Command="{Binding Path=BindingContext.EditNotificationCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
+                                        IsEnabled="{Binding IsEditable}">
+                                        <SwipeItem.IconImageSource>
+                                            <FileImageSource File="edit_button.png" />
+                                        </SwipeItem.IconImageSource>
                                     </SwipeItem>
                                     <SwipeItem 
                                         Text="Renew"
                                         BackgroundColor="#03C988"
-                                        IconImageSource="renew_button.png">
+                                        Command="{Binding Path=BindingContext.RenewNotificationCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
+                                        IsEnabled="{Binding IsRenewable}">
+                                        <SwipeItem.IconImageSource>
+                                            <FileImageSource File="renew_button.png" />
+                                        </SwipeItem.IconImageSource>
                                     </SwipeItem>
                                 </SwipeItems>
                             </SwipeView.RightItems>
