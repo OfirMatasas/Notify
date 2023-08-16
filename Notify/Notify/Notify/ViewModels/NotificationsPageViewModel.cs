@@ -115,9 +115,9 @@ namespace Notify.ViewModels
             RenewNotificationCommand = new Command<Notification>(onRenewNotificationButtonClicked);
             ExecuteSearchCommand = new Command(applyFilterAndSearch);
 
-            DeleteNotificationCommand = new Command(onDeleteNotificationButtonClicked);
-            EditNotificationCommand = new Command(onEditNotificationButtonClicked);
-            RenewNotificationCommand = new Command(onRenewNotificationButtonClicked);
+            DeleteNotificationCommand = new Command<Notification>(onDeleteNotificationButtonClicked);
+            EditNotificationCommand = new Command<Notification>(onEditNotificationButtonClicked);
+            RenewNotificationCommand = new Command<Notification>(onRenewNotificationButtonClicked);
 
             try
             {
