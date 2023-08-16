@@ -72,9 +72,9 @@ namespace Notify.ViewModels
             RefreshNotificationsCommand = new Command(onNotificationsRefreshClicked);
             NotificationSelectedCommand = new Command(onNotificationSelected);
 
-            DeleteNotificationCommand = new Command(onDeleteNotificationButtonClicked);
-            EditNotificationCommand = new Command(onEditNotificationButtonClicked);
-            RenewNotificationCommand = new Command(onRenewNotificationButtonClicked);
+            DeleteNotificationCommand = new Command<Notification>(onDeleteNotificationButtonClicked);
+            EditNotificationCommand = new Command<Notification>(onEditNotificationButtonClicked);
+            RenewNotificationCommand = new Command<Notification>(onRenewNotificationButtonClicked);
 
             try
             {
@@ -124,17 +124,17 @@ namespace Notify.ViewModels
             OnPropertyChanged(propertyName);
         }
         
-        private async void onDeleteNotificationButtonClicked()
+        private async void onDeleteNotificationButtonClicked(Notification notification)
         {
             bool isDeleted;
             Debug.WriteLine("Delete notification button clicked");
-            bool isConfirmed = await App.Current.MainPage.DisplayAlert("Notification Deletion",
+            bool isConfirmed = await App.Current.MainPage.DisplayAlert($"Notification Deletion",
                 "Are you sure you want to delete this notification?",
                 "Yes", "No");
 
             if (isConfirmed)
             {
-                isDeleted = await AzureHttpClient.Instance.DeleteNotificationAsync(ID);
+                isDeleted = await AzureHttpClient.Instance.DeleteNotificationAsync(notification.ID);
 
                 if (isDeleted)
                 {
@@ -149,7 +149,7 @@ namespace Notify.ViewModels
             }
         }
 
-        private async void onEditNotificationButtonClicked()
+        private async void onEditNotificationButtonClicked(Notification notification)
         {
             Debug.WriteLine("edit notification button clicked");
             Shell.Current.Navigation.PushAsync(new NotificationCreationPage(SelectedNotification));
@@ -160,7 +160,7 @@ namespace Notify.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private async void onRenewNotificationButtonClicked()
+        private async void onRenewNotificationButtonClicked(Notification notification)
         {
             Debug.WriteLine("renew notification button clicked");
 
@@ -173,7 +173,7 @@ namespace Notify.ViewModels
             if (isConfirmed)
             {
                 username = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
-                isRenewed = await AzureHttpClient.Instance.RenewNotificationAsync(username, ID);
+                isRenewed = await AzureHttpClient.Instance.RenewNotificationAsync(username, notification.ID);
 
                 if (isRenewed)
                 {

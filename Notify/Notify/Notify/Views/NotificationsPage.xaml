@@ -110,6 +110,7 @@
                                         Text="Delete"
                                         BackgroundColor="#DD4A48"
                                         Command="{Binding Path=BindingContext.DeleteNotificationCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
+                                        CommandParameter="{Binding .}"
                                         IsEnabled="{Binding IsDeletable}">
                                         <SwipeItem.IconImageSource>
                                             <FileImageSource File="delete_button.png" />
@@ -123,6 +124,7 @@
                                         Text="Edit"
                                         BackgroundColor="#068FFF"
                                         Command="{Binding Path=BindingContext.EditNotificationCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
+                                        CommandParameter="{Binding .}"
                                         IsEnabled="{Binding IsEditable}">
                                         <SwipeItem.IconImageSource>
                                             <FileImageSource File="edit_button.png" />
@@ -132,6 +134,7 @@
                                         Text="Renew"
                                         BackgroundColor="#03C988"
                                         Command="{Binding Path=BindingContext.RenewNotificationCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
+                                        CommandParameter="{Binding .}"
                                         IsEnabled="{Binding IsRenewable}">
                                         <SwipeItem.IconImageSource>
                                             <FileImageSource File="renew_button.png" />
