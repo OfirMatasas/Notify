@@ -458,39 +458,47 @@ namespace Notify.Azure.HttpClient
             return destinations;
         }
 
-        public void UpdateNotificationsStatus(List<Notification> notifications, string newStatus)
+        public bool UpdateNotificationsStatus(List<Notification> notifications, string newStatus)
         {
             List<string> notificationsIds = notifications.Select(notification => notification.ID).ToList();
             dynamic request;
             string json;
             HttpResponseMessage response;
+            bool isSuccess;
             
             if(notificationsIds.Count == 0)
             {
                 r_Logger.LogDebug($"No notifications to update");
-                return;
+                isSuccess = false;
+            }
+            else
+            {
+                try
+                {
+                    request = new JObject
+                    {
+                        { "notifications", JToken.FromObject(notificationsIds) },
+                        { "status", newStatus }
+                    };
+
+                    json = JsonConvert.SerializeObject(request);
+                    r_Logger.LogInformation($"request:{Environment.NewLine}{json}");
+
+                    response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_UPDATE_STATUS,
+                        createJsonStringContent(json)).Result;
+
+                    response.EnsureSuccessStatusCode();
+                    r_Logger.LogDebug($"Successful status code from Azure Function from UpdateNotificationsStatus");
+                    isSuccess = true;
+                }
+                catch (Exception ex)
+                {
+                    r_Logger.LogError($"Error occured on UpdateNotificationsStatus: {ex.Message}");
+                    isSuccess = false;
+                }
             }
             
-            try
-            {
-                request = new JObject
-                {
-                    { "notifications", JToken.FromObject(notificationsIds) },
-                    { "status", newStatus }
-                };
-                
-                json = JsonConvert.SerializeObject(request);
-                r_Logger.LogInformation($"request:{Environment.NewLine}{json}");
-
-                response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_UPDATE_STATUS, createJsonStringContent(json)).Result;
-
-                response.EnsureSuccessStatusCode();
-                r_Logger.LogDebug($"Successful status code from Azure Function from UpdateNotificationsStatus");
-            }
-            catch (Exception ex)
-            {
-                r_Logger.LogError($"Error occured on UpdateNotificationsStatus: {ex.Message}");
-            }
+            return isSuccess;
         }
 
         public async Task<Location> GetCoordinatesFromAddress(string selectedAddress)
