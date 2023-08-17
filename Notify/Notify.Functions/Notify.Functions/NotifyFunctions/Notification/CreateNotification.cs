@@ -66,35 +66,68 @@ namespace Notify.Functions.NotifyFunctions.Notification
         {
             BsonDocument document;
             BsonElement extraElement;
+            string creator = Convert.ToString(json["creator"]);
 
             setExtraElementBaseOnType(type, json, out extraElement);
 
             foreach (string user in json["users"]?.ToObject<List<string>>()!)
             {
+                setStatusForDocument(creator, user, type, out string status);
+
                 document = new BsonDocument
                 {
-                    { "creator", json["creator"].ToString() },
+                    { "creator", creator },
                     { "creation_timestamp", DateTimeOffset.Now.ToUnixTimeSeconds() },
-                    { "status", "Active" },
-                    { "description", json["description"].ToString() },
+                    { "status", status },
+                    { "description", Convert.ToString(json["description"]) },
                     {
                         "notification", new BsonDocument
                         {
-                            { "name", json["notification"]["name"].ToString() },
-                            { "type", json["notification"]["type"].ToString() },
+                            { "name", Convert.ToString(json["notification"]["name"]) },
+                            { "type", Convert.ToString(json["notification"]["type"]) },
                             extraElement
                         }
                     },
                     { "user", user }
                 };
 
-                if (type.ToLower().Equals("location"))
+                if (type.ToLower().Equals(Constants.NOTIFICATION_TYPE_LOCATION.ToLower()))
                 {
-                    document["notification"]["activation"] = json["notification"]["activation"].ToString();
-                    document["notification"]["permanent"] = json["notification"]["permanent"].ToString();
+                    document["notification"]["activation"] = Convert.ToString(json["notification"]["activation"]);
+                    document["notification"]["permanent"] = Convert.ToString(json["notification"]["permanent"]);
                 }
 
                 documentsList.Add(document);
+            }
+        }
+
+        private static void setStatusForDocument(string creator, string user, string type, out string status)
+        {
+            IMongoCollection<BsonDocument> permissionCollection;
+            FilterDefinition<BsonDocument> permissionFilter = Builders<BsonDocument>.Filter.And(
+                Builders<BsonDocument>.Filter.Eq("permit", user),
+                Builders<BsonDocument>.Filter.Eq("username", creator));
+            BsonDocument permissionDocument;
+            string relevantPermission;
+
+            if (creator.Equals(user))
+            {
+                status = Constants.NOTIFICATION_STATUS_ACTIVE;
+            }
+            else
+            {
+                permissionCollection = MongoUtils.GetCollection(Constants.COLLECTION_PERMISSION);
+                permissionDocument = permissionCollection.Find(permissionFilter).FirstOrDefault();
+
+                if (permissionDocument != null)
+                {
+                    relevantPermission = Convert.ToString(permissionDocument[type.ToLower()]) ?? Constants.PERMISSION_DISALLOW;
+                    status = relevantPermission.Equals(Constants.PERMISSION_ALLOW) ? Constants.NOTIFICATION_STATUS_ACTIVE : Constants.NOTIFICATION_STATUS_PENDING;
+                }
+                else
+                {
+                    throw new ArgumentException($"There's no permission document for permit {user} and username {creator}");
+                }
             }
         }
 
@@ -102,11 +135,12 @@ namespace Notify.Functions.NotifyFunctions.Notification
         {
             string lowerCasedType = type.ToLower();
             
-            if (lowerCasedType.Equals("location") || lowerCasedType.Equals("dynamic"))
+            if (lowerCasedType.Equals(Constants.NOTIFICATION_TYPE_LOCATION.ToLower())
+                || lowerCasedType.Equals(Constants.NOTIFICATION_TYPE_DYNAMIC.ToLower()))
             {
                 extraElement = new BsonElement("location", json["notification"]["location"].ToString());
             }
-            else if(lowerCasedType.Equals("time"))
+            else if(lowerCasedType.Equals(Constants.NOTIFICATION_TYPE_TIME.ToLower()))
             {
                 extraElement = new BsonElement("timestamp", int.Parse(json["notification"]["timestamp"].ToString()));
             }

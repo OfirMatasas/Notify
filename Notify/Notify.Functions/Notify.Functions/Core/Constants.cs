@@ -1,5 +1,3 @@
-using Twilio.Rest.Api.V2010.Account.AvailablePhoneNumberCountry;
-
 namespace Notify.Functions.Core
 {
     public static class Constants
@@ -10,7 +8,7 @@ namespace Notify.Functions.Core
         public static readonly string COLLECTION_USER = "User";
         public static readonly string COLLECTION_FRIEND = "Friend";
         public static readonly string COLLECTION_FRIEND_REQUEST = "Friend_Request";
-        public static readonly string COLLECTION_GROUP = "Group";
+        public static readonly string COLLECTION_PERMISSION = "Permission";
         public static readonly string ENCRYPT_OPERATION = "encrypt";
         public static readonly string DECRYPT_OPERATION = "decrypt";
         public static readonly string AZURE_BLOB_CONTAINER_NAME = "notifycontainer";
@@ -33,6 +31,23 @@ namespace Notify.Functions.Core
 
         public static readonly string GOOGLE_API_BASE_URL = "https://maps.googleapis.com/maps/api/";
         public static readonly int GOOGLE_API_RADIUS = 1000;
+
+        #endregion
+
+        #region Values
+
+        public static readonly string PERMISSION_ALLOW = "Allow";
+        public static readonly string PERMISSION_ALLOW_LOWER = PERMISSION_ALLOW.ToLower();
+        public static readonly string PERMISSION_DISALLOW = "Disallow";
+        public static readonly string PERMISSION_DISALLOW_LOWER = PERMISSION_DISALLOW.ToLower();
+        public static readonly string NOTIFICATION_TYPE_LOCATION = "Location";
+        public static readonly string NOTIFICATION_TYPE_LOCATION_LOWER = NOTIFICATION_TYPE_LOCATION.ToLower();
+        public static readonly string NOTIFICATION_TYPE_TIME = "Time";
+        public static readonly string NOTIFICATION_TYPE_TIME_LOWER = NOTIFICATION_TYPE_TIME.ToLower();
+        public static readonly string NOTIFICATION_TYPE_DYNAMIC = "Dynamic";
+        public static readonly string NOTIFICATION_TYPE_DYNAMIC_LOWER = NOTIFICATION_TYPE_DYNAMIC.ToLower();
+        public static readonly string NOTIFICATION_STATUS_ACTIVE = "Active";
+        public static readonly string NOTIFICATION_STATUS_PENDING = "Pending";
 
         #endregion
     }
