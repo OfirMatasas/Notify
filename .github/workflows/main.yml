@@ -6,27 +6,26 @@ name: Build and deploy dotnet core app to Azure Function App - NotifyMTA
 on:
   push:
     branches:
-      - master
+      - feature/*
   workflow_dispatch:
 
 env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: './Notify/Notify.Functions/Notify.Functions' # set this to the path to your web app project, defaults to the repository root
-  DOTNET_VERSION: '6.0.x' # set this to the dotnet version to use
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: './Notify/Notify.Functions/Notify.Functions'
+  DOTNET_VERSION: '6.0.x'
 
 jobs:
   build-and-deploy:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: 'Checkout GitHub Action'
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: 'Resolve Project Dependencies Using Dotnet'
-        shell: pwsh
         run: |
           pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
           dotnet build --configuration Release --output ./output
@@ -40,4 +39,3 @@ jobs:
           slot-name: 'Production'
           package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
           publish-profile: ${{ secrets.Azure }}
-          
