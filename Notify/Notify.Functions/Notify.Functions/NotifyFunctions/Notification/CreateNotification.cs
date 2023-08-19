@@ -91,7 +91,7 @@ namespace Notify.Functions.NotifyFunctions.Notification
                     { "user", user }
                 };
 
-                if (type.ToLower().Equals(Constants.NOTIFICATION_TYPE_LOCATION.ToLower()))
+                if (type.ToLower().Equals(Constants.NOTIFICATION_TYPE_LOCATION_LOWER))
                 {
                     document["notification"]["activation"] = Convert.ToString(json["notification"]["activation"]);
                     document["notification"]["permanent"] = Convert.ToString(json["notification"]["permanent"]);
@@ -135,12 +135,12 @@ namespace Notify.Functions.NotifyFunctions.Notification
         {
             string lowerCasedType = type.ToLower();
             
-            if (lowerCasedType.Equals(Constants.NOTIFICATION_TYPE_LOCATION.ToLower())
-                || lowerCasedType.Equals(Constants.NOTIFICATION_TYPE_DYNAMIC.ToLower()))
+            if (lowerCasedType.Equals(Constants.NOTIFICATION_TYPE_LOCATION_LOWER)
+                || lowerCasedType.Equals(Constants.NOTIFICATION_TYPE_DYNAMIC_LOWER))
             {
                 extraElement = new BsonElement("location", json["notification"]["location"].ToString());
             }
-            else if(lowerCasedType.Equals(Constants.NOTIFICATION_TYPE_TIME.ToLower()))
+            else if(lowerCasedType.Equals(Constants.NOTIFICATION_TYPE_TIME_LOWER))
             {
                 extraElement = new BsonElement("timestamp", int.Parse(json["notification"]["timestamp"].ToString()));
             }

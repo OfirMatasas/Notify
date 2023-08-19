@@ -52,22 +52,29 @@ namespace Notify.Functions.NotifyFunctions.Permission
                 Builders<BsonDocument>.Filter.Eq("username", data.username.ToString()));
             BsonDocument permissionDocument = await collection.FindAsync(filter).Result.FirstOrDefaultAsync();
             List<UpdateDefinition<BsonDocument>> updates;
+            ActionResult result;
 
             if (permissionDocument == null)
             {
                 string errorMessage = $"No permission found for {data.permit} and {data.username}";
                 log.LogError(errorMessage);
-                return new NotFoundObjectResult(errorMessage);
+                result = new NotFoundObjectResult(errorMessage);
             }
-
-            updates = CollectUpdates(data);
-            if (updates.Count == 0)
+            else
             {
-                return new BadRequestObjectResult("No valid updates provided in request.");
+                updates = CollectUpdates(data);
+                if (updates.Count.Equals(0))
+                {
+                    result = new BadRequestObjectResult("No valid updates provided in request.");
+                }
+                else
+                {
+                    await collection.UpdateOneAsync(filter, Builders<BsonDocument>.Update.Combine(updates));
+                    result = new OkObjectResult($"Permission for {data.permit} and {data.username} was updated");
+                }
             }
-
-            await collection.UpdateOneAsync(filter, Builders<BsonDocument>.Update.Combine(updates));
-            return new OkObjectResult($"Permission for {data.permit} and {data.username} was updated");
+            
+            return result;
         }
         
         private static List<UpdateDefinition<BsonDocument>> CollectUpdates(dynamic data)

@@ -46,6 +46,8 @@ namespace Notify.Functions.Core
         public static readonly string NOTIFICATION_TYPE_TIME_LOWER = NOTIFICATION_TYPE_TIME.ToLower();
         public static readonly string NOTIFICATION_TYPE_DYNAMIC = "Dynamic";
         public static readonly string NOTIFICATION_TYPE_DYNAMIC_LOWER = NOTIFICATION_TYPE_DYNAMIC.ToLower();
+        public static readonly string NOTIFICATION_TYPE_WIFI = "WiFi";
+        public static readonly string NOTIFICATION_TYPE_BLUETOOTH = "Bluetooth";
         public static readonly string NOTIFICATION_STATUS_ACTIVE = "Active";
         public static readonly string NOTIFICATION_STATUS_PENDING = "Pending";
 

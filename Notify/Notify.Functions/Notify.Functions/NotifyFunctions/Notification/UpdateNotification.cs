@@ -56,17 +56,17 @@ namespace Notify.Functions.NotifyFunctions.Notification
             updates.Add(updateBuilder.Set("notification.name", Convert.ToString(data.name)));
             updates.Add(updateBuilder.Set("description", Convert.ToString(data.description)));
 
-            if (lowerCasedType.Equals("location"))
+            if (lowerCasedType.Equals(Constants.NOTIFICATION_TYPE_LOCATION_LOWER))
             {
                 updates.Add(updateBuilder.Set("notification.location", Convert.ToString(data.location)));
                 updates.Add(updateBuilder.Set("notification.permanent", Convert.ToString(data.permanent)));
                 updates.Add(updateBuilder.Set("notification.location", Convert.ToString(data.location)));
             }
-            else if (lowerCasedType.Equals("dynamic"))
+            else if (lowerCasedType.Equals(Constants.NOTIFICATION_TYPE_DYNAMIC_LOWER))
             {
                 updates.Add(updateBuilder.Set("notification.location", Convert.ToString(data.location)));
             }
-            else if (lowerCasedType.Equals("time"))
+            else if (lowerCasedType.Equals(Constants.NOTIFICATION_TYPE_TIME_LOWER))
             {
                 updates.Add(updateBuilder.Set("notification.timestamp", Convert.ToInt64(data.timestamp)));
             }
@@ -92,7 +92,7 @@ namespace Notify.Functions.NotifyFunctions.Notification
             {
                 throw new ArgumentException($"Notification with id {data.id} is not a type of '{lowerCasedType}'");
             }
-            if(!lowerCasedType.Equals("location"))
+            if(!lowerCasedType.Equals(Constants.NOTIFICATION_TYPE_LOCATION_LOWER))
             {
                 if (data.permanent != null && Convert.ToBoolean(data.permanent))
                 {

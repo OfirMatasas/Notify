@@ -119,6 +119,9 @@ namespace Notify.Helpers
         public static readonly string NOTIFICATION_STATUS_DECLINED = "Declined";
         public static readonly string NOTIFICATION_STATUS_ARRIVED = "Arrived";
         public static readonly string NOTIFICATION_STATUS_EXPIRED = "Expired";
+        
+        public static readonly string NOTIFICATION_PERMISSION_ALLOW = "Allow";
+        public static readonly string NOTIFICATION_PERMISSION_DISALLOW = "Disallow";
 
         #endregion
 
@@ -143,6 +146,7 @@ namespace Notify.Helpers
         public static readonly string AZURE_FUNCTIONS_PATTERN_DESTINATION_UPDATE = AZURE_FUNCTIONS_PATTERN_DESTINATION + "/update";
         public static readonly string AZURE_FUNCTIONS_PATTERN_DESTINATION_SUGGESTIONS = AZURE_FUNCTIONS_PATTERN_DESTINATION + "/suggestions";
         public static readonly string AZURE_FUNCTIONS_PATTERN_DESTINATION_COORDINATES= AZURE_FUNCTIONS_PATTERN_DESTINATION + "/coordinates";
+        public static readonly string AZURE_FUNCTIONS_PATTERN_PERMISSION = "permission";
         public static readonly string AZURE_FUNCTIONS_PATTERN_LOGIN = "login";
         public static readonly string AZURE_FUNCTIONS_PATTERN_REGISTER = "register";
         public static readonly string AZURE_FUNCTIONS_PATTERN_FRIEND = "friend";
@@ -199,7 +203,7 @@ namespace Notify.Helpers
         public static readonly string PREFERENCES_USERNAME = "NotifyUserName";
         public static readonly string PREFERENCES_PASSWORD = "NotifyPassword";
         public static readonly string PREFERENCES_NOT_FRIENDS_USERS = "NotFriendsUsers";
-        public static readonly string PREFERENCES_DYNAMIC_LOCATIONS = "DynamicLocations";
+        public static readonly string PREFERENCES_FRIENDS_PERMISSIONS = "FriendsPermissions";
 
         #endregion
 
