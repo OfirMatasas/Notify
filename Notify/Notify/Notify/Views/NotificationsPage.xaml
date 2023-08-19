@@ -86,6 +86,15 @@
                         WidthRequest="7" />
                 </Grid>
             </pancakeView:PancakeView>
+            <SearchBar
+                BackgroundColor="WhiteSmoke"
+                Grid.Row="0"
+                IsSpellCheckEnabled="False"
+                Margin="0,100,0,0"
+                Placeholder="Search a notification"
+                PlaceholderColor="#2F3246"
+                SearchCommand="{Binding ExecuteSearchCommand}"
+                SearchCommandParameter="{Binding .}" />
             <CollectionView
                 Grid.Row="2"
                 HorizontalOptions="FillAndExpand"
