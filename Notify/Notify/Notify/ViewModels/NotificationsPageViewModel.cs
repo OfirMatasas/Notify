@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -22,12 +24,14 @@ namespace Notify.ViewModels
         public bool IsRefreshing { set => SetField(ref m_IsRefreshing, value); }
         public Color Color { get => m_Color; set => SetField(ref m_Color, value); }
         public List<Notification> Notifications { get; set; }
+        public List<Notification> FilteredNotifications { get; set; }
         
         public Command DeleteNotificationCommand { get; set; }
         public Command EditNotificationCommand { get; set; }
         public Command RenewNotificationCommand { get; set; }
         public Command NotificationSelectedCommand { get; set; }
         public Command CreateNotificationCommand { get; set; }
+        public Command ExecuteSearchCommand { get; set; }
         
         public event PropertyChangedEventHandler PropertyChanged;
         
@@ -42,6 +46,17 @@ namespace Notify.ViewModels
             {
                 m_IsActivationType = value;
                 OnPropertyChanged(nameof(IsActivationType));
+            }
+        }
+        
+        private string m_SearchTerm;
+        public string SearchTerm
+        {
+            get => m_SearchTerm;
+            set
+            {
+                SetField(ref m_SearchTerm, value);
+                executeSearch();
             }
         }
         
@@ -65,9 +80,11 @@ namespace Notify.ViewModels
             DeleteNotificationCommand = new Command<Notification>(onDeleteNotificationButtonClicked);
             EditNotificationCommand = new Command<Notification>(onEditNotificationButtonClicked);
             RenewNotificationCommand = new Command<Notification>(onRenewNotificationButtonClicked);
+            ExecuteSearchCommand = new Command(executeSearch);
 
             try
             {
+                FilteredNotifications = new List<Notification>();
                 notificationsJson = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
                 if (!notificationsJson.Equals(string.Empty))
                 {
@@ -82,7 +99,23 @@ namespace Notify.ViewModels
 
             OnNotificationsRefreshClicked();
         }
-        
+
+        private void executeSearch()
+        {
+            if (string.IsNullOrWhiteSpace(SearchTerm))
+            {
+                FilteredNotifications = new List<Notification>(Notifications);
+            }
+            else
+            {
+                FilteredNotifications = Notifications.Where(n => 
+                    CultureInfo.CurrentCulture.CompareInfo.IndexOf(n.Name, SearchTerm, CompareOptions.IgnoreCase) >= 0
+                ).ToList();
+            }
+
+            OnPropertyChanged(nameof(FilteredNotifications));
+        }
+
         private async void onCreateNotificationClicked()
         {
             await Shell.Current.Navigation.PushAsync(new NotificationCreationPage());
@@ -95,6 +128,8 @@ namespace Notify.ViewModels
             IsRefreshing = true;
 
             await Task.Run(() => Notifications = AzureHttpClient.Instance.GetNotifications().Result);
+            FilteredNotifications = new List<Notification>(Notifications);
+            executeSearch();
             Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(Notifications));
 
             IsRefreshing = false;

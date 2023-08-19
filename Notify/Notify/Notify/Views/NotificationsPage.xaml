@@ -94,11 +94,12 @@
                 Placeholder="Search a notification"
                 PlaceholderColor="#2F3246"
                 SearchCommand="{Binding ExecuteSearchCommand}"
-                SearchCommandParameter="{Binding .}" />
+                SearchCommandParameter="{Binding .}"
+                Text="{Binding SearchTerm}" />
             <CollectionView
                 Grid.Row="2"
                 HorizontalOptions="FillAndExpand"
-                ItemsSource="{Binding Notifications}"
+                ItemsSource="{Binding FilteredNotifications}"
                 Margin="15,-10,15,0"
                 SelectionMode="None"
                 VerticalOptions="FillAndExpand"
