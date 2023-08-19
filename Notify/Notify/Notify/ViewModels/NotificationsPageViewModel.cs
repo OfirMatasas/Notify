@@ -144,8 +144,16 @@ namespace Notify.ViewModels
 
         private async void onEditNotificationButtonClicked(Notification notification)
         {
-            Debug.WriteLine("edit notification button clicked");
-            Shell.Current.Navigation.PushAsync(new NotificationCreationPage(SelectedNotification));
+            if (notification.IsEditable)
+            {
+                Shell.Current.Navigation.PushAsync(new NotificationCreationPage(SelectedNotification));
+            }
+            else
+            {
+                await App.Current.MainPage.DisplayAlert("Notification Edit",
+                    $"Notification {notification.Name} is not editable",
+                    "OK");
+            }
         }
         
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)

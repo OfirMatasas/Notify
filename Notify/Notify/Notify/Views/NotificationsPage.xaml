@@ -123,7 +123,7 @@
                             <SwipeView.RightItems>
                                 <SwipeItems Mode="Reveal">
                                     <SwipeItem
-                                        BackgroundColor="#068FFF"
+                                        BackgroundColor="{Binding IsEditable, Converter={StaticResource BooleanToColorConverter}, ConverterParameter='068FFF;808080'}"
                                         Command="{Binding Path=BindingContext.EditNotificationCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
                                         CommandParameter="{Binding .}"
                                         IsEnabled="{Binding IsEditable}"

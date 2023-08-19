@@ -28,7 +28,6 @@ namespace Notify.Core
         
         public bool IsRenewable => Status == "Expired" && Type != NotificationType.Time;
         public bool IsEditable => Status != "Expired";
-        public bool IsDeletable => Status != "Expired";
 
         public Notification(string id, string name, string description, DateTime creationDateTime, string status, string creator, NotificationType type, object typeInfo, string target, string activation, bool permanent)
         {
