@@ -42,7 +42,7 @@ namespace Notify.Functions.NotifyFunctions.Friend
             }
             else
             {
-                message = $"Friendship and permissions between {username} and {friendName} was deleted";
+                message = $"Friendship and permissions between {username} and {friendName} were deleted";
                 result = new OkObjectResult(message);
             }
             

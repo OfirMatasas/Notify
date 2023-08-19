@@ -109,7 +109,7 @@
                 <Picker
                     Grid.Column="1"
                     Grid.Row="3"
-                    ItemsSource="{Binding AllowDisallowOptions}"
+                    ItemsSource="{Binding PermissionOptions}"
                     SelectedItem="{Binding LocationNotificationsPermission}"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
@@ -127,7 +127,7 @@
                 <Picker
                     Grid.Column="1"
                     Grid.Row="4"
-                    ItemsSource="{Binding AllowDisallowOptions}"
+                    ItemsSource="{Binding PermissionOptions}"
                     SelectedItem="{Binding TimeNotificationsPermission}"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
@@ -145,7 +145,7 @@
                 <Picker
                     Grid.Column="1"
                     Grid.Row="5"
-                    ItemsSource="{Binding AllowDisallowOptions}"
+                    ItemsSource="{Binding PermissionOptions}"
                     SelectedItem="{Binding DynamicNotificationsPermission}"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />

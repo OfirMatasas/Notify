@@ -18,7 +18,7 @@ namespace Notify.ViewModels
         public string UserName { get; set; }
         public string Telephone { get; set; }
         public ImageSource ProfileImage { get; set; }
-        public List<string> AllowDisallowOptions { get; set; } = new List<string> { Constants.NOTIFICATION_PERMISSION_ALLOW, Constants.NOTIFICATION_PERMISSION_DISALLOW };
+        public List<string> PermissionOptions { get; set; } = new List<string> { Constants.NOTIFICATION_PERMISSION_ALLOW, Constants.NOTIFICATION_PERMISSION_DISALLOW };
         public Command BackCommand { get; set; }
         public Command UpdateFriendPermissionsCommand { get; set; }
         public string DynamicNotificationsPermission { get; set; }
