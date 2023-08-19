@@ -12,5 +12,12 @@ namespace Notify.Views
             InitializeComponent();
             BindingContext = new NotificationsPageViewModel();
         }
+        
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            (BindingContext as NotificationsPageViewModel)?.OnNotificationsRefreshClicked();
+        }
+
     }
 }

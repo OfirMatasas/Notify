@@ -22,13 +22,12 @@ namespace Notify.ViewModels
         public bool IsRefreshing { set => SetField(ref m_IsRefreshing, value); }
         public Color Color { get => m_Color; set => SetField(ref m_Color, value); }
         public List<Notification> Notifications { get; set; }
-        public Notification SelectedNotification { get; set; }
         
-        public Command BackCommand { get; set; }
         public Command DeleteNotificationCommand { get; set; }
         public Command EditNotificationCommand { get; set; }
         public Command RenewNotificationCommand { get; set; }
         public Command NotificationSelectedCommand { get; set; }
+        public Command CreateNotificationCommand { get; set; }
         
         public event PropertyChangedEventHandler PropertyChanged;
         
@@ -62,9 +61,7 @@ namespace Notify.ViewModels
             string notificationsJson;
 
             CreateNotificationCommand = new Command(onCreateNotificationClicked);
-            RefreshNotificationsCommand = new Command(onNotificationsRefreshClicked);
-            NotificationSelectedCommand = new Command(onNotificationSelected);
-
+            RefreshNotificationsCommand = new Command(OnNotificationsRefreshClicked);
             DeleteNotificationCommand = new Command<Notification>(onDeleteNotificationButtonClicked);
             EditNotificationCommand = new Command<Notification>(onEditNotificationButtonClicked);
             RenewNotificationCommand = new Command<Notification>(onRenewNotificationButtonClicked);
@@ -83,11 +80,9 @@ namespace Notify.ViewModels
                 r_Logger.LogError(ex.Message);
             }
 
-            onNotificationsRefreshClicked();
+            OnNotificationsRefreshClicked();
         }
         
-        public Command CreateNotificationCommand { get; set; }
-
         private async void onCreateNotificationClicked()
         {
             await Shell.Current.Navigation.PushAsync(new NotificationCreationPage());
@@ -95,7 +90,7 @@ namespace Notify.ViewModels
 
         public Command RefreshNotificationsCommand { get; set; }
 
-        private async void onNotificationsRefreshClicked()
+        public async void OnNotificationsRefreshClicked()
         {
             IsRefreshing = true;
 
@@ -103,11 +98,6 @@ namespace Notify.ViewModels
             Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(Notifications));
 
             IsRefreshing = false;
-        }
-        
-        private async void onNotificationSelected()
-        {
-            await Shell.Current.Navigation.PushAsync(new NotificationDetailsPage(SelectedNotification));
         }
         
         private void SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
@@ -131,7 +121,7 @@ namespace Notify.ViewModels
 
                 if (isDeleted)
                 {
-                    onNotificationsRefreshClicked();
+                    OnNotificationsRefreshClicked();
                 }
                 else
                 {
@@ -146,7 +136,7 @@ namespace Notify.ViewModels
         {
             if (notification.IsEditable)
             {
-                Shell.Current.Navigation.PushAsync(new NotificationCreationPage(SelectedNotification));
+                Shell.Current.Navigation.PushAsync(new NotificationCreationPage(notification));
             }
             else
             {
@@ -156,11 +146,6 @@ namespace Notify.ViewModels
             }
         }
         
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         private async void onRenewNotificationButtonClicked(Notification notification)
         {
             string messageTitle = "Notification Renewal";
@@ -181,7 +166,7 @@ namespace Notify.ViewModels
                     if (isRenewed)
                     {
                         messageBody = $"Notification {notification.Name} renewed successfully";
-                        onNotificationsRefreshClicked();
+                        OnNotificationsRefreshClicked();
                     }
                     else
                     {
@@ -197,10 +182,10 @@ namespace Notify.ViewModels
                 await App.Current.MainPage.DisplayAlert(messageTitle, messageBody, "OK");
             }
         }
-
-        private async void onBackButtonClicked()
+        
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            await Shell.Current.Navigation.PopAsync();
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
