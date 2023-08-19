@@ -4,6 +4,7 @@
     x:Class="Notify.Views.NotificationsPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:helpers="clr-namespace:Notify.Helpers;assembly=Notify"
+    xmlns:materialDesignControls="clr-namespace:Plugin.MaterialDesignControls;assembly=Plugin.MaterialDesignControls"
     xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
     xmlns:views="http://xamarin.com/schemas/2020/toolkit"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
@@ -106,13 +107,22 @@
                 VerticalScrollBarVisibility="Always">
                 <CollectionView.Header>
                     <Grid>
-                        <Label
-                            FontSize="Large"
-                            Text="All Notifications"
-                            TextColor="Black" />
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <materialDesignControls:MaterialPicker
+                            BackgroundColor="Transparent"
+                            BorderColor="Transparent"
+                            Grid.Column="0"
+                            ItemsSource="{Binding FilterTypes}"
+                            Placeholder="Filter by"
+                            PlaceholderColor="Black"
+                            SelectedItem="{Binding SelectedFilter}" />
                         <Label
                             FontAttributes="Bold"
                             FontSize="Large"
+                            Grid.Column="1"
                             HorizontalOptions="End"
                             Margin="0,0,10,0"
                             Text="+"
