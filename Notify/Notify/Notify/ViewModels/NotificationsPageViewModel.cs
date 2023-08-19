@@ -23,13 +23,6 @@ namespace Notify.ViewModels
         public Color Color { get => m_Color; set => SetField(ref m_Color, value); }
         public List<Notification> Notifications { get; set; }
         public Notification SelectedNotification { get; set; }
-        public string Name { get; set; }
-        public string ID { get; set; }
-        public string Status { get; set; }
-        public string Type { get; set; }
-        public bool IsRenewable => Status == "Expired" && Type != Constants.TIME;
-        public bool IsEditable => Status != "Expired";
-        public bool IsDeletable => Status != "Expired";
         
         public Command BackCommand { get; set; }
         public Command DeleteNotificationCommand { get; set; }
@@ -164,34 +157,35 @@ namespace Notify.ViewModels
         {
             string messageTitle = "Notification Renewal";
             string messageBody, username;
-            bool canRenew, isRenewed;
-            bool isConfirmed = await App.Current.MainPage.DisplayAlert(messageTitle,
-                "Are you sure you want to renew this notification?",
-                "Yes", "No");
+            bool isRenewed, isConfirmed;
 
-            if (isConfirmed)
+            if (notification.IsRenewable)
             {
-                canRenew = notification.Status == "Expired" && notification.Type != NotificationType.Time;
+                isConfirmed = await App.Current.MainPage.DisplayAlert(messageTitle,
+                    "Are you sure you want to renew this notification?",
+                    "Yes", "No");
 
-                if (canRenew)
+                if (isConfirmed)
                 {
                     username = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
                     isRenewed = await AzureHttpClient.Instance.RenewNotificationAsync(username, notification.ID);
 
-                    messageBody = isRenewed
-                        ? $"Notification {notification.Name} renewed successfully"
-                        : $"Failed to renew notification {notification.Name}";
-
                     if (isRenewed)
                     {
+                        messageBody = $"Notification {notification.Name} renewed successfully";
                         onNotificationsRefreshClicked();
                     }
-                }
-                else
-                {
-                    messageBody = $"Notification {notification.Name} is not renewable";
-                }
+                    else
+                    {
+                        messageBody = $"Failed to renew notification {notification.Name}";
+                    }
 
+                    await App.Current.MainPage.DisplayAlert(messageTitle, messageBody, "OK");
+                }
+            }
+            else
+            {
+                messageBody = $"Notification {notification.Name} is not renewable";
                 await App.Current.MainPage.DisplayAlert(messageTitle, messageBody, "OK");
             }
         }

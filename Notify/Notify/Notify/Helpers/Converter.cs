@@ -20,39 +20,21 @@ namespace Notify.Helpers
         }
     }
     
-    public class BoolToDeleteIconConverter : IValueConverter
+    public class BooleanToColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (bool)value ? "delete_button" : "delete_button_disabled";
-        }
+            string[] colorArray;
+            if (value is bool booleanValue && parameter is string colors)
+            {
+                colorArray = colors.Split(';');
+                if (colorArray.Length == 2)
+                {
+                    return booleanValue ? Color.FromHex(colorArray[0]) : Color.FromHex(colorArray[1]);
+                }
+            }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return null;
-        }
-    }
-
-    public class BoolToEditIconConverter : IValueConverter
-    {
-        // Similar logic here, return "edit_button.png" or "edit_button_disabled.png"
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return (bool)value ? "edit_button" : "edit_button_disabled";
-
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return null;
-        }
-    }
-
-    public class BoolToRenewIconConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return (bool)value ? "renew_button" : "renew_button_disabled";
+            return Color.Default;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -111,7 +93,6 @@ namespace Notify.Helpers
                 }
             }
             
-            Debug.WriteLine($"Unexpected value in TypeToIconConverter: {value?.GetType()} - {value}");
             return null;
         }
 

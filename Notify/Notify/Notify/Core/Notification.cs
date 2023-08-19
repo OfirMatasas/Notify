@@ -1,4 +1,5 @@
 using System;
+using Notify.Helpers;
 
 namespace Notify.Core
 {
@@ -24,6 +25,10 @@ namespace Notify.Core
         public string Activation { get; set; }
         public bool IsPermanent { get; set; }
         public string Target { get; set; }
+        
+        public bool IsRenewable => Status == "Expired" && Type != NotificationType.Time;
+        public bool IsEditable => Status != "Expired";
+        public bool IsDeletable => Status != "Expired";
 
         public Notification(string id, string name, string description, DateTime creationDateTime, string status, string creator, NotificationType type, object typeInfo, string target, string activation, bool permanent)
         {
