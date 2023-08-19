@@ -126,9 +126,9 @@ namespace Notify.ViewModels
         
         private async void onDeleteNotificationButtonClicked(Notification notification)
         {
+            string messageTitle = "Notification Deletion";
             bool isDeleted;
-            Debug.WriteLine("Delete notification button clicked");
-            bool isConfirmed = await App.Current.MainPage.DisplayAlert($"Notification Deletion",
+            bool isConfirmed = await App.Current.MainPage.DisplayAlert(messageTitle,
                 "Are you sure you want to delete this notification?",
                 "Yes", "No");
 
@@ -138,11 +138,11 @@ namespace Notify.ViewModels
 
                 if (isDeleted)
                 {
-                    await Shell.Current.Navigation.PopAsync();
+                    onNotificationsRefreshClicked();
                 }
                 else
                 {
-                    await App.Current.MainPage.DisplayAlert("Notification Deletion",
+                    await App.Current.MainPage.DisplayAlert(messageTitle,
                         "Failed to delete notification",
                         "OK");
                 }
@@ -162,31 +162,37 @@ namespace Notify.ViewModels
 
         private async void onRenewNotificationButtonClicked(Notification notification)
         {
-            Debug.WriteLine("renew notification button clicked");
-
-            string username, messageBody;
-            bool isRenewed;
-            bool isConfirmed = await App.Current.MainPage.DisplayAlert("Notification Renewal",
+            string messageTitle = "Notification Renewal";
+            string messageBody, username;
+            bool canRenew, isRenewed;
+            bool isConfirmed = await App.Current.MainPage.DisplayAlert(messageTitle,
                 "Are you sure you want to renew this notification?",
                 "Yes", "No");
 
             if (isConfirmed)
             {
-                username = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
-                isRenewed = await AzureHttpClient.Instance.RenewNotificationAsync(username, notification.ID);
+                canRenew = notification.Status == "Expired" && notification.Type != NotificationType.Time;
 
-                if (isRenewed)
+                if (canRenew)
                 {
-                    messageBody = $"Notification {Name} renewed successfully";
+                    username = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
+                    isRenewed = await AzureHttpClient.Instance.RenewNotificationAsync(username, notification.ID);
+
+                    messageBody = isRenewed
+                        ? $"Notification {notification.Name} renewed successfully"
+                        : $"Failed to renew notification {notification.Name}";
+
+                    if (isRenewed)
+                    {
+                        onNotificationsRefreshClicked();
+                    }
                 }
                 else
                 {
-                    messageBody = $"Failed to renew notification {Name}";
+                    messageBody = $"Notification {notification.Name} is not renewable";
                 }
 
-                await App.Current.MainPage.DisplayAlert("Notification Renewal",
-                    messageBody,
-                    "OK");
+                await App.Current.MainPage.DisplayAlert(messageTitle, messageBody, "OK");
             }
         }
 
