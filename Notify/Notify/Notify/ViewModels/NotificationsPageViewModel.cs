@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -12,7 +11,6 @@ using Notify.Core;
 using Notify.Helpers;
 using Notify.Services;
 using Notify.Views;
-using Notify.Views.Views;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -56,9 +54,33 @@ namespace Notify.ViewModels
             set
             {
                 SetField(ref m_SearchTerm, value);
-                executeSearch();
+                applyFilterAndSearch();
             }
         }
+        
+        private string m_SelectedFilter;
+        public string SelectedFilter
+        {
+            get => m_SelectedFilter;
+            set
+            {
+                SetField(ref m_SelectedFilter, value);
+                applyFilterAndSearch();
+            }
+        }
+        
+        public List<string> FilterTypes { get; } = new List<string>
+        {
+            "Active",
+            "Pending",
+            "Declined",
+            "Expired",
+            "Permanent",
+            "Location",
+            "Dynamic Location",
+            "Time",
+            "All Notifications",
+        };
         
         private bool m_IsLocationType;
         public bool IsLocationType
@@ -70,7 +92,7 @@ namespace Notify.ViewModels
                 OnPropertyChanged(nameof(IsLocationType));
             }
         }
-        
+
         public NotificationsPageViewModel()
         {
             string notificationsJson;
@@ -80,7 +102,7 @@ namespace Notify.ViewModels
             DeleteNotificationCommand = new Command<Notification>(onDeleteNotificationButtonClicked);
             EditNotificationCommand = new Command<Notification>(onEditNotificationButtonClicked);
             RenewNotificationCommand = new Command<Notification>(onRenewNotificationButtonClicked);
-            ExecuteSearchCommand = new Command(executeSearch);
+            ExecuteSearchCommand = new Command(applyFilterAndSearch);
 
             try
             {
@@ -97,25 +119,60 @@ namespace Notify.ViewModels
                 r_Logger.LogError(ex.Message);
             }
 
+            SelectedFilter = "Active";
             OnNotificationsRefreshClicked();
+            applyFilterAndSearch();
         }
 
-        private void executeSearch()
+        private void applyFilterAndSearch()
         {
-            if (string.IsNullOrWhiteSpace(SearchTerm))
+            IEnumerable<Notification> filteredNotifications = ApplyFilter(Notifications);
+    
+            if (!string.IsNullOrWhiteSpace(SearchTerm))
             {
-                FilteredNotifications = new List<Notification>(Notifications);
-            }
-            else
-            {
-                FilteredNotifications = Notifications.Where(n => 
+                filteredNotifications = filteredNotifications.Where(n => 
                     CultureInfo.CurrentCulture.CompareInfo.IndexOf(n.Name, SearchTerm, CompareOptions.IgnoreCase) >= 0
-                ).ToList();
+                );
             }
-
+    
+            FilteredNotifications = new List<Notification>(filteredNotifications);
             OnPropertyChanged(nameof(FilteredNotifications));
         }
 
+        
+        private IEnumerable<Notification> ApplyFilter(IEnumerable<Notification> notifications)
+        {
+            switch (SelectedFilter)
+            {
+                case "Permanent":
+                    return notifications.Where(n => n.IsPermanent);
+
+                case "Location":
+                    return notifications.Where(n => n.Type.Equals(NotificationType.Location)); 
+
+                case "Dynamic Location":
+                    return notifications.Where(n => n.Type.Equals(NotificationType.Dynamic));
+
+                case "Time":
+                    return notifications.Where(n => n.Type.Equals(NotificationType.Time));
+
+                case "Active":
+                    return notifications.Where(n => n.Status.Equals("Active")); 
+
+                case "Pending":
+                    return notifications.Where(n => n.Status.Equals("Pending")); 
+
+                case "Declined":
+                    return notifications.Where(n => n.Status.Equals("Declined"));
+
+                case "Expired":
+                    return notifications.Where(n => n.Status.Equals("Expired"));
+
+                default:
+                    return notifications;
+            }
+        }
+        
         private async void onCreateNotificationClicked()
         {
             await Shell.Current.Navigation.PushAsync(new NotificationCreationPage());
@@ -129,7 +186,7 @@ namespace Notify.ViewModels
 
             await Task.Run(() => Notifications = AzureHttpClient.Instance.GetNotifications().Result);
             FilteredNotifications = new List<Notification>(Notifications);
-            executeSearch();
+            applyFilterAndSearch();
             Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(Notifications));
 
             IsRefreshing = false;
