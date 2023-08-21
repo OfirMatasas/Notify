@@ -19,24 +19,28 @@ namespace Notify.ViewModels
     public sealed class NotificationsPageViewModel : INotifyPropertyChanged
     {
         private readonly LoggerService r_Logger = LoggerService.Instance;
-        public bool IsRefreshing { set => SetField(ref m_IsRefreshing, value); }
-        public Color Color { get => m_Color; set => SetField(ref m_Color, value); }
         public List<Notification> Notifications { get; set; }
         public List<Notification> FilteredNotifications { get; set; }
+        
+        private bool m_IsActivationType;
+        private string m_SearchTerm;
+        private bool m_IsRefreshing;
+        private Color m_Color;
+        private string m_SelectedFilter;
+        private bool m_IsLocationType;
         
         public Command DeleteNotificationCommand { get; set; }
         public Command EditNotificationCommand { get; set; }
         public Command RenewNotificationCommand { get; set; }
-        public Command NotificationSelectedCommand { get; set; }
         public Command CreateNotificationCommand { get; set; }
         public Command ExecuteSearchCommand { get; set; }
         
         public event PropertyChangedEventHandler PropertyChanged;
         
-        private bool m_IsRefreshing;
-        private Color m_Color;
+        public bool IsRefreshing { set => SetField(ref m_IsRefreshing, value); }
         
-        private bool m_IsActivationType;
+        public Color Color { get => m_Color; set => SetField(ref m_Color, value); }
+        
         public bool IsActivationType
         {
             get => m_IsActivationType;
@@ -47,7 +51,6 @@ namespace Notify.ViewModels
             }
         }
         
-        private string m_SearchTerm;
         public string SearchTerm
         {
             get => m_SearchTerm;
@@ -58,7 +61,6 @@ namespace Notify.ViewModels
             }
         }
         
-        private string m_SelectedFilter;
         public string SelectedFilter
         {
             get => m_SelectedFilter;
@@ -82,7 +84,6 @@ namespace Notify.ViewModels
             "All Notifications",
         };
         
-        private bool m_IsLocationType;
         public bool IsLocationType
         {
             get => m_IsLocationType;
