@@ -229,7 +229,6 @@
             TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
                                         Dark={StaticResource DarkButtonTextColor}}"
             VerticalOptions="End" />
-
         <BoxView BackgroundColor="Transparent" HeightRequest="15" />
 
     </StackLayout>
