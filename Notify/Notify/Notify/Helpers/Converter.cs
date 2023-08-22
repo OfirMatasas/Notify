@@ -90,5 +90,14 @@ namespace Notify.Helpers
                 Address = (string)(destination.location.address ?? "")
             };
         }
+        
+        public static Permission ToPermission(dynamic permission)
+        {
+            return new Permission(
+                friendUsername: (string)permission.username,
+                locationNotificationPermission: (string)permission.location,
+                timeNotificationPermission: (string)permission.time,
+                dynamicNotificationPermission: (string)permission.dynamic);
+        }
     }
 }

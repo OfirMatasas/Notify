@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.SymbolStore;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Notify.Azure.HttpClient;
@@ -58,6 +59,8 @@ namespace Notify.ViewModels
             RenewNotificationCommand = new Command(onRenewNotificationButtonClicked);
             EditNotificationCommand = new Command(onEditNotificationButtonClicked);
             DeleteNotificationCommand = new Command(onDeleteNotificationButtonClicked);
+            AcceptNotificationCommand = new Command(onAcceptNotificationButtonClicked);
+            DeclineNotificationCommand = new Command(onDeclineNotificationButtonClicked);
             SelectedNotification = selectedNotification;
         }
 
@@ -117,6 +120,42 @@ namespace Notify.ViewModels
                     "OK");
             }
         }
+        
+        private async void onDeclineNotificationButtonClicked()
+        {
+            bool isDeleted = await AzureHttpClient.Instance.DeleteNotificationAsync(ID);
+            
+            if (isDeleted)
+            {
+                await Shell.Current.Navigation.PopAsync();
+            }
+            else
+            {
+                await App.Current.MainPage.DisplayAlert("Notification Deletion", 
+                    "Failed to delete notification", 
+                    "OK");
+            }
+        }
+
+        private void onAcceptNotificationButtonClicked()
+        {
+            bool isAccepted = AzureHttpClient.Instance.UpdateNotificationsStatus(new List<Notification> { SelectedNotification }, Constants.NOTIFICATION_STATUS_ACTIVE);
+            
+            if (isAccepted)
+            {
+                App.Current.MainPage.DisplayAlert("Notification Acceptance", 
+                    "Notification accepted successfully", 
+                    "OK");
+                
+                Status = Constants.NOTIFICATION_STATUS_ACTIVE;
+            }
+            else
+            {
+                App.Current.MainPage.DisplayAlert("Notification Acceptance", 
+                    "Failed to accept notification", 
+                    "OK");
+            }
+        }
 
         private async void onBackButtonClicked()
         {
@@ -143,10 +182,13 @@ namespace Notify.ViewModels
         public Command DeleteNotificationCommand { get; set; }
         public Command EditNotificationCommand { get; set; }
         public Command RenewNotificationCommand { get; set; }
+        public Command AcceptNotificationCommand { get; set; }
+        public Command DeclineNotificationCommand { get; set; }
 
         public bool IsRenewable => Status == "Expired" && Type != Constants.TIME;
         public bool IsEditable => Status != "Expired";
         public bool IsDeletable => Status != "Expired";
+        public bool IsPending => Status == "Pending";
 
         public event PropertyChangedEventHandler PropertyChanged;
 

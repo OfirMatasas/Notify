@@ -223,6 +223,49 @@
                     Text="{Binding Target}"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
+                <ImageButton
+                    BackgroundColor="Transparent"
+                    Command="{Binding AcceptNotificationCommand}"
+                    Grid.Column="1"
+                    Grid.Row="11"
+                    HeightRequest="50"
+                    Margin="0,20"
+                    VerticalOptions="End"
+                    WidthRequest="50">
+                    <ImageButton.Source>
+                        <FileImageSource File="accept_button.png" />
+                    </ImageButton.Source>
+                    <ImageButton.Triggers>
+                        <DataTrigger
+                            Binding="{Binding IsPending}"
+                            TargetType="ImageButton"
+                            Value="False">
+                            <Setter Property="IsVisible" Value="False" />
+                        </DataTrigger>
+                    </ImageButton.Triggers>
+                </ImageButton>
+
+                <ImageButton
+                    BackgroundColor="Transparent"
+                    Command="{Binding DeclineNotificationCommand}"
+                    Grid.Column="4"
+                    Grid.Row="11"
+                    HeightRequest="50"
+                    Margin="0,20"
+                    VerticalOptions="End"
+                    WidthRequest="50">
+                    <ImageButton.Source>
+                        <FileImageSource File="reject_button.png" />
+                    </ImageButton.Source>
+                    <ImageButton.Triggers>
+                        <DataTrigger
+                            Binding="{Binding IsPending}"
+                            TargetType="ImageButton"
+                            Value="False">
+                            <Setter Property="IsVisible" Value="False" />
+                        </DataTrigger>
+                    </ImageButton.Triggers>
+                </ImageButton>
 
                 <ImageButton
                     BackgroundColor="Transparent"
@@ -243,6 +286,12 @@
                             TargetType="ImageButton"
                             Value="False">
                             <Setter Property="Source" Value="delete_button_disabled.png" />
+                        </DataTrigger>
+                        <DataTrigger
+                            Binding="{Binding IsPending}"
+                            TargetType="ImageButton"
+                            Value="True">
+                            <Setter Property="IsVisible" Value="False" />
                         </DataTrigger>
                     </ImageButton.Triggers>
                 </ImageButton>
@@ -267,6 +316,12 @@
                             Value="False">
                             <Setter Property="Source" Value="edit_button_disabled.png" />
                         </DataTrigger>
+                        <DataTrigger
+                            Binding="{Binding IsPending}"
+                            TargetType="ImageButton"
+                            Value="True">
+                            <Setter Property="IsVisible" Value="False" />
+                        </DataTrigger>
                     </ImageButton.Triggers>
                 </ImageButton>
 
@@ -289,6 +344,12 @@
                             TargetType="ImageButton"
                             Value="False">
                             <Setter Property="Source" Value="renew_button_disabled.png" />
+                        </DataTrigger>
+                        <DataTrigger
+                            Binding="{Binding IsPending}"
+                            TargetType="ImageButton"
+                            Value="True">
+                            <Setter Property="IsVisible" Value="False" />
                         </DataTrigger>
                     </ImageButton.Triggers>
                 </ImageButton>

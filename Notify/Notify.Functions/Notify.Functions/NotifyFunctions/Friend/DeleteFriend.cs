@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,9 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using Newtonsoft.Json;
 using Notify.Functions.Core;
-using Notify.Functions.HTTPClients;
 using Notify.Functions.Utils;
 using MongoUtils = Notify.Functions.Utils.MongoUtils;
 
@@ -46,7 +42,7 @@ namespace Notify.Functions.NotifyFunctions.Friend
             }
             else
             {
-                message = $"Friendship between {username} and {friendName} was deleted";
+                message = $"Friendship and permissions between {username} and {friendName} were deleted";
                 result = new OkObjectResult(message);
             }
             
@@ -62,8 +58,29 @@ namespace Notify.Functions.NotifyFunctions.Friend
                     Builders<BsonDocument>.Filter.Eq("userName2", friendName)),
                 Builders<BsonDocument>.Filter.And(Builders<BsonDocument>.Filter.Eq("userName1", friendName),
                     Builders<BsonDocument>.Filter.Eq("userName2", username)));
+            DeleteResult friendshipDeleteResult = await collection.DeleteOneAsync(filter);
+            DeleteResult permissionDeleteResult = null;
             
-            return await collection.DeleteOneAsync(filter);
+            if (!friendshipDeleteResult.DeletedCount.Equals(0))
+            {
+                permissionDeleteResult = await deletePermissionsFromDatabase(username, friendName);
+            }
+            
+            return permissionDeleteResult ?? friendshipDeleteResult;
+        }
+
+        private static async Task<DeleteResult> deletePermissionsFromDatabase(string username, string friendName)
+        {
+            FilterDefinition<BsonDocument> filter;
+            IMongoCollection<BsonDocument> permissionsCollection = MongoUtils.GetCollection(Constants.COLLECTION_PERMISSION);
+            filter = Builders<BsonDocument>.Filter.Or(
+                Builders<BsonDocument>.Filter.And(Builders<BsonDocument>.Filter.Eq("permit", username),
+                    Builders<BsonDocument>.Filter.Eq("username", friendName)),
+                Builders<BsonDocument>.Filter.And(Builders<BsonDocument>.Filter.Eq("permit", friendName),
+                    Builders<BsonDocument>.Filter.Eq("username", username))
+            );
+
+            return await permissionsCollection.DeleteManyAsync(filter);
         }
     }
 }

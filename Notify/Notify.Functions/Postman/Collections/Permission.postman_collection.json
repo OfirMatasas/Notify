@@ -1,0 +1,60 @@
+{
+	"info": {
+		"_postman_id": "6be0d7c1-7208-4b4f-bb2f-1f1c50252ac5",
+		"name": "Permission",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26136776",
+		"_collection_link": "https://warped-shadow-814178.postman.co/workspace/My-Workspace~54429c37-4045-4a7c-8a63-dc888dec1345/collection/26136776-6be0d7c1-7208-4b4f-bb2f-1f1c50252ac5?action=share&source=collection_link&creator=26136776"
+	},
+	"item": [
+		{
+			"name": "Get permissions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HTTP}}/permission?username=MaTaSaS",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"permission"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "MaTaSaS"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get permissions Copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"permit\": \"MaTaSaS\",\n    \"username\": \"linkimos\",\n    \"location\": \"Disallow\",\n    \"dynamic\": \"Allow\",\n    \"time\": \"Disallow\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HTTP}}/permission",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"permission"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
