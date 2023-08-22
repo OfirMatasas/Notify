@@ -19,6 +19,89 @@ namespace Notify.Helpers
         }
     }
     
+    public class BooleanToColorConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            string[] colorArray;
+            if (value is bool booleanValue && parameter is string colors)
+            {
+                colorArray = colors.Split(';');
+                if (colorArray.Length == 2)
+                {
+                    return booleanValue ? Color.FromHex(colorArray[0]) : Color.FromHex(colorArray[1]);
+                }
+            }
+
+            return Color.Default;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
+    
+    public class TypeToColorConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            Color notificationColor = Color.Default;
+            
+            if (value is NotificationType type)
+            {
+                switch (type)
+                {
+                    case NotificationType.Location:
+                        notificationColor = Constants.LOCATION_NOTIFICATION_COLOR;
+                        break;
+                    case NotificationType.Dynamic:
+                        notificationColor = Constants.DYNAMIC_NOTIFICATION_COLOR;
+                        break;
+                    case NotificationType.Time:
+                        notificationColor = Constants.TIME_NOTIFICAATION_COLOR;
+                        break;
+                }
+            }
+
+            return notificationColor;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
+    
+    public class TypeToIconConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (!(value is NotificationType type))
+            {
+                throw new ArgumentException($"Expected value of type {nameof(NotificationType)}, but got {value?.GetType().Name ?? "null"}.", nameof(value));
+            }
+
+            switch (type)
+            {
+                case NotificationType.Location:
+                    return ImageSource.FromFile("location_colored_icon");
+                case NotificationType.Dynamic:
+                    return ImageSource.FromFile("dynamic_location_colored_icon");
+                case NotificationType.Time:
+                    return ImageSource.FromFile("time_colored_icon");
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), $"Unsupported {nameof(NotificationType)} value: {value}.");
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
+
+
     public static class Converter
     {
         public static Notification ToNotification(dynamic notification)

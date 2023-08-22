@@ -220,6 +220,7 @@ namespace Notify.ViewModels
                 if (isUpdated)
                 {
                     await App.Current.MainPage.DisplayAlert("Notification updated", $"Notification {NotificationName} updated updated!", "OK");
+                    await Shell.Current.Navigation.PopAsync();
                 }
             }
         }
@@ -312,6 +313,7 @@ namespace Notify.ViewModels
                 if (isCreated)
                 {
                     await App.Current.MainPage.DisplayAlert("Notification created", $"Notification {NotificationName} created successfully!", "OK");
+                    Shell.Current.Navigation.PopAsync();
                 }
                 else
                 {
@@ -396,7 +398,7 @@ namespace Notify.ViewModels
         
         private async void onBackClicked()
         {
-            await Shell.Current.GoToAsync(Constants.SHELL_NAVIGATION_NOTIFICATIONS);
+            await Shell.Current.Navigation.PopAsync();
         }
     }
 }
