@@ -21,14 +21,14 @@ namespace Notify.Views
             BindingContext = m_NotificationCreationViewModel;
         }
 
-        private void SelectableItemsView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            IEnumerable<object> removedItems = e.PreviousSelection.Except(e.CurrentSelection);
-            IEnumerable<object> addedItems = e.CurrentSelection.Except(e.PreviousSelection);
-
-            removedItems.ToList().ForEach(item => ((User)item).IsSelected = false);
-            addedItems.ToList().ForEach(item => ((User)item).IsSelected = true);
-        }
+        // private void SelectableItemsView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        // {
+        //     IEnumerable<object> removedItems = e.PreviousSelection.Except(e.CurrentSelection);
+        //     IEnumerable<object> addedItems = e.CurrentSelection.Except(e.PreviousSelection);
+        //
+        //     removedItems.ToList().ForEach(item => ((User)item).IsSelected = false);
+        //     addedItems.ToList().ForEach(item => ((User)item).IsSelected = true);
+        // }
 
         protected override void OnAppearing()
         {
@@ -40,7 +40,7 @@ namespace Notify.Views
         private void DatePicker_OnDateSelected(object sender, DateChangedEventArgs e)
         {
             DateTime datePicked = e.NewDate.Add(TimePicker.Time);
-
+            
             if (datePicked < DateTime.Now)
             {
                 DisplayAlert("Invalid Date", "Please select a time in the future", "OK");
@@ -52,16 +52,16 @@ namespace Notify.Views
         private void TimePicker_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             DateTime timePicked;
-
+        
             if (e.PropertyName.Equals(TimePicker.TimeProperty.PropertyName))
             {
                 timePicked = DatePicker.Date.Add(TimePicker.Time);
-
+        
                 if (timePicked < DateTime.Now)
                 {
                     DisplayAlert("Error", "Please select a time in the future.", "OK");
                 }
-
+        
                 NotificationCreationViewModel.SelectedTime = TimePicker.Time;
             }
         }

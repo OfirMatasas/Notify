@@ -38,6 +38,13 @@
                 <RowDefinition Height="auto" />
                 <!--  Notification Description Entry  -->
                 <!--  Add more rows as needed  -->
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+
             </Grid.RowDefinitions>
 
             <Button
@@ -66,25 +73,21 @@
                 VerticalOptions="Center"
                 VerticalTextAlignment="Center" />
 
-            <!--  Notification Name  -->
-            <Label
-                Grid.Column="0"
-                Grid.Row="1"
-                Style="{StaticResource Body1FontSize_ExoBold}"
-                Text="Notification Name"
-                VerticalOptions="Center" />
-            <Entry
-                Grid.Column="0"
-                Grid.Row="2"
-                Placeholder="Notification Name"
-                PlaceholderColor="{AppThemeBinding Light={StaticResource LightPlaceholderTextColor},
-                                                   Dark={StaticResource DarkPlaceholderTextColor}}"
-                Style="{StaticResource Body1FontSize_ExoBold}"
-                Text="{Binding NotificationName}" />
-
-
             <materialDesignControls:MaterialEntry
                 AnimateError="True"
+                CornerRadius="10"
+                Grid.Column="0"
+                Grid.Row="3"
+                LabelMargin="3"
+                LabelSize="16"
+                LabelText="Notification Name"
+                MaxLength="25"
+                Placeholder="Notification Name"
+                ReturnType="Next"
+                TabIndex="1"
+                Text="{Binding NotificationName}" />
+
+            <materialDesignControls:MaterialEntry
                 CornerRadius="10"
                 Grid.Column="0"
                 Grid.Row="4"
@@ -97,7 +100,96 @@
                 TabIndex="1"
                 Text="{Binding NotificationDescription}" />
 
-            <!--  Continue in this pattern for your other elements  -->
+            <materialDesignControls:MaterialPicker
+                CornerRadius="10"
+                Grid.Column="0"
+                Grid.Row="5"
+                IsEnabled="{Binding IsCreating}"
+                ItemsSource="{Binding NotificationTypes}"
+                LabelMargin="3"
+                LabelSize="16"
+                LabelText="Notification Type"
+                Placeholder="Notification Type"
+                SelectedItem="{Binding SelectedNotificationType}"
+                TabIndex="1" />
+            <Frame
+                CornerRadius="10"
+                Grid.Column="0"
+                Grid.Row="6"
+                IsVisible="{Binding IsTimeTypeSelected}"
+                HorizontalOptions="Start">
+
+                <TimePicker
+                    Format="hh:mm tt"
+                    IsVisible="{Binding IsTimeTypeSelected}"
+                    PropertyChanged="TimePicker_OnPropertyChanged"
+                    Time="{Binding SelectedTime}"
+                    x:Name="TimePicker" />
+            </Frame>
+
+            <Frame
+                CornerRadius="10"
+                Grid.Column="1"
+                IsVisible="{Binding IsTimeTypeSelected}"
+                Grid.ColumnSpan="2"
+                Grid.Row="6"
+                Padding="5,10">
+                <DatePicker
+                    Date="{Binding SelectedDate}"
+                    DateSelected="DatePicker_OnDateSelected"
+                    Format="dd/MM/yyyy"
+                    IsVisible="{Binding IsTimeTypeSelected}"
+                    x:Name="DatePicker" />
+            </Frame>
+
+            <materialDesignControls:MaterialPicker
+                CornerRadius="10"
+                Grid.Column="0"
+                Grid.Row="7"
+                IsVisible="{Binding IsLocationTypeSelected}"
+                ItemsSource="{Binding LocationOptions}"
+                LabelMargin="3"
+                LabelSize="16"
+                LabelText="Location Option"
+                Placeholder="Location Option"
+                SelectedItem="{Binding SelectedLocationOption}"
+                TabIndex="1" />
+
+            <materialDesignControls:MaterialPicker
+                CornerRadius="10"
+                Grid.Column="0"
+                Grid.Row="7"
+                IsVisible="{Binding IsDynamicTypeSelected}"
+                ItemsSource="{Binding DynamicOptions}"
+                LabelMargin="3"
+                LabelSize="16"
+                LabelText="Place Option"
+                Placeholder="Place Option"
+                SelectedItem="{Binding SelectedDynamicOption}"
+                TabIndex="1" />
+
+            <materialDesignControls:MaterialPicker
+                CornerRadius="10"
+                Grid.Column="0"
+                Grid.Row="7"
+                IsVisible="{Binding ShowActivationOptions}"
+                ItemsSource="{Binding ActivationOptions}"
+                LabelMargin="3"
+                LabelSize="16"
+                LabelText="Activate on"
+                Placeholder="Activate on"
+                SelectedItem="{Binding SelectedActivationOption}"
+                TabIndex="1" />
+
+            <materialDesignControls:MaterialCheckbox
+                Animation="Scale"
+                Color="Blue"
+                Grid.Column="0"
+                Grid.Row="8"
+                IsChecked="{Binding IsPermanent}"
+                IsVisible="{Binding IsLocationTypeSelected}"
+                Text="Permanent" />
+
 
         </Grid>
 
