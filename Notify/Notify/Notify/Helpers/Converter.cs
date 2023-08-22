@@ -61,9 +61,6 @@ namespace Notify.Helpers
                     case NotificationType.Time:
                         notificationColor = Constants.TIME_NOTIFICAATION_COLOR;
                         break;
-                    default:
-                        notificationColor = Color.Default;
-                        break;
                 }
             }
 
