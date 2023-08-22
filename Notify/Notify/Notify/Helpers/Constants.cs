@@ -156,6 +156,7 @@ namespace Notify.Helpers
         public static readonly string AZURE_FUNCTIONS_PATTERN_REJECT_FRIEND_REQUEST = AZURE_FUNCTIONS_PATTERN_FRIEND + "/reject";
         public static readonly string AZURE_FUNCTIONS_PATTERN_ACCEPT_FRIEND_REQUEST = AZURE_FUNCTIONS_PATTERN_FRIEND + "/accept";
         public static readonly string AZURE_FUNCTIONS_PATTERN_UPLOAD_PROFILE_PICTURE_TO_BLOB = "uploadProfilePicture";
+        public static readonly string AZURE_FUNCTIONS_DEFAULT_USER_PROFILE_PICTURE = "https://notifyblobstorage.blob.core.windows.net/notifycontainer/4199b89b-48e4-477c-9496-50c340ccd882.jpg";
 
         #endregion
 
@@ -204,6 +205,7 @@ namespace Notify.Helpers
         public static readonly string PREFERENCES_PASSWORD = "NotifyPassword";
         public static readonly string PREFERENCES_NOT_FRIENDS_USERS = "NotFriendsUsers";
         public static readonly string PREFERENCES_FRIENDS_PERMISSIONS = "FriendsPermissions";
+        public static readonly string PREFERENCES_USER_OBJECT = "UserObject";
 
         #endregion
 
