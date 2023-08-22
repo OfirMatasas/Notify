@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using Notify.Core;
 using Xamarin.Forms;
@@ -62,6 +61,9 @@ namespace Notify.Helpers
                     case NotificationType.Time:
                         notificationColor = Constants.TIME_NOTIFICAATION_COLOR;
                         break;
+                    default:
+                        notificationColor = Color.Default;
+                        break;
                 }
             }
 
@@ -78,22 +80,22 @@ namespace Notify.Helpers
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is NotificationType type)
+            if (!(value is NotificationType type))
             {
-                switch (type)
-                {
-                    case NotificationType.Location:
-                        return ImageSource.FromFile("location_colored_icon"); 
-                    case NotificationType.Dynamic:
-                        return ImageSource.FromFile("dynamic_location_colored_icon");
-                    case NotificationType.Time:
-                        return ImageSource.FromFile("time_colored_icon");
-                    default:
-                        return null; 
-                }
+                throw new ArgumentException($"Expected value of type {nameof(NotificationType)}, but got {value?.GetType().Name ?? "null"}.", nameof(value));
             }
-            
-            return null;
+
+            switch (type)
+            {
+                case NotificationType.Location:
+                    return ImageSource.FromFile("location_colored_icon");
+                case NotificationType.Dynamic:
+                    return ImageSource.FromFile("dynamic_location_colored_icon");
+                case NotificationType.Time:
+                    return ImageSource.FromFile("time_colored_icon");
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), $"Unsupported {nameof(NotificationType)} value: {value}.");
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -101,6 +103,7 @@ namespace Notify.Helpers
             return null;
         }
     }
+
 
     public static class Converter
     {
