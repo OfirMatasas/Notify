@@ -150,10 +150,13 @@ namespace Notify.Helpers
         
         public static User ToFriend(dynamic friend)
         {
+            string profilePicture = friend.profilePicture ?? Constants.AZURE_FUNCTIONS_DEFAULT_USER_PROFILE_PICTURE;
+            
             return new User(
                 name: (string)friend.name, 
                 username: (string)friend.userName, 
-                telephone: (string)friend.telephone);
+                telephone: (string)friend.telephone,
+                profilePicture: profilePicture);
         }
         
         public static Destination ToDestination(dynamic destination)

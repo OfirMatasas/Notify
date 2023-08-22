@@ -261,8 +261,10 @@ namespace Notify.ViewModels
             {
                 Friends = JsonConvert.DeserializeObject<List<User>>(friendsJson);
             }
-
-            Friends.Add(new User(string.Empty, myUsername, string.Empty));
+            
+            string loggedUserJson = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
+            User loggedUser = JsonConvert.DeserializeObject<User>(loggedUserJson);
+            Friends.Add(new User(loggedUser.Name, myUsername, loggedUser.Telephone, loggedUser.ProfilePicture));
             Friends.Sort((friend1, friend2) => string.Compare(friend1.Name, friend2.Name, StringComparison.Ordinal));
         }
 

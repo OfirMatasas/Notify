@@ -22,7 +22,7 @@ namespace Notify.ViewModels
         private string m_UserName;
         private ImageSource m_ProfilePicture;
         private ObservableCollection<Destination> m_ScrollViewContent;
-        private Task<User> m_CurrentUser;
+        private User m_CurrentUser;
         
         public Command LocationButtonCommand { get; set; }
         public Command BlueToothButtonCommand { get; set; }
@@ -68,9 +68,7 @@ namespace Notify.ViewModels
         
         public ProfilePageViewModel()
         {
-            UserName = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
-            m_CurrentUser = AzureHttpClient.Instance.GetUserByUsernameAsync(UserName);
-            SetProfilePictureAsync(); // TODO save the entire user object in preferences
+            setUser();
 
             LocationButtonCommand = new Command(onLocationButtonPressed);
             BlueToothButtonCommand = new Command(onBlueToothButtonPressed);
@@ -82,11 +80,18 @@ namespace Notify.ViewModels
             string destinationsJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, String.Empty);
             Destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationsJson);
         }
-        
-        private async Task SetProfilePictureAsync()
+
+        private async void setUser()
         {
-            User user = await m_CurrentUser;
-            ProfilePicture = ImageSource.FromUri(new Uri(user.ProfilePicture));
+            UserName = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
+            m_CurrentUser = await AzureHttpClient.Instance.GetUserByUsernameAsync(UserName);
+            setProfilePicture();
+        }
+        
+        private void setProfilePicture()
+        {
+            ProfilePicture = ImageSource.FromUri(new Uri(m_CurrentUser.ProfilePicture));
+            Preferences.Set(Constants.PREFERENCES_USER_OBJECT, JsonConvert.SerializeObject(m_CurrentUser));
         }
         
         private async void onLoadProfilePicture()
@@ -141,8 +146,8 @@ namespace Notify.ViewModels
                         r_Logger.LogInformation("Profile picture uploaded successfully");
                         await AzureHttpClient.Instance.UpdateUserProfilePictureAsync(UserName, imageUrl);
                         
-                        m_CurrentUser = AzureHttpClient.Instance.GetUserByUsernameAsync(UserName);
-                        SetProfilePictureAsync();
+                        m_CurrentUser = await AzureHttpClient.Instance.GetUserByUsernameAsync(UserName);
+                        setProfilePicture();
                     }
                     else
                     {
@@ -159,8 +164,8 @@ namespace Notify.ViewModels
         private async Task clearProfilePicture()
         {
             await AzureHttpClient.Instance.UpdateUserProfilePictureAsync(UserName, string.Empty);
-            m_CurrentUser = AzureHttpClient.Instance.GetUserByUsernameAsync(UserName);
-            SetProfilePictureAsync();
+            m_CurrentUser = await AzureHttpClient.Instance.GetUserByUsernameAsync(UserName);
+            setProfilePicture();
         }
 
         private void onLocationButtonPressed()
