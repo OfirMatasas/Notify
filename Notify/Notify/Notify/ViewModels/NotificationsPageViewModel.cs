@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Notify.Azure.HttpClient;
 using Notify.Core;
@@ -139,7 +138,6 @@ namespace Notify.ViewModels
             FilteredNotifications = new List<Notification>(filteredNotifications);
             OnPropertyChanged(nameof(FilteredNotifications));
         }
-
         
         private IEnumerable<Notification> ApplyFilter(IEnumerable<Notification> notifications)
         {
@@ -185,10 +183,9 @@ namespace Notify.ViewModels
         {
             IsRefreshing = true;
 
-            await Task.Run(() => Notifications = AzureHttpClient.Instance.GetNotifications().Result);
+            Notifications = await AzureHttpClient.Instance.GetNotifications();
             FilteredNotifications = new List<Notification>(Notifications);
             applyFilterAndSearch();
-            Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(Notifications));
 
             IsRefreshing = false;
         }
@@ -282,6 +279,3 @@ namespace Notify.ViewModels
         }
     }
 }
-
-        
-
