@@ -15,29 +15,36 @@
                     HorizontalTextAlignment="Center"
                     Text="Friend Details"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
-                                                Dark={StaticResource DarkPrimaryTextColor}}" />
-                <Image
-                    Aspect="AspectFit"
+                                                Dark={StaticResource DarkPrimaryTextColor}}"
+                    VerticalTextAlignment="Center" />
+
+                <Button
+                    Background="Transparent"
+                    BackgroundColor="Transparent"
+                    Command="{Binding BackCommand}"
+                    FontAttributes="Bold"
+                    FontSize="30"
                     Grid.Column="0"
-                    HeightRequest="50"
+                    Grid.Row="0"
                     HorizontalOptions="Start"
-                    Source="back.png">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding BackCommand}" />
-                    </Image.GestureRecognizers>
-                </Image>
+                    Text="❮"
+                    TextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
+                                                Dark={StaticResource LightEntryBackgroundColor}}"
+                    VerticalOptions="Start" />
+
             </Grid>
 
             <Grid
                 Column="3"
                 ColumnDefinitions="auto, auto, *"
-                RowDefinitions="auto, auto, auto">
+                Margin="20"
+                RowDefinitions="auto, auto, auto, auto, auto, auto, *, *">
                 <Label
                     FontAttributes="Bold"
                     FontSize="Medium"
                     Grid.Column="0"
                     Grid.Row="0"
-                    Margin="0,10,0,0"
+                    Margin="0,15,0,0"
                     Text="Name:"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
@@ -45,7 +52,7 @@
                     FontSize="Medium"
                     Grid.Column="1"
                     Grid.Row="0"
-                    Margin="0,10,0,0"
+                    Margin="0,15,0,0"
                     Text="{Binding Name}"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
@@ -54,7 +61,7 @@
                     FontSize="Medium"
                     Grid.Column="0"
                     Grid.Row="1"
-                    Margin="0,10,0,0"
+                    Margin="0,15,0,0"
                     Text="Username:"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
@@ -62,7 +69,7 @@
                     FontSize="Medium"
                     Grid.Column="1"
                     Grid.Row="1"
-                    Margin="0,10,0,0"
+                    Margin="0,15,0,0"
                     Text="{Binding UserName}"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
@@ -71,7 +78,7 @@
                     FontSize="Medium"
                     Grid.Column="0"
                     Grid.Row="2"
-                    Margin="0,10,0,0"
+                    Margin="0,15,0,0"
                     Text="Telephone:"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
@@ -79,7 +86,7 @@
                     FontSize="Medium"
                     Grid.Column="1"
                     Grid.Row="2"
-                    Margin="0,10,0,0"
+                    Margin="0,15,0,0"
                     Text="{Binding Telephone}"
                     TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}" />
@@ -89,6 +96,74 @@
                     Grid.RowSpan="3"
                     HeightRequest="100"
                     Source="{Binding ProfileImage}" />
+
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="Medium"
+                    Grid.Column="0"
+                    Grid.Row="3"
+                    Margin="0,15,0,0"
+                    Text="Location:"
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
+                <Picker
+                    Grid.Column="1"
+                    Grid.Row="3"
+                    ItemsSource="{Binding PermissionOptions}"
+                    SelectedItem="{Binding LocationNotificationsPermission}"
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
+
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="Medium"
+                    Grid.Column="0"
+                    Grid.Row="4"
+                    Margin="0,15,0,0"
+                    Text="Time:"
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
+
+                <Picker
+                    Grid.Column="1"
+                    Grid.Row="4"
+                    ItemsSource="{Binding PermissionOptions}"
+                    SelectedItem="{Binding TimeNotificationsPermission}"
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
+
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="Medium"
+                    Grid.Column="0"
+                    Grid.Row="5"
+                    Margin="0,15,0,0"
+                    Text="Dynamic:"
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
+
+                <Picker
+                    Grid.Column="1"
+                    Grid.Row="5"
+                    ItemsSource="{Binding PermissionOptions}"
+                    SelectedItem="{Binding DynamicNotificationsPermission}"
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}" />
+
+                <Button
+                    BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
+                                                      Dark={StaticResource DarkButtonColor}}"
+                    Command="{Binding UpdateFriendPermissionsCommand}"
+                    CornerRadius="50"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3"
+                    Grid.Row="7"
+                    Margin="20"
+                    Style="{StaticResource Button_ExoRegular}"
+                    Text="Update"
+                    TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
+                                                Dark={StaticResource DarkButtonTextColor}}"
+                    VerticalOptions="EndAndExpand" />
             </Grid>
 
         </StackLayout>

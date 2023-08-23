@@ -64,16 +64,19 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Grid
-                            Column="3"
+                            Column="2"
                             ColumnDefinitions="*, *"
                             HorizontalOptions="Center"
                             RowDefinitions="auto">
-                            <Image
+                            <ImageButton
+                                Background="Transparent"
+                                CornerRadius="50"
                                 Grid.Column="0"
-                                HeightRequest="30"
+                                HeightRequest="50"
                                 HorizontalOptions="Center"
-                                Source="{Binding ProfileImage}"
-                                VerticalOptions="Center" />
+                                Source="{Binding ProfilePicture}"
+                                VerticalOptions="Center"
+                                WidthRequest="50" />
                             <Label
                                 FontSize="15"
                                 Grid.Column="1"

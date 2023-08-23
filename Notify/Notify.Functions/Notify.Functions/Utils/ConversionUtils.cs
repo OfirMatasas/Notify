@@ -15,7 +15,7 @@ namespace Notify.Functions.Utils
     {
         public static string ConvertBsonDocumentListToJson(List<BsonDocument> bsonDocumentList)
         {
-            JsonWriterSettings jsonSettings = new JsonWriterSettings { OutputMode = JsonOutputMode.Strict };
+            JsonWriterSettings jsonSettings = new JsonWriterSettings { OutputMode = JsonOutputMode.CanonicalExtendedJson };
             string jsonArrayString, id;
             JArray jsonArray;
 

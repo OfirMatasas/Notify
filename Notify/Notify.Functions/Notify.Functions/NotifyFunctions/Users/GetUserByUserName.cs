@@ -9,7 +9,6 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Notify.Functions.Core;
-using Notify.Functions.HTTPClients;
 using MongoUtils = Notify.Functions.Utils.MongoUtils;
 
 namespace Notify.Functions.NotifyFunctions.Users

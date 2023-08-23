@@ -34,8 +34,9 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
                 username = Convert.ToString(data.userName);
                 
                 log.LogInformation($"Accepting friend request from {requester} to {username}");
-                await createFriendship(requester, username, log);
-                await deleteFriendRequest(requester, username, log);
+                await createFriendshipAsync(requester, username, log);
+                await createPermissionsAsync(requester, username, log);
+                await deleteFriendRequestAsync(requester, username, log);
                 
                 result = new OkObjectResult("Friend request accepted");
             }
@@ -48,7 +49,31 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
             return result;
         }
 
-        private static async Task createFriendship(string requester, string username, ILogger log)
+        private static async Task createPermissionsAsync(string requester, string username, ILogger log)
+        {
+            IMongoCollection<BsonDocument> permissionsCollection = MongoUtils.GetCollection(Constants.COLLECTION_PERMISSION);
+
+            await createAndInsertPermissionDocument(requester, username, permissionsCollection, log);
+            await createAndInsertPermissionDocument(username, requester, permissionsCollection, log);
+        }
+
+        private static async Task createAndInsertPermissionDocument(string permit, string username, IMongoCollection<BsonDocument> collection, ILogger log)
+        {
+            BsonDocument permissionsDocument = new BsonDocument
+            {
+                { "permit", permit },
+                { "username", username },
+                { Constants.NOTIFICATION_TYPE_LOCATION_LOWER, Constants.PERMISSION_DISALLOW },
+                { Constants.NOTIFICATION_TYPE_DYNAMIC_LOWER, Constants.PERMISSION_DISALLOW },
+                { Constants.NOTIFICATION_TYPE_TIME_LOWER, Constants.PERMISSION_DISALLOW }
+            };
+
+            log.LogInformation($"Creating permissions document for {permit} and {username}");
+            await collection.InsertOneAsync(permissionsDocument);
+            log.LogInformation($"Permissions document for {permit} and {username} created successfully");
+        }
+
+        private static async Task createFriendshipAsync(string requester, string username, ILogger log)
         {
             IMongoCollection<BsonDocument> friendsCollection;
             BsonDocument friendDocument;
@@ -66,8 +91,8 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
 
             log.LogInformation($"Friendship document between {requester} and {username} created successfully");
         }
-
-        private static async Task deleteFriendRequest(string requester, string username, ILogger log)
+        
+        private static async Task deleteFriendRequestAsync(string requester, string username, ILogger log)
         {
             IMongoCollection<BsonDocument> friendRequestsCollection;
             FilterDefinition<BsonDocument> friendRequestsFilter;
@@ -87,4 +112,3 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
         }
     }
 }
-

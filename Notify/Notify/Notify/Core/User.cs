@@ -1,7 +1,5 @@
-using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Xamarin.Forms;
 
 namespace Notify.Core
 {
@@ -19,13 +17,13 @@ namespace Notify.Core
 
         #region Constructor
 
-        public User(string name, string username, string telephone)
+        public User(string name, string username, string telephone, string profilePicture)
         {
             Name = name;
             UserName = username;
             Telephone = telephone;
             IsSelected = false;
-            ProfilePicture = string.Empty;
+            ProfilePicture = profilePicture;
         }
 
         #endregion

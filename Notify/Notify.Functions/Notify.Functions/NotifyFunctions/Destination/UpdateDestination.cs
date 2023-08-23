@@ -78,7 +78,7 @@ namespace Notify.Functions.NotifyFunctions.Destination
             
             log.LogInformation($"Found existing document for user {data.user} and location {data.location.name}. Updating it");
 
-            if (type.Equals("Location"))
+            if (type.Equals(Constants.NOTIFICATION_TYPE_LOCATION))
             {
                 double latitude = Convert.ToDouble(data.location.latitude), longitude = Convert.ToDouble(data.location.longitude);
                 string address = GoogleHttpClient.Instance.GetAddressFromCoordinatesAsync(latitude, longitude, log).Result;
@@ -87,11 +87,11 @@ namespace Notify.Functions.NotifyFunctions.Destination
                 document["location"].AsBsonDocument["longitude"] = longitude;
                 document["location"].AsBsonDocument["address"] = address;
             }
-            else if (type.Equals("WiFi"))
+            else if (type.Equals(Constants.NOTIFICATION_TYPE_WIFI))
             {
                 document["location"].AsBsonDocument["ssid"] = Convert.ToString(data.location.ssid);
             }
-            else if (type.Equals("Bluetooth"))
+            else if (type.Equals(Constants.NOTIFICATION_TYPE_BLUETOOTH))
             {
                 document["location"].AsBsonDocument["device"] = Convert.ToString(data.location.device);
             }
@@ -121,7 +121,7 @@ namespace Notify.Functions.NotifyFunctions.Destination
                 }
             };
 
-            if (type.Equals("Location"))
+            if (type.Equals(Constants.NOTIFICATION_TYPE_LOCATION))
             {
                 double latitude = Convert.ToDouble(data.location.latitude), longitude = Convert.ToDouble(data.location.longitude);
                 string address = GoogleHttpClient.Instance.GetAddressFromCoordinatesAsync(latitude, longitude, log).Result;
@@ -130,11 +130,11 @@ namespace Notify.Functions.NotifyFunctions.Destination
                 document["location"].AsBsonDocument.Add("longitude", longitude);
                 document["location"].AsBsonDocument.Add("address", address);
             }
-            else if (type.Equals("WiFi"))
+            else if (type.Equals(Constants.NOTIFICATION_TYPE_WIFI))
             {
                 document["location"].AsBsonDocument.Add("ssid", Convert.ToString(data.location.ssid));
             }
-            else if (type.Equals("Bluetooth"))
+            else if (type.Equals(Constants.NOTIFICATION_TYPE_BLUETOOTH))
             {
                 document["location"].AsBsonDocument.Add("device", Convert.ToString(data.location.device));
             }
