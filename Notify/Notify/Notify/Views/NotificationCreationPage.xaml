@@ -3,7 +3,6 @@
     x:Class="Notify.Views.NotificationCreationPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:materialDesignControls="clr-namespace:Plugin.MaterialDesignControls;assembly=Plugin.MaterialDesignControls"
-    xmlns:views="clr-namespace:Notify.Views.Views;assembly=Notify"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <FlexLayout
@@ -12,32 +11,23 @@
         Direction="Column"
         JustifyContent="SpaceBetween">
 
-        <!--  Grid for Main Content  -->
         <Grid
             ColumnSpacing="20"
             Margin="20"
             RowSpacing="20">
 
-            <!--  Grid Column Definitions  -->
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
 
-            <!--  Grid Row Definitions  -->
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
-                <!--  For Back button and Title  -->
                 <RowDefinition Height="auto" />
-                <!--  Notification Name Label  -->
                 <RowDefinition Height="auto" />
-                <!--  Notification Name Entry  -->
                 <RowDefinition Height="auto" />
-                <!--  Notification Description Label  -->
                 <RowDefinition Height="auto" />
-                <!--  Notification Description Entry  -->
-                <!--  Add more rows as needed  -->
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
@@ -112,93 +102,132 @@
                 Placeholder="Notification Type"
                 SelectedItem="{Binding SelectedNotificationType}"
                 TabIndex="1" />
-            <Frame
-                CornerRadius="10"
+
+            <StackLayout
                 Grid.Column="0"
                 Grid.Row="6"
-                HorizontalOptions="Start"
                 IsVisible="{Binding IsTimeTypeSelected}">
-
-                <TimePicker
-                    Format="hh:mm tt"
+                <Label
+                    FontSize="16"
+                    Text="Time"
+                    VerticalOptions="Start" />
+                <Frame
+                    BorderColor="Transparent"
+                    CornerRadius="10"
+                    HorizontalOptions="Start"
                     IsVisible="{Binding IsTimeTypeSelected}"
-                    PropertyChanged="TimePicker_OnPropertyChanged"
-                    Time="{Binding SelectedTime}"
-                    x:Name="TimePicker" />
-            </Frame>
+                    Padding="10,5">
 
-            <Frame
-                CornerRadius="10"
+                    <TimePicker
+                        Format="hh:mm tt"
+                        IsVisible="{Binding IsTimeTypeSelected}"
+                        PropertyChanged="TimePicker_OnPropertyChanged"
+                        Time="{Binding SelectedTime}"
+                        x:Name="TimePicker" />
+                </Frame>
+            </StackLayout>
+
+            <StackLayout
                 Grid.Column="1"
                 Grid.ColumnSpan="2"
                 Grid.Row="6"
-                IsVisible="{Binding IsTimeTypeSelected}"
-                Padding="5,10">
-                <DatePicker
-                    Date="{Binding SelectedDate}"
-                    DateSelected="DatePicker_OnDateSelected"
-                    Format="dd/MM/yyyy"
+                IsVisible="{Binding IsTimeTypeSelected}">
+                <Label
+                    FontSize="16"
+                    Text="Date"
+                    VerticalOptions="Start" />
+                <Frame
+                    BorderColor="Transparent"
+                    CornerRadius="10"
                     IsVisible="{Binding IsTimeTypeSelected}"
-                    x:Name="DatePicker" />
-            </Frame>
+                    Padding="5,5">
+                    <DatePicker
+                        Date="{Binding SelectedDate}"
+                        DateSelected="DatePicker_OnDateSelected"
+                        Format="dd/MM/yyyy"
+                        IsVisible="{Binding IsTimeTypeSelected}"
+                        x:Name="DatePicker" />
+                </Frame>
+            </StackLayout>
 
-            <Frame
-                CornerRadius="10"
+            <StackLayout
                 Grid.Column="0"
                 Grid.Row="6"
-                HasShadow="False"
-                IsVisible="{Binding IsLocationTypeSelected}"
-                Padding="0">
-                <Picker
-                    BackgroundColor="Transparent"
-                    ItemsSource="{Binding LocationOptions}"
-                    SelectedItem="{Binding SelectedLocationOption}"
-                    Title="Location Option">
-                    <Picker.Style>
-                        <Style TargetType="Picker">
-                            <Setter Property="HeightRequest" Value="45" />
-                        </Style>
-                    </Picker.Style>
-                </Picker>
-            </Frame>
+                IsVisible="{Binding IsLocationTypeSelected}">
+                <Label
+                    FontSize="16"
+                    Text="Location Option"
+                    VerticalOptions="Start" />
+                <Frame
+                    BorderColor="Transparent"
+                    CornerRadius="10"
+                    IsVisible="{Binding IsLocationTypeSelected}"
+                    Padding="15,1">
+                    <Picker
+                        BackgroundColor="Transparent"
+                        ItemsSource="{Binding LocationOptions}"
+                        SelectedItem="{Binding SelectedLocationOption}"
+                        Title="Location Option" />
+                </Frame>
+            </StackLayout>
 
-
-            <materialDesignControls:MaterialPicker
-                CornerRadius="10"
+            <StackLayout
                 Grid.Column="0"
                 Grid.Row="7"
-                IsVisible="{Binding IsDynamicTypeSelected}"
-                ItemsSource="{Binding DynamicOptions}"
-                LabelMargin="3"
-                LabelSize="16"
-                LabelText="Place Option"
-                Placeholder="Place Option"
-                SelectedItem="{Binding SelectedDynamicOption}"
-                TabIndex="1" />
+                IsVisible="{Binding ShowActivationOptions}">
+                <Label
+                    FontSize="16"
+                    Text="Activate on"
+                    VerticalOptions="Start" />
+                <Frame
+                    BorderColor="Transparent"
+                    CornerRadius="10"
+                    IsVisible="{Binding ShowActivationOptions}"
+                    Padding="15,1">
+                    <Picker
+                        BackgroundColor="Transparent"
+                        ItemsSource="{Binding ActivationOptions}"
+                        SelectedItem="{Binding SelectedActivationOption}"
+                        Title="Activate on">
+                        <!--  Picker.Style as it was  -->
+                    </Picker>
+                </Frame>
+            </StackLayout>
 
-            <materialDesignControls:MaterialPicker
-                CornerRadius="10"
-                Grid.Column="0"
-                Grid.Row="7"
-                IsVisible="{Binding ShowActivationOptions}"
-                ItemsSource="{Binding ActivationOptions}"
-                LabelMargin="3"
-                LabelSize="16"
-                LabelText="Activate on"
-                Placeholder="Activate on"
-                SelectedItem="{Binding SelectedActivationOption}"
-                TabIndex="1" />
-
-            <materialDesignControls:MaterialCheckbox
-                Animation="Scale"
-                Color="Blue"
+            <StackLayout
                 Grid.Column="0"
                 Grid.Row="8"
-                IsChecked="{Binding IsPermanent}"
+                HeightRequest="20"
                 IsVisible="{Binding IsLocationTypeSelected}"
-                Text="Permanent" />
+                Orientation="Horizontal"
+                Spacing="10">
+                <Label
+                    Text="Permanent"
+                    TextColor="Gray"
+                    VerticalOptions="Center" />
+                <CheckBox Color="Black" IsChecked="{Binding IsPermanent}" />
+            </StackLayout>
 
-
+            <StackLayout
+                Grid.Column="0"
+                Grid.Row="6"
+                IsVisible="{Binding IsDynamicTypeSelected}">
+                <Label
+                    FontSize="16"
+                    Text="Place Option"
+                    VerticalOptions="Start" />
+                <Frame
+                    BorderColor="Transparent"
+                    CornerRadius="10"
+                    IsVisible="{Binding IsDynamicTypeSelected}"
+                    Padding="15,1">
+                    <Picker
+                        BackgroundColor="Transparent"
+                        ItemsSource="{Binding DynamicOptions}"
+                        SelectedItem="{Binding SelectedDynamicOption}"
+                        Title="Place Option" />
+                </Frame>
+            </StackLayout>
         </Grid>
 
         <!--  Buttons and Bottom Content are the same as previously shared  -->
