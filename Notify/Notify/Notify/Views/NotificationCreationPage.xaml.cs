@@ -21,14 +21,14 @@ namespace Notify.Views
             BindingContext = m_NotificationCreationViewModel;
         }
 
-        // private void SelectableItemsView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        // {
-        //     IEnumerable<object> removedItems = e.PreviousSelection.Except(e.CurrentSelection);
-        //     IEnumerable<object> addedItems = e.CurrentSelection.Except(e.PreviousSelection);
-        //
-        //     removedItems.ToList().ForEach(item => ((User)item).IsSelected = false);
-        //     addedItems.ToList().ForEach(item => ((User)item).IsSelected = true);
-        // }
+        private void SelectableItemsView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            IEnumerable<object> removedItems = e.PreviousSelection.Except(e.CurrentSelection);
+            IEnumerable<object> addedItems = e.CurrentSelection.Except(e.PreviousSelection);
+        
+            removedItems.ToList().ForEach(item => ((User)item).IsSelected = false);
+            addedItems.ToList().ForEach(item => ((User)item).IsSelected = true);
+        }
 
         protected override void OnAppearing()
         {
