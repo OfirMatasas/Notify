@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using Notify.Azure.HttpClient;
@@ -14,9 +13,10 @@ namespace Notify.ViewModels
     public class FriendRequestPageViewModel : INotifyPropertyChanged
     {
         public Command BackCommand { get; set; }
-        public Command SearchTextChangedCommand { get; set; }
+        public Command ExecuteSearchCommand { get; set; }
         public Command<User> SendRequestCommand { get; set; }
         public Command<User> ShowFriendDetailsCommand { get; set; }
+        public Command RefreshPotentialFriendsCommand { get; set; }
 
         private string m_SearchText;
         public string SearchText
@@ -24,6 +24,9 @@ namespace Notify.ViewModels
             get => m_SearchText;
             set => SetField(ref m_SearchText, value);
         }
+        
+        private bool m_IsRefreshing;
+        public bool IsRefreshing { set => SetField(ref m_IsRefreshing, value); } 
 
         private List<User> UsersList { get; set; }
         
@@ -45,9 +48,20 @@ namespace Notify.ViewModels
         {
             BackCommand = new Command(onBackButtonClicked);
             SendRequestCommand = new Command<User>(onSendRequestButtonClicked);
-            SearchTextChangedCommand = new Command(onSearchTextChanged);
+            ExecuteSearchCommand = new Command(onSearchTextChanged);
             ShowFriendDetailsCommand = new Command<User>(onFriendClicked);
+            RefreshPotentialFriendsCommand = new Command(onRefreshPotentialFriendsClicked);
             PopulateUsersList();
+        }
+
+        private void onRefreshPotentialFriendsClicked()
+        {
+            IsRefreshing = true;
+            
+            UsersList = AzureHttpClient.Instance.GetNotFriendsUsers().Result;
+            onSearchTextChanged();
+            
+            IsRefreshing = false;
         }
 
         private void onSearchTextChanged()

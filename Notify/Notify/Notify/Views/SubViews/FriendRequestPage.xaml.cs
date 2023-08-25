@@ -18,7 +18,7 @@ namespace Notify.Views.SubViews
 
         private void SearchEntry_OnTextChanged(object sender, EventArgs e)
         {
-            m_FriendRequestPageViewModel.SearchTextChangedCommand.Execute(null);
+            m_FriendRequestPageViewModel.ExecuteSearchCommand.Execute(null);
         }
     }
 }
