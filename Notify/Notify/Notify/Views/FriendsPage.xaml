@@ -88,7 +88,7 @@
                             Text="+"
                             TextColor="Black">
                             <Label.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding AddFriendCommand}" />
+                                <TapGestureRecognizer Command="{Binding ShowFriendRequestsCommand}" />
                             </Label.GestureRecognizers>
                         </Label>
                     </Grid>
@@ -149,6 +149,7 @@
                                                             HeightRequest="70"
                                                             HorizontalOptions="Center"
                                                             Source="{Binding ProfilePicture}"
+                                                            VerticalOptions="Center"
                                                             WidthRequest="70" />
                                                     </StackLayout>
                                                     <BoxView

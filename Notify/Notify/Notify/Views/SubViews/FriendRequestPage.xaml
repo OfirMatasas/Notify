@@ -58,14 +58,22 @@
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <Grid
-                                    ColumnDefinitions="*, *"
+                                    ColumnDefinitions="*, *, *"
                                     ColumnSpacing="0"
                                     Margin="0,20,0,20"
                                     RowDefinitions="auto">
+                                    <Image
+                                        Aspect="AspectFill"
+                                        Grid.Column="0"
+                                        HeightRequest="50"
+                                        HorizontalOptions="Start"
+                                        Source="{Binding ProfilePicture}"
+                                        VerticalOptions="Center"
+                                        WidthRequest="50" />
                                     <materialDesignControls:MaterialLabel
                                         FontAttributes="Bold"
                                         FontSize="Medium"
-                                        Grid.Column="0"
+                                        Grid.Column="1"
                                         HorizontalOptions="StartAndExpand"
                                         HorizontalTextAlignment="Start"
                                         Style="{StaticResource Body1FontSize_ExoBold}"
@@ -80,7 +88,7 @@
                                         BackgroundColor="Transparent"
                                         Command="{Binding Path=BindingContext.SendRequestCommand, Source={x:Reference Name=FriendReqPage}}"
                                         CommandParameter="{Binding .}"
-                                        Grid.Column="1"
+                                        Grid.Column="2"
                                         HeightRequest="30"
                                         HorizontalOptions="End"
                                         Source="add_friend.png"
