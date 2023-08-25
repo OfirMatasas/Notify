@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -8,7 +9,6 @@ using Notify.Azure.HttpClient;
 using Notify.Core;
 using Notify.Helpers;
 using Notify.Services;
-using Notify.Views;
 using Notify.Views.SubViews;
 using Notify.Views.Views;
 using Xamarin.Essentials;
@@ -19,30 +19,36 @@ namespace Notify.ViewModels
     public class FriendsPageViewModel : INotifyPropertyChanged
     {
         private readonly LoggerService r_Logger = LoggerService.Instance;
-
-        #region Commands
+        public List<User> Friends { get; set; }
+        public List<User> FilteredFriends { get; set; }
+        public User SelectedFriend { get; set; }
         
         public Command ShowFriendRequestsCommand { get; set; }
         public Command SelectedFriendCommand { get; set; }
         public Command ShowPendingFriendRequestsCommand { get; set; }
+        public Command ExecuteSearchCommand { get; set; }
 
-        #endregion
-
-        #region Members
-
-        public List<User> Friends { get; set; }
-        public User SelectedFriend { get; set; }
-
-        #endregion
+        private bool m_IsRefreshing;
+        public bool IsRefreshing { set => SetField(ref m_IsRefreshing, value); }
         
-        #region Constructor
-
+        private string m_SearchFriendsInput;
+        public string SearchFriendsInput
+        {
+            get => m_SearchFriendsInput;
+            set
+            {
+                SetField(ref m_SearchFriendsInput, value);
+                applyFilterAndSearch();
+            }
+        }
+        
         public FriendsPageViewModel()
         {
             ShowPendingFriendRequestsCommand = new Command(onShowPendingFriendRequestsClicked);
             RefreshFriendsCommand = new Command(onRefreshFriendsClicked);
             ShowFriendRequestsCommand = new Command(onShowFriendRequestsClicked);
             SelectedFriendCommand = new Command(onSelectedFriendClicked);
+            ExecuteSearchCommand = new Command(applyFilterAndSearch);
 
             RefreshFriendsList();
             onRefreshFriendsClicked();
@@ -60,6 +66,7 @@ namespace Notify.ViewModels
                 {
                     r_Logger.LogDebug("Friends found in preferences");
                     Friends = JsonConvert.DeserializeObject<List<User>>(friendsJson);
+                    FilteredFriends = new List<User>(Friends);
                 }
             }
             catch (Exception ex)
@@ -68,18 +75,39 @@ namespace Notify.ViewModels
             }
         }
 
-        #endregion
-
-        #region Refresh_Friends
-
         public Command RefreshFriendsCommand { get; set; }
 
         private async void onRefreshFriendsClicked()
         {
+            IsRefreshing = true;
+
             await Task.Run(() => Friends = AzureHttpClient.Instance.GetFriends().Result);
+            applyFilterAndSearch();
+            
+            IsRefreshing = false;
         }
         
-        #endregion
+        private void applyFilterAndSearch()
+        {
+            FilteredFriends.Clear();
+    
+            if (!string.IsNullOrWhiteSpace(SearchFriendsInput))
+            {
+                FilteredFriends = Friends.Where(friend =>
+                {
+                    bool containedInUsername = friend.UserName.ToLower().Contains(SearchFriendsInput.ToLower());
+                    bool containedInTelephone = friend.Telephone.Contains(SearchFriendsInput);
+
+                    return containedInUsername || containedInTelephone;
+                }).ToList();
+            }
+            else
+            {
+                FilteredFriends = new List<User>(Friends);
+            }
+    
+            OnPropertyChanged(nameof(FilteredFriends));
+        }
         
         private async void onSelectedFriendClicked()
         {

@@ -103,12 +103,12 @@
                 PlaceholderColor="#2F3246"
                 SearchCommand="{Binding ExecuteSearchCommand}"
                 SearchCommandParameter="{Binding .}"
-                Text="{Binding SearchTerm}" />
+                Text="{Binding SearchFriendsInput}" />
 
             <CollectionView
                 Grid.Row="2"
                 HorizontalOptions="FillAndExpand"
-                ItemsSource="{Binding Friends}"
+                ItemsSource="{Binding FilteredFriends}"
                 Margin="15,-10,15,0"
                 SelectionMode="None"
                 VerticalOptions="FillAndExpand"
