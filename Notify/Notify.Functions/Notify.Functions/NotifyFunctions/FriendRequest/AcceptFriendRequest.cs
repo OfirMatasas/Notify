@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNetCore.Authorization;
@@ -33,6 +34,11 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
                 requester = Convert.ToString(data.requester);
                 username = Convert.ToString(data.userName);
                 
+                if(!checkIfFriendshipRequestExists(requester, username, log))
+                {
+                    throw new Exception($"Friendship request does not exist between {requester} and {username}");
+                }
+                
                 log.LogInformation($"Accepting friend request from {requester} to {username}");
                 await createFriendshipAsync(requester, username, log);
                 await createPermissionsAsync(requester, username, log);
@@ -47,6 +53,21 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
             }
 
             return result;
+        }
+
+        private static bool checkIfFriendshipRequestExists(string requester, string username, ILogger log)
+        {
+            IMongoCollection<BsonDocument> friendRequestsCollection =
+                MongoUtils.GetCollection(Constants.COLLECTION_FRIEND_REQUEST);
+            FilterDefinition<BsonDocument> friendRequestsFilter =  Builders<BsonDocument>.Filter.And(
+                Builders<BsonDocument>.Filter.Regex("requester", 
+                    new BsonRegularExpression($"^{Regex.Escape(requester)}$", "i")),
+                Builders<BsonDocument>.Filter.Regex("userName", 
+                    new BsonRegularExpression($"^{Regex.Escape(username)}$", "i"))
+            );
+            
+            log.LogInformation($"Checking if friendship request exists between {requester} and {username}");
+            return friendRequestsCollection.Find(friendRequestsFilter).Any();
         }
 
         private static async Task createPermissionsAsync(string requester, string username, ILogger log)
@@ -98,10 +119,12 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
             FilterDefinition<BsonDocument> friendRequestsFilter;
 
             friendRequestsCollection = MongoUtils.GetCollection(Constants.COLLECTION_FRIEND_REQUEST);
-
+            
             friendRequestsFilter = Builders<BsonDocument>.Filter.And(
-                Builders<BsonDocument>.Filter.Eq("requester", requester),
-                Builders<BsonDocument>.Filter.Eq("userName", username)
+                Builders<BsonDocument>.Filter.Regex("requester", 
+                    new BsonRegularExpression($"^{Regex.Escape(requester)}$", "i")),
+                Builders<BsonDocument>.Filter.Regex("userName", 
+                    new BsonRegularExpression($"^{Regex.Escape(username)}$", "i"))
             );
 
             log.LogInformation($"Deleting the pending friend request document from {requester} to {username}");

@@ -157,19 +157,8 @@ namespace Notify.Helpers
         {
             string profilePicture = friend.profilePicture ?? Constants.AZURE_FUNCTIONS_DEFAULT_USER_PROFILE_PICTURE;
             string permissionsJson = Preferences.Get(Constants.PREFERENCES_FRIENDS_PERMISSIONS, string.Empty);
-            List<Permission> permissions;
-            Permission friendPermission;
-
-            if (permissionsJson.IsNullOrEmpty())
-            {
-                permissions = AzureHttpClient.Instance.GetFriendsPermissions().Result;
-            }
-            else
-            {
-                permissions = JsonConvert.DeserializeObject<List<Permission>>(permissionsJson);
-            }
-            
-            friendPermission = permissions.Find(permission => permission.FriendUsername.Equals((string)friend.userName));
+            List<Permission> permissions = JsonConvert.DeserializeObject<List<Permission>>(permissionsJson);
+            Permission friendPermission = permissions.Find(permission => permission.FriendUsername.Equals((string)friend.userName));
 
             return new User(
                 name: (string)friend.name, 

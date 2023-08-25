@@ -38,10 +38,7 @@
                     HorizontalOptions="Center"
                     Margin="0,-40,0,0"
                     VerticalOptions="Center">
-                    <Label
-                        FontSize="40"
-                        HorizontalTextAlignment="Center"
-                        TextColor="White">
+                    <Label HorizontalTextAlignment="Center" TextColor="White">
                         <Label.FormattedText>
                             <FormattedString>
                                 <FormattedString.Spans>
@@ -56,43 +53,6 @@
                     </Label>
                 </StackLayout>
             </Grid>
-
-
-            <pancakeView:PancakeView
-                Grid.Row="1"
-                HeightRequest="40"
-                HorizontalOptions="Center"
-                Margin="0,0,0,0">
-                <Grid ColumnSpacing="0" HorizontalOptions="FillAndExpand">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <pancakeView:PancakeView
-                        CornerRadius="3.5"
-                        Grid.Row="1"
-                        HeightRequest="7"
-                        HorizontalOptions="Center"
-                        Margin="7"
-                        VerticalOptions="Center"
-                        WidthRequest="7" />
-                    <pancakeView:PancakeView
-                        BackgroundColor="#C9D6EF"
-                        CornerRadius="3.5"
-                        Grid.Column="1"
-                        Grid.Row="1"
-                        HeightRequest="7"
-                        HorizontalOptions="Center"
-                        Margin="7"
-                        VerticalOptions="Center"
-                        WidthRequest="7" />
-                </Grid>
-            </pancakeView:PancakeView>
-
 
             <SearchBar
                 BackgroundColor="WhiteSmoke"
@@ -109,7 +69,7 @@
                 Grid.Row="2"
                 HorizontalOptions="FillAndExpand"
                 ItemsSource="{Binding FilteredFriends}"
-                Margin="15,-10,15,0"
+                Margin="15,-30,15,0"
                 SelectionMode="None"
                 VerticalOptions="FillAndExpand"
                 VerticalScrollBarVisibility="Always">
@@ -134,7 +94,7 @@
                     </Grid>
                 </CollectionView.Header>
                 <CollectionView.ItemsLayout>
-                    <LinearItemsLayout ItemSpacing="20" Orientation="Vertical" />
+                    <LinearItemsLayout ItemSpacing="10" Orientation="Vertical" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
@@ -186,9 +146,10 @@
                                                     <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
                                                         <Image
                                                             Aspect="AspectFill"
-                                                            HeightRequest="30"
+                                                            HeightRequest="70"
                                                             HorizontalOptions="Center"
-                                                            Source="{Binding ProfilePicture}" />
+                                                            Source="{Binding ProfilePicture}"
+                                                            WidthRequest="70" />
                                                     </StackLayout>
                                                     <BoxView
                                                         BackgroundColor="#F2F4F8"

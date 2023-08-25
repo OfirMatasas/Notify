@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -54,11 +55,15 @@ namespace Notify.Functions.NotifyFunctions.Friend
         private static async Task<DeleteResult> deleteFriendFromDatabase(string username, string friendUsername, IMongoCollection<BsonDocument> collection)
         {
             FilterDefinition<BsonDocument> filter = Builders<BsonDocument>.Filter.Or(
-                Builders<BsonDocument>.Filter.And(Builders<BsonDocument>.Filter.Eq("userName1", username),
-                    Builders<BsonDocument>.Filter.Eq("userName2", friendUsername)),
-                Builders<BsonDocument>.Filter.And(Builders<BsonDocument>.Filter.Eq("userName1", friendUsername),
-                    Builders<BsonDocument>.Filter.Eq("userName2", username)));
-            DeleteResult friendshipDeleteResult = await collection.DeleteOneAsync(filter);
+                Builders<BsonDocument>.Filter.And(Builders<BsonDocument>.Filter.Regex("userName1", 
+                        new BsonRegularExpression($"^{Regex.Escape(username)}$", "i")),
+                    Builders<BsonDocument>.Filter.Regex("userName2", 
+                        new BsonRegularExpression($"^{Regex.Escape(friendUsername)}$", "i"))),
+                Builders<BsonDocument>.Filter.And(Builders<BsonDocument>.Filter.Regex("userName1", 
+                        new BsonRegularExpression($"^{Regex.Escape(friendUsername)}$", "i")),
+                    Builders<BsonDocument>.Filter.Regex("userName2", 
+                        new BsonRegularExpression($"^{Regex.Escape(username)}$", "i"))));
+            DeleteResult friendshipDeleteResult = await collection.DeleteManyAsync(filter);
             DeleteResult permissionDeleteResult = null;
             
             if (!friendshipDeleteResult.DeletedCount.Equals(0))
@@ -74,10 +79,14 @@ namespace Notify.Functions.NotifyFunctions.Friend
             FilterDefinition<BsonDocument> filter;
             IMongoCollection<BsonDocument> permissionsCollection = MongoUtils.GetCollection(Constants.COLLECTION_PERMISSION);
             filter = Builders<BsonDocument>.Filter.Or(
-                Builders<BsonDocument>.Filter.And(Builders<BsonDocument>.Filter.Eq("permit", username),
-                    Builders<BsonDocument>.Filter.Eq("username", friendUsername)),
-                Builders<BsonDocument>.Filter.And(Builders<BsonDocument>.Filter.Eq("permit", friendUsername),
-                    Builders<BsonDocument>.Filter.Eq("username", username))
+                Builders<BsonDocument>.Filter.And(Builders<BsonDocument>.Filter.Regex("permit", 
+                        new BsonRegularExpression($"^{Regex.Escape(username)}$", "i")),
+                    Builders<BsonDocument>.Filter.Regex("username", 
+                        new BsonRegularExpression($"^{Regex.Escape(friendUsername)}$", "i"))),
+                Builders<BsonDocument>.Filter.And(Builders<BsonDocument>.Filter.Regex("permit", 
+                        new BsonRegularExpression($"^{Regex.Escape(friendUsername)}$", "i")),
+                    Builders<BsonDocument>.Filter.Regex("username", 
+                        new BsonRegularExpression($"^{Regex.Escape(username)}$", "i")))
             );
 
             return await permissionsCollection.DeleteManyAsync(filter);

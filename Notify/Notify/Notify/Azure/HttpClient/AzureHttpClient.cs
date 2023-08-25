@@ -434,6 +434,8 @@ namespace Notify.Azure.HttpClient
 
         public async Task<List<User>> GetFriends()
         {
+            await GetFriendsPermissions();
+            
             return await GetData(
                 endpoint: Constants.AZURE_FUNCTIONS_PATTERN_FRIEND, 
                 preferencesKey: Constants.PREFERENCES_FRIENDS, 
@@ -981,6 +983,7 @@ namespace Notify.Azure.HttpClient
             catch (Exception ex)
             {
                 r_Logger.LogError($"Error occured on DeleteFriendAsync: {ex.Message}");
+                r_Logger.LogDebug(ex.Data.ToString());
                 isDeleted = false;
             }
             
