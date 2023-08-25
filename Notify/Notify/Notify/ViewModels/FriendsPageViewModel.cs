@@ -25,6 +25,7 @@ namespace Notify.ViewModels
         
         public Command ShowFriendRequestsCommand { get; set; }
         public Command SelectedFriendCommand { get; set; }
+        public Command DeleteFriendCommand { get; set; }
         public Command ShowPendingFriendRequestsCommand { get; set; }
         public Command ExecuteSearchCommand { get; set; }
 
@@ -46,6 +47,7 @@ namespace Notify.ViewModels
         {
             ShowPendingFriendRequestsCommand = new Command(onShowPendingFriendRequestsClicked);
             RefreshFriendsCommand = new Command(onRefreshFriendsClicked);
+            DeleteFriendCommand = new Command<User>(onDeleteFriendButtonClicked);
             ShowFriendRequestsCommand = new Command(onShowFriendRequestsClicked);
             SelectedFriendCommand = new Command(onSelectedFriendClicked);
             ExecuteSearchCommand = new Command(applyFilterAndSearch);
@@ -119,6 +121,30 @@ namespace Notify.ViewModels
             await Shell.Current.Navigation.PushAsync(new FriendRequestPage());
         }
         
+        private async void onDeleteFriendButtonClicked(User friend)
+        {
+            string messageTitle = "Friend Deletion";
+            bool isDeleted;
+            bool isConfirmed = await App.Current.MainPage.DisplayAlert(messageTitle,
+                $"Are you sure you want to delete {friend.UserName} from your friends list?",
+                "Yes", "No");
+
+            if (isConfirmed)
+            {
+                isDeleted = await AzureHttpClient.Instance.DeleteFriendAsync(friend.UserName);
+
+                if (isDeleted)
+                {
+                    onRefreshFriendsClicked();
+                }
+                else
+                {
+                    await App.Current.MainPage.DisplayAlert(messageTitle,
+                        "Failed to delete friend",
+                        "OK");
+                }
+            }
+        }
         
         private async void onShowPendingFriendRequestsClicked()
         {
