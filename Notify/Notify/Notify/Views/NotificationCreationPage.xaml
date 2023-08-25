@@ -116,8 +116,8 @@
                 CornerRadius="10"
                 Grid.Column="0"
                 Grid.Row="6"
-                IsVisible="{Binding IsTimeTypeSelected}"
-                HorizontalOptions="Start">
+                HorizontalOptions="Start"
+                IsVisible="{Binding IsTimeTypeSelected}">
 
                 <TimePicker
                     Format="hh:mm tt"
@@ -130,9 +130,9 @@
             <Frame
                 CornerRadius="10"
                 Grid.Column="1"
-                IsVisible="{Binding IsTimeTypeSelected}"
                 Grid.ColumnSpan="2"
                 Grid.Row="6"
+                IsVisible="{Binding IsTimeTypeSelected}"
                 Padding="5,10">
                 <DatePicker
                     Date="{Binding SelectedDate}"
@@ -142,18 +142,26 @@
                     x:Name="DatePicker" />
             </Frame>
 
-            <materialDesignControls:MaterialPicker
+            <Frame
                 CornerRadius="10"
                 Grid.Column="0"
-                Grid.Row="7"
+                Grid.Row="6"
+                HasShadow="False"
                 IsVisible="{Binding IsLocationTypeSelected}"
-                ItemsSource="{Binding LocationOptions}"
-                LabelMargin="3"
-                LabelSize="16"
-                LabelText="Location Option"
-                Placeholder="Location Option"
-                SelectedItem="{Binding SelectedLocationOption}"
-                TabIndex="1" />
+                Padding="0">
+                <Picker
+                    BackgroundColor="Transparent"
+                    ItemsSource="{Binding LocationOptions}"
+                    SelectedItem="{Binding SelectedLocationOption}"
+                    Title="Location Option">
+                    <Picker.Style>
+                        <Style TargetType="Picker">
+                            <Setter Property="HeightRequest" Value="45" />
+                        </Style>
+                    </Picker.Style>
+                </Picker>
+            </Frame>
+
 
             <materialDesignControls:MaterialPicker
                 CornerRadius="10"
