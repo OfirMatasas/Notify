@@ -264,7 +264,9 @@ namespace Notify.ViewModels
             
             string loggedUserJson = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
             User loggedUser = JsonConvert.DeserializeObject<User>(loggedUserJson);
-            Friends.Add(new User(loggedUser.Name, myUsername, loggedUser.Telephone, loggedUser.ProfilePicture));
+            Permission userPermission = new Permission(loggedUser.Name, Constants.NOTIFICATION_PERMISSION_ALLOW,
+                Constants.NOTIFICATION_PERMISSION_ALLOW, Constants.NOTIFICATION_PERMISSION_ALLOW);
+            Friends.Add(new User(loggedUser.Name, myUsername, loggedUser.Telephone, loggedUser.ProfilePicture, userPermission));
             Friends.Sort((friend1, friend2) => string.Compare(friend1.Name, friend2.Name, StringComparison.Ordinal));
         }
 

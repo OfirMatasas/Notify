@@ -8,6 +8,7 @@
     xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
     xmlns:views="http://xamarin.com/schemas/2020/toolkit"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
     <ContentPage.Resources>
         <ResourceDictionary>
             <helpers:TypeToColorConverter x:Key="TypeToColorConverter" />
