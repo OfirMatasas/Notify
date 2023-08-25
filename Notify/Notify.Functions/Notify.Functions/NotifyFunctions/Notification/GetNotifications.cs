@@ -52,17 +52,14 @@ namespace Notify.Functions.NotifyFunctions.Notification
 
         private static async Task<string> GetAllUserNotifications(string username, ILogger log)
         {
-            IMongoCollection<BsonDocument> collection;
-            FilterDefinition<BsonDocument> userFilter;
+            IMongoCollection<BsonDocument> collection = MongoUtils.GetCollection(Constants.COLLECTION_NOTIFICATION);
+            FilterDefinition<BsonDocument> userFilter = Builders<BsonDocument>.Filter
+                .Where(doc => doc["user"].ToString().ToLower().Equals(username));
             List<BsonDocument> notifications;
             string response;
 
             log.LogInformation($"Getting all notifications of user {username}");
 
-            collection = MongoUtils.GetCollection(Constants.COLLECTION_NOTIFICATION);
-            
-            userFilter = Builders<BsonDocument>.Filter
-                .Where(doc => doc["user"].ToString().ToLower().Equals(username));
             notifications = await collection.Find(userFilter).ToListAsync();
             response = ConversionUtils.ConvertBsonDocumentListToJson(notifications);
 

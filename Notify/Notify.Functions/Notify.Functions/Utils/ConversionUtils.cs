@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 using MongoDB.Bson.IO;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using JsonConvert = Newtonsoft.Json.JsonConvert;
 
@@ -15,20 +14,20 @@ namespace Notify.Functions.Utils
     {
         public static string ConvertBsonDocumentListToJson(List<BsonDocument> bsonDocumentList)
         {
-            JsonWriterSettings jsonSettings = new JsonWriterSettings { OutputMode = JsonOutputMode.CanonicalExtendedJson };
+            JsonWriterSettings jsonSettings = new JsonWriterSettings { OutputMode = JsonOutputMode.Strict };
             string jsonArrayString, id;
             JArray jsonArray;
 
-            List<string> jsonList = bsonDocumentList.Select(bsonDocument =>
+            List<string> jsonList = bsonDocumentList.Select(document =>
             {
-                if (bsonDocument.Contains("_id"))
+                if (document.Contains("_id"))
                 {
-                    id = bsonDocument.GetValue("_id").AsObjectId.ToString();
-                    bsonDocument.Remove("_id");
-                    bsonDocument.Add("id", id);
+                    id = document.GetValue("_id").AsObjectId.ToString();
+                    document.Remove("_id");
+                    document.Add("id", id);
                 }
 
-                return bsonDocument.ToJson(jsonSettings);
+                return document.ToJson(jsonSettings);
             }).ToList();
 
             jsonArrayString = $"[{string.Join(',', jsonList)}]";
