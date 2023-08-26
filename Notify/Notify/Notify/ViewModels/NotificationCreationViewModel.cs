@@ -262,7 +262,7 @@ namespace Notify.ViewModels
                 Friends = JsonConvert.DeserializeObject<List<User>>(friendsJson);
             }
             
-            string loggedUserJson = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
+            string loggedUserJson = Preferences.Get(Constants.PREFERENCES_USER_OBJECT, string.Empty);
             User loggedUser = JsonConvert.DeserializeObject<User>(loggedUserJson);
             Permission userPermission = new Permission(loggedUser.Name, Constants.NOTIFICATION_PERMISSION_ALLOW,
                 Constants.NOTIFICATION_PERMISSION_ALLOW, Constants.NOTIFICATION_PERMISSION_ALLOW);

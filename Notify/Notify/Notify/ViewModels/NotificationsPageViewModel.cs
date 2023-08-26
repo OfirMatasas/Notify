@@ -59,17 +59,6 @@ namespace Notify.ViewModels
                 applyFilterAndSearch();
             }
         }
-
-        private Color m_Color;
-        public Color Color
-        {
-            get => m_IsLocationType;
-            set
-            {
-                m_IsLocationType = value;
-                OnPropertyChanged(nameof(IsLocationType));
-            }
-        }
         
         public string SelectedFilter
         {
@@ -286,12 +275,6 @@ namespace Notify.ViewModels
                 messageBody = $"Notification {notification.Name} is not renewable";
                 await App.Current.MainPage.DisplayAlert(messageTitle, messageBody, "OK");
             }
-        }
-        
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            Debug.WriteLine("edit notification button clicked");
-            Shell.Current.Navigation.PushAsync(new NotificationCreationPage(SelectedNotification));
         }
         
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
