@@ -34,6 +34,7 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
 
                 <Button
@@ -224,7 +225,10 @@
                             Title="Place Option" />
                     </Frame>
                 </StackLayout>
-                <StackLayout Grid.Column="0" Grid.Row="9">
+                <StackLayout
+                    Grid.Column="0"
+                    Grid.Row="9"
+                    HeightRequest="200">
                     <Label
                         IsVisible="{Binding IsCreating}"
                         Style="{StaticResource Body1FontSize_ExoBold}"
@@ -243,41 +247,46 @@
                         </CollectionView.ItemTemplate>
                     </CollectionView>
                 </StackLayout>
+
+                <StackLayout
+                    Grid.Column="0"
+                    Grid.Row="11"
+                    HorizontalOptions="Center"
+                    Padding="30,0"
+                    Spacing="10">
+                    <Button
+                        BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
+                                                          Dark={StaticResource DarkButtonColor}}"
+                        Command="{Binding CreateNotificationCommand}"
+                        CornerRadius="10"
+                        IsVisible="{Binding IsCreating}"
+                        Style="{StaticResource Button_ExoRegular}"
+                        Text="Create"
+                        TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
+                                                    Dark={StaticResource DarkButtonTextColor}}"
+                        VerticalOptions="End"
+                        WidthRequest="200" />
+
+                    <Button
+                        BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
+                                                          Dark={StaticResource DarkButtonColor}}"
+                        Command="{Binding UpdateNotificationCommand}"
+                        IsVisible="{Binding IsEditing}"
+                        Style="{StaticResource Button_ExoRegular}"
+                        Text="Update"
+                        TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
+                                                    Dark={StaticResource DarkButtonTextColor}}"
+                        VerticalOptions="End"
+                        WidthRequest="200" />
+                </StackLayout>
+
+                <BoxView BackgroundColor="Transparent" HeightRequest="15" />
+
             </Grid>
         </ScrollView>
 
 
-        <StackLayout
-            HorizontalOptions="Center"
-            Padding="30,0"
-            Spacing="10">
-            <Button
-                BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
-                                                  Dark={StaticResource DarkButtonColor}}"
-                Command="{Binding CreateNotificationCommand}"
-                CornerRadius="10"
-                IsVisible="{Binding IsCreating}"
-                Style="{StaticResource Button_ExoRegular}"
-                Text="Create"
-                TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
-                                            Dark={StaticResource DarkButtonTextColor}}"
-                VerticalOptions="End"
-                WidthRequest="200" />
 
-            <Button
-                BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
-                                                  Dark={StaticResource DarkButtonColor}}"
-                Command="{Binding UpdateNotificationCommand}"
-                IsVisible="{Binding IsEditing}"
-                Style="{StaticResource Button_ExoRegular}"
-                Text="Update"
-                TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
-                                            Dark={StaticResource DarkButtonTextColor}}"
-                VerticalOptions="End"
-                WidthRequest="200" />
-        </StackLayout>
-
-        <BoxView BackgroundColor="Transparent" HeightRequest="15" />
 
     </FlexLayout>
 </ContentPage>
