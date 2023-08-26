@@ -237,8 +237,8 @@ namespace Notify.ViewModels
         {
             string placeType = "Supermarket";   // TODO - get the right type from notification info
             double nearestPlaceLatitude, nearestPlaceLongitude;
-            Location currentLocation;// new Location(34.80134772655939, 32.10931177724262, null, null); // TODO - get the current device location
-            Location nearestPlace;// = await GoogleMapsHandler.GetNearestPlace(placeType, currentLocation);
+            Location currentLocation;
+            Location nearestPlace;
             GeolocationRequest request;
             Xamarin.Essentials.Location location;
 
@@ -258,7 +258,7 @@ namespace Notify.ViewModels
                 }
                 else
                 {
-                    await App.Current.MainPage.DisplayAlert("Error", $"No {placeType} nearby.", "OK");
+                    await App.Current.MainPage.DisplayAlert("", $"No {placeType} nearby.", "OK");
                 }
                 
             }
