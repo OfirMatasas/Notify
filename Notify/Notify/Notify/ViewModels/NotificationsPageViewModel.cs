@@ -42,7 +42,7 @@ namespace Notify.ViewModels
         
         public bool IsActivationType
         {
-            get => m_IsActivationType;
+            get => m_IsActivationType;  
             set
             {
                 m_IsActivationType = value;
@@ -57,17 +57,6 @@ namespace Notify.ViewModels
             {
                 SetField(ref m_SearchTerm, value);
                 applyFilterAndSearch();
-            }
-        }
-
-        private Color m_Color;
-        public Color Color
-        {
-            get => m_IsLocationType;
-            set
-            {
-                m_IsLocationType = value;
-                OnPropertyChanged(nameof(IsLocationType));
             }
         }
         
@@ -286,12 +275,6 @@ namespace Notify.ViewModels
                 messageBody = $"Notification {notification.Name} is not renewable";
                 await App.Current.MainPage.DisplayAlert(messageTitle, messageBody, "OK");
             }
-        }
-        
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            Debug.WriteLine("edit notification button clicked");
-            Shell.Current.Navigation.PushAsync(new NotificationCreationPage(SelectedNotification));
         }
         
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
