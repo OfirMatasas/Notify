@@ -31,7 +31,7 @@
 			"response": []
 		},
 		{
-			"name": "Get permissions Copy",
+			"name": "Update permissions",
 			"request": {
 				"method": "POST",
 				"header": [],

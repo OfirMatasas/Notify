@@ -434,6 +434,8 @@ namespace Notify.Azure.HttpClient
 
         public async Task<List<User>> GetFriends()
         {
+            await GetFriendsPermissions();
+            
             return await GetData(
                 endpoint: Constants.AZURE_FUNCTIONS_PATTERN_FRIEND, 
                 preferencesKey: Constants.PREFERENCES_FRIENDS, 
@@ -953,6 +955,39 @@ namespace Notify.Azure.HttpClient
             }
             
             return isUpdated;
+        }
+
+        public async Task<bool> DeleteFriendAsync(string friendUserName)
+        {
+            bool isDeleted;
+            string username = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
+            dynamic data = new JObject
+            {
+                { "username", username },
+                { "friendUsername", friendUserName }
+            };
+            string json = JsonConvert.SerializeObject(data);
+            
+            r_Logger.LogInformation($"request:{Environment.NewLine}{json}");
+
+            try
+            {
+                HttpResponseMessage responseMessage = await deleteAsync(requestUri: Constants.AZURE_FUNCTIONS_PATTERN_FRIEND, createJsonStringContent(json));
+                responseMessage.EnsureSuccessStatusCode();
+                
+                r_Logger.LogDebug($"Successful status code from Azure Function from DeleteFriendAsync");
+                isDeleted = true;
+                
+                await GetFriends();
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error occured on DeleteFriendAsync: {ex.Message}");
+                r_Logger.LogDebug(ex.Data.ToString());
+                isDeleted = false;
+            }
+            
+            return isDeleted;
         }
     }
 }

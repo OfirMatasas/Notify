@@ -12,18 +12,20 @@ namespace Notify.Core
         private string m_Telephone;
         private bool m_IsSelected;
         private string m_ProfilePicture;
+        private Permission m_Permissions;
 
         #endregion
 
         #region Constructor
 
-        public User(string name, string username, string telephone, string profilePicture)
+        public User(string name, string username, string telephone, string profilePicture, Permission permissions)
         {
             Name = name;
             UserName = username;
             Telephone = telephone;
             IsSelected = false;
             ProfilePicture = profilePicture;
+            m_Permissions = permissions;
         }
 
         #endregion
@@ -90,6 +92,19 @@ namespace Notify.Core
                 if (m_ProfilePicture != value)
                 {
                     m_ProfilePicture = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        
+        public Permission Permissions
+        {
+            get => m_Permissions;
+            set
+            {
+                if (m_Permissions != value)
+                {
+                    m_Permissions = value;
                     OnPropertyChanged();
                 }
             }

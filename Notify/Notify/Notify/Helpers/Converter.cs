@@ -1,8 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Microsoft.IdentityModel.Tokens;
+using Notify.Azure.HttpClient;
 using Notify.Core;
+using Xamarin.Essentials;
 using Xamarin.Forms;
+using Newtonsoft.Json;
+using Location = Notify.Core.Location;
 
 namespace Notify.Helpers
 {
@@ -151,12 +156,16 @@ namespace Notify.Helpers
         public static User ToFriend(dynamic friend)
         {
             string profilePicture = friend.profilePicture ?? Constants.AZURE_FUNCTIONS_DEFAULT_USER_PROFILE_PICTURE;
-            
+            string permissionsJson = Preferences.Get(Constants.PREFERENCES_FRIENDS_PERMISSIONS, string.Empty);
+            List<Permission> permissions = JsonConvert.DeserializeObject<List<Permission>>(permissionsJson);
+            Permission friendPermission = permissions.Find(permission => permission.FriendUsername.Equals((string)friend.userName));
+
             return new User(
                 name: (string)friend.name, 
                 username: (string)friend.userName, 
                 telephone: (string)friend.telephone,
-                profilePicture: profilePicture);
+                profilePicture: profilePicture,
+                permissions: friendPermission);
         }
         
         public static Destination ToDestination(dynamic destination)
