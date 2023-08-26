@@ -119,9 +119,9 @@ namespace Notify.ViewModels
                 r_Logger.LogError(ex.Message);
             }
 
-            SelectedFilter = "Active";
+            m_SelectedFilter = "Active";
             OnNotificationsRefreshClicked();
-            applyFilterAndSearch();
+            // applyFilterAndSearch();      TODO - re-comment this line
         }
 
         private void applyFilterAndSearch()
@@ -130,8 +130,8 @@ namespace Notify.ViewModels
     
             if (!string.IsNullOrWhiteSpace(SearchTerm))
             {
-                filteredNotifications = filteredNotifications.Where(n => 
-                    CultureInfo.CurrentCulture.CompareInfo.IndexOf(n.Name, SearchTerm, CompareOptions.IgnoreCase) >= 0
+                 filteredNotifications = filteredNotifications.Where(n => 
+                     CultureInfo.CurrentCulture.CompareInfo.IndexOf(n.Name, SearchTerm, CompareOptions.IgnoreCase) >= 0
                 );
             }
     

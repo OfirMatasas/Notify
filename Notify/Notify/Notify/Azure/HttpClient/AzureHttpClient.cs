@@ -392,10 +392,10 @@ namespace Notify.Azure.HttpClient
 
         public async Task<List<Notification>> GetNotifications()
         {
-            List<Notification> notifications = await GetData(
-                endpoint: Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION,
-                preferencesKey: Constants.PREFERENCES_NOTIFICATIONS, 
-                converter: Converter.ToNotification);
+             List<Notification> notifications = await GetData(
+                 endpoint: Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION,
+                 preferencesKey: Constants.PREFERENCES_NOTIFICATIONS, 
+                 converter: Converter.ToNotification);
 
             createNewDynamicDestinations(notifications);
             DependencyService.Get<IWiFiManager>().SendNotifications(null, null);

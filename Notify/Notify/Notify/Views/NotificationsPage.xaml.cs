@@ -18,6 +18,5 @@ namespace Notify.Views
             base.OnAppearing();
             (BindingContext as NotificationsPageViewModel)?.OnNotificationsRefreshClicked();
         }
-
     }
 }
