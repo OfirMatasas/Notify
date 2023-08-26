@@ -228,6 +228,44 @@ namespace Notify.ViewModels
             r_Logger.LogDebug($"Getting suggestions for {SearchAddress}");
 
             DropBoxOptions = await AzureHttpClient.Instance.GetAddressSuggestions(SearchAddress);
+
+            OnOpenGoogleMapsAppButtonClicked();   // TODO - delete this function call after moving the function to it's right class 
+        }
+        
+        public async void OnOpenGoogleMapsAppButtonClicked()   
+            // TODO - just for testing the logic - need to move this function to notification details page with a dedicated button
+        {
+            string placeType = "Supermarket";   // TODO - get the right type from notification info
+            double nearestPlaceLatitude, nearestPlaceLongitude;
+            Location currentLocation;// new Location(34.80134772655939, 32.10931177724262, null, null); // TODO - get the current device location
+            Location nearestPlace;// = await GoogleMapsHandler.GetNearestPlace(placeType, currentLocation);
+            GeolocationRequest request;
+            Xamarin.Essentials.Location location;
+
+            try
+            {
+                request = new GeolocationRequest(GeolocationAccuracy.High);
+                location = await Xamarin.Essentials.Geolocation.GetLocationAsync(request);
+
+                currentLocation = new Location(location.Longitude, location.Latitude);
+                nearestPlace = await GoogleMapsHandler.GetNearestPlace(placeType, currentLocation);
+                
+                if (nearestPlace != null)
+                {
+                    nearestPlaceLatitude = nearestPlace.Latitude;
+                    nearestPlaceLongitude = nearestPlace.Longitude;
+                    GoogleMapsHandler.GetInstance().OpenGoogleMapsNavigation(nearestPlaceLatitude, nearestPlaceLongitude);
+                }
+                else
+                {
+                    await App.Current.MainPage.DisplayAlert("Error", $"No {placeType} nearby.", "OK");
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"OnOpenGoogleMapsAppButtonClicked: {ex.Message}");
+            }
         }
     }
 }

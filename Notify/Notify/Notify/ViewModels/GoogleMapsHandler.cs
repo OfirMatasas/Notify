@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Android.Content;
 using Android.Content.PM;
 using Geolocation;
@@ -41,7 +42,7 @@ namespace Notify.ViewModels
 
         public void OpenGoogleMapsNavigation(double latitude, double longitude)
         {
-            //if (IsGoogleMapsInstalled()) - TODO uncomment this line
+            //if (IsGoogleMapsInstalled()) - TODO  - uncomment this line and check on physical device
             if(true)
             {
                 var uri = Android.Net.Uri.Parse($"google.navigation:q={latitude},{longitude}");
@@ -75,7 +76,7 @@ namespace Notify.ViewModels
             return res;
         }
         
-         public Location GetNearestPlace(string placeType, Location currentLocation)
+         public static async Task<Location> GetNearestPlace(string placeType, Location currentLocation)
         {
             Location nearestPlace = null;
             List<Location> nearbyPlaces = await AzureHttpClient.Instance.GetNearbyPlaces(placeType, currentLocation);
@@ -89,6 +90,9 @@ namespace Notify.ViewModels
             if (nearbyPlaces.Count > 0)
             {
                 nearestPlace = nearbyPlaces[0];
+                placeCoordinate = new Coordinate(
+                    latitude: nearestPlace.Latitude,
+                    longitude: nearestPlace.Longitude);
                 
                 minDistance = GeoCalculator.GetDistance(
                     originCoordinate: currentCoordinate,
@@ -96,15 +100,15 @@ namespace Notify.ViewModels
                     distanceUnit: DistanceUnit.Meters);
 
                 for (int i = 1; i < nearbyPlaces.Count; i++)
-                {   
-                    placeCoordinate = new Coordinate(
-                        latitude: nearbyPlaces[i].Latitude,
-                        longitude: nearbyPlaces[i].Longitude);
+                {
+                    placeCoordinate.Latitude = nearbyPlaces[i].Latitude;
+                    placeCoordinate.Longitude = nearbyPlaces[i].Longitude;
                     
                     distance = GeoCalculator.GetDistance(
                         originCoordinate: currentCoordinate,
                         destinationCoordinate: placeCoordinate,
                         distanceUnit: DistanceUnit.Meters);
+                    
                     if (distance < minDistance)
                     {
                         minDistance = distance;
@@ -114,16 +118,6 @@ namespace Notify.ViewModels
             }
             
             return nearestPlace;
-        }
-        
-        private async void onOpenGoogleMapsAppButtonClicked(Location place)
-        {
-            double latitude, longitude;
-            
-            latitude = place.Latitude;
-            longitude = place.Longitude;
-            
-            GoogleMapsHandler.GetInstance().OpenGoogleMapsNavigation(latitude, longitude);
         }
     }
 }
