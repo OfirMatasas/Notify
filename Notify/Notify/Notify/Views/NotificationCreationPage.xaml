@@ -226,9 +226,10 @@
                     </Frame>
                 </StackLayout>
                 <StackLayout
+                    BackgroundColor="Red"
                     Grid.Column="0"
                     Grid.Row="9"
-                    HeightRequest="200">
+                    HeightRequest="250">
                     <Label
                         IsVisible="{Binding IsCreating}"
                         Style="{StaticResource Body1FontSize_ExoBold}"
@@ -265,7 +266,7 @@
                         TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
                                                     Dark={StaticResource DarkButtonTextColor}}"
                         VerticalOptions="End"
-                        WidthRequest="200" />
+                        WidthRequest="250" />
 
                     <Button
                         BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
@@ -277,7 +278,7 @@
                         TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
                                                     Dark={StaticResource DarkButtonTextColor}}"
                         VerticalOptions="End"
-                        WidthRequest="200" />
+                        WidthRequest="250" />
                 </StackLayout>
 
                 <BoxView BackgroundColor="Transparent" HeightRequest="15" />
