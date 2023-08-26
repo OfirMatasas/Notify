@@ -255,6 +255,12 @@
                                     Margin="10"
                                     Padding="10">
                                     <StackLayout Orientation="Horizontal">
+                                        <ImageButton
+                                            Aspect="AspectFill"
+                                            CornerRadius="20"
+                                            HeightRequest="20"
+                                            Source="{Binding ProfilePicture}"
+                                            WidthRequest="40" />
                                         <Label
                                             BackgroundColor="Transparent"
                                             FontAttributes="Bold"
@@ -291,6 +297,7 @@
                         BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
                                                           Dark={StaticResource DarkButtonColor}}"
                         Command="{Binding UpdateNotificationCommand}"
+                        CornerRadius="10"
                         IsVisible="{Binding IsEditing}"
                         Style="{StaticResource Button_ExoRegular}"
                         Text="Update"
