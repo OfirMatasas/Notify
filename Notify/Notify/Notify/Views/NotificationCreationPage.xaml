@@ -226,29 +226,48 @@
                     </Frame>
                 </StackLayout>
                 <StackLayout
-                    BackgroundColor="Red"
                     Grid.Column="0"
                     Grid.Row="9"
-                    HeightRequest="250">
+                    HeightRequest="450">
                     <Label
+                        FontSize="Large"
                         IsVisible="{Binding IsCreating}"
                         Style="{StaticResource Body1FontSize_ExoBold}"
                         Text="Friends" />
 
                     <CollectionView
+                        HorizontalOptions="FillAndExpand"
                         IsVisible="{Binding IsCreating}"
                         ItemsSource="{Binding Friends}"
                         SelectionChanged="SelectableItemsView_OnSelectionChanged"
-                        SelectionMode="Multiple">
+                        SelectionMode="Multiple"
+                        VerticalOptions="FillAndExpand">
+
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout ItemSpacing="5" Orientation="Vertical" />
+                        </CollectionView.ItemsLayout>
 
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <views:FriendsListView />
+                                <Frame
+                                    BorderColor="Transparent"
+                                    CornerRadius="8"
+                                    Margin="10"
+                                    Padding="10">
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label
+                                            BackgroundColor="Transparent"
+                                            FontAttributes="Bold"
+                                            FontSize="16"
+                                            Margin="5,0,0,0"
+                                            Text="{Binding UserName}"
+                                            VerticalOptions="CenterAndExpand" />
+                                    </StackLayout>
+                                </Frame>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
                 </StackLayout>
-
                 <StackLayout
                     Grid.Column="0"
                     Grid.Row="11"
@@ -280,14 +299,7 @@
                         VerticalOptions="End"
                         WidthRequest="250" />
                 </StackLayout>
-
-                <BoxView BackgroundColor="Transparent" HeightRequest="15" />
-
             </Grid>
         </ScrollView>
-
-
-
-
     </FlexLayout>
 </ContentPage>
