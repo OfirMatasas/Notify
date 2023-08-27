@@ -82,6 +82,9 @@
     <Compile Include="Notifications\AndroidNotificationManager.cs" />
     <Compile Include="Notifications\NotificationHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Renderers\CustomDatePickerRenderer.cs" />
+    <Compile Include="Renderers\CustomPickerRenderer.cs" />
+    <Compile Include="Renderers\CustomTimePickerRenderer.cs" />
     <Compile Include="Renderers\ShellCustomRenderer.cs" />
     <Compile Include="Resource.designer.cs" />
     <Compile Include="Services\AndroidDeviceService.cs" />

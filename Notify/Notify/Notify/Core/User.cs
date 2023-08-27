@@ -17,7 +17,7 @@ namespace Notify.Core
         #endregion
 
         #region Constructor
-
+        
         public User(string name, string username, string telephone, string profilePicture, Permission permissions)
         {
             Name = name;

@@ -104,6 +104,10 @@ namespace Notify.ViewModels
             RenewNotificationCommand = new Command<Notification>(onRenewNotificationButtonClicked);
             ExecuteSearchCommand = new Command(applyFilterAndSearch);
 
+            DeleteNotificationCommand = new Command<Notification>(onDeleteNotificationButtonClicked);
+            EditNotificationCommand = new Command<Notification>(onEditNotificationButtonClicked);
+            RenewNotificationCommand = new Command<Notification>(onRenewNotificationButtonClicked);
+
             try
             {
                 FilteredNotifications = new List<Notification>();
@@ -279,3 +283,6 @@ namespace Notify.ViewModels
         }
     }
 }
+
+        
+
