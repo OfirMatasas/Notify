@@ -85,6 +85,7 @@
     <Compile Include="Renderers\ShellCustomRenderer.cs" />
     <Compile Include="Resource.designer.cs" />
     <Compile Include="Services\AndroidDeviceService.cs" />
+    <Compile Include="Services\GoogleMapsService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Notify\Notify.csproj">

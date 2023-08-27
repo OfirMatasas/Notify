@@ -1,43 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Android.Content;
 using Android.Content.PM;
 using Geolocation;
 using Notify.Azure.HttpClient;
-using Notify.Core;
-using Notify.Services;
+using Xamarin.Essentials;
 
-namespace Notify.ViewModels
+namespace Notify.Services
 {
-    public class GoogleMapsHandler
+    public class GoogleMapsService : ExternalMapsService
     {
         private readonly LoggerService r_Logger = LoggerService.Instance;
-        private static GoogleMapsHandler s_Instance;
         private readonly Context r_Context;
 
-        private GoogleMapsHandler(Context context)
+        private GoogleMapsService(Context context)
         {
             r_Context = context;
         }
 
-        public static void Initialize(Context context)
+        public static ExternalMapsService Initialize(Context context)
         {
-            if (s_Instance == null)
+            if (m_Instance == null)
             {
-                s_Instance = new GoogleMapsHandler(context);
+                m_Instance = new GoogleMapsService(context);
             }
+    
+            return m_Instance;
         }
 
-        public static GoogleMapsHandler GetInstance()
+        public static GoogleMapsService GetInstance()
         {
-            if (s_Instance == null)
+            if (m_Instance == null)
             {
                 throw new InvalidOperationException("MyMapHandler has not been initialized. Call Initialize first.");
             }
             
-            return s_Instance;
+            return (GoogleMapsService)m_Instance;
         }
 
         public void OpenGoogleMapsNavigation(double latitude, double longitude)
@@ -76,10 +75,10 @@ namespace Notify.ViewModels
             return res;
         }
         
-         public static async Task<Location> GetNearestPlace(string placeType, Location currentLocation)
+         public static async Task<Core.Location> GetNearestPlace(string placeType, Core.Location currentLocation)
         {
-            Location nearestPlace = null;
-            List<Location> nearbyPlaces = await AzureHttpClient.Instance.GetNearbyPlaces(placeType, currentLocation);
+            Core.Location nearestPlace = null;
+            List<Core.Location> nearbyPlaces = await AzureHttpClient.Instance.GetNearbyPlaces(placeType, currentLocation);
             Coordinate currentCoordinate, placeCoordinate;
             double distance, minDistance;
             
@@ -119,5 +118,40 @@ namespace Notify.ViewModels
             
             return nearestPlace;
         }
+         
+         public override async void OpenExternalMap()   
+         {
+             string placeType = "Supermarket";   // TODO - get the right type from notification info
+             double nearestPlaceLatitude, nearestPlaceLongitude;
+             Core.Location currentLocation;
+             Core.Location nearestPlace;
+             GeolocationRequest request;
+             Xamarin.Essentials.Location location;
+
+             try
+             {
+                 request = new GeolocationRequest(GeolocationAccuracy.High);
+                 location = await Xamarin.Essentials.Geolocation.GetLocationAsync(request);
+
+                 currentLocation = new Core.Location(location.Longitude, location.Latitude);
+                 nearestPlace = await GetNearestPlace(placeType, currentLocation);
+                
+                 if (nearestPlace != null)
+                 {
+                     nearestPlaceLatitude = nearestPlace.Latitude;
+                     nearestPlaceLongitude = nearestPlace.Longitude;
+                     GetInstance().OpenGoogleMapsNavigation(nearestPlaceLatitude, nearestPlaceLongitude);
+                 }
+                 else
+                 {
+                     await App.Current.MainPage.DisplayAlert("", $"No {placeType} nearby.", "OK");
+                 }
+                
+             }
+             catch (Exception ex)
+             {
+                 r_Logger.LogError($"OnOpenGoogleMapsAppButtonClicked: {ex.Message}");
+             }
+         }
     }
 }

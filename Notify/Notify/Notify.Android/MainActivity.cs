@@ -8,7 +8,6 @@ using Notify.Droid.Notifications;
 using Notify.Helpers;
 using Notify.Notifications;
 using Notify.Services;
-using Notify.ViewModels;
 using Notify.Views.Views;
 using Xamarin.Forms;
 using Xamarin.Essentials;
@@ -20,21 +19,20 @@ namespace Notify.Droid
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         private readonly LoggerService r_Logger = AndroidLogger.Instance;
-        private GoogleMapsHandler googleMapsHandler;
         private Intent serviceIntent;
         private const int RequestCode = 5469;
         internal static readonly string CHANNEL_ID = "my_notification_channel";
         
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            ExternalMapsService externalMap = GoogleMapsService.Initialize(this);;
+            
             base.OnCreate(savedInstanceState);
 
             Platform.Init(this, savedInstanceState);
             Forms.Init(this, savedInstanceState);
             Plugin.MaterialDesignControls.Android.Renderer.Init();
             
-            GoogleMapsHandler.Initialize(this);
-
             serviceIntent = new Intent(this, typeof(AndroidLocationService));
             SetServiceMethods();
 

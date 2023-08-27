@@ -229,43 +229,7 @@ namespace Notify.ViewModels
 
             DropBoxOptions = await AzureHttpClient.Instance.GetAddressSuggestions(SearchAddress);
 
-            OnOpenGoogleMapsAppButtonClicked();   // TODO - delete this function call after moving the function to it's right class 
-        }
-        
-        public async void OnOpenGoogleMapsAppButtonClicked()   
-            // TODO - just for testing the logic - need to move this function to notification details page with a dedicated button
-        {
-            string placeType = "Supermarket";   // TODO - get the right type from notification info
-            double nearestPlaceLatitude, nearestPlaceLongitude;
-            Location currentLocation;
-            Location nearestPlace;
-            GeolocationRequest request;
-            Xamarin.Essentials.Location location;
-
-            try
-            {
-                request = new GeolocationRequest(GeolocationAccuracy.High);
-                location = await Xamarin.Essentials.Geolocation.GetLocationAsync(request);
-
-                currentLocation = new Location(location.Longitude, location.Latitude);
-                nearestPlace = await GoogleMapsHandler.GetNearestPlace(placeType, currentLocation);
-                
-                if (nearestPlace != null)
-                {
-                    nearestPlaceLatitude = nearestPlace.Latitude;
-                    nearestPlaceLongitude = nearestPlace.Longitude;
-                    GoogleMapsHandler.GetInstance().OpenGoogleMapsNavigation(nearestPlaceLatitude, nearestPlaceLongitude);
-                }
-                else
-                {
-                    await App.Current.MainPage.DisplayAlert("", $"No {placeType} nearby.", "OK");
-                }
-                
-            }
-            catch (Exception ex)
-            {
-                r_Logger.LogError($"OnOpenGoogleMapsAppButtonClicked: {ex.Message}");
-            }
+            ExternalMapsService.Instance.OpenExternalMap();   // TODO - move this function call to the right place (NotificationDetailsPageViewModel of dynamic location notifications) 
         }
     }
 }
