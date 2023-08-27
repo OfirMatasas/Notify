@@ -564,7 +564,7 @@ namespace Notify.Azure.HttpClient
                 converter: Converter.ToFriend);
         }
 
-        public async void SendFriendRequest(string username)
+        public async Task<bool> SendFriendRequest(string username)
         {
             dynamic request = new JObject
             {
@@ -573,11 +573,27 @@ namespace Notify.Azure.HttpClient
                 { "requestDate", DateTime.Now.Date.ToShortDateString() }
             };
             string json = JsonConvert.SerializeObject(request);
+            HttpResponseMessage response;
+            bool isSuccess;
             
             r_Logger.LogInformation($"request:{Environment.NewLine}{json}");
-            
-            createJsonStringContent(JsonConvert.SerializeObject(request));
-            await postAsync(requestUri: Constants.AZURE_FUNCTIONS_PATTERN_FRIEND_REQUEST, createJsonStringContent(json));
+
+            try
+            {
+                createJsonStringContent(JsonConvert.SerializeObject(request));
+                response = await postAsync(requestUri: Constants.AZURE_FUNCTIONS_PATTERN_FRIEND_REQUEST, createJsonStringContent(json));
+                response.EnsureSuccessStatusCode();
+                
+                r_Logger.LogInformation($"Successful status code from Azure Function from SendFriendRequest");
+                isSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error occured on SendFriendRequest: {ex.Message}");
+                isSuccess = false;
+            }
+
+            return isSuccess;
         }
 
         public async Task<List<FriendRequest>> GetFriendRequests(string userName)

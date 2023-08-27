@@ -99,13 +99,25 @@ namespace Notify.ViewModels
             }
         }
 
-        private void onSendRequestButtonClicked(User friend)
+        private async void onSendRequestButtonClicked(User friend)
         {
+            bool isSucceeded;
+            
             if (!(friend is null))
             {
-                AzureHttpClient.Instance.SendFriendRequest(friend.UserName);
-                App.Current.MainPage.DisplayAlert("Friend Request Sent", $"Friend request sent to {friend.UserName}",
-                    "OK");
+                isSucceeded = await AzureHttpClient.Instance.SendFriendRequest(friend.UserName);
+                
+                if (isSucceeded)
+                {
+                    App.Current.MainPage.DisplayAlert("Friend Request", $"Friend request sent to {friend.UserName}", "OK");
+                    UsersList.Remove(friend);
+                    UsersSelectionList.Remove(friend);
+                    onRefreshPotentialFriendsClicked();
+                }
+                else
+                {
+                    App.Current.MainPage.DisplayAlert("Friend Request", $"Failed to send friend request to {friend.UserName}", "OK");
+                }
             }
         }
 
