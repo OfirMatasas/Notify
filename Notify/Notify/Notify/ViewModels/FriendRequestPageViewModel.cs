@@ -26,7 +26,7 @@ namespace Notify.ViewModels
         }
         
         private bool m_IsRefreshing;
-        public bool IsRefreshing { set => SetField(ref m_IsRefreshing, value); } 
+        public bool IsRefreshing { set => SetField(ref m_IsRefreshing, value); }
 
         private List<User> UsersList { get; set; }
         
@@ -54,11 +54,11 @@ namespace Notify.ViewModels
             PopulateUsersList();
         }
 
-        private void onRefreshPotentialFriendsClicked()
+        private async void onRefreshPotentialFriendsClicked()
         {
             IsRefreshing = true;
             
-            UsersList = AzureHttpClient.Instance.GetNotFriendsUsers().Result;
+            UsersList = await AzureHttpClient.Instance.GetNotFriendsUsers();
             onSearchTextChanged();
             
             IsRefreshing = false;

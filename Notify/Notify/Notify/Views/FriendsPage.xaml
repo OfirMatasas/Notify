@@ -18,7 +18,6 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-
     <RefreshView Command="{Binding RefreshFriendsCommand}" IsRefreshing="{Binding IsRefreshing}">
         <Grid
             BackgroundColor="#F3F5F9"
