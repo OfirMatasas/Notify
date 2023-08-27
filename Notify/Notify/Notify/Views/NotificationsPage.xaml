@@ -2,6 +2,7 @@
 <ContentPage
     Title="Notification Creation"
     x:Class="Notify.Views.NotificationsPage"
+    x:Name="NotificationForm"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:helpers="clr-namespace:Notify.Helpers;assembly=Notify"
     xmlns:materialDesignControls="clr-namespace:Plugin.MaterialDesignControls;assembly=Plugin.MaterialDesignControls"
@@ -14,6 +15,7 @@
             <helpers:TypeToColorConverter x:Key="TypeToColorConverter" />
             <helpers:TypeToIconConverter x:Key="TypeToIconConverter" />
             <helpers:BooleanToColorConverter x:Key="BooleanToColorConverter" />
+            <helpers:IdToIsExpandedConverter x:Key="IdToIsExpandedConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -193,7 +195,7 @@
                                             HorizontalOptions="Start"
                                             VerticalOptions="FillAndExpand"
                                             WidthRequest="3" />
-                                        <views:Expander Grid.Column="1">
+                                        <views:Expander Grid.Column="1" IsExpanded="{Binding Id, Converter={StaticResource IdToIsExpandedConverter}, ConverterParameter={Binding Source={x:Reference NotificationForm}, Path=BindingContext.ExpandedNotificationId}}">
                                             <views:Expander.Header>
                                                 <Grid HorizontalOptions="FillAndExpand">
                                                     <Grid.ColumnDefinitions>

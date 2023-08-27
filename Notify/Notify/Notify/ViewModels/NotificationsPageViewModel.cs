@@ -38,6 +38,8 @@ namespace Notify.ViewModels
         
         public bool IsRefreshing { set => SetField(ref m_IsRefreshing, value); }
         
+        public string ExpandedNotificationId { get; set; }
+        
         public Color Color { get => m_Color; set => SetField(ref m_Color, value); }
         
         public bool IsActivationType
