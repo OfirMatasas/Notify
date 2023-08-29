@@ -270,6 +270,11 @@ namespace Notify.ViewModels
             }
         }
         
+        public void ResetExpandedNotification()
+        {
+            ExpandedNotificationId = null;
+        }
+        
         private async void onRenewNotificationButtonClicked(Notification notification)
         {
             string messageTitle = "Notification Renewal";

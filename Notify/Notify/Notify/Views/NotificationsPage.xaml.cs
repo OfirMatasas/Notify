@@ -24,5 +24,11 @@ namespace Notify.Views
             base.OnAppearing();
             (BindingContext as NotificationsPageViewModel)?.OnNotificationsRefreshClicked();
         }
+        
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            (BindingContext as NotificationsPageViewModel)?.ResetExpandedNotification();
+        }
     }
 }
