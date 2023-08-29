@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Notify.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -16,7 +15,6 @@ namespace Notify.Views
         {
             InitializeComponent();
             BindingContext = viewModel ?? NotificationsPageViewModel.Instance;
-            Debug.WriteLine($"ViewModel in Page: {BindingContext.GetHashCode()}");
         }
 
         protected override void OnAppearing()

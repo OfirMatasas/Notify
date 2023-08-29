@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using Notify.Core;
 using Xamarin.Essentials;
@@ -28,9 +27,7 @@ namespace Notify.Helpers
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var viewModel = NotificationsPageViewModel.Instance;
-            Debug.WriteLine($"Converter called. Value: {value}, Parameter: {parameter}, viewModel: {viewModel.GetHashCode()}");
-            return value?.ToString() == viewModel?.ExpandedNotificationId;
+            return value?.ToString() == NotificationsPageViewModel.Instance?.ExpandedNotificationId;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

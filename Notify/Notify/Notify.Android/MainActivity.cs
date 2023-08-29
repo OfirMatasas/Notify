@@ -10,7 +10,6 @@ using Notify.Notifications;
 using Notify.Services;
 using Notify.ViewModels;
 using Notify.Views;
-using Notify.Views.Views;
 using Xamarin.Forms;
 using Xamarin.Essentials;
 using Environment = System.Environment;
@@ -127,10 +126,10 @@ namespace Notify.Droid
         protected override void OnNewIntent(Intent intent)
         {
             base.OnNewIntent(intent);
-            CreateNotificationFromIntent(intent);
+            createNotificationFromIntent(intent);
         }
 
-        void CreateNotificationFromIntent(Intent intent)
+        private void createNotificationFromIntent(Intent intent)
         {
             if (intent?.Extras != null)
             {
@@ -138,12 +137,9 @@ namespace Notify.Droid
                 string message = intent.GetStringExtra(AndroidNotificationManager.messageKey);
                 string data = intent.GetStringExtra(AndroidNotificationManager.dataKey);
                 Core.Notification notification = Newtonsoft.Json.JsonConvert.DeserializeObject<Core.Notification>(data);
-                r_Logger.LogInformation($"Notification ID from intent: {notification.ID}");
 
                 NotificationsPageViewModel viewModel = NotificationsPageViewModel.Instance;
                 viewModel.ExpandedNotificationId = notification.ID;
-
-                r_Logger.LogInformation($"ExpandedNotificationId set in ViewModel: {viewModel.ExpandedNotificationId}");
 
                 DependencyService.Get<INotificationManager>().ReceiveNotification(title, message, notification);
                 App.Current.MainPage.Navigation.PushAsync(new NotificationsPage(viewModel));

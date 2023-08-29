@@ -17,18 +17,28 @@ namespace Notify.ViewModels
 {
     public sealed class NotificationsPageViewModel : INotifyPropertyChanged
     {
-        private static NotificationsPageViewModel instance;
+
+        private static NotificationsPageViewModel m_Instance;
+        private static readonly object r_LockInstanceCreation = new object();
+
         public static NotificationsPageViewModel Instance 
         {
             get
             {
-                if (instance == null)
+                if (m_Instance == null)
                 {
-                    instance = new NotificationsPageViewModel();
+                    lock (r_LockInstanceCreation)
+                    {
+                        if (m_Instance == null)
+                        {
+                            m_Instance = new NotificationsPageViewModel();
+                        }
+                    }
                 }
-                return instance;
+                return m_Instance;
             }
         }
+        
         private readonly LoggerService r_Logger = LoggerService.Instance;
         public List<Notification> Notifications { get; set; }
         public List<Notification> FilteredNotifications { get; set; }
@@ -39,6 +49,7 @@ namespace Notify.ViewModels
         private Color m_Color;
         private string m_SelectedFilter;
         private bool m_IsLocationType;
+        private string m_ExpandedNotificationId;
         
         public Command DeleteNotificationCommand { get; set; }
         public Command EditNotificationCommand { get; set; }
@@ -105,7 +116,6 @@ namespace Notify.ViewModels
             }
         }
         
-        private string m_ExpandedNotificationId;
         public string ExpandedNotificationId
         {
             get => m_ExpandedNotificationId;
@@ -118,11 +128,9 @@ namespace Notify.ViewModels
                 }
             }
         }
-        
-        public NotificationsPageViewModel()
-        {
-            r_Logger.LogInformation($"ViewModel created: {GetHashCode()}");
 
+        private NotificationsPageViewModel()
+        {
             string notificationsJson;
 
             CreateNotificationCommand = new Command(onCreateNotificationClicked);
@@ -154,8 +162,6 @@ namespace Notify.ViewModels
             SelectedFilter = "Active";
             OnNotificationsRefreshClicked();
             applyFilterAndSearch();
-            r_Logger.LogInformation($"NotificationsPageViewModel constructed. ExpandedNotificationId: {ExpandedNotificationId}");
-
         }
 
         private void applyFilterAndSearch()
