@@ -17,6 +17,18 @@ namespace Notify.ViewModels
 {
     public sealed class NotificationsPageViewModel : INotifyPropertyChanged
     {
+        private static NotificationsPageViewModel instance;
+        public static NotificationsPageViewModel Instance 
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new NotificationsPageViewModel();
+                }
+                return instance;
+            }
+        }
         private readonly LoggerService r_Logger = LoggerService.Instance;
         public List<Notification> Notifications { get; set; }
         public List<Notification> FilteredNotifications { get; set; }
@@ -37,8 +49,6 @@ namespace Notify.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
         
         public bool IsRefreshing { set => SetField(ref m_IsRefreshing, value); }
-        
-        public string ExpandedNotificationId { get; set; }
         
         public Color Color { get => m_Color; set => SetField(ref m_Color, value); }
         
@@ -94,9 +104,25 @@ namespace Notify.ViewModels
                 OnPropertyChanged(nameof(IsLocationType));
             }
         }
-
+        
+        private string m_ExpandedNotificationId;
+        public string ExpandedNotificationId
+        {
+            get => m_ExpandedNotificationId;
+            set
+            {
+                if (m_ExpandedNotificationId != value)
+                {
+                    m_ExpandedNotificationId = value;
+                    OnPropertyChanged(nameof(ExpandedNotificationId));
+                }
+            }
+        }
+        
         public NotificationsPageViewModel()
         {
+            r_Logger.LogInformation($"ViewModel created: {GetHashCode()}");
+
             string notificationsJson;
 
             CreateNotificationCommand = new Command(onCreateNotificationClicked);
@@ -128,6 +154,8 @@ namespace Notify.ViewModels
             SelectedFilter = "Active";
             OnNotificationsRefreshClicked();
             applyFilterAndSearch();
+            r_Logger.LogInformation($"NotificationsPageViewModel constructed. ExpandedNotificationId: {ExpandedNotificationId}");
+
         }
 
         private void applyFilterAndSearch()

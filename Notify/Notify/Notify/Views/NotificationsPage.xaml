@@ -195,7 +195,7 @@
                                             HorizontalOptions="Start"
                                             VerticalOptions="FillAndExpand"
                                             WidthRequest="3" />
-                                        <views:Expander Grid.Column="1" IsExpanded="{Binding Id, Converter={StaticResource IdToIsExpandedConverter}, ConverterParameter={Binding Source={x:Reference NotificationForm}, Path=BindingContext.ExpandedNotificationId}}">
+                                        <views:Expander Grid.Column="1" IsExpanded="{Binding ID, Converter={StaticResource IdToIsExpandedConverter}, ConverterParameter={Binding Source={x:Reference NotificationForm}, Path=BindingContext.ExpandedNotificationId}}">
                                             <views:Expander.Header>
                                                 <Grid HorizontalOptions="FillAndExpand">
                                                     <Grid.ColumnDefinitions>

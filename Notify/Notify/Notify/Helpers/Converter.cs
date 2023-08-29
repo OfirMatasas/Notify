@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using Notify.Core;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Newtonsoft.Json;
+using Notify.ViewModels;
 using Location = Notify.Core.Location;
 
 namespace Notify.Helpers
@@ -26,7 +28,9 @@ namespace Notify.Helpers
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value?.ToString() == parameter?.ToString();
+            var viewModel = NotificationsPageViewModel.Instance;
+            Debug.WriteLine($"Converter called. Value: {value}, Parameter: {parameter}, viewModel: {viewModel.GetHashCode()}");
+            return value?.ToString() == viewModel?.ExpandedNotificationId;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -34,8 +38,7 @@ namespace Notify.Helpers
             return null;
         }
     }
-
-
+    
     public class BooleanToColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

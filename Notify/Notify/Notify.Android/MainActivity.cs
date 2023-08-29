@@ -17,14 +17,17 @@ using Environment = System.Environment;
 
 namespace Notify.Droid
 {
-    [Activity(Label = "Notify", Icon = "@mipmap/icon", Theme = "@style/MainTheme", LaunchMode = LaunchMode.SingleTop, MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize)]
+    [Activity(Label = "Notify", Icon = "@mipmap/icon", Theme = "@style/MainTheme", LaunchMode = LaunchMode.SingleTop,
+        MainLauncher = true,
+        ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode |
+                               ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         private readonly LoggerService r_Logger = AndroidLogger.Instance;
         private Intent serviceIntent;
         private const int RequestCode = 5469;
         internal static readonly string CHANNEL_ID = "my_notification_channel";
-        
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -44,11 +47,13 @@ namespace Notify.Droid
             }
 
             App app = new App();
-            
-            if (Preferences.ContainsKey(Constants.PREFERENCES_USERNAME) && Preferences.ContainsKey(Constants.PREFERENCES_PASSWORD))
+
+            if (Preferences.ContainsKey(Constants.PREFERENCES_USERNAME) &&
+                Preferences.ContainsKey(Constants.PREFERENCES_PASSWORD))
             {
-                r_Logger.LogInformation($"Logging in with credentials from preferences.{Environment.NewLine}UserName: {Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty)}" +
-                                        $", Password: {Preferences.Get(Constants.PREFERENCES_PASSWORD, string.Empty)}");
+                r_Logger.LogInformation(
+                    $"Logging in with credentials from preferences.{Environment.NewLine}UserName: {Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty)}" +
+                    $", Password: {Preferences.Get(Constants.PREFERENCES_PASSWORD, string.Empty)}");
                 Shell.Current.GoToAsync("//home");
                 app.MainPage = Shell.Current;
             }
@@ -59,8 +64,9 @@ namespace Notify.Droid
 
             LoadApplication(app);
         }
-        
-        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
+
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions,
+            [GeneratedEnum] Permission[] grantResults)
         {
             Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -68,7 +74,8 @@ namespace Notify.Droid
 
         void SetServiceMethods()
         {
-            MessagingCenter.Subscribe<StartServiceMessage>(this, "ServiceStarted", message => {
+            MessagingCenter.Subscribe<StartServiceMessage>(this, "ServiceStarted", message =>
+            {
                 if (!IsServiceRunning(typeof(AndroidLocationService)))
                 {
                     if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
@@ -82,7 +89,8 @@ namespace Notify.Droid
                 }
             });
 
-            MessagingCenter.Subscribe<StopServiceMessage>(this, "ServiceStopped", message => {
+            MessagingCenter.Subscribe<StopServiceMessage>(this, "ServiceStopped", message =>
+            {
                 if (IsServiceRunning(typeof(AndroidLocationService)))
                     StopService(serviceIntent);
             });
@@ -91,7 +99,7 @@ namespace Notify.Droid
         private bool IsServiceRunning(Type cls)
         {
             ActivityManager manager = (ActivityManager)GetSystemService(ActivityService);
-            
+
             foreach (ActivityManager.RunningServiceInfo service in manager.GetRunningServices(int.MaxValue))
             {
                 if (service.Service.ClassName.Equals(Java.Lang.Class.FromType(cls).CanonicalName))
@@ -99,7 +107,7 @@ namespace Notify.Droid
                     return true;
                 }
             }
-            
+
             return false;
         }
 
@@ -115,9 +123,10 @@ namespace Notify.Droid
 
             base.OnActivityResult(requestCode, resultCode, data);
         }
-        
+
         protected override void OnNewIntent(Intent intent)
         {
+            base.OnNewIntent(intent);
             CreateNotificationFromIntent(intent);
         }
 
@@ -125,15 +134,19 @@ namespace Notify.Droid
         {
             if (intent?.Extras != null)
             {
-                NotificationsPageViewModel viewModel = DependencyService.Get<NotificationsPageViewModel>();
                 string title = intent.GetStringExtra(AndroidNotificationManager.titleKey);
                 string message = intent.GetStringExtra(AndroidNotificationManager.messageKey);
                 string data = intent.GetStringExtra(AndroidNotificationManager.dataKey);
                 Core.Notification notification = Newtonsoft.Json.JsonConvert.DeserializeObject<Core.Notification>(data);
-                
+                r_Logger.LogInformation($"Notification ID from intent: {notification.ID}");
+
+                NotificationsPageViewModel viewModel = NotificationsPageViewModel.Instance;
                 viewModel.ExpandedNotificationId = notification.ID;
+
+                r_Logger.LogInformation($"ExpandedNotificationId set in ViewModel: {viewModel.ExpandedNotificationId}");
+
                 DependencyService.Get<INotificationManager>().ReceiveNotification(title, message, notification);
-                App.Current.MainPage.Navigation.PushAsync(new NotificationsPage());
+                App.Current.MainPage.Navigation.PushAsync(new NotificationsPage(viewModel));
             }
         }
     }
