@@ -33,6 +33,7 @@ namespace Notify.ViewModels
         public Command RenewNotificationCommand { get; set; }
         public Command CreateNotificationCommand { get; set; }
         public Command ExecuteSearchCommand { get; set; }
+        public Command OpenMapCommand { get; set; } 
         
         public event PropertyChangedEventHandler PropertyChanged;
         
@@ -103,6 +104,7 @@ namespace Notify.ViewModels
             EditNotificationCommand = new Command<Notification>(onEditNotificationButtonClicked);
             RenewNotificationCommand = new Command<Notification>(onRenewNotificationButtonClicked);
             ExecuteSearchCommand = new Command(applyFilterAndSearch);
+            OpenMapCommand = new Command<Notification>(onMapClicked);
 
             DeleteNotificationCommand = new Command<Notification>(onDeleteNotificationButtonClicked);
             EditNotificationCommand = new Command<Notification>(onEditNotificationButtonClicked);
@@ -126,6 +128,15 @@ namespace Notify.ViewModels
             SelectedFilter = "Active";
             OnNotificationsRefreshClicked();
             applyFilterAndSearch();
+        }
+
+        private void onMapClicked(Notification notification)
+        {
+            r_Logger.LogInformation($"onMapClicked: {notification.Name}");
+            if (notification.Type == NotificationType.Dynamic)
+            {
+                ExternalMapsService.Instance.OpenExternalMap(notification);
+            }
         }
 
         private void applyFilterAndSearch()

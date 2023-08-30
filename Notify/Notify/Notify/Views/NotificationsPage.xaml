@@ -290,10 +290,19 @@
                                                     <Label
                                                         FontAttributes="Bold"
                                                         FontSize="Small"
-                                                        Margin="20,0,20,10"
+                                                        Margin="20,0"
                                                         Opacity="0.8"
                                                         Text="{Binding Target, StringFormat='Target User: {0}'}"
                                                         TextColor="#2F3246" />
+                                                    <Button
+                                                        Command="{Binding Path=BindingContext.OpenMapCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
+                                                        CommandParameter="{Binding .}"
+                                                        FontAttributes="Bold"
+                                                        FontSize="Small"
+                                                        Margin="20,0,20,10"
+                                                        Opacity="0.8"
+                                                        Text="Open in Google Maps" />
+
                                                 </StackLayout>
                                             </Grid>
                                         </views:Expander>
