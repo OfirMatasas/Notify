@@ -209,6 +209,20 @@ namespace Notify.Helpers
 
         #endregion
 
+        #region Filter_Types
+        
+        public static readonly string FILTER_TYPE_ACTIVE = "Active";
+        public static readonly string FILTER_TYPE_PENDING = "Pending";
+        public static readonly string FILTER_TYPE_DECLINED = "Declined";
+        public static readonly string FILTER_TYPE_EXPIRED = "Expired";
+        public static readonly string FILTER_TYPE_PERMANENT = "Permanent";
+        public static readonly string FILTER_TYPE_LOCATION = "Location";
+        public static readonly string FILTER_TYPE_DYNAMIC_LOCATION = "Dynamic Location";
+        public static readonly string FILTER_TYPE_TIME = "Time";
+        public static readonly string FILTER_TYPE_ALL = "All Notifications";
+        
+        #endregion
+
         #region Colors
 
         public static readonly Color VALID_COLOR = Color.SeaGreen;
