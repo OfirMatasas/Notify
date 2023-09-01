@@ -16,7 +16,7 @@ namespace Notify.Functions.NotifyFunctions.Notification
     {
         [FunctionName("GetNotificationByID")]
         public static async Task<IActionResult> RunAsync(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "notification/id")] HttpRequest req, 
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "notification/{id}")] HttpRequest req, 
             ILogger log, string id)
         {
             log.LogInformation($"C# HTTP trigger function processed a request to get notification by ID: {id}");
