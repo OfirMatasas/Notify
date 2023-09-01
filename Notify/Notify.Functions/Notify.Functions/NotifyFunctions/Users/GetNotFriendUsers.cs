@@ -49,15 +49,23 @@ namespace Notify.Functions.NotifyFunctions.Users
         private static async Task<List<BsonDocument>> getAllUsersWhichAreNotFriendsOfUser(string username, ILogger log)
         {
             List<string> friendsUsernamesList;
+            List<string> friendRequestsUsernamesList;
+            List<string> usersToExclude;
             List<BsonDocument> userDocuments;
 
-            log.LogInformation($"Getting all users which are not friends of user {username}");
+            log.LogInformation($"Getting all users which are friends of user {username}");
             friendsUsernamesList = await getUsersFriendsUsername(username.ToLower());
             log.LogInformation($"Got all {friendsUsernamesList.Count} friends of user {username}");
-
-            log.LogInformation($"Getting all users which are not friends of user {username}");
-            userDocuments = await getAllOtherUsers(friendsUsernamesList);
-            log.LogInformation($"Got all {userDocuments.Count} users which are not friends of user {username}");
+            
+            log.LogInformation($"Getting all users which {username} has sent them a friend request");
+            friendRequestsUsernamesList = await getUsersFromSentFriendRequests(username.ToLower());
+            log.LogInformation($"Got all {friendRequestsUsernamesList.Count} users which {username} has sent them a friend request");
+            
+            usersToExclude = friendsUsernamesList.Union(friendRequestsUsernamesList).ToList();
+            
+            log.LogInformation($"Getting all users which are not friends of user {username} and which {username} has not sent them a friend request");
+            userDocuments = await getAllOtherUsers(usersToExclude);
+            log.LogInformation($"Got all {userDocuments.Count} users which are not friends of user {username} and which {username} has not sent them a friend request");
             
             return userDocuments;
         }
@@ -89,15 +97,23 @@ namespace Notify.Functions.NotifyFunctions.Users
 
             return friendsUsernamesList;
         }
+        
+        private static async Task<List<string>> getUsersFromSentFriendRequests(string lowerCasedUsername)
+        {
+            IMongoCollection<BsonDocument> friendRequestsCollection = MongoUtils.GetCollection(Constants.COLLECTION_FRIEND_REQUEST);
+            FilterDefinition<BsonDocument> userFilter = Builders<BsonDocument>.Filter
+                .Where(doc => doc["requester"].AsString.ToLower().Equals(lowerCasedUsername));
+            List<BsonDocument> friendRequestsDocuments = (await friendRequestsCollection.FindAsync(userFilter)).ToList();
+            
+            return friendRequestsDocuments
+                .Select(doc => doc["userName"].ToString())
+                .ToList();
+        }
 
         private static async Task<List<BsonDocument>> getAllOtherUsers(List<string> friendsUsernames)
         {
-            IMongoCollection<BsonDocument> userCollection;
-            FilterDefinition<BsonDocument> userFilter;
-
-            userCollection = MongoUtils.GetCollection(Constants.COLLECTION_USER);
-            
-            userFilter = Builders<BsonDocument>.Filter
+            IMongoCollection<BsonDocument> userCollection = MongoUtils.GetCollection(Constants.COLLECTION_USER);
+            FilterDefinition<BsonDocument> userFilter = Builders<BsonDocument>.Filter
                 .Where(doc => !friendsUsernames.Contains(doc["userName"].AsString));
             
             return await userCollection
