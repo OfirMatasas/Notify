@@ -13,6 +13,7 @@ using Notify.Views;
 using Xamarin.Forms;
 using Xamarin.Essentials;
 using Environment = System.Environment;
+using Notification = Notify.Core.Notification;
 
 namespace Notify.Droid
 {
@@ -136,11 +137,12 @@ namespace Notify.Droid
                 string title = intent.GetStringExtra(AndroidNotificationManager.titleKey);
                 string message = intent.GetStringExtra(AndroidNotificationManager.messageKey);
                 string data = intent.GetStringExtra(AndroidNotificationManager.dataKey);
-                Core.Notification notification = Newtonsoft.Json.JsonConvert.DeserializeObject<Core.Notification>(data);
+                Notification notification = Newtonsoft.Json.JsonConvert.DeserializeObject<Notification>(data);
 
                 NotificationsPageViewModel viewModel = NotificationsPageViewModel.Instance;
                 viewModel.ExpandedNotificationId = notification.ID;
                 viewModel.SelectedFilter = Constants.FILTER_TYPE_ALL;
+                
                 DependencyService.Get<INotificationManager>().ReceiveNotification(title, message, notification);
                 App.Current.MainPage.Navigation.PushAsync(new NotificationsPage(viewModel));
             }
