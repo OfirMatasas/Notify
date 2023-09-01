@@ -7,6 +7,7 @@ using Notify.Core;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Newtonsoft.Json;
+using Notify.ViewModels;
 using Location = Notify.Core.Location;
 
 namespace Notify.Helpers
@@ -16,6 +17,19 @@ namespace Notify.Helpers
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value is string strValue && !string.IsNullOrEmpty(strValue);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
+
+    public class IdToIsExpandedConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value?.ToString() == NotificationsPageViewModel.Instance?.ExpandedNotificationId;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
