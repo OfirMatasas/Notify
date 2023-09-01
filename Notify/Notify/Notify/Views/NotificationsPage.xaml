@@ -296,6 +296,49 @@
                                                         Opacity="0.8"
                                                         Text="{Binding Target, StringFormat='Target User: {0}'}"
                                                         TextColor="#2F3246" />
+                                                    <StackLayout
+                                                        HorizontalOptions="Start"
+                                                        IsVisible="{Binding IsPending}"
+                                                        Orientation="Horizontal"
+                                                        Padding="15,0,0,5">
+
+                                                        <StackLayout HorizontalOptions="Start">
+                                                            <Image
+                                                                HeightRequest="50"
+                                                                Source="approve_button.png"
+                                                                WidthRequest="50">
+                                                                <Image.GestureRecognizers>
+                                                                    <TapGestureRecognizer Command="{Binding Path=BindingContext.AcceptNotificationCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}" CommandParameter="{Binding .}" />
+                                                                </Image.GestureRecognizers>
+                                                            </Image>
+                                                            <Label
+                                                                FontAttributes="Bold"
+                                                                FontSize="Small"
+                                                                HorizontalOptions="Center"
+                                                                Text="Accept"
+                                                                TextColor="#2F3246" />
+                                                        </StackLayout>
+
+                                                        <BoxView WidthRequest="20" />
+
+                                                        <StackLayout HorizontalOptions="Start">
+                                                            <Image
+                                                                HeightRequest="50"
+                                                                Source="reject_button_red.png"
+                                                                WidthRequest="50">
+                                                                <Image.GestureRecognizers>
+                                                                    <TapGestureRecognizer Command="{Binding Path=BindingContext.RejectNotificationCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}" CommandParameter="{Binding .}" />
+                                                                </Image.GestureRecognizers>
+                                                            </Image>
+                                                            <Label
+                                                                FontAttributes="Bold"
+                                                                FontSize="Small"
+                                                                HorizontalOptions="Center"
+                                                                Text="Reject"
+                                                                TextColor="#2F3246" />
+                                                        </StackLayout>
+                                                    </StackLayout>
+
                                                 </StackLayout>
                                             </Grid>
                                         </views:Expander>

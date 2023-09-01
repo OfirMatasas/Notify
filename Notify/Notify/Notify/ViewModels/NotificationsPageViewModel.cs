@@ -56,6 +56,8 @@ namespace Notify.ViewModels
         public Command RenewNotificationCommand { get; set; }
         public Command CreateNotificationCommand { get; set; }
         public Command ExecuteSearchCommand { get; set; }
+        public Command AcceptNotificationCommand { get; set; }
+        public Command RejectNotificationCommand { get; set; }
         
         public event PropertyChangedEventHandler PropertyChanged;
         
@@ -143,6 +145,9 @@ namespace Notify.ViewModels
             DeleteNotificationCommand = new Command<Notification>(onDeleteNotificationButtonClicked);
             EditNotificationCommand = new Command<Notification>(onEditNotificationButtonClicked);
             RenewNotificationCommand = new Command<Notification>(onRenewNotificationButtonClicked);
+            
+            AcceptNotificationCommand = new Command<Notification>(onAcceptNotificationButtonClicked);
+            RejectNotificationCommand = new Command<Notification>(onRejectNotificationButtonClicked);
 
             try
             {
@@ -162,6 +167,36 @@ namespace Notify.ViewModels
             SelectedFilter = Constants.FILTER_TYPE_ACTIVE;
             OnNotificationsRefreshClicked();
             applyFilterAndSearch();
+        }
+
+        private async void onRejectNotificationButtonClicked(Notification notification)
+        {
+            string messageTitle = "Reject Notification";
+            bool isRejected;
+            bool isConfirmed = await App.Current.MainPage.DisplayAlert(messageTitle,
+                "Are you sure you want to reject this notification?",
+                "Yes", "No");
+
+            if (isConfirmed)
+            {
+                isRejected = await AzureHttpClient.Instance.DeleteNotificationAsync(notification.ID);
+
+                if (isRejected)
+                {
+                    OnNotificationsRefreshClicked();
+                }
+                else
+                {
+                    await App.Current.MainPage.DisplayAlert(messageTitle,
+                        "Failed to Reject notification",
+                        "OK");
+                }
+            }
+        }
+
+        private void onAcceptNotificationButtonClicked(Notification notification)
+        {
+            
         }
 
         private void applyFilterAndSearch()
