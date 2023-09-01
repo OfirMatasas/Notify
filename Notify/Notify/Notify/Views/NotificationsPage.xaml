@@ -7,6 +7,7 @@
     xmlns:helpers="clr-namespace:Notify.Helpers;assembly=Notify"
     xmlns:materialDesignControls="clr-namespace:Plugin.MaterialDesignControls;assembly=Plugin.MaterialDesignControls"
     xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+    xmlns:viewModels="clr-namespace:Notify.ViewModels;assembly=Notify"
     xmlns:views="http://xamarin.com/schemas/2020/toolkit"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
@@ -16,6 +17,229 @@
             <helpers:TypeToIconConverter x:Key="TypeToIconConverter" />
             <helpers:BooleanToColorConverter x:Key="BooleanToColorConverter" />
             <helpers:IdToIsExpandedConverter x:Key="IdToIsExpandedConverter" />
+
+            <ContentView x:Key="SharedSwipeView">
+                <SwipeView.Content>
+                    <pancakeView:PancakeView
+                        BackgroundColor="White"
+                        HorizontalOptions="FillAndExpand"
+                        VerticalOptions="StartAndExpand">
+                        <Grid HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <BoxView
+                                BackgroundColor="{Binding Type, Converter={StaticResource TypeToColorConverter}}"
+                                HorizontalOptions="Start"
+                                VerticalOptions="FillAndExpand"
+                                WidthRequest="3" />
+                            <views:Expander Grid.Column="1" IsExpanded="{Binding ID, Converter={StaticResource IdToIsExpandedConverter}, ConverterParameter={Binding Source={x:Reference NotificationForm}, Path=BindingContext.ExpandedNotificationId}}">
+                                <views:Expander.Header>
+                                    <Grid HorizontalOptions="FillAndExpand">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="3.5*" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                                            <Image
+                                                Aspect="AspectFill"
+                                                HeightRequest="30"
+                                                HorizontalOptions="Center"
+                                                Source="{Binding Type, Converter={StaticResource TypeToIconConverter}}" />
+                                        </StackLayout>
+                                        <BoxView
+                                            BackgroundColor="#F2F4F8"
+                                            Grid.Column="1"
+                                            HorizontalOptions="Start"
+                                            VerticalOptions="FillAndExpand"
+                                            WidthRequest="1" />
+                                        <StackLayout
+                                            Grid.Column="2"
+                                            HorizontalOptions="Start"
+                                            Margin="20,20,20,20"
+                                            VerticalOptions="Center">
+                                            <Label
+                                                FontAttributes="Bold"
+                                                FontSize="Medium"
+                                                Text="{Binding Name}"
+                                                TextColor="Black" />
+                                            <Label
+                                                FontSize="Medium"
+                                                Margin="0,-5,0,0"
+                                                Text="{Binding Description}"
+                                                TextColor="#2F3246" />
+                                        </StackLayout>
+                                    </Grid>
+                                </views:Expander.Header>
+                                <Grid HorizontalOptions="FillAndExpand">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="3.5*" />
+                                    </Grid.ColumnDefinitions>
+                                    <BoxView
+                                        BackgroundColor="#F2F4F8"
+                                        Grid.Column="1"
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="FillAndExpand"
+                                        WidthRequest="1" />
+                                    <StackLayout Grid.Column="2" Spacing="10">
+                                        <Label
+                                            FontAttributes="Bold"
+                                            FontSize="Small"
+                                            Margin="20,0"
+                                            Opacity="0.8"
+                                            Text="{Binding Status, StringFormat='Status: {0}'}"
+                                            TextColor="#2F3246" />
+                                        <Label
+                                            FontAttributes="Bold"
+                                            FontSize="Small"
+                                            Margin="20,0"
+                                            Opacity="0.8"
+                                            Text="{Binding Creator, StringFormat='Creator: {0}'}"
+                                            TextColor="#2F3246" />
+                                        <Label
+                                            FontAttributes="Bold"
+                                            FontSize="Small"
+                                            Margin="20,0"
+                                            Opacity="0.8"
+                                            Text="{Binding CreationDateTime, StringFormat='Creation Date: {0}'}"
+                                            TextColor="#2F3246" />
+                                        <Label
+                                            FontAttributes="Bold"
+                                            FontSize="Small"
+                                            Margin="20,0"
+                                            Opacity="0.8"
+                                            Text="{Binding TypeInfo, StringFormat='Type Info: {0}'}"
+                                            TextColor="#2F3246" />
+                                        <Label
+                                            FontAttributes="Bold"
+                                            FontSize="Small"
+                                            Margin="20,0"
+                                            Opacity="0.8"
+                                            Text="{Binding Activation, StringFormat='Activate on: {0}'}"
+                                            TextColor="#2F3246" />
+                                        <Label
+                                            FontAttributes="Bold"
+                                            FontSize="Small"
+                                            Margin="20,0"
+                                            Opacity="0.8"
+                                            Text="{Binding IsPermanent, StringFormat='Permanent: {0}'}"
+                                            TextColor="#2F3246" />
+                                        <Label
+                                            FontAttributes="Bold"
+                                            FontSize="Small"
+                                            Margin="20,0,20,10"
+                                            Opacity="0.8"
+                                            Text="{Binding Target, StringFormat='Target User: {0}'}"
+                                            TextColor="#2F3246" />
+                                    </StackLayout>
+                                </Grid>
+                            </views:Expander>
+                        </Grid>
+                    </pancakeView:PancakeView>
+                </SwipeView.Content>
+            </ContentView>
+
+            <DataTemplate x:Key="RegularNotificationTemplate">
+                <SwipeView>
+                    <SwipeView.LeftItems>
+                        <SwipeItems>
+                            <SwipeItem
+                                BackgroundColor="#DD4A48"
+                                Command="{Binding Path=BindingContext.DeleteNotificationCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
+                                CommandParameter="{Binding .}"
+                                IsEnabled="{Binding IsDeletable}"
+                                Text="Delete">
+                                <SwipeItem.IconImageSource>
+                                    <FileImageSource File="delete_button.png" />
+                                </SwipeItem.IconImageSource>
+                            </SwipeItem>
+                        </SwipeItems>
+                    </SwipeView.LeftItems>
+                    <SwipeView.RightItems>
+                        <SwipeItems Mode="Reveal">
+                            <SwipeItem
+                                BackgroundColor="{Binding IsEditable, Converter={StaticResource BooleanToColorConverter}, ConverterParameter='068FFF;808080'}"
+                                Command="{Binding Path=BindingContext.EditNotificationCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
+                                CommandParameter="{Binding .}"
+                                IsEnabled="{Binding IsEditable}"
+                                Text="Edit">
+                                <SwipeItem.IconImageSource>
+                                    <FileImageSource File="edit_button.png" />
+                                </SwipeItem.IconImageSource>
+                            </SwipeItem>
+                            <SwipeItem
+                                BackgroundColor="{Binding IsRenewable, Converter={StaticResource BooleanToColorConverter}, ConverterParameter='03C988;808080'}"
+                                Command="{Binding Path=BindingContext.RenewNotificationCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
+                                CommandParameter="{Binding .}"
+                                IsEnabled="{Binding IsRenewable}"
+                                Text="Renew">
+                                <SwipeItem.IconImageSource>
+                                    <FileImageSource File="renew_button.png" />
+                                </SwipeItem.IconImageSource>
+                            </SwipeItem>
+                        </SwipeItems>
+                    </SwipeView.RightItems>
+                    <SwipeView.Content>
+                        <ContentView Content="{StaticResource SharedSwipeView}" />
+                    </SwipeView.Content>
+                </SwipeView>
+            </DataTemplate>
+
+            <DataTemplate x:Key="PendingNotificationTemplate">
+                <SwipeView>
+                    <SwipeView.LeftItems>
+                        <SwipeItems>
+                            <SwipeItem
+                                BackgroundColor="#DD4A48"
+                                Command="{Binding Path=BindingContext.DeleteNotificationCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
+                                CommandParameter="{Binding .}"
+                                IsEnabled="{Binding IsDeletable}"
+                                Text="Delete">
+                                <SwipeItem.IconImageSource>
+                                    <FileImageSource File="delete_button.png" />
+                                </SwipeItem.IconImageSource>
+                            </SwipeItem>
+                        </SwipeItems>
+                    </SwipeView.LeftItems>
+                    <SwipeView.RightItems>
+                        <SwipeItems Mode="Reveal">
+                            <SwipeItem
+                                BackgroundColor="{Binding IsEditable, Converter={StaticResource BooleanToColorConverter}, ConverterParameter='068FFF;808080'}"
+                                Command="{Binding Path=BindingContext.EditNotificationCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
+                                CommandParameter="{Binding .}"
+                                IsEnabled="{Binding IsEditable}"
+                                Text="Edit">
+                                <SwipeItem.IconImageSource>
+                                    <FileImageSource File="edit_button.png" />
+                                </SwipeItem.IconImageSource>
+                            </SwipeItem>
+                            <SwipeItem
+                                BackgroundColor="{Binding IsRenewable, Converter={StaticResource BooleanToColorConverter}, ConverterParameter='03C988;808080'}"
+                                Command="{Binding Path=BindingContext.RenewNotificationCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
+                                CommandParameter="{Binding .}"
+                                IsEnabled="{Binding IsRenewable}"
+                                Text="Renew">
+                                <SwipeItem.IconImageSource>
+                                    <FileImageSource File="renew_button.png" />
+                                </SwipeItem.IconImageSource>
+                            </SwipeItem>
+                        </SwipeItems>
+                    </SwipeView.RightItems>
+
+                    <SwipeView.Content>
+                        <ContentView Content="{StaticResource SharedSwipeView}" />
+                    </SwipeView.Content>
+                </SwipeView>
+            </DataTemplate>
+
+            <viewModels:NotificationTemplateSelector
+                PendingTemplate="{StaticResource PendingNotificationTemplate}"
+                RegularTemplate="{StaticResource RegularNotificationTemplate}"
+                x:Key="NotificationTemplateSelector" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -140,170 +364,7 @@
                     <LinearItemsLayout ItemSpacing="20" Orientation="Vertical" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <SwipeView>
-                            <SwipeView.LeftItems>
-                                <SwipeItems>
-                                    <SwipeItem
-                                        BackgroundColor="#DD4A48"
-                                        Command="{Binding Path=BindingContext.DeleteNotificationCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
-                                        CommandParameter="{Binding .}"
-                                        IsEnabled="{Binding IsDeletable}"
-                                        Text="Delete">
-                                        <SwipeItem.IconImageSource>
-                                            <FileImageSource File="delete_button.png" />
-                                        </SwipeItem.IconImageSource>
-                                    </SwipeItem>
-                                </SwipeItems>
-                            </SwipeView.LeftItems>
-                            <SwipeView.RightItems>
-                                <SwipeItems Mode="Reveal">
-                                    <SwipeItem
-                                        BackgroundColor="{Binding IsEditable, Converter={StaticResource BooleanToColorConverter}, ConverterParameter='068FFF;808080'}"
-                                        Command="{Binding Path=BindingContext.EditNotificationCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
-                                        CommandParameter="{Binding .}"
-                                        IsEnabled="{Binding IsEditable}"
-                                        Text="Edit">
-                                        <SwipeItem.IconImageSource>
-                                            <FileImageSource File="edit_button.png" />
-                                        </SwipeItem.IconImageSource>
-                                    </SwipeItem>
-                                    <SwipeItem
-                                        BackgroundColor="{Binding IsRenewable, Converter={StaticResource BooleanToColorConverter}, ConverterParameter='03C988;808080'}"
-                                        Command="{Binding Path=BindingContext.RenewNotificationCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
-                                        CommandParameter="{Binding .}"
-                                        IsEnabled="{Binding IsRenewable}"
-                                        Text="Renew">
-                                        <SwipeItem.IconImageSource>
-                                            <FileImageSource File="renew_button.png" />
-                                        </SwipeItem.IconImageSource>
-                                    </SwipeItem>
-                                </SwipeItems>
-                            </SwipeView.RightItems>
-                            <SwipeView.Content>
-                                <pancakeView:PancakeView
-                                    BackgroundColor="White"
-                                    HorizontalOptions="FillAndExpand"
-                                    VerticalOptions="StartAndExpand">
-                                    <Grid HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <BoxView
-                                            BackgroundColor="{Binding Type, Converter={StaticResource TypeToColorConverter}}"
-                                            HorizontalOptions="Start"
-                                            VerticalOptions="FillAndExpand"
-                                            WidthRequest="3" />
-                                        <views:Expander Grid.Column="1" IsExpanded="{Binding ID, Converter={StaticResource IdToIsExpandedConverter}, ConverterParameter={Binding Source={x:Reference NotificationForm}, Path=BindingContext.ExpandedNotificationId}}">
-                                            <views:Expander.Header>
-                                                <Grid HorizontalOptions="FillAndExpand">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="3.5*" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                                                        <Image
-                                                            Aspect="AspectFill"
-                                                            HeightRequest="30"
-                                                            HorizontalOptions="Center"
-                                                            Source="{Binding Type, Converter={StaticResource TypeToIconConverter}}" />
-                                                    </StackLayout>
-                                                    <BoxView
-                                                        BackgroundColor="#F2F4F8"
-                                                        Grid.Column="1"
-                                                        HorizontalOptions="Start"
-                                                        VerticalOptions="FillAndExpand"
-                                                        WidthRequest="1" />
-                                                    <StackLayout
-                                                        Grid.Column="2"
-                                                        HorizontalOptions="Start"
-                                                        Margin="20,20,20,20"
-                                                        VerticalOptions="Center">
-                                                        <Label
-                                                            FontAttributes="Bold"
-                                                            FontSize="Medium"
-                                                            Text="{Binding Name}"
-                                                            TextColor="Black" />
-                                                        <Label
-                                                            FontSize="Medium"
-                                                            Margin="0,-5,0,0"
-                                                            Text="{Binding Description}"
-                                                            TextColor="#2F3246" />
-                                                    </StackLayout>
-                                                </Grid>
-                                            </views:Expander.Header>
-                                            <Grid HorizontalOptions="FillAndExpand">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="3.5*" />
-                                                </Grid.ColumnDefinitions>
-                                                <BoxView
-                                                    BackgroundColor="#F2F4F8"
-                                                    Grid.Column="1"
-                                                    HorizontalOptions="Start"
-                                                    VerticalOptions="FillAndExpand"
-                                                    WidthRequest="1" />
-                                                <StackLayout Grid.Column="2" Spacing="10">
-                                                    <Label
-                                                        FontAttributes="Bold"
-                                                        FontSize="Small"
-                                                        Margin="20,0"
-                                                        Opacity="0.8"
-                                                        Text="{Binding Status, StringFormat='Status: {0}'}"
-                                                        TextColor="#2F3246" />
-                                                    <Label
-                                                        FontAttributes="Bold"
-                                                        FontSize="Small"
-                                                        Margin="20,0"
-                                                        Opacity="0.8"
-                                                        Text="{Binding Creator, StringFormat='Creator: {0}'}"
-                                                        TextColor="#2F3246" />
-                                                    <Label
-                                                        FontAttributes="Bold"
-                                                        FontSize="Small"
-                                                        Margin="20,0"
-                                                        Opacity="0.8"
-                                                        Text="{Binding CreationDateTime, StringFormat='Creation Date: {0}'}"
-                                                        TextColor="#2F3246" />
-                                                    <Label
-                                                        FontAttributes="Bold"
-                                                        FontSize="Small"
-                                                        Margin="20,0"
-                                                        Opacity="0.8"
-                                                        Text="{Binding TypeInfo, StringFormat='Type Info: {0}'}"
-                                                        TextColor="#2F3246" />
-                                                    <Label
-                                                        FontAttributes="Bold"
-                                                        FontSize="Small"
-                                                        Margin="20,0"
-                                                        Opacity="0.8"
-                                                        Text="{Binding Activation, StringFormat='Activate on: {0}'}"
-                                                        TextColor="#2F3246" />
-                                                    <Label
-                                                        FontAttributes="Bold"
-                                                        FontSize="Small"
-                                                        Margin="20,0"
-                                                        Opacity="0.8"
-                                                        Text="{Binding IsPermanent, StringFormat='Permanent: {0}'}"
-                                                        TextColor="#2F3246" />
-                                                    <Label
-                                                        FontAttributes="Bold"
-                                                        FontSize="Small"
-                                                        Margin="20,0,20,10"
-                                                        Opacity="0.8"
-                                                        Text="{Binding Target, StringFormat='Target User: {0}'}"
-                                                        TextColor="#2F3246" />
-                                                </StackLayout>
-                                            </Grid>
-                                        </views:Expander>
-                                    </Grid>
-                                </pancakeView:PancakeView>
-                            </SwipeView.Content>
-                        </SwipeView>
-                    </DataTemplate>
+                    <StaticResource Key="NotificationTemplateSelector" />
                 </CollectionView.ItemTemplate>
                 <CollectionView.Footer>
                     <BoxView BackgroundColor="Transparent" HeightRequest="15" />
