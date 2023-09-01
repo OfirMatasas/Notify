@@ -140,7 +140,7 @@ namespace Notify.Droid
 
                 NotificationsPageViewModel viewModel = NotificationsPageViewModel.Instance;
                 viewModel.ExpandedNotificationId = notification.ID;
-
+                viewModel.SelectedFilter = Constants.FILTER_TYPE_ALL;
                 DependencyService.Get<INotificationManager>().ReceiveNotification(title, message, notification);
                 App.Current.MainPage.Navigation.PushAsync(new NotificationsPage(viewModel));
             }

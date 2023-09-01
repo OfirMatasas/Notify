@@ -95,15 +95,15 @@ namespace Notify.ViewModels
         
         public List<string> FilterTypes { get; } = new List<string>
         {
-            "Active",
-            "Pending",
-            "Declined",
-            "Expired",
-            "Permanent",
-            "Location",
-            "Dynamic Location",
-            "Time",
-            "All Notifications",
+            Constants.FILTER_TYPE_ALL,
+            Constants.FILTER_TYPE_ACTIVE,
+            Constants.FILTER_TYPE_PERMANENT,
+            Constants.FILTER_TYPE_LOCATION,
+            Constants.FILTER_TYPE_DYNAMIC_LOCATION,
+            Constants.FILTER_TYPE_TIME,
+            Constants.FILTER_TYPE_PENDING,
+            Constants.FILTER_TYPE_DECLINED,
+            Constants.FILTER_TYPE_EXPIRED
         };
         
         public bool IsLocationType
@@ -159,7 +159,7 @@ namespace Notify.ViewModels
                 r_Logger.LogError(ex.Message);
             }
 
-            SelectedFilter = "Active";
+            SelectedFilter = Constants.FILTER_TYPE_ACTIVE;
             OnNotificationsRefreshClicked();
             applyFilterAndSearch();
         }
