@@ -308,7 +308,7 @@
                                                                 Source="approve_button.png"
                                                                 WidthRequest="50">
                                                                 <Image.GestureRecognizers>
-                                                                    <TapGestureRecognizer Command="{Binding Path=BindingContext.AcceptNotificationCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}" CommandParameter="{Binding .}" />
+                                                                    <TapGestureRecognizer Command="{Binding Path=BindingContext.AcceptNotificationCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}" CommandParameter="{Binding ID}" />
                                                                 </Image.GestureRecognizers>
                                                             </Image>
                                                             <Label
@@ -320,6 +320,7 @@
                                                         </StackLayout>
 
                                                         <BoxView WidthRequest="20" />
+
                                                     </StackLayout>
 
                                                 </StackLayout>

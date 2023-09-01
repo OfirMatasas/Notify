@@ -145,7 +145,7 @@ namespace Notify.ViewModels
             EditNotificationCommand = new Command<Notification>(onEditNotificationButtonClicked);
             RenewNotificationCommand = new Command<Notification>(onRenewNotificationButtonClicked);
             
-            AcceptNotificationCommand = new Command<Notification>(onAcceptNotificationButtonClicked);
+            AcceptNotificationCommand = new Command<string>(onAcceptNotificationButtonClicked);
 
             try
             {
@@ -167,11 +167,6 @@ namespace Notify.ViewModels
             applyFilterAndSearch();
         }
         
-        private void onAcceptNotificationButtonClicked(Notification notification)
-        {
-            
-        }
-
         private void applyFilterAndSearch()
         {
             IEnumerable<Notification> filteredNotifications = ApplyFilter(Notifications);
@@ -243,6 +238,15 @@ namespace Notify.ViewModels
             if (EqualityComparer<T>.Default.Equals(field, value)) return;
             field = value;
             OnPropertyChanged(propertyName);
+        }
+        
+        private void onAcceptNotificationButtonClicked(string notificationID)
+        {
+            Notification notification = AzureHttpClient.Instance.GetNotificationByIdAsync(notificationID).Result;
+            r_Logger.LogInformation($"Accept button clicked for Notification ID {notificationID}");  
+            
+            AzureHttpClient.Instance.UpdateNotificationsStatus(new List<Notification> { notification }, Constants.NOTIFICATION_STATUS_ACTIVE);
+            OnNotificationsRefreshClicked();
         }
         
         private async void onDeleteNotificationButtonClicked(Notification notification)
