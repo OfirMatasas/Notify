@@ -7,17 +7,26 @@ namespace Notify.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class NotificationsPage : ContentPage
     {
-        public NotificationsPage()
+        public NotificationsPage() : this(NotificationsPageViewModel.Instance)
+        {
+        }
+
+        public NotificationsPage(NotificationsPageViewModel viewModel)
         {
             InitializeComponent();
-            BindingContext = new NotificationsPageViewModel();
+            BindingContext = viewModel ?? NotificationsPageViewModel.Instance;
         }
-        
+
         protected override void OnAppearing()
         {
             base.OnAppearing();
             (BindingContext as NotificationsPageViewModel)?.OnNotificationsRefreshClicked();
         }
-
+        
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            (BindingContext as NotificationsPageViewModel)?.ResetExpandedNotification();
+        }
     }
 }

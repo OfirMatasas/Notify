@@ -17,6 +17,28 @@ namespace Notify.ViewModels
 {
     public sealed class NotificationsPageViewModel : INotifyPropertyChanged
     {
+
+        private static NotificationsPageViewModel m_Instance;
+        private static readonly object r_LockInstanceCreation = new object();
+
+        public static NotificationsPageViewModel Instance 
+        {
+            get
+            {
+                if (m_Instance == null)
+                {
+                    lock (r_LockInstanceCreation)
+                    {
+                        if (m_Instance == null)
+                        {
+                            m_Instance = new NotificationsPageViewModel();
+                        }
+                    }
+                }
+                return m_Instance;
+            }
+        }
+        
         private readonly LoggerService r_Logger = LoggerService.Instance;
         public List<Notification> Notifications { get; set; }
         public List<Notification> FilteredNotifications { get; set; }
@@ -27,6 +49,7 @@ namespace Notify.ViewModels
         private Color m_Color;
         private string m_SelectedFilter;
         private bool m_IsLocationType;
+        private string m_ExpandedNotificationId;
         
         public Command DeleteNotificationCommand { get; set; }
         public Command EditNotificationCommand { get; set; }
@@ -72,15 +95,15 @@ namespace Notify.ViewModels
         
         public List<string> FilterTypes { get; } = new List<string>
         {
-            "Active",
-            "Pending",
-            "Declined",
-            "Expired",
-            "Permanent",
-            "Location",
-            "Dynamic Location",
-            "Time",
-            "All Notifications",
+            Constants.FILTER_TYPE_ALL,
+            Constants.FILTER_TYPE_ACTIVE,
+            Constants.FILTER_TYPE_PERMANENT,
+            Constants.FILTER_TYPE_LOCATION,
+            Constants.FILTER_TYPE_DYNAMIC_LOCATION,
+            Constants.FILTER_TYPE_TIME,
+            Constants.FILTER_TYPE_PENDING,
+            Constants.FILTER_TYPE_DECLINED,
+            Constants.FILTER_TYPE_EXPIRED
         };
         
         public bool IsLocationType
@@ -92,8 +115,21 @@ namespace Notify.ViewModels
                 OnPropertyChanged(nameof(IsLocationType));
             }
         }
+        
+        public string ExpandedNotificationId
+        {
+            get => m_ExpandedNotificationId;
+            set
+            {
+                if (m_ExpandedNotificationId != value)
+                {
+                    m_ExpandedNotificationId = value;
+                    OnPropertyChanged(nameof(ExpandedNotificationId));
+                }
+            }
+        }
 
-        public NotificationsPageViewModel()
+        private NotificationsPageViewModel()
         {
             string notificationsJson;
 
@@ -123,7 +159,7 @@ namespace Notify.ViewModels
                 r_Logger.LogError(ex.Message);
             }
 
-            SelectedFilter = "Active";
+            SelectedFilter = Constants.FILTER_TYPE_ACTIVE;
             OnNotificationsRefreshClicked();
             applyFilterAndSearch();
         }
@@ -238,6 +274,11 @@ namespace Notify.ViewModels
                     $"Notification {notification.Name} is not editable",
                     "OK");
             }
+        }
+        
+        public void ResetExpandedNotification()
+        {
+            ExpandedNotificationId = null;
         }
         
         private async void onRenewNotificationButtonClicked(Notification notification)
