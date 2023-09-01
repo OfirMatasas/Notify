@@ -118,10 +118,8 @@ namespace Notify.Droid.Services
             return nearestPlace;
         }
          
-         public override async void OpenExternalMap(Notification notification)
+         public override async void OpenExternalMap(string notificationType)
          {
-             string placeType = notification.TypeInfo.ToString();
-             r_Logger.LogInformation($"OpenExternalMap: {placeType}");
              double nearestPlaceLatitude, nearestPlaceLongitude;
              Core.Location currentLocation;
              Core.Location nearestPlace;
@@ -134,7 +132,7 @@ namespace Notify.Droid.Services
                  location = await Xamarin.Essentials.Geolocation.GetLocationAsync(request);
 
                  currentLocation = new Core.Location(location.Longitude, location.Latitude);
-                 nearestPlace = await GetNearestPlace(placeType, currentLocation);
+                 nearestPlace = await GetNearestPlace(notificationType, currentLocation);
                 
                  if (nearestPlace != null)
                  {
@@ -144,9 +142,8 @@ namespace Notify.Droid.Services
                  }
                  else
                  {
-                     await App.Current.MainPage.DisplayAlert("", $"No {placeType} nearby.", "OK");
+                     await App.Current.MainPage.DisplayAlert("", $"No {notificationType} nearby.", "OK");
                  }
-                
              }
              catch (Exception ex)
              {

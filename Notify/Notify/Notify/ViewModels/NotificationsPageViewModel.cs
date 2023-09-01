@@ -132,11 +132,9 @@ namespace Notify.ViewModels
 
         private void onMapClicked(Notification notification)
         {
-            r_Logger.LogInformation($"onMapClicked: {notification.Name}");
-            if (notification.Type == NotificationType.Dynamic)
-            {
-                ExternalMapsService.Instance.OpenExternalMap(notification);
-            }
+            r_Logger.LogInformation($"onMapClicked with: {notification.Name}");
+
+            ExternalMapsService.Instance.OpenExternalMap(notification.TypeInfo.ToString());
         }
 
         private void applyFilterAndSearch()

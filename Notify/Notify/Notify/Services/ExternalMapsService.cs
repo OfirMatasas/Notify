@@ -26,6 +26,6 @@ namespace Notify.Services
                 return m_Instance;
             }
         }
-        public abstract void OpenExternalMap(Notification notification);
+        public abstract void OpenExternalMap(string notificationType);
     }
 }

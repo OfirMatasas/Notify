@@ -113,6 +113,7 @@
     <AndroidResource Include="Resources\drawable\friends.png" />
     <AndroidResource Include="Resources\drawable\friend_request.png" />
     <AndroidResource Include="Resources\drawable\google.png" />
+    <AndroidResource Include="Resources\drawable\google_maps_icon.png" />
     <AndroidResource Include="Resources\drawable\groups.png" />
     <AndroidResource Include="Resources\drawable\location_colored_icon.png" />
     <AndroidResource Include="Resources\drawable\location_icon.png" />
