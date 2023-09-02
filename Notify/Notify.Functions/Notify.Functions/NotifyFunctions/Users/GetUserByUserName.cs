@@ -32,9 +32,7 @@ namespace Notify.Functions.NotifyFunctions.Users
                 log.LogInformation($"Received request to get user profile for username: {userName}");
 
                 collection = MongoUtils.GetCollection(Constants.COLLECTION_USER);
-
                 userFilter = Builders<BsonDocument>.Filter.Eq("userName", userName);
-
                 projection = Builders<BsonDocument>.Projection.Exclude("_id").Exclude("password");
                 user = await collection.Find(userFilter).Project(projection).FirstOrDefaultAsync();
 
