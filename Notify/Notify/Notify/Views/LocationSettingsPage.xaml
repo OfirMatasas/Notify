@@ -57,7 +57,7 @@
                     <CheckBox Color="Black" IsChecked="{Binding IsUseCurrentLocation, Mode=TwoWay}" Margin="30,0,0,0" />
                     <Label
                         Text="USE CURRENT LOCATION"
-                        TextColor="Gray"
+                        TextColor="Black"
                         VerticalOptions="Center" />
                 </StackLayout>
                 
