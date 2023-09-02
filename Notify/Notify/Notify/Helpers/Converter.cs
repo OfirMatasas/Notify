@@ -117,8 +117,61 @@ namespace Notify.Helpers
             return null;
         }
     }
+    
+    public class PendingToTextConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (bool)value ? "Reject" : "Delete";
+        }
 
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
 
+    public class InverseBooleanConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return !(bool)value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return !(bool)value;
+        }
+    }
+    
+    public class PendingToCommandConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            // Assuming that parameter is your ViewModel instance.
+            NotificationsPageViewModel viewModel = NotificationsPageViewModel.Instance;
+            return (bool)value ? viewModel.AcceptNotificationCommand : viewModel.EditNotificationCommand;
+        }
+    
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
+
+    public class PendingToIconConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (bool)value ? "accept_button.png" : "edit_button.png";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
+    
     public static class Converter
     {
         public static Notification ToNotification(dynamic notification)

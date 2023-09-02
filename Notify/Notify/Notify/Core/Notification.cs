@@ -26,9 +26,9 @@ namespace Notify.Core
         public bool IsPermanent { get; set; }
         public string Target { get; set; }
         
-        public bool IsPending => Status == "Pending";
-        public bool IsRenewable => Status == "Expired" && Type != NotificationType.Time;
-        public bool IsEditable => Status != "Expired";
+        public bool IsPending => Status == Constants.NOTIFICATION_STATUS_PENDING;
+        public bool IsRenewable => Status == Constants.NOTIFICATION_STATUS_EXPIRED && Type != NotificationType.Time;
+        public bool IsEditable => Status != Constants.NOTIFICATION_STATUS_EXPIRED;
 
         public Notification()
         {

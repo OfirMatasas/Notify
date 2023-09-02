@@ -16,6 +16,10 @@
             <helpers:TypeToIconConverter x:Key="TypeToIconConverter" />
             <helpers:BooleanToColorConverter x:Key="BooleanToColorConverter" />
             <helpers:IdToIsExpandedConverter x:Key="IdToIsExpandedConverter" />
+            <helpers:PendingToTextConverter x:Key="PendingToTextConverter" />
+            <helpers:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+            <helpers:PendingToCommandConverter x:Key="PendingToCommandConverter" />
+            <helpers:PendingToIconConverter x:Key="PendingToIconConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -149,7 +153,7 @@
                                         Command="{Binding Path=BindingContext.DeleteNotificationCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
                                         CommandParameter="{Binding .}"
                                         IsEnabled="{Binding IsDeletable}"
-                                        Text="Delete">
+                                        Text="{Binding IsPending, Converter={StaticResource PendingToTextConverter}}">
                                         <SwipeItem.IconImageSource>
                                             <FileImageSource File="delete_button.png" />
                                         </SwipeItem.IconImageSource>
@@ -160,12 +164,13 @@
                                 <SwipeItems Mode="Reveal">
                                     <SwipeItem
                                         BackgroundColor="{Binding IsEditable, Converter={StaticResource BooleanToColorConverter}, ConverterParameter='068FFF;808080'}"
-                                        Command="{Binding Path=BindingContext.EditNotificationCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
+                                        Command="{Binding IsPending, Converter={StaticResource PendingToCommandConverter}, ConverterParameter={Binding Source={x:Reference NotificationForm}, Path=BindingContext}}"
                                         CommandParameter="{Binding .}"
                                         IsEnabled="{Binding IsEditable}"
+                                        IsVisible="{Binding IsPending, Converter={StaticResource InverseBooleanConverter}}"
                                         Text="Edit">
                                         <SwipeItem.IconImageSource>
-                                            <FileImageSource File="edit_button.png" />
+                                            <FileImageSource File="{Binding IsPending, Converter={StaticResource PendingToIconConverter}}" />
                                         </SwipeItem.IconImageSource>
                                     </SwipeItem>
                                     <SwipeItem
@@ -173,9 +178,21 @@
                                         Command="{Binding Path=BindingContext.RenewNotificationCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
                                         CommandParameter="{Binding .}"
                                         IsEnabled="{Binding IsRenewable}"
+                                        IsVisible="{Binding IsPending, Converter={StaticResource InverseBooleanConverter}}"
                                         Text="Renew">
                                         <SwipeItem.IconImageSource>
                                             <FileImageSource File="renew_button.png" />
+                                        </SwipeItem.IconImageSource>
+                                    </SwipeItem>
+                                    <SwipeItem
+                                        BackgroundColor="#03C988"
+                                        Command="{Binding Path=BindingContext.AcceptNotificationCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
+                                        CommandParameter="{Binding ID}"
+                                        IsEnabled="{Binding IsPending}"
+                                        IsVisible="{Binding IsPending}"
+                                        Text="Accept">
+                                        <SwipeItem.IconImageSource>
+                                            <FileImageSource File="accept_button.png" />
                                         </SwipeItem.IconImageSource>
                                     </SwipeItem>
                                 </SwipeItems>
@@ -296,33 +313,6 @@
                                                         Opacity="0.8"
                                                         Text="{Binding Target, StringFormat='Target User: {0}'}"
                                                         TextColor="#2F3246" />
-                                                    <StackLayout
-                                                        HorizontalOptions="Start"
-                                                        IsVisible="{Binding IsPending}"
-                                                        Orientation="Horizontal"
-                                                        Padding="15,0,0,5">
-
-                                                        <StackLayout HorizontalOptions="Start">
-                                                            <Image
-                                                                HeightRequest="50"
-                                                                Source="approve_button.png"
-                                                                WidthRequest="50">
-                                                                <Image.GestureRecognizers>
-                                                                    <TapGestureRecognizer Command="{Binding Path=BindingContext.AcceptNotificationCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}" CommandParameter="{Binding ID}" />
-                                                                </Image.GestureRecognizers>
-                                                            </Image>
-                                                            <Label
-                                                                FontAttributes="Bold"
-                                                                FontSize="Small"
-                                                                HorizontalOptions="Center"
-                                                                Text="Accept"
-                                                                TextColor="#2F3246" />
-                                                        </StackLayout>
-
-                                                        <BoxView WidthRequest="20" />
-
-                                                    </StackLayout>
-
                                                 </StackLayout>
                                             </Grid>
                                         </views:Expander>
