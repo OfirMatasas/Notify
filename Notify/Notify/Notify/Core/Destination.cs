@@ -80,6 +80,15 @@ namespace Notify.Core
             double distance;
             bool isArrived = false;
             
+            if (!IsDynamic)
+            {
+                if (Locations[0].Longitude.Equals(0) && Locations[0].Latitude.Equals(0))
+                {
+                    LoggerService.Instance.LogDebug($"There's no location defined for destination {Name}.");
+                    return false;
+                }
+            }
+            
             currentCoordinate = new Coordinate(
                 latitude: currentLocation.Latitude, 
                 longitude: currentLocation.Longitude);
@@ -110,6 +119,15 @@ namespace Notify.Core
 
         public bool IsLeft(Location location)
         {
+            if (!IsDynamic)
+            {
+                if (Locations[0].Longitude.Equals(0) && Locations[0].Latitude.Equals(0))
+                {
+                    LoggerService.Instance.LogDebug($"There's no location defined for destination {Name}.");
+                    return false;
+                }
+            }
+            
             return !IsArrived(location);
         }
 

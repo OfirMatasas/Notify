@@ -26,7 +26,7 @@ namespace Notify.Helpers
                             arrivedNotification.ID.Equals(notification.ID)))
                     {
                         notification.Status = newStatus;
-                        r_Logger.LogDebug($"Updated status of notification {notification.ID} to '{newStatus}'");
+                        r_Logger.LogInformation($"Updated status of notification {notification.ID} to '{newStatus}'");
                     }
                 });
 

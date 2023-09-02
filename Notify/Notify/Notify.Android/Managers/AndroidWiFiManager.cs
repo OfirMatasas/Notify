@@ -152,15 +152,18 @@ namespace Notify.Droid.Managers
                             
                             if (notification.IsPermanent)
                             {
+                                r_Logger.LogInformation($"Notification {notification.Name} is permanent, and it's added to arrived notifications list");
                                 arrivedNotifications.Add(notification);
                             }
                             else
                             {
+                                r_Logger.LogInformation($"Notification {notification.Name} is not permanent, and it's added to sent notifications list");
                                 sentNotifications.Add(notification);
                             }
                         }
                         else
                         {
+                            r_Logger.LogInformation($"Notification {notification.Name} is leave notification, and it's added to arrived notifications list");
                             arrivedNotifications.Add(notification);
                         }
                     }
@@ -193,15 +196,18 @@ namespace Notify.Droid.Managers
                             
                             if(notification.IsPermanent)
                             {
+                                r_Logger.LogInformation($"Notification {notification.Name} is permanent, and it's added to permanent notifications list");
                                 permanentNotifications.Add(notification);
                             }
                             else
                             {
+                                r_Logger.LogInformation($"Notification {notification.Name} is not permanent, and it's added to sent notifications list");
                                 sentNotifications.Add(notification);
                             }
                         }
                         else if(notification.IsPermanent)
                         {
+                            r_Logger.LogInformation($"Notification {notification.Name} is permanent, and it's added to permanent notifications list");
                             permanentNotifications.Add(notification);
                         }
                     }
