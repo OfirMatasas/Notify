@@ -16,6 +16,7 @@
             <helpers:TypeToIconConverter x:Key="TypeToIconConverter" />
             <helpers:BooleanToColorConverter x:Key="BooleanToColorConverter" />
             <helpers:IdToIsExpandedConverter x:Key="IdToIsExpandedConverter" />
+            <helpers:TypeInfoToCustomStringConverter x:Key="TypeInfoConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -273,11 +274,19 @@
                                                         FontSize="Small"
                                                         Margin="20,0"
                                                         Opacity="0.8"
-                                                        Text="{Binding TypeInfo, StringFormat='Type Info: {0}'}"
-                                                        TextColor="#2F3246" />
+                                                        TextColor="#2F3246">
+                                                        <Label.FormattedText>
+                                                            <FormattedString>
+                                                                <Span Text="{Binding Type, Converter={StaticResource TypeInfoConverter}}" />
+                                                                <Span Text=": " />
+                                                                <Span Text="{Binding TypeInfo}" />
+                                                            </FormattedString>
+                                                        </Label.FormattedText>
+                                                    </Label>
                                                     <Label
                                                         FontAttributes="Bold"
                                                         FontSize="Small"
+                                                        IsVisible="{Binding IsLocationType}"
                                                         Margin="20,0"
                                                         Opacity="0.8"
                                                         Text="{Binding Activation, StringFormat='Activate on: {0}'}"
@@ -285,6 +294,7 @@
                                                     <Label
                                                         FontAttributes="Bold"
                                                         FontSize="Small"
+                                                        IsVisible="{Binding IsLocationType}"
                                                         Margin="20,0"
                                                         Opacity="0.8"
                                                         Text="{Binding IsPermanent, StringFormat='Permanent: {0}'}"

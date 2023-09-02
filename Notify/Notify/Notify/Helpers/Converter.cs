@@ -36,6 +36,34 @@ namespace Notify.Helpers
         }
     }
     
+    public class TypeInfoToCustomStringConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is NotificationType typeInfo)
+            {
+                switch (typeInfo)
+                {
+                    case NotificationType.Time:
+                        return "Time";
+                    case NotificationType.Location:
+                        return "Location";
+                    case NotificationType.Dynamic:
+                        return "Service";
+                    default:
+                        return "Type Info";
+                }
+            }
+            
+            return "Type Info";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
+    
     public class BooleanToColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
