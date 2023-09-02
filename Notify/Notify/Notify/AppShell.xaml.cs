@@ -214,15 +214,18 @@ namespace Notify
 
                         if (notification.IsPermanent)
                         {
+                            r_Logger.LogInformation($"Adding notification {notification.ID} is permanent, therefore adding it to arrived notifications list");
                             arrivedNotifications.Add(notification);
                         }
                         else
                         {
+                            r_Logger.LogInformation($"Adding notification {notification.ID} is not permanent, therefore adding it to sent notifications list");
                             sentNotifications.Add(notification);
                         }
                     }
                     else
                     {
+                        r_Logger.LogInformation($"Adding notification {notification.ID} is permanent, therefore adding it to arrived notifications list");
                         arrivedNotifications.Add(notification);
                     }
                 }
@@ -277,15 +280,18 @@ namespace Notify
                         
                         if(notification.IsPermanent)
                         {
+                            r_Logger.LogInformation($"Adding notification {notification.ID} is permanent, therefore adding it to permanent notifications list");
                             permanentNotifications.Add(notification);
                         }
                         else
                         {
+                            r_Logger.LogInformation($"Adding notification {notification.ID} is not permanent, therefore adding it to sent notifications list");
                             sentNotifications.Add(notification);
                         }
                     }
                     else if(notification.IsPermanent)
                     {
+                        r_Logger.LogInformation($"Adding notification {notification.ID} is permanent, therefore adding it to permanent notifications list");
                         permanentNotifications.Add(notification);
                     }
                 }
@@ -351,7 +357,7 @@ namespace Notify
                 if (sentNotifications.Any(sentNotification => sentNotification.ID.Equals(notification.ID)))
                 {
                     notification.Status = newStatus;
-                    LoggerService.Instance.LogDebug($"Updated status of notification {notification.ID} to {newStatus}");
+                    LoggerService.Instance.LogInformation($"Updated status of notification {notification.ID} to {newStatus}");
                 }
             }
 
