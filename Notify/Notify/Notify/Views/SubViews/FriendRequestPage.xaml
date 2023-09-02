@@ -147,7 +147,7 @@
                                                             CornerRadius="50"
                                                             HeightRequest="50"
                                                             HorizontalOptions="Center"
-                                                            Source="{Binding ProfilePicture}"
+                                                            Source="{Binding RequesterProfilePicture}"
                                                             VerticalOptions="Center"
                                                             WidthRequest="50" />
                                                     </StackLayout>
@@ -187,13 +187,7 @@
                                                         FontAttributes="Bold"
                                                         FontSize="Small"
                                                         Margin="20,0"
-                                                        Text="{Binding Name, StringFormat='Name: {0}'}"
-                                                        TextColor="#2F3246" />
-                                                    <Label
-                                                        FontAttributes="Bold"
-                                                        FontSize="Small"
-                                                        Margin="20,0"
-                                                        Text="{Binding Telephone, StringFormat='Telephone: {0}'}"
+                                                        Text="{Binding RequestDate, StringFormat='Request date: {0}'}"
                                                         TextColor="#2F3246" />
                                                 </StackLayout>
                                             </Grid>
