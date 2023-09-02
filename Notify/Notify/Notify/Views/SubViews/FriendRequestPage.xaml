@@ -100,13 +100,14 @@
                                                 <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
                                             <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                                                <Image
+                                                <ImageButton
                                                     Aspect="AspectFill"
-                                                    HeightRequest="70"
+                                                    CornerRadius="50"
+                                                    HeightRequest="50"
                                                     HorizontalOptions="Center"
                                                     Source="{Binding ProfilePicture}"
                                                     VerticalOptions="Center"
-                                                    WidthRequest="70" />
+                                                    WidthRequest="50" />
                                             </StackLayout>
                                             <BoxView
                                                 BackgroundColor="#F2F4F8"
