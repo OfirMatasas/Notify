@@ -3,7 +3,8 @@
     NavigationPage.HasNavigationBar="False"
     x:Class="Notify.Views.BluetoothSettingsPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:materialDesignControls="clr-namespace:Plugin.MaterialDesignControls;assembly=Plugin.MaterialDesignControls">
     <ContentPage.Content>
         <ScrollView>
 
@@ -12,71 +13,64 @@
                                                   Dark={StaticResource DarkPageBackgroundColor}}"
                 Row="6"
                 RowDefinitions="Auto, Auto, Auto, Auto, Auto, *">
-                <Label
-                    FontAttributes="Bold"
-                    FontSize="Large"
-                    Grid.Column="0"
-                    Grid.Row="0"
-                    HorizontalTextAlignment="Center"
-                    Style="{StaticResource Body1FontSize_ExoBold}"
-                    Text="Bluetooth Settings"
-                    VerticalTextAlignment="Center" />
+                
                 <Button
+                    Grid.Row="0"
+                    Margin="-20, 0, 0, 0"
                     Background="Transparent"
                     BackgroundColor="Transparent"
                     Command="{Binding BackCommand}"
                     FontAttributes="Bold"
                     FontSize="30"
-                    Grid.Column="0"
-                    Grid.Row="0"
                     HorizontalOptions="Start"
                     Text="❮"
                     TextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
                                                 Dark={StaticResource LightEntryBackgroundColor}}"
                     VerticalOptions="Start" />
-
+                
                 <Label
-                    Grid.Column="0"
                     Grid.Row="1"
+                    FontAttributes="Bold"
+                    FontSize="30"
                     HorizontalTextAlignment="Center"
-                    Margin="5,30,5,0"
                     Style="{StaticResource Body1FontSize_ExoBold}"
-                    Text="Select Bluetooth"
-                    VerticalOptions="Start" />
-                <Picker
-                    Grid.Column="0"
+                    Text="Bluetooth Settings"
+                    VerticalTextAlignment="Center" />
+                
+                <materialDesignControls:MaterialPicker
                     Grid.Row="2"
-                    HorizontalTextAlignment="Center"
+                    CornerRadius="10"
+                    LabelMargin="3"
+                    LabelSize="16"
+                    Margin="30,60,30,0"
+                    LabelText="Select Bluetooth"
+                    Placeholder="Select Bluetooth"
+                    LabelTextColor="Black"
+                    BackgroundColor="White"
                     ItemsSource="{Binding BluetoothSelectionList}"
                     SelectedItem="{Binding SelectedBluetoothID}"
-                    Style="{StaticResource Body1FontSize_ExoBold}"
-                    VerticalOptions="Start" />
+                    TabIndex="1"/>
 
-
-                <Label
-                    Grid.Column="0"
+                <materialDesignControls:MaterialPicker
                     Grid.Row="3"
-                    HorizontalTextAlignment="Center"
-                    Margin="5,30,5,0"
-                    Style="{StaticResource Body1FontSize_ExoBold}"
-                    Text="Select location"
-                    VerticalOptions="Start" />
-                <Picker
-                    Grid.Column="0"
-                    Grid.Row="4"
-                    HorizontalTextAlignment="Center"
+                    CornerRadius="10"
+                    LabelMargin="3"
+                    LabelSize="16"
+                    Margin="30,20,30,0"
+                    LabelText="Select location"
+                    Placeholder="Select location"
+                    LabelTextColor="Black"
+                    BackgroundColor="White"
                     ItemsSource="{Binding LocationSelectionList}"
                     SelectedItem="{Binding SelectedLocation}"
-                    Style="{StaticResource Body1FontSize_ExoBold}"
-                    VerticalOptions="Start" />
+                    TabIndex="1"/>
 
                 <Button
+                    Grid.Row="5"
                     BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
                                                       Dark={StaticResource DarkButtonColor}}"
                     Command="{Binding UpdateBluetoothSettingsCommand}"
-                    Grid.Column="0"
-                    Grid.Row="5"
-                    Text="Update"
+                    Text="Update BLUETOOTH"
                     TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
                                                 Dark={StaticResource DarkButtonTextColor}}"
                     VerticalOptions="End" />
