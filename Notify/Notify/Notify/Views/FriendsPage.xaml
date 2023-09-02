@@ -4,19 +4,9 @@
     Title="Friends"
     x:Class="Notify.Views.FriendsPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:helpers="clr-namespace:Notify.Helpers;assembly=Notify"
-    xmlns:materialDesignControls="clr-namespace:Plugin.MaterialDesignControls;assembly=Plugin.MaterialDesignControls"
     xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
     xmlns:views="http://xamarin.com/schemas/2020/toolkit"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
-
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <helpers:TypeToColorConverter x:Key="TypeToColorConverter" />
-            <helpers:TypeToIconConverter x:Key="TypeToIconConverter" />
-            <helpers:BooleanToColorConverter x:Key="BooleanToColorConverter" />
-        </ResourceDictionary>
-    </ContentPage.Resources>
 
     <RefreshView Command="{Binding RefreshFriendsCommand}" IsRefreshing="{Binding IsRefreshing}">
         <Grid
@@ -143,13 +133,14 @@
                                                         <ColumnDefinition Width="3.5*" />
                                                     </Grid.ColumnDefinitions>
                                                     <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                                                        <Image
+                                                        <ImageButton
                                                             Aspect="AspectFill"
-                                                            HeightRequest="70"
+                                                            CornerRadius="50"
+                                                            HeightRequest="50"
                                                             HorizontalOptions="Center"
                                                             Source="{Binding ProfilePicture}"
                                                             VerticalOptions="Center"
-                                                            WidthRequest="70" />
+                                                            WidthRequest="50" />
                                                     </StackLayout>
                                                     <BoxView
                                                         BackgroundColor="#F2F4F8"

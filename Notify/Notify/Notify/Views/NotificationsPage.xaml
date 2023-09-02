@@ -31,6 +31,7 @@
                 <RowDefinition Height="40" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
+
             <Grid
                 BackgroundColor="#F3F5F9"
                 HorizontalOptions="FillAndExpand"
@@ -57,40 +58,7 @@
                     </Label>
                 </StackLayout>
             </Grid>
-            <pancakeView:PancakeView
-                Grid.Row="1"
-                HeightRequest="40"
-                HorizontalOptions="Center"
-                Margin="0,0,0,0">
-                <Grid ColumnSpacing="0" HorizontalOptions="FillAndExpand">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <pancakeView:PancakeView
-                        CornerRadius="3.5"
-                        Grid.Row="1"
-                        HeightRequest="7"
-                        HorizontalOptions="Center"
-                        Margin="7"
-                        VerticalOptions="Center"
-                        WidthRequest="7" />
-                    <pancakeView:PancakeView
-                        BackgroundColor="#C9D6EF"
-                        CornerRadius="3.5"
-                        Grid.Column="1"
-                        Grid.Row="1"
-                        HeightRequest="7"
-                        HorizontalOptions="Center"
-                        Margin="7"
-                        VerticalOptions="Center"
-                        WidthRequest="7" />
-                </Grid>
-            </pancakeView:PancakeView>
+
             <SearchBar
                 BackgroundColor="WhiteSmoke"
                 Grid.Row="0"
