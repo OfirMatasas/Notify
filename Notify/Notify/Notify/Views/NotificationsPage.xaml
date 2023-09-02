@@ -19,7 +19,6 @@
             <helpers:PendingToTextConverter x:Key="PendingToTextConverter" />
             <helpers:InverseBooleanConverter x:Key="InverseBooleanConverter" />
             <helpers:PendingToCommandConverter x:Key="PendingToCommandConverter" />
-            <helpers:PendingToIconConverter x:Key="PendingToIconConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
 

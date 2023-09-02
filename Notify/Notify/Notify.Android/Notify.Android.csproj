@@ -99,7 +99,6 @@
     <AndroidResource Include="Resources\.DS_Store" />
     <AndroidResource Include="Resources\drawable\accept_button.png" />
     <AndroidResource Include="Resources\drawable\add_friend.png" />
-    <AndroidResource Include="Resources\drawable\approve_button.png" />
     <AndroidResource Include="Resources\drawable\avatar.png" />
     <AndroidResource Include="Resources\drawable\back.png" />
     <AndroidResource Include="Resources\drawable\backButton.png" />
@@ -128,7 +127,6 @@
     <AndroidResource Include="Resources\drawable\NotifyLanding.png" />
     <AndroidResource Include="Resources\drawable\add_icon.png" />
     <AndroidResource Include="Resources\drawable\reject_button.png" />
-    <AndroidResource Include="Resources\drawable\reject_button_red.png" />
     <AndroidResource Include="Resources\drawable\renew_button.png" />
     <AndroidResource Include="Resources\drawable\settings.png" />
     <AndroidResource Include="Resources\drawable\time_colored_icon.png" />
