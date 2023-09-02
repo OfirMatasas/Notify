@@ -239,16 +239,34 @@ namespace Notify.ViewModels
             field = value;
             OnPropertyChanged(propertyName);
         }
-        
-        private void onAcceptNotificationButtonClicked(string notificationID)
+
+        private async void onAcceptNotificationButtonClicked(string notificationID)
         {
-            Notification notification = AzureHttpClient.Instance.GetNotificationByIdAsync(notificationID).Result;
-            r_Logger.LogInformation($"Accept button clicked for Notification ID {notificationID}");  
-            
-            AzureHttpClient.Instance.UpdateNotificationsStatus(new List<Notification> { notification }, Constants.NOTIFICATION_STATUS_ACTIVE);
-            OnNotificationsRefreshClicked();
+            string messageTitle = "Notification Acceptance";
+            string messageBody;
+            bool isConfirmed;
+            Notification notification;
+
+            isConfirmed = await App.Current.MainPage.DisplayAlert(messageTitle,
+                "Are you sure you want to accept this notification?",
+                "Yes", "No");
+
+            if (isConfirmed)
+            {
+                notification = new Notification(notificationID);
+
+                AzureHttpClient.Instance.UpdateNotificationsStatus(
+                    new List<Notification> { notification },
+                    Constants.NOTIFICATION_STATUS_ACTIVE
+                );
+
+                OnNotificationsRefreshClicked();
+
+                messageBody = $"Notification accepted successfully";
+                await App.Current.MainPage.DisplayAlert(messageTitle, messageBody, "OK");
+            }
         }
-        
+
         private async void onDeleteNotificationButtonClicked(Notification notification)
         {
             string messageTitle = "Notification Deletion";

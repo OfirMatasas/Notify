@@ -708,34 +708,6 @@ namespace Notify.Azure.HttpClient
             }
         }
         
-        public async Task<Notification> GetNotificationByIdAsync(string ID)
-        {
-            string requestUri, responseJson;
-            HttpResponseMessage response;
-            Notification notification;
-
-            try
-            {
-                requestUri = Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION + $"/{ID}";
-                r_Logger.LogInformation($"Requesting notification for ID: {requestUri}");
-
-                response = await m_HttpClient.GetAsync(requestUri);
-                response.EnsureSuccessStatusCode();
-
-                responseJson = await response.Content.ReadAsStringAsync();
-                notification = JsonConvert.DeserializeObject<Notification>(responseJson);
-
-                r_Logger.LogInformation($"Successfully retrieved notification for ID: {ID}");
-            }
-            catch (Exception ex)
-            {
-                r_Logger.LogError($"Error occurred on GetNotificationByIdAsync: {Environment.NewLine}{ex.Message}");
-                notification = null;
-            }
-
-            return notification;
-        }
-        
         public async Task<User> GetUserByUsernameAsync(string username)
         {
             string requestUri, responseJson;
