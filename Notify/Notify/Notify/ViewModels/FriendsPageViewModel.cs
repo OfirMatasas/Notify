@@ -56,7 +56,7 @@ namespace Notify.ViewModels
             onRefreshFriendsClicked();
         }
         
-        private void RefreshFriendsList()
+        private async void RefreshFriendsList()
         {
             string friendsJson;
             
@@ -68,6 +68,11 @@ namespace Notify.ViewModels
                 {
                     r_Logger.LogDebug("Friends found in preferences");
                     Friends = JsonConvert.DeserializeObject<List<User>>(friendsJson);
+                    FilteredFriends = new List<User>(Friends);
+                }
+                else
+                {
+                    Friends = await AzureHttpClient.Instance.GetFriends();
                     FilteredFriends = new List<User>(Friends);
                 }
             }
