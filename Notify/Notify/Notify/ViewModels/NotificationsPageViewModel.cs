@@ -17,10 +17,9 @@ namespace Notify.ViewModels
 {
     public sealed class NotificationsPageViewModel : INotifyPropertyChanged
     {
-
         private static NotificationsPageViewModel m_Instance;
         private static readonly object r_LockInstanceCreation = new object();
-
+        
         public static NotificationsPageViewModel Instance 
         {
             get
@@ -48,7 +47,6 @@ namespace Notify.ViewModels
         private bool m_IsRefreshing;
         private Color m_Color;
         private string m_SelectedFilter;
-        private bool m_IsLocationType;
         private string m_ExpandedNotificationId;
         
         public Command DeleteNotificationCommand { get; set; }
@@ -107,16 +105,6 @@ namespace Notify.ViewModels
             Constants.FILTER_TYPE_EXPIRED
         };
         
-        public bool IsLocationType
-        {
-            get => m_IsLocationType;
-            set
-            {
-                m_IsLocationType = value;
-                OnPropertyChanged(nameof(IsLocationType));
-            }
-        }
-        
         public string ExpandedNotificationId
         {
             get => m_ExpandedNotificationId;
@@ -160,7 +148,7 @@ namespace Notify.ViewModels
                 r_Logger.LogError(ex.Message);
             }
 
-            SelectedFilter = Constants.FILTER_TYPE_ACTIVE;
+            SelectedFilter = Constants.FILTER_TYPE_ALL;
             OnNotificationsRefreshClicked();
             applyFilterAndSearch();
         }
