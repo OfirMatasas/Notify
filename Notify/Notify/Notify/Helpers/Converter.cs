@@ -148,6 +148,47 @@ namespace Notify.Helpers
         }
     }
     
+    public class PendingToTextConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (bool)value ? "Reject" : "Delete";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
+
+    public class InverseBooleanConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return !(bool)value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return !(bool)value;
+        }
+    }
+    
+    public class PendingToCommandConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            NotificationsPageViewModel viewModel = NotificationsPageViewModel.Instance;
+            
+            return (bool)value ? viewModel.AcceptNotificationCommand : viewModel.EditNotificationCommand;
+        }
+    
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
+    
     public static class Converter
     {
         public static Notification ToNotification(dynamic notification)

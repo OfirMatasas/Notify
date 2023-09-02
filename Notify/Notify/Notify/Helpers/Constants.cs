@@ -213,7 +213,6 @@ namespace Notify.Helpers
         
         public static readonly string FILTER_TYPE_ACTIVE = "Active";
         public static readonly string FILTER_TYPE_PENDING = "Pending";
-        public static readonly string FILTER_TYPE_DECLINED = "Declined";
         public static readonly string FILTER_TYPE_EXPIRED = "Expired";
         public static readonly string FILTER_TYPE_PERMANENT = "Permanent";
         public static readonly string FILTER_TYPE_LOCATION = "Location";
