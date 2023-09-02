@@ -120,8 +120,6 @@ namespace Notify.ViewModels
 
         private NotificationsPageViewModel()
         {
-            string notificationsJson;
-
             CreateNotificationCommand = new Command(onCreateNotificationClicked);
             RefreshNotificationsCommand = new Command(OnNotificationsRefreshClicked);
             DeleteNotificationCommand = new Command<Notification>(onDeleteNotificationButtonClicked);
@@ -133,24 +131,32 @@ namespace Notify.ViewModels
             EditNotificationCommand = new Command<Notification>(onEditNotificationButtonClicked);
             RenewNotificationCommand = new Command<Notification>(onRenewNotificationButtonClicked);
 
+            refreshNotificationsList();
+        }
+
+        private async void refreshNotificationsList()
+        {
+            string notificationsJson;
+
             try
             {
-                FilteredNotifications = new List<Notification>();
                 notificationsJson = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
                 if (!notificationsJson.Equals(string.Empty))
                 {
                     r_Logger.LogDebug("Notifications found in preferences");
                     Notifications = JsonConvert.DeserializeObject<List<Notification>>(notificationsJson);
                 }
+                else
+                {
+                    Notifications = await AzureHttpClient.Instance.GetNotifications();
+                }
+
+                FilteredNotifications = new List<Notification>(Notifications);
             }
             catch (Exception ex)
             {
                 r_Logger.LogError(ex.Message);
             }
-
-            SelectedFilter = Constants.FILTER_TYPE_ALL;
-            OnNotificationsRefreshClicked();
-            applyFilterAndSearch();
         }
 
         private void applyFilterAndSearch()
