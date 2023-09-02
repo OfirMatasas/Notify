@@ -54,6 +54,7 @@ namespace Notify.ViewModels
         public Command RenewNotificationCommand { get; set; }
         public Command CreateNotificationCommand { get; set; }
         public Command ExecuteSearchCommand { get; set; }
+        public Command OpenMapCommand { get; set; } 
         public Command AcceptNotificationCommand { get; set; }
         public Command RefreshNotificationsCommand { get; set; }
         
@@ -127,6 +128,7 @@ namespace Notify.ViewModels
             EditNotificationCommand = new Command<Notification>(onEditNotificationButtonClicked);
             RenewNotificationCommand = new Command<Notification>(onRenewNotificationButtonClicked);
             ExecuteSearchCommand = new Command(applyFilterAndSearch);
+            OpenMapCommand = new Command<Notification>(onMapClicked);
 
             DeleteNotificationCommand = new Command<Notification>(onDeleteNotificationButtonClicked);
             EditNotificationCommand = new Command<Notification>(onEditNotificationButtonClicked);
@@ -161,7 +163,12 @@ namespace Notify.ViewModels
                 r_Logger.LogError(ex.Message);
             }
         }
-        
+
+        private void onMapClicked(Notification notification)
+        {
+            ExternalMapsService.Instance.OpenExternalMap(notification.TypeInfo.ToString());
+        }
+
         private void applyFilterAndSearch()
         {
             IEnumerable<Notification> filteredNotifications = ApplyFilter(Notifications);

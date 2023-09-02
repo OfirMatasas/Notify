@@ -30,6 +30,7 @@ namespace Notify.Core
         public bool IsRenewable => Status == Constants.NOTIFICATION_STATUS_EXPIRED && Type != NotificationType.Time;
         public bool IsEditable => Status != Constants.NOTIFICATION_STATUS_EXPIRED;
         public bool IsLocationType => Type == NotificationType.Location;
+        public bool IsDynamicLocation => Type == NotificationType.Dynamic;
 
         public Notification()
         {

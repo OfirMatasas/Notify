@@ -286,10 +286,31 @@
                                                     <Label
                                                         FontAttributes="Bold"
                                                         FontSize="Small"
-                                                        Margin="20,0,20,10"
+                                                        Margin="20,1"
                                                         Opacity="0.8"
                                                         Text="{Binding Target, StringFormat='Target User: {0}'}"
                                                         TextColor="#2F3246" />
+                                                    <StackLayout
+                                                        IsVisible="{Binding IsDynamicLocation}"
+                                                        Margin="20,0,20,10"
+                                                        Orientation="Horizontal"
+                                                        Spacing="5">
+                                                        <Label
+                                                            FontAttributes="Bold"
+                                                            FontSize="Small"
+                                                            Opacity="0.8"
+                                                            Text="Open in:"
+                                                            TextColor="#2F3246"
+                                                            VerticalOptions="Center" />
+                                                        <ImageButton
+                                                            BackgroundColor="Transparent"
+                                                            Command="{Binding Path=BindingContext.OpenMapCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
+                                                            CommandParameter="{Binding .}"
+                                                            HeightRequest="30"
+                                                            Opacity="0.8"
+                                                            Source="google_maps_icon.png" />
+                                                    </StackLayout>
+
                                                 </StackLayout>
                                             </Grid>
                                         </views:Expander>
