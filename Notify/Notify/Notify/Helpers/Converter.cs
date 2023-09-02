@@ -179,6 +179,7 @@ namespace Notify.Helpers
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             NotificationsPageViewModel viewModel = NotificationsPageViewModel.Instance;
+            
             return (bool)value ? viewModel.AcceptNotificationCommand : viewModel.EditNotificationCommand;
         }
     
