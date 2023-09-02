@@ -187,16 +187,29 @@ namespace Notify.ViewModels
                 {
                     m_TmpLongitude = Longitude;
                     m_TmpLatitude = Latitude;
+                    EntryBackgroundColor = Color.FromHex("#D1D1D1");
                     getCurrentLocationButtonClicked();
                 }
                 else
                 {
                     Longitude = m_TmpLongitude;
                     Latitude = m_TmpLatitude;
+                    EntryBackgroundColor = Color.White;
                 }
             }
         }
         public bool m_IsUseOtherLocation => !m_IsUseCurrentLocation;
+        
+        private Color m_EntryBackgroundColor = Color.White;
+        public Color EntryBackgroundColor
+        {
+            get => m_EntryBackgroundColor;
+            set
+            {
+                m_EntryBackgroundColor = value;
+                OnPropertyChanged(nameof(EntryBackgroundColor));
+            }
+        }
         
         #endregion
         

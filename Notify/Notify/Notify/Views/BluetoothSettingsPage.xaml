@@ -11,8 +11,8 @@
             <Grid
                 BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor},
                                                   Dark={StaticResource DarkPageBackgroundColor}}"
-                Row="6"
-                RowDefinitions="Auto, Auto, Auto, Auto, Auto, *">
+                Row="9"
+                RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, *">
                 
                 <Button
                     Grid.Row="0"
@@ -57,8 +57,8 @@
                     LabelMargin="3"
                     LabelSize="16"
                     Margin="30,20,30,0"
-                    LabelText="Select location"
-                    Placeholder="Select location"
+                    LabelText="Select Location"
+                    Placeholder="Select Location"
                     LabelTextColor="Black"
                     BackgroundColor="White"
                     ItemsSource="{Binding LocationSelectionList}"
@@ -66,15 +66,17 @@
                     TabIndex="1"/>
 
                 <Button
-                    Grid.Row="5"
+                    Grid.Row="9"
+                    Margin="50,80,50,180"
                     BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
                                                       Dark={StaticResource DarkButtonColor}}"
                     Command="{Binding UpdateBluetoothSettingsCommand}"
-                    Text="Update BLUETOOTH"
+                    CornerRadius="30"
+                    Text="UPDATE BLUETOOTH"
                     TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
-                                                Dark={StaticResource DarkButtonTextColor}}"
-                    VerticalOptions="End" />
+                                                Dark={StaticResource DarkButtonTextColor}}" />
             </Grid>
+                
         </ScrollView>
 
     </ContentPage.Content>
