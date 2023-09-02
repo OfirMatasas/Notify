@@ -117,8 +117,7 @@ namespace Notify.Helpers
             return null;
         }
     }
-
-
+    
     public static class Converter
     {
         public static Notification ToNotification(dynamic notification)
@@ -182,7 +181,6 @@ namespace Notify.Helpers
         
         public static Destination ToDestination(dynamic destination)
         {
-            Console.WriteLine("Address: " + (string)(destination.location.address ?? "null"));
             return new Destination((string)destination.location.name)
             {
                 Locations = new List<Location>
