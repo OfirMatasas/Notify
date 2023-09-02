@@ -168,8 +168,6 @@ namespace Notify.ViewModels
 
         private void onMapClicked(Notification notification)
         {
-            r_Logger.LogInformation($"onMapClicked with: {notification.Name}");
-
             ExternalMapsService.Instance.OpenExternalMap(notification.TypeInfo.ToString());
         }
 

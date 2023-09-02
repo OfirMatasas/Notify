@@ -9,6 +9,7 @@ using Notify.Core;
 using Notify.Services;
 using Xamarin.Essentials;
 using Location = Xamarin.Essentials.Location;
+using Uri = Android.Net.Uri;
 
 namespace Notify.Droid.Services
 {
@@ -16,6 +17,8 @@ namespace Notify.Droid.Services
     {
         private readonly LoggerService r_Logger = LoggerService.Instance;
         private readonly Context r_Context;
+        private static readonly object r_LockInstanceCreation = new object();
+        private static GoogleMapsService m_Instance;
 
         private GoogleMapsService(Context context)
         {
@@ -26,12 +29,17 @@ namespace Notify.Droid.Services
         {
             if (m_Instance == null)
             {
-                m_Instance = new GoogleMapsService(context);
+                lock (r_LockInstanceCreation)
+                {
+                    if (m_Instance == null)
+                    {
+                        m_Instance = new GoogleMapsService(context);
+                    }
+                }
             }
-    
             return m_Instance;
         }
-
+        
         public static GoogleMapsService GetInstance()
         {
             if (m_Instance == null)
@@ -44,43 +52,47 @@ namespace Notify.Droid.Services
 
         public void OpenGoogleMapsNavigation(double latitude, double longitude)
         {
+            Uri uri;
+            Intent intent;
             //if (IsGoogleMapsInstalled()) - TODO  - uncomment this line and check on physical device
-            if(true)
-            {
-                var uri = Android.Net.Uri.Parse($"google.navigation:q={latitude},{longitude}");
-                var intent = new Intent(Intent.ActionView, uri);
-                intent.SetPackage("com.google.android.apps.maps");
-                r_Context.StartActivity(intent);
-            }
+
+            uri = Uri.Parse($"google.navigation:q={latitude},{longitude}");
+            intent = new Intent(Intent.ActionView, uri);
+            intent.SetPackage("com.google.android.apps.maps");
+            r_Context.StartActivity(intent);
         }
 
         private bool IsGoogleMapsInstalled()
         {
-            bool res;
+            bool isSucceeded;
+            Uri uri;
+            Intent intent;
             
             try
             {
-                 var uri = Android.Net.Uri.Parse("com.google.android.apps.maps");
-                 var intent = new Intent(Intent.ActionView, uri);
-                 intent.SetPackage("com.google.android.apps.maps");
-                 res = r_Context.PackageManager.QueryIntentActivities(intent, PackageInfoFlags.MatchDefaultOnly).Count > 0;
+                uri = Uri.Parse("com.google.android.apps.maps");
+                intent = new Intent(Intent.ActionView, uri);
+                intent.SetPackage("com.google.android.apps.maps");
+                isSucceeded = r_Context.PackageManager.QueryIntentActivities(intent, PackageInfoFlags.MatchDefaultOnly)
+                    .Count > 0;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                r_Logger.LogWarning("Something went wrong with detecting the Google Maps application on the device.");
-                res = false;
+                r_Logger.LogWarning($"Something went wrong.{Environment.NewLine}{ex.Message}");
+                isSucceeded = false;
             }
 
-            return res;
+            return isSucceeded;
         }
-        
-         public static async Task<Core.Location> GetNearestPlace(string placeType, Core.Location currentLocation)
+
+        private static async Task<Core.Location> GetNearestPlace(string placeType, Core.Location currentLocation)
         {
             Core.Location nearestPlace = null;
-            List<Core.Location> nearbyPlaces = await AzureHttpClient.Instance.GetNearbyPlaces(placeType, currentLocation);
+            List<Core.Location> nearbyPlaces =
+                await AzureHttpClient.Instance.GetNearbyPlaces(placeType, currentLocation);
             Coordinate currentCoordinate, placeCoordinate;
             double distance, minDistance;
-            
+
             currentCoordinate = new Coordinate(
                 latitude: currentLocation.Latitude,
                 longitude: currentLocation.Longitude);
@@ -91,7 +103,7 @@ namespace Notify.Droid.Services
                 placeCoordinate = new Coordinate(
                     latitude: nearestPlace.Latitude,
                     longitude: nearestPlace.Longitude);
-                
+
                 minDistance = GeoCalculator.GetDistance(
                     originCoordinate: currentCoordinate,
                     destinationCoordinate: placeCoordinate,
@@ -101,12 +113,12 @@ namespace Notify.Droid.Services
                 {
                     placeCoordinate.Latitude = nearbyPlaces[i].Latitude;
                     placeCoordinate.Longitude = nearbyPlaces[i].Longitude;
-                    
+
                     distance = GeoCalculator.GetDistance(
                         originCoordinate: currentCoordinate,
                         destinationCoordinate: placeCoordinate,
                         distanceUnit: DistanceUnit.Meters);
-                    
+
                     if (distance < minDistance)
                     {
                         minDistance = distance;
@@ -114,11 +126,11 @@ namespace Notify.Droid.Services
                     }
                 }
             }
-            
+
             return nearestPlace;
         }
-         
-         public override async void OpenExternalMap(string notificationType)
+
+        public override async void OpenExternalMap(string notificationType)
          {
              double nearestPlaceLatitude, nearestPlaceLongitude;
              Core.Location currentLocation;

@@ -6,6 +6,8 @@ namespace Notify.Services
     public abstract class ExternalMapsService
     {
         protected static ExternalMapsService m_Instance;
+        private static readonly LoggerService r_Logger = LoggerService.Instance;
+
         private static readonly object r_Lock = new object();
 
         public static ExternalMapsService Instance
@@ -18,14 +20,15 @@ namespace Notify.Services
                     {
                         if (m_Instance == null)
                         {
-                            Debug.Write("ERROR to initialize ExternalMapsService.");
+                            r_Logger.LogError("ERROR to initialize ExternalMapsService.");
                         }
                     }
                 }
-                
+
                 return m_Instance;
             }
         }
+
         public abstract void OpenExternalMap(string notificationType);
     }
 }
