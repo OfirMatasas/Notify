@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Microsoft.IdentityModel.Tokens;
+using Notify.Azure.HttpClient;
 using Notify.Core;
 using Xamarin.Essentials;
 using Xamarin.Forms;

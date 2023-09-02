@@ -13,9 +13,10 @@ namespace Notify.ViewModels
     public class FriendRequestPageViewModel : INotifyPropertyChanged
     {
         public Command BackCommand { get; set; }
-        public Command SearchTextChangedCommand { get; set; }
+        public Command ExecuteSearchCommand { get; set; }
         public Command<User> SendRequestCommand { get; set; }
         public Command<User> ShowFriendDetailsCommand { get; set; }
+        public Command RefreshPotentialFriendsCommand { get; set; }
 
         private string m_SearchText;
         public string SearchText
@@ -23,6 +24,9 @@ namespace Notify.ViewModels
             get => m_SearchText;
             set => SetField(ref m_SearchText, value);
         }
+        
+        private bool m_IsRefreshing;
+        public bool IsRefreshing { set => SetField(ref m_IsRefreshing, value); }
 
         private List<User> UsersList { get; set; }
         
@@ -44,9 +48,20 @@ namespace Notify.ViewModels
         {
             BackCommand = new Command(onBackButtonClicked);
             SendRequestCommand = new Command<User>(onSendRequestButtonClicked);
-            SearchTextChangedCommand = new Command(onSearchTextChanged);
+            ExecuteSearchCommand = new Command(onSearchTextChanged);
             ShowFriendDetailsCommand = new Command<User>(onFriendClicked);
+            RefreshPotentialFriendsCommand = new Command(onRefreshPotentialFriendsClicked);
             PopulateUsersList();
+        }
+
+        private async void onRefreshPotentialFriendsClicked()
+        {
+            IsRefreshing = true;
+            
+            UsersList = await AzureHttpClient.Instance.GetNotFriendsUsers();
+            onSearchTextChanged();
+            
+            IsRefreshing = false;
         }
 
         private void onSearchTextChanged()
@@ -84,13 +99,25 @@ namespace Notify.ViewModels
             }
         }
 
-        private void onSendRequestButtonClicked(User friend)
+        private async void onSendRequestButtonClicked(User friend)
         {
+            bool isSucceeded;
+            
             if (!(friend is null))
             {
-                AzureHttpClient.Instance.SendFriendRequest(friend.UserName);
-                App.Current.MainPage.DisplayAlert("Friend Request Sent", $"Friend request sent to {friend.UserName}",
-                    "OK");
+                isSucceeded = await AzureHttpClient.Instance.SendFriendRequest(friend.UserName);
+                
+                if (isSucceeded)
+                {
+                    App.Current.MainPage.DisplayAlert("Friend Request", $"Friend request sent to {friend.UserName}", "OK");
+                    UsersList.Remove(friend);
+                    UsersSelectionList.Remove(friend);
+                    onRefreshPotentialFriendsClicked();
+                }
+                else
+                {
+                    App.Current.MainPage.DisplayAlert("Friend Request", $"Failed to send friend request to {friend.UserName}", "OK");
+                }
             }
         }
 

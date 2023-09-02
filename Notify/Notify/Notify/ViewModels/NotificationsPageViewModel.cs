@@ -54,6 +54,7 @@ namespace Notify.ViewModels
         public Command RenewNotificationCommand { get; set; }
         public Command CreateNotificationCommand { get; set; }
         public Command ExecuteSearchCommand { get; set; }
+        public Command RefreshNotificationsCommand { get; set; }
         
         public event PropertyChangedEventHandler PropertyChanged;
         
@@ -204,9 +205,7 @@ namespace Notify.ViewModels
         {
             await Shell.Current.Navigation.PushAsync(new NotificationCreationPage());
         }
-
-        public Command RefreshNotificationsCommand { get; set; }
-
+        
         public async void OnNotificationsRefreshClicked()
         {
             IsRefreshing = true;

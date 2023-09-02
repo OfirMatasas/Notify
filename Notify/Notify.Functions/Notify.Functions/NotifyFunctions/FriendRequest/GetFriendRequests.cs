@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -38,12 +39,10 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
             }
             else
             {
-                lowerCasedUsername = username.ToLower();
-
                 log.LogInformation(
                     $"Got client's HTTP request to list all pending friend requests of user {username}");
 
-                friendRequestDocuments = await GetPendingFriendRequestOfSelectedUsernameDocuments(lowerCasedUsername);
+                friendRequestDocuments = await GetPendingFriendRequestOfSelectedUsernameDocuments(username);
 
                 if (friendRequestDocuments.Count.Equals(0))
                 {
@@ -64,7 +63,7 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
         }
 
         private static async Task<List<BsonDocument>> GetPendingFriendRequestOfSelectedUsernameDocuments(
-            string lowerCasedUsername)
+            string username)
         {
             IMongoCollection<BsonDocument> pendingFriendRequestsCollection;
             FilterDefinition<BsonDocument> pendingFriendRequestFilter;
@@ -75,8 +74,8 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
                     databaseName: Constants.DATABASE_NOTIFY_MTA,
                     collectionName: Constants.COLLECTION_FRIEND_REQUEST);
 
-            pendingFriendRequestFilter = Builders<BsonDocument>.Filter.Eq(
-                "userName", lowerCasedUsername);
+            pendingFriendRequestFilter = Builders<BsonDocument>.Filter.Regex(
+                "userName", new BsonRegularExpression($"^{Regex.Escape(username)}$", "i"));
 
             pendingFriendRequestsList = await pendingFriendRequestsCollection
                 .Find(pendingFriendRequestFilter)
