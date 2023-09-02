@@ -604,8 +604,9 @@ namespace Notify.Azure.HttpClient
                 converter: Converter.ToFriendRequest);
         }
 
-        public async Task RejectFriendRequest(string userName, string requester)
+        public async Task<bool> RejectFriendRequest(string userName, string requester)
         {
+            bool isSuccess;
             HttpResponseMessage response;
             dynamic data = new JObject
             {
@@ -616,15 +617,28 @@ namespace Notify.Azure.HttpClient
 
             r_Logger.LogInformation($"Reject friend request:{Environment.NewLine}{json}");
 
-            response = await postAsync(
-                requestUri: Constants.AZURE_FUNCTIONS_PATTERN_REJECT_FRIEND_REQUEST,
-                content: createJsonStringContent(json));
+            try
+            {
+                response = await postAsync(
+                    requestUri: Constants.AZURE_FUNCTIONS_PATTERN_REJECT_FRIEND_REQUEST,
+                    content: createJsonStringContent(json));
 
-            r_Logger.LogInformation($"Friend request from {requester} to {userName} was rejected");
+                response.EnsureSuccessStatusCode();
+                r_Logger.LogInformation($"Friend request from {requester} to {userName} was rejected");
+                isSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error occured on RejectFriendRequest: {ex.Message}");
+                isSuccess = false;
+            }
+            
+            return isSuccess;
         }
 
-        public async Task AcceptFriendRequest(string userName, string requester)
+        public async Task<bool> AcceptFriendRequest(string userName, string requester)
         {
+            bool isSuccess;
             HttpResponseMessage response;
             dynamic data = new JObject
             {
@@ -635,11 +649,23 @@ namespace Notify.Azure.HttpClient
 
             r_Logger.LogInformation($"Accept friend request:{Environment.NewLine}{json}");
 
-            response = await postAsync(
-                requestUri: Constants.AZURE_FUNCTIONS_PATTERN_ACCEPT_FRIEND_REQUEST,
-                content: createJsonStringContent(json));
-
-            r_Logger.LogInformation($"Friend request from {requester} to {userName} was accepted");
+            try
+            {
+                response = await postAsync(
+                    requestUri: Constants.AZURE_FUNCTIONS_PATTERN_ACCEPT_FRIEND_REQUEST,
+                    content: createJsonStringContent(json));
+                
+                response.EnsureSuccessStatusCode();
+                r_Logger.LogInformation($"Friend request from {requester} to {userName} was accepted");
+                isSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error occured on AcceptFriendRequest: {ex.Message}");
+                isSuccess = false;
+            }
+            
+            return isSuccess;
         }
         
         public async Task<string> UploadProfilePictureToBLOB(string base64Image)

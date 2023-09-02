@@ -83,12 +83,34 @@ namespace Notify.ViewModels
 
         private async void onAcceptFriendRequestClicked(FriendRequest friendRequest)
         {
-            await AzureHttpClient.Instance.AcceptFriendRequest(friendRequest.UserName, friendRequest.Requester);
+            bool isSucceeded = await AzureHttpClient.Instance.AcceptFriendRequest(friendRequest.UserName, friendRequest.Requester);
+            
+            if (isSucceeded)
+            {
+                PendingFriendRequestsList.Remove(friendRequest);
+                FilteredPendingFriendRequestsList.Remove(friendRequest);
+                onRefreshPotentialFriendsClicked();
+            }
+            else
+            {
+                App.Current.MainPage.DisplayAlert("Friend Request", $"Failed to accept friend request from {friendRequest.Requester}", "OK");
+            }
         }
         
         private async void onRejectFriendRequestClicked(FriendRequest friendRequest)
         {
-            await AzureHttpClient.Instance.RejectFriendRequest(friendRequest.UserName, friendRequest.Requester);
+            bool isSucceeded = await AzureHttpClient.Instance.RejectFriendRequest(friendRequest.UserName, friendRequest.Requester);
+            
+            if (isSucceeded)
+            {
+                PendingFriendRequestsList.Remove(friendRequest);
+                FilteredPendingFriendRequestsList.Remove(friendRequest);
+                onRefreshPotentialFriendsClicked();
+            }
+            else
+            {
+                App.Current.MainPage.DisplayAlert("Friend Request", $"Failed to reject friend request from {friendRequest.Requester}", "OK");
+            }
         }
 
         private async void onRefreshPotentialFriendsClicked()
