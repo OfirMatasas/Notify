@@ -22,7 +22,6 @@ namespace Notify.ViewModels
             BackCommand = new Command(onBackButtonClicked);
             UpdateLocationCommand = new Command(onUpdateLocationButtonClicked);
             GetAddressSuggestionsCommand = new Command(onGetAddressSuggestionsButtonClicked);
-            GetCurrentLocationCommand = new Command(onGetCurrentLocationButtonClicked);
         }
 
         #endregion
@@ -59,7 +58,6 @@ namespace Notify.ViewModels
         #region Address
 
         public Command GetAddressSuggestionsCommand { get; set; }
-        public Command GetCurrentLocationCommand { get; set; }
         private string m_SearchedAddress;
         private string m_SelectedAddress;
         private List<string> m_DropBoxSuggestions;
@@ -171,6 +169,36 @@ namespace Notify.ViewModels
         }
 
         #endregion
+        
+        #region Use_Current_Location
+        
+        private bool m_IsUseCurrentLocation;
+        public bool m_IsUseOtherLocation => !m_IsUseCurrentLocation;
+        private string m_TmpLongitude;
+        private string m_TmpLatitude;
+        public bool IsUseCurrentLocation
+        {
+            get => m_IsUseCurrentLocation;
+            set
+            {
+                m_IsUseCurrentLocation = value;
+                OnPropertyChanged(nameof(IsUseCurrentLocation));
+                
+                if (m_IsUseCurrentLocation)
+                {
+                    m_TmpLongitude = Longitude;
+                    m_TmpLatitude = Latitude;
+                    getCurrentLocationButtonClicked();
+                }
+                else
+                {
+                    Longitude = m_TmpLongitude;
+                    Latitude = m_TmpLatitude;
+                }
+            }
+        }
+        
+        #endregion
 
         private async void onGetGeographicCoordinatesButtonClicked()
         {
@@ -200,7 +228,7 @@ namespace Notify.ViewModels
             }
         }
 
-         private async void onGetCurrentLocationButtonClicked()
+         private async void getCurrentLocationButtonClicked()
          {
              GeolocationRequest request;
              Xamarin.Essentials.Location location;
@@ -213,9 +241,6 @@ namespace Notify.ViewModels
                  Longitude = location.Longitude.ToString();
                  Latitude = location.Latitude.ToString();
                  r_Logger.LogDebug($"onGetCurrentLocationButtonClicked - Longitude: {Longitude}, Latitude: {Latitude}");
-
-                 //SelectedAddress = await AzureHttpClient.Instance.GetAddressFromCoordinatesAsync(latitude: location.Latitude, longitude: location.Longitude);
-                 //r_Logger.LogDebug($"onGetCurrentLocationButtonClicked - SelectedAddress: {SelectedAddress}");
              }
              catch (Exception ex)
              {
