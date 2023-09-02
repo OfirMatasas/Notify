@@ -173,7 +173,6 @@ namespace Notify.ViewModels
         #region Use_Current_Location
         
         private bool m_IsUseCurrentLocation;
-        public bool m_IsUseOtherLocation => !m_IsUseCurrentLocation;
         private string m_TmpLongitude;
         private string m_TmpLatitude;
         public bool IsUseCurrentLocation
@@ -197,6 +196,7 @@ namespace Notify.ViewModels
                 }
             }
         }
+        public bool m_IsUseOtherLocation => !m_IsUseCurrentLocation;
         
         #endregion
 
