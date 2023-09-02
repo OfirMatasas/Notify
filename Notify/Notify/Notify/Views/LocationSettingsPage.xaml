@@ -56,7 +56,7 @@
                     Spacing="10">
                     <CheckBox Color="Black" IsChecked="{Binding IsUseCurrentLocation, Mode=TwoWay}" Margin="30,0,0,0" />
                     <Label
-                        Text="USE CURRENT LOCATION"
+                        Text="Use Current Location"
                         TextColor="Black"
                         VerticalOptions="Center" />
                 </StackLayout>
@@ -120,7 +120,7 @@
                     Command="{Binding GetAddressSuggestionsCommand}"
                     IsVisible="{Binding m_IsUseOtherLocation}"
                     CornerRadius="30"
-                    Text="GET ADDRESS SUGGESTIONS"
+                    Text="Get Address Suggestion"
                     TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
                                                 Dark={StaticResource DarkButtonTextColor}}" />
                 
