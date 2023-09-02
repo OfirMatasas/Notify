@@ -163,7 +163,7 @@ namespace Notify.Helpers
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (bool)value ? "accept_button.png" : "edit_button.png";
+            return (bool)value ? "accept_button" : "edit_button";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

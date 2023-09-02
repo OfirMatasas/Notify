@@ -170,7 +170,7 @@
                                         IsVisible="{Binding IsPending, Converter={StaticResource InverseBooleanConverter}}"
                                         Text="Edit">
                                         <SwipeItem.IconImageSource>
-                                            <FileImageSource File="{Binding IsPending, Converter={StaticResource PendingToIconConverter}}" />
+                                            <FileImageSource File="edit_button.png" />
                                         </SwipeItem.IconImageSource>
                                     </SwipeItem>
                                     <SwipeItem
