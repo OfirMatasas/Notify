@@ -102,7 +102,6 @@ namespace Notify.ViewModels
             Constants.FILTER_TYPE_DYNAMIC_LOCATION,
             Constants.FILTER_TYPE_TIME,
             Constants.FILTER_TYPE_PENDING,
-            Constants.FILTER_TYPE_DECLINED,
             Constants.FILTER_TYPE_EXPIRED
         };
         
@@ -198,10 +197,7 @@ namespace Notify.ViewModels
 
                 case "Pending":
                     return notifications.Where(n => n.Status.Equals("Pending")); 
-
-                case "Declined":
-                    return notifications.Where(n => n.Status.Equals("Declined"));
-
+                
                 case "Expired":
                     return notifications.Where(n => n.Status.Equals("Expired"));
 
@@ -236,7 +232,7 @@ namespace Notify.ViewModels
         private async void onAcceptNotificationButtonClicked(string notificationID)
         {
             string messageTitle = "Notification Acceptance";
-            string messageBody;
+            string messageBody = "Notification accepted successfully";
             bool isConfirmed;
             Notification notification;
 
@@ -254,8 +250,7 @@ namespace Notify.ViewModels
                 );
 
                 OnNotificationsRefreshClicked();
-
-                messageBody = $"Notification accepted successfully";
+                
                 await App.Current.MainPage.DisplayAlert(messageTitle, messageBody, "OK");
             }
         }
