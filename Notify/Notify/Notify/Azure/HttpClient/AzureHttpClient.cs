@@ -596,15 +596,16 @@ namespace Notify.Azure.HttpClient
             return isSuccess;
         }
 
-        public async Task<List<FriendRequest>> GetFriendRequests(string userName)
+        public async Task<List<FriendRequest>> GetFriendRequests()
         {
+            string username = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
             string requestUri, responseJson;
             HttpResponseMessage response;
             List<FriendRequest> friendRequests;
             
             try
             {
-                requestUri = Constants.AZURE_FUNCTIONS_PATTERN_FRIEND_REQUEST + $"?username={userName}";
+                requestUri = Constants.AZURE_FUNCTIONS_PATTERN_FRIEND_REQUEST + $"?username={username}";
                 r_Logger.LogInformation($"request URI {requestUri}");
                 response = await m_HttpClient.GetAsync(requestUri);
                 response.EnsureSuccessStatusCode();

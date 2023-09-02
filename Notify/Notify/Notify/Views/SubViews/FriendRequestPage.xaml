@@ -22,6 +22,7 @@
             <Label
                 Grid.Row="0"
                 HorizontalTextAlignment="Center"
+                Margin="0,20,0,0"
                 TextColor="White"
                 VerticalTextAlignment="Start">
                 <Label.FormattedText>
@@ -30,7 +31,7 @@
                             <Span
                                 FontAttributes="Bold"
                                 FontSize="40"
-                                Text="Friends Search"
+                                Text="Friend Requests"
                                 TextColor="#222831" />
                         </FormattedString.Spans>
                     </FormattedString>
@@ -45,9 +46,11 @@
                 FontSize="30"
                 Grid.Row="0"
                 HorizontalOptions="Start"
+                Margin="0,15,0,0"
                 Text="❮"
                 TextColor="#222831"
-                VerticalOptions="Start" />
+                VerticalOptions="Start"
+                WidthRequest="50" />
 
             <SearchBar
                 BackgroundColor="WhiteSmoke"
@@ -62,6 +65,152 @@
 
             <CollectionView
                 Grid.Row="2"
+                HorizontalOptions="FillAndExpand"
+                ItemsSource="{Binding FilteredPendingFriendRequestsList}"
+                Margin="15,-30,15,0"
+                SelectionMode="None"
+                VerticalOptions="FillAndExpand"
+                VerticalScrollBarVisibility="Always">
+                <CollectionView.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="Large"
+                            Grid.Column="1"
+                            HorizontalOptions="End"
+                            Margin="0,0,10,0"
+                            Text="+"
+                            TextColor="Black">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ShowFriendRequestsCommand}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Grid>
+                </CollectionView.Header>
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout ItemSpacing="10" Orientation="Vertical" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <SwipeView>
+                            <SwipeView.LeftItems>
+                                <SwipeItems>
+                                    <SwipeItem
+                                        BackgroundColor="#DD4A48"
+                                        Command="{Binding Path=BindingContext.RejectFriendRequestCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
+                                        CommandParameter="{Binding .}"
+                                        Text="Decline">
+                                        <SwipeItem.IconImageSource>
+                                            <FileImageSource File="delete_button.png" />
+                                        </SwipeItem.IconImageSource>
+                                    </SwipeItem>
+                                </SwipeItems>
+                            </SwipeView.LeftItems>
+                            <SwipeView.RightItems>
+                                <SwipeItems Mode="Reveal">
+                                    <SwipeItem
+                                        BackgroundColor="Green"
+                                        Command="{Binding Path=BindingContext.AcceptFriendRequestCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
+                                        CommandParameter="{Binding .}"
+                                        Text="Approve">
+                                        <SwipeItem.IconImageSource>
+                                            <FileImageSource File="accept_button.png" />
+                                        </SwipeItem.IconImageSource>
+                                    </SwipeItem>
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+                            <SwipeView.Content>
+                                <pancakeView:PancakeView
+                                    BackgroundColor="White"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="StartAndExpand">
+                                    <Grid HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <views:Expander BackgroundColor="#88FFCF00" Grid.Column="1">
+                                            <views:Expander.Header>
+                                                <Grid HorizontalOptions="FillAndExpand">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="3.5*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                                                        <ImageButton
+                                                            Aspect="AspectFill"
+                                                            CornerRadius="50"
+                                                            HeightRequest="50"
+                                                            HorizontalOptions="Center"
+                                                            Source="{Binding ProfilePicture}"
+                                                            VerticalOptions="Center"
+                                                            WidthRequest="50" />
+                                                    </StackLayout>
+                                                    <BoxView
+                                                        BackgroundColor="#F2F4F8"
+                                                        Grid.Column="1"
+                                                        HorizontalOptions="Start"
+                                                        VerticalOptions="FillAndExpand"
+                                                        WidthRequest="1" />
+                                                    <StackLayout
+                                                        Grid.Column="2"
+                                                        HorizontalOptions="Start"
+                                                        Margin="20,20,20,20"
+                                                        VerticalOptions="Center">
+                                                        <Label
+                                                            FontAttributes="Bold"
+                                                            FontSize="Medium"
+                                                            Text="{Binding Requester}"
+                                                            TextColor="Black" />
+                                                    </StackLayout>
+                                                </Grid>
+                                            </views:Expander.Header>
+                                            <Grid HorizontalOptions="FillAndExpand">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="3.5*" />
+                                                </Grid.ColumnDefinitions>
+                                                <BoxView
+                                                    BackgroundColor="#F2F4F8"
+                                                    Grid.Column="1"
+                                                    HorizontalOptions="Start"
+                                                    VerticalOptions="FillAndExpand"
+                                                    WidthRequest="1" />
+                                                <StackLayout Grid.Column="2" Spacing="10">
+                                                    <Label
+                                                        FontAttributes="Bold"
+                                                        FontSize="Small"
+                                                        Margin="20,0"
+                                                        Text="{Binding Name, StringFormat='Name: {0}'}"
+                                                        TextColor="#2F3246" />
+                                                    <Label
+                                                        FontAttributes="Bold"
+                                                        FontSize="Small"
+                                                        Margin="20,0"
+                                                        Text="{Binding Telephone, StringFormat='Telephone: {0}'}"
+                                                        TextColor="#2F3246" />
+                                                </StackLayout>
+                                            </Grid>
+                                        </views:Expander>
+                                    </Grid>
+                                </pancakeView:PancakeView>
+                            </SwipeView.Content>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.Footer>
+                    <BoxView BackgroundColor="Transparent" HeightRequest="15" />
+                </CollectionView.Footer>
+            </CollectionView>
+
+            <CollectionView
+                Grid.Row="3"
                 HorizontalOptions="FillAndExpand"
                 ItemsSource="{Binding UsersSelectionList}"
                 Margin="15,-30,15,0"

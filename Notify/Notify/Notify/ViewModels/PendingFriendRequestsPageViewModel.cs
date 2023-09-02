@@ -95,13 +95,11 @@ namespace Notify.ViewModels
 
         private async void LoadPendingFriendRequests()
         {
-            string userName;
             List<FriendRequest> pendingFriendRequests;
             
             try
             {
-                userName = Preferences.Get(Constants.PREFERENCES_USERNAME, String.Empty);
-                pendingFriendRequests = await AzureHttpClient.Instance.GetFriendRequests(userName);
+                pendingFriendRequests = await AzureHttpClient.Instance.GetFriendRequests();
                 
                 foreach (FriendRequest friendRequest in pendingFriendRequests)
                 {

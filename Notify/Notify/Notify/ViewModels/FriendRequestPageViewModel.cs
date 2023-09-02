@@ -17,6 +17,8 @@ namespace Notify.ViewModels
         public Command<User> SendRequestCommand { get; set; }
         public Command<User> ShowFriendDetailsCommand { get; set; }
         public Command RefreshPotentialFriendsCommand { get; set; }
+        public Command AcceptFriendRequestCommand { get; set; }
+        public Command RejectFriendRequestCommand { get; set; }
 
         private string m_SearchText;
         public string SearchText
@@ -31,7 +33,6 @@ namespace Notify.ViewModels
         private List<User> UsersList { get; set; }
         
         private List<User> m_UsersSelectionList;
-
         public List<User> UsersSelectionList
         {
             get => m_UsersSelectionList;
@@ -39,6 +40,28 @@ namespace Notify.ViewModels
             {
                 m_UsersSelectionList = value;
                 OnPropertyChanged(nameof(UsersSelectionList));
+            }
+        }
+        
+        private List<FriendRequest> m_PendingFriendRequestsList;
+        public List<FriendRequest> PendingFriendRequestsList
+        {
+            get => m_PendingFriendRequestsList;
+            set
+            {
+                m_PendingFriendRequestsList = value;
+                OnPropertyChanged(nameof(PendingFriendRequestsList));
+            }
+        }
+        
+        private List<FriendRequest> m_FilteredPendingFriendRequestsList;
+        public List<FriendRequest> FilteredPendingFriendRequestsList
+        {
+            get => m_FilteredPendingFriendRequestsList;
+            set
+            {
+                m_FilteredPendingFriendRequestsList = value;
+                OnPropertyChanged(nameof(m_FilteredPendingFriendRequestsList));
             }
         }
 
@@ -51,7 +74,21 @@ namespace Notify.ViewModels
             ExecuteSearchCommand = new Command(onSearchTextChanged);
             ShowFriendDetailsCommand = new Command<User>(onFriendClicked);
             RefreshPotentialFriendsCommand = new Command(onRefreshPotentialFriendsClicked);
-            PopulateUsersList();
+            AcceptFriendRequestCommand = new Command<FriendRequest>(onAcceptFriendRequestClicked);
+            RejectFriendRequestCommand = new Command<FriendRequest>(onRejectFriendRequestClicked);
+            
+            populateUsersList();
+            populatePendingFriendRequestsList();
+        }
+
+        private async void onAcceptFriendRequestClicked(FriendRequest friendRequest)
+        {
+            await AzureHttpClient.Instance.AcceptFriendRequest(friendRequest.UserName, friendRequest.Requester);
+        }
+        
+        private async void onRejectFriendRequestClicked(FriendRequest friendRequest)
+        {
+            await AzureHttpClient.Instance.RejectFriendRequest(friendRequest.UserName, friendRequest.Requester);
         }
 
         private async void onRefreshPotentialFriendsClicked()
@@ -59,6 +96,7 @@ namespace Notify.ViewModels
             IsRefreshing = true;
             
             UsersList = await AzureHttpClient.Instance.GetNotFriendsUsers();
+            PendingFriendRequestsList = await AzureHttpClient.Instance.GetFriendRequests();
             onSearchTextChanged();
             
             IsRefreshing = false;
@@ -74,16 +112,28 @@ namespace Notify.ViewModels
             if (string.IsNullOrWhiteSpace(searchText))
             {
                 UsersSelectionList = UsersList;
+                FilteredPendingFriendRequestsList = PendingFriendRequestsList;
             }
             else
             {
-                UsersSelectionList = UsersList.FindAll(friend => 
-                    friend.UserName.ToLower().Contains(searchText.ToLower().Trim()) || 
+                UsersSelectionList = UsersList.FindAll(friend =>
+                    friend.UserName.ToLower().Contains(searchText.ToLower().Trim()) ||
                     friend.Telephone.Contains(searchText.Trim()));
+
+                FilteredPendingFriendRequestsList = PendingFriendRequestsList.FindAll(friendRequest =>
+                    friendRequest.Requester.ToLower().Contains(searchText.ToLower().Trim()));
             }
         }
+        
+        private async void populatePendingFriendRequestsList()
+        {
+            string pendingFriendRequestsListJson = Preferences.Get(Constants.PREFERENCES_PENDING_FRIEND_REQUESTS, "");
+            
+            PendingFriendRequestsList = JsonConvert.DeserializeObject<List<FriendRequest>>(pendingFriendRequestsListJson);
+            FilteredPendingFriendRequestsList = PendingFriendRequestsList = await AzureHttpClient.Instance.GetFriendRequests();        
+        }
 
-        private async void PopulateUsersList()
+        private async void populateUsersList()
         {
             string usersListJson = Preferences.Get(Constants.PREFERENCES_NOT_FRIENDS_USERS, "");
             
