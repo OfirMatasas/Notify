@@ -54,6 +54,7 @@ namespace Notify.ViewModels
         public Command RenewNotificationCommand { get; set; }
         public Command CreateNotificationCommand { get; set; }
         public Command ExecuteSearchCommand { get; set; }
+        public Command AcceptNotificationCommand { get; set; }
         public Command RefreshNotificationsCommand { get; set; }
         
         public event PropertyChangedEventHandler PropertyChanged;
@@ -130,6 +131,8 @@ namespace Notify.ViewModels
             DeleteNotificationCommand = new Command<Notification>(onDeleteNotificationButtonClicked);
             EditNotificationCommand = new Command<Notification>(onEditNotificationButtonClicked);
             RenewNotificationCommand = new Command<Notification>(onRenewNotificationButtonClicked);
+            
+            AcceptNotificationCommand = new Command<string>(onAcceptNotificationButtonClicked);
 
             refreshNotificationsList();
         }
@@ -158,7 +161,7 @@ namespace Notify.ViewModels
                 r_Logger.LogError(ex.Message);
             }
         }
-
+        
         private void applyFilterAndSearch()
         {
             IEnumerable<Notification> filteredNotifications = ApplyFilter(Notifications);
@@ -229,7 +232,34 @@ namespace Notify.ViewModels
             field = value;
             OnPropertyChanged(propertyName);
         }
-        
+
+        private async void onAcceptNotificationButtonClicked(string notificationID)
+        {
+            string messageTitle = "Notification Acceptance";
+            string messageBody;
+            bool isConfirmed;
+            Notification notification;
+
+            isConfirmed = await App.Current.MainPage.DisplayAlert(messageTitle,
+                "Are you sure you want to accept this notification?",
+                "Yes", "No");
+
+            if (isConfirmed)
+            {
+                notification = new Notification(notificationID);
+
+                AzureHttpClient.Instance.UpdateNotificationsStatus(
+                    new List<Notification> { notification },
+                    Constants.NOTIFICATION_STATUS_ACTIVE
+                );
+
+                OnNotificationsRefreshClicked();
+
+                messageBody = $"Notification accepted successfully";
+                await App.Current.MainPage.DisplayAlert(messageTitle, messageBody, "OK");
+            }
+        }
+
         private async void onDeleteNotificationButtonClicked(Notification notification)
         {
             string messageTitle = "Notification Deletion";
