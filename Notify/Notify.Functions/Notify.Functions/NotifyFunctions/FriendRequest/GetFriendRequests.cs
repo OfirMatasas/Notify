@@ -23,7 +23,7 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "friend/request")]
             HttpRequest req, ILogger log)
         {
-            string lowerCasedUsername, response, username;
+            string response, username;
             List<BsonDocument> friendRequestDocuments;
             ObjectResult result;
 
@@ -51,6 +51,9 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
                 }
                 else
                 {
+                    log.LogInformation("Getting profile pictures of users who sent friend requests");
+                    await GetProfilePicturesOfUsersAsync(friendRequestDocuments, log);
+                    
                     response = ConversionUtils.ConvertBsonDocumentListToJson(friendRequestDocuments);
                     log.LogInformation(
                         $"Retrieved {friendRequestDocuments.Count} pending friend requests of user {username}:");
@@ -83,6 +86,40 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
                 .ToListAsync();
 
             return pendingFriendRequestsList;
+        }
+        
+        private static async Task GetProfilePicturesOfUsersAsync(List<BsonDocument> requestDocuments, ILogger log)
+        {
+            IMongoCollection<BsonDocument> usersCollection = Utils.MongoUtils.GetCollection(Constants.COLLECTION_USER);
+            FilterDefinition<BsonDocument> userFilter;
+            BsonDocument userDocument;
+
+            foreach (BsonDocument requestDocument in requestDocuments)
+            {
+                userFilter = Builders<BsonDocument>.Filter.Where(
+                    document => document["userName"].AsString.Equals(requestDocument["requester"].AsString));
+                
+                userDocument = usersCollection.Find(userFilter).FirstOrDefault();
+                
+                if(userDocument != null)
+                {
+                    if (userDocument.Contains("profilePicture"))
+                    {
+                        requestDocument["profilePicture"] = userDocument["profilePicture"].AsString;
+                    }
+                    else
+                    {
+                        requestDocument["profilePicture"] = "";
+                    }
+                }
+                else
+                {
+                    log.LogWarning($"User {requestDocument["requester"].AsString} not found");
+                    requestDocument["profilePicture"] = "to_be_removed";
+                }
+            }
+            
+            requestDocuments.RemoveAll(doc => doc["profilePicture"].AsString.Equals("to_be_removed"));
         }
     }
 }
