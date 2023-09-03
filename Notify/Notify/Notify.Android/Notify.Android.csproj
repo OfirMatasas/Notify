@@ -88,6 +88,7 @@
     <Compile Include="Renderers\ShellCustomRenderer.cs" />
     <Compile Include="Resource.designer.cs" />
     <Compile Include="Services\AndroidDeviceService.cs" />
+    <Compile Include="Services\GoogleMapsService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Notify\Notify.csproj">
@@ -97,7 +98,6 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\.DS_Store" />
-    <AndroidResource Include="Resources\drawable\accept_button.png" />
     <AndroidResource Include="Resources\drawable\add_friend.png" />
     <AndroidResource Include="Resources\drawable\avatar.png" />
     <AndroidResource Include="Resources\drawable\back.png" />
@@ -112,6 +112,7 @@
     <AndroidResource Include="Resources\drawable\friends.png" />
     <AndroidResource Include="Resources\drawable\friend_request.png" />
     <AndroidResource Include="Resources\drawable\google.png" />
+    <AndroidResource Include="Resources\drawable\google_maps_icon.png" />
     <AndroidResource Include="Resources\drawable\groups.png" />
     <AndroidResource Include="Resources\drawable\location_colored_icon.png" />
     <AndroidResource Include="Resources\drawable\location_icon.png" />
@@ -129,6 +130,7 @@
     <AndroidResource Include="Resources\drawable\reject_button.png" />
     <AndroidResource Include="Resources\drawable\renew_button.png" />
     <AndroidResource Include="Resources\drawable\settings.png" />
+    <AndroidResource Include="Resources\drawable\accept_button.png" />
     <AndroidResource Include="Resources\drawable\time_colored_icon.png" />
     <AndroidResource Include="Resources\drawable\wifi.png" />
     <AndroidResource Include="Resources\drawable\wifi_icon.png" />

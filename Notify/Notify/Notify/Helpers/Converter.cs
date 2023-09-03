@@ -265,6 +265,15 @@ namespace Notify.Helpers
             };
         }
         
+        public static FriendRequest ToFriendRequest(dynamic friendRequest)
+        {
+            return new FriendRequest(
+                requester: (string)friendRequest.requester,
+                userName: (string)friendRequest.userName,
+                requestDate: (string)friendRequest.requestDate ?? string.Empty,
+                requesterProfilePicture: (string)friendRequest.profilePicture ?? Constants.AZURE_FUNCTIONS_DEFAULT_USER_PROFILE_PICTURE);
+        }
+        
         public static Permission ToPermission(dynamic permission)
         {
             return new Permission(
