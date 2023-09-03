@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -101,12 +102,13 @@ namespace Notify.Functions.NotifyFunctions.Users
         private static async Task<List<string>> getUsersFromSentFriendRequests(string lowerCasedUsername)
         {
             IMongoCollection<BsonDocument> friendRequestsCollection = MongoUtils.GetCollection(Constants.COLLECTION_FRIEND_REQUEST);
-            FilterDefinition<BsonDocument> userFilter = Builders<BsonDocument>.Filter
-                .Where(doc => doc["requester"].AsString.ToLower().Equals(lowerCasedUsername));
+            FilterDefinition<BsonDocument> userFilter = Builders<BsonDocument>.Filter.Or(
+                Builders<BsonDocument>.Filter.Regex("userName", new BsonRegularExpression($"^{Regex.Escape(lowerCasedUsername)}$", "i")),
+                Builders<BsonDocument>.Filter.Regex("requester", new BsonRegularExpression($"^{Regex.Escape(lowerCasedUsername)}$", "i")));
             List<BsonDocument> friendRequestsDocuments = (await friendRequestsCollection.FindAsync(userFilter)).ToList();
             
-            return friendRequestsDocuments
-                .Select(doc => doc["userName"].ToString())
+            return friendRequestsDocuments.SelectMany(doc => new[] { doc["userName"].ToString(), doc["requester"].ToString() })
+                .Distinct()
                 .ToList();
         }
 
