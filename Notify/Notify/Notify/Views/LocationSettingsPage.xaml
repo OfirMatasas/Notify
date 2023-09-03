@@ -5,102 +5,138 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:materialDesignControls1="clr-namespace:Plugin.MaterialDesignControls;assembly=Plugin.MaterialDesignControls"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    
     <ContentPage.Content>
         <ScrollView>
             <Grid
                 BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor},
                                                   Dark={StaticResource DarkPageBackgroundColor}}"
-                Row="8"
-                RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, *">
-
-                <Label
-                    FontAttributes="Bold"
-                    FontSize="Large"
-                    Grid.Column="0"
-                    Grid.Row="0"
-                    HorizontalTextAlignment="Center"
-                    Style="{StaticResource Body1FontSize_ExoBold}"
-                    Text="Location Settings"
-                    VerticalTextAlignment="Center" />
-
+                Row="9"
+                RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, *">
+              
                 <Button
+                    Grid.Row="0"
+                    Margin="-20, 0, 0, 0"
                     Background="Transparent"
                     BackgroundColor="Transparent"
                     Command="{Binding BackCommand}"
                     FontAttributes="Bold"
-                    FontSize="30"
-                    Grid.Column="0"
-                    Grid.Row="0"
+                    FontSize="25"
                     HorizontalOptions="Start"
                     Text="❮"
                     TextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
                                                 Dark={StaticResource LightEntryBackgroundColor}}"
                     VerticalOptions="Start" />
 
-                <materialDesignControls1:MaterialPicker
-                    FontSize="16"
-                    Grid.Column="0"
+                <Label
                     Grid.Row="1"
-                    ItemsSource="{Binding LocationSelectionList}"
-                    Margin="5,30,5,0"
-                    Placeholder="Select destination"
-                    SelectedItem="{Binding SelectedLocation}" />
-
-                <materialDesignControls1:MaterialEntry
-                    BackgroundColor="White"
-                    BorderColor="Transparent"
-                    FontSize="16"
-                    Grid.Row="2"
-                    Margin="5,0,5,0"
-                    MaxLength="100"
-                    Placeholder="Enter Address"
-                    ReturnType="Next"
-                    TabIndex="1"
-                    Text="{Binding SearchAddress}"
-                    TextColor="Black" />
-
+                    FontAttributes="Bold"
+                    FontSize="30"
+                    HorizontalTextAlignment="Center"
+                    Style="{StaticResource Body1FontSize_ExoBold}"
+                    Text="Location Settings"
+                    VerticalTextAlignment="Center" />
+                
                 <materialDesignControls1:MaterialPicker
+                    Grid.Row="2"
                     FontSize="16"
+                    CornerRadius="10"
+                    ItemsSource="{Binding LocationSelectionList}"
+                    Margin="30,60,30,0"
+                    LabelText="Select Destination"
+                    Placeholder="Select Destination"
+                    LabelSize="16"
+                    LabelTextColor="Black"
+                    BackgroundColor="White"
+                    SelectedItem="{Binding SelectedLocation}"/>
+                
+                <StackLayout
                     Grid.Row="3"
-                    Margin="5,0,5,0"
-                    Placeholder="Suggestions"
-                    SelectedItem="{Binding SelectedAddress}">
-                    <materialDesignControls1:MaterialPicker.ItemsSource>
-                        <Binding Path="DropBoxOptions" />
-                    </materialDesignControls1:MaterialPicker.ItemsSource>
-                </materialDesignControls1:MaterialPicker>
+                    HeightRequest="20"
+                    Orientation="Horizontal"
+                    Spacing="10">
+                    <CheckBox Color="Black" IsChecked="{Binding IsCurrentLocationEnabled, Mode=TwoWay}" Margin="30,0,0,0" />
+                    <Label
+                        Text="Use Current Location"
+                        TextColor="Black"
+                        VerticalOptions="Center" />
+                </StackLayout>
+                
+                <Grid
+                    Grid.Row="4"
+                    IsEnabled="{Binding m_IsOtherLocationEnabled}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <materialDesignControls1:MaterialEntry
+                        FontSize="16"
+                        Grid.Column="0"
+                        HeightRequest="70"
+                        CornerRadius="10"
+                        Margin="30,30,30,0"
+                        LabelText="Enter Address"
+                        Placeholder="Enter Address"
+                        LabelSize="16"
+                        LabelTextColor="Black"
+                        PlaceholderColor="Gray"
+                        BackgroundColor="{Binding EntryBackgroundColor}"
+                        BorderColor="Transparent"
+                        MaxLength="100"
+                        ReturnType="Next"
+                        TabIndex="1"
+                        Text="{Binding SearchAddress}"
+                        TextColor="Black" />
+                </Grid>
+                
+                <Grid
+                    Grid.Row="5"
+                    IsEnabled="{Binding m_IsOtherLocationEnabled}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <materialDesignControls1:MaterialPicker
+                        FontSize="16"
+                        Grid.Column="0"
+                        HeightRequest="70"
+                        CornerRadius="10"
+                        Margin="30,10,30,0"
+                        LabelText="Suggestions"
+                        Placeholder="Suggestions"
+                        LabelSize="16"
+                        LabelTextColor="Black"
+                        PlaceholderColor="Gray"
+                        BackgroundColor="{Binding EntryBackgroundColor}"
+                        SelectedItem="{Binding SelectedAddress}">
+                        <materialDesignControls1:MaterialPicker.ItemsSource>
+                            <Binding Path="DropBoxOptions" />
+                        </materialDesignControls1:MaterialPicker.ItemsSource>
+                    </materialDesignControls1:MaterialPicker>
+                </Grid>
 
                 <Button
+                    Grid.Row="6"
+                    Margin="80,20,80,20"
                     BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
                                                       Dark={StaticResource DarkButtonColor}}"
                     Command="{Binding GetAddressSuggestionsCommand}"
+                    IsEnabled="{Binding m_IsOtherLocationEnabled}"
                     CornerRadius="30"
-                    Grid.Row="4"
-                    Margin="5,40,5,0"
-                    Text="GET ADDRESS SUGGESTIONS"
+                    Text="Get Address Suggestion"
                     TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
                                                 Dark={StaticResource DarkButtonTextColor}}" />
-
+                
                 <Button
-                    BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
-                                                      Dark={StaticResource DarkButtonColor}}"
-                    Command="{Binding GetCurrentLocationCommand}"
-                    CornerRadius="30"
-                    Grid.Row="5"
-                    Margin="5,0,5,0"
-                    Text="USE CURRENT LOCATION"
-                    TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
-                                                Dark={StaticResource DarkButtonTextColor}}" />
-
-                <Button
+                    Grid.Row="9"
+                    Margin="50,-15,50,180"
                     BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
                                                       Dark={StaticResource DarkButtonColor}}"
                     Command="{Binding UpdateLocationCommand}"
-                    Grid.Row="7"
+                    CornerRadius="30"
                     Text="UPDATE LOCATION"
                     TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
-                                                Dark={StaticResource DarkButtonTextColor}}"
-                    VerticalOptions="End" />
+                                                Dark={StaticResource DarkButtonTextColor}}" />
 
             </Grid>
         </ScrollView>
