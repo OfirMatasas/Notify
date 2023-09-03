@@ -34,6 +34,7 @@ namespace Notify.Droid.Services
                     if (m_Instance == null)
                     {
                         m_Instance = new GoogleMapsService(context);
+                        ExternalMapsService.Initialize(m_Instance); 
                     }
                 }
             }

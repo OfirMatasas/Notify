@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Notify.Azure.HttpClient;
 using Notify.Core;
@@ -48,6 +49,7 @@ namespace Notify.ViewModels
         private Color m_Color;
         private string m_SelectedFilter;
         private string m_ExpandedNotificationId;
+        private bool m_IsLoading;
         
         public Command DeleteNotificationCommand { get; set; }
         public Command EditNotificationCommand { get; set; }
@@ -64,6 +66,18 @@ namespace Notify.ViewModels
         
         public Color Color { get => m_Color; set => SetField(ref m_Color, value); }
         
+        public bool IsLoading
+        {
+            get => m_IsLoading;
+            set
+            {
+                if (m_IsLoading != value)
+                {
+                    m_IsLoading = value;
+                    OnPropertyChanged("IsLoading");
+                }
+            }
+        }        
         public bool IsActivationType
         {
             get => m_IsActivationType;
@@ -163,9 +177,21 @@ namespace Notify.ViewModels
             }
         }
 
-        private void onMapClicked(Notification notification)
+        private async void onMapClicked(Notification notification)
         {
-            ExternalMapsService.Instance.OpenExternalMap(notification.TypeInfo.ToString());
+            Task openMapTask;
+
+            IsLoading = true;
+            Task delayTask = Task.Delay(2500);
+            
+            openMapTask = Task.Run(() =>
+            {
+                ExternalMapsService.Instance.OpenExternalMap(notification.TypeInfo.ToString());
+            });
+            
+            await Task.WhenAll(openMapTask, delayTask);
+
+            IsLoading = false;
         }
 
         private void applyFilterAndSearch()

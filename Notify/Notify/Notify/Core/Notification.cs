@@ -36,12 +36,7 @@ namespace Notify.Core
         {
             
         }
-
-        public Notification()
-        {
-            
-        }
-
+        
         public Notification(string id, string name, string description, DateTime creationDateTime, string status, string creator, NotificationType type, object typeInfo, string target, string activation, bool permanent)
         {
             ID = id;

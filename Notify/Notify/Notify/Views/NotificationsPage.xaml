@@ -61,7 +61,6 @@
                     </Label>
                 </StackLayout>
             </Grid>
-
             <SearchBar
                 BackgroundColor="WhiteSmoke"
                 Grid.Row="0"
@@ -72,6 +71,10 @@
                 SearchCommand="{Binding ExecuteSearchCommand}"
                 SearchCommandParameter="{Binding .}"
                 Text="{Binding SearchTerm}" />
+            <ActivityIndicator
+                Color="#393E46"
+                IsRunning="{Binding IsLoading}"
+                IsVisible="{Binding IsLoading}" />
             <CollectionView
                 Grid.Row="2"
                 HorizontalOptions="FillAndExpand"
@@ -310,7 +313,6 @@
                                                             Opacity="0.8"
                                                             Source="google_maps_icon.png" />
                                                     </StackLayout>
-
                                                 </StackLayout>
                                             </Grid>
                                         </views:Expander>
