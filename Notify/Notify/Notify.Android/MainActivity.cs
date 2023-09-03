@@ -5,6 +5,7 @@ using Android.Runtime;
 using Android.OS;
 using Android.Content;
 using Notify.Droid.Notifications;
+using Notify.Droid.Services;
 using Notify.Helpers;
 using Notify.Notifications;
 using Notify.Services;
@@ -30,6 +31,8 @@ namespace Notify.Droid
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            ExternalMapsService externalMap = GoogleMapsService.Initialize(this);
+            
             base.OnCreate(savedInstanceState);
 
             Platform.Init(this, savedInstanceState);
