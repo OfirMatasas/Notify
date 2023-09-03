@@ -172,33 +172,33 @@ namespace Notify.ViewModels
 
         #region Use_Current_Location
 
-        private bool m_IsUseCurrentLocation;
-        private string m_TmpLongitude;
-        private string m_TmpLatitude;
-        public bool IsUseCurrentLocation
+        private bool m_IsCurrentLocationEnabled;
+        private string m_SelectedAddressLongitude;
+        private string m_SelectedAddressLatitude;
+        public bool IsCurrentLocationEnabled
         {
-            get => m_IsUseCurrentLocation;
+            get => m_IsCurrentLocationEnabled;
             set
             {
-                m_IsUseCurrentLocation = value;
-                OnPropertyChanged(nameof(IsUseCurrentLocation));
+                m_IsCurrentLocationEnabled = value;
+                OnPropertyChanged(nameof(IsCurrentLocationEnabled));
 
-                if (m_IsUseCurrentLocation)
+                if (m_IsCurrentLocationEnabled)
                 {
-                    m_TmpLongitude = Longitude;
-                    m_TmpLatitude = Latitude;
+                    m_SelectedAddressLongitude = Longitude;
+                    m_SelectedAddressLatitude = Latitude;
                     EntryBackgroundColor = Color.FromHex("#D1D1D1");
                     getCurrentLocationButtonClicked();
                 }
                 else
                 {
-                    Longitude = m_TmpLongitude;
-                    Latitude = m_TmpLatitude;
+                    Longitude = m_SelectedAddressLongitude;
+                    Latitude = m_SelectedAddressLatitude;
                     EntryBackgroundColor = Color.White;
                 }
             }
         }
-        public bool m_IsUseOtherLocation => !m_IsUseCurrentLocation;
+        public bool m_IsOtherLocationEnabled => !m_IsCurrentLocationEnabled;
         
         private Color m_EntryBackgroundColor = Color.White;
         public Color EntryBackgroundColor
@@ -269,3 +269,4 @@ namespace Notify.ViewModels
         }
     }
 }
+
