@@ -22,7 +22,6 @@ namespace Notify.ViewModels
             BackCommand = new Command(onBackButtonClicked);
             UpdateLocationCommand = new Command(onUpdateLocationButtonClicked);
             GetAddressSuggestionsCommand = new Command(onGetAddressSuggestionsButtonClicked);
-            GetCurrentLocationCommand = new Command(onGetCurrentLocationButtonClicked);
         }
 
         #endregion
@@ -59,7 +58,6 @@ namespace Notify.ViewModels
         #region Address
 
         public Command GetAddressSuggestionsCommand { get; set; }
-        public Command GetCurrentLocationCommand { get; set; }
         private string m_SearchedAddress;
         private string m_SelectedAddress;
         private List<string> m_DropBoxSuggestions;
@@ -172,6 +170,49 @@ namespace Notify.ViewModels
 
         #endregion
 
+        #region Use_Current_Location
+
+        private bool m_IsCurrentLocationEnabled;
+        private string m_SelectedAddressLongitude;
+        private string m_SelectedAddressLatitude;
+        public bool IsCurrentLocationEnabled
+        {
+            get => m_IsCurrentLocationEnabled;
+            set
+            {
+                m_IsCurrentLocationEnabled = value;
+                OnPropertyChanged(nameof(IsCurrentLocationEnabled));
+
+                if (m_IsCurrentLocationEnabled)
+                {
+                    m_SelectedAddressLongitude = Longitude;
+                    m_SelectedAddressLatitude = Latitude;
+                    EntryBackgroundColor = Color.FromHex("#D1D1D1");
+                    getCurrentLocationButtonClicked();
+                }
+                else
+                {
+                    Longitude = m_SelectedAddressLongitude;
+                    Latitude = m_SelectedAddressLatitude;
+                    EntryBackgroundColor = Color.White;
+                }
+            }
+        }
+        public bool m_IsOtherLocationEnabled => !m_IsCurrentLocationEnabled;
+        
+        private Color m_EntryBackgroundColor = Color.White;
+        public Color EntryBackgroundColor
+        {
+            get => m_EntryBackgroundColor;
+            set
+            {
+                m_EntryBackgroundColor = value;
+                OnPropertyChanged(nameof(EntryBackgroundColor));
+            }
+        }
+        
+        #endregion
+        
         private async void onGetGeographicCoordinatesButtonClicked()
         {
             Location location;
@@ -200,7 +241,7 @@ namespace Notify.ViewModels
             }
         }
 
-         private async void onGetCurrentLocationButtonClicked()
+         private async void getCurrentLocationButtonClicked()
          {
              GeolocationRequest request;
              Xamarin.Essentials.Location location;
@@ -213,9 +254,6 @@ namespace Notify.ViewModels
                  Longitude = location.Longitude.ToString();
                  Latitude = location.Latitude.ToString();
                  r_Logger.LogDebug($"onGetCurrentLocationButtonClicked - Longitude: {Longitude}, Latitude: {Latitude}");
-
-                 //SelectedAddress = await AzureHttpClient.Instance.GetAddressFromCoordinatesAsync(latitude: location.Latitude, longitude: location.Longitude);
-                 //r_Logger.LogDebug($"onGetCurrentLocationButtonClicked - SelectedAddress: {SelectedAddress}");
              }
              catch (Exception ex)
              {
@@ -231,3 +269,4 @@ namespace Notify.ViewModels
         }
     }
 }
+

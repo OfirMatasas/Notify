@@ -12,11 +12,13 @@
             Column="2"
             Row="6"
             RowDefinitions="Auto, Auto, Auto, Auto, *, Auto">
+            
             <Label
                 FontAttributes="Bold"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Grid.Row="0"
+                FontSize="35"
                 HorizontalTextAlignment="Center"
                 Margin="40"
                 Style="{StaticResource Headline3_ExoBold}"
@@ -27,6 +29,7 @@
                                                   Dark={StaticResource DarkButtonColor}}"
                 Command="{Binding GoLocationSettingsPageCommand}"
                 CornerRadius="30"
+                Margin="40 , 5, 40, 5"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Grid.Row="1"
@@ -39,10 +42,11 @@
                                                   Dark={StaticResource DarkButtonColor}}"
                 Command="{Binding GoWifiSettingsPageCommand}"
                 CornerRadius="30"
+                Margin="40 , 5, 40, 5"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Grid.Row="2"
-                Text="WiFi Settings"
+                Text="Wi-Fi Settings"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
                                             Dark={StaticResource DarkButtonTextColor}}" />
 
@@ -51,6 +55,7 @@
                                                   Dark={StaticResource DarkButtonColor}}"
                 Command="{Binding GoBluetoothSettingsPageCommand}"
                 CornerRadius="30"
+                Margin="40 , 5, 40, 5"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Grid.Row="3"
