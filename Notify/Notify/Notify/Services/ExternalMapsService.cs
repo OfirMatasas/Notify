@@ -1,5 +1,3 @@
-using System.Diagnostics;
-using Notify.Core;
 
 namespace Notify.Services
 {
@@ -9,6 +7,7 @@ namespace Notify.Services
         private static readonly LoggerService r_Logger = LoggerService.Instance;
 
         private static readonly object r_Lock = new object();
+        private static readonly LoggerService r_logger = LoggerService.Instance;
 
         public static ExternalMapsService Instance
         {
@@ -20,7 +19,7 @@ namespace Notify.Services
                     {
                         if (m_Instance == null)
                         {
-                            r_Logger.LogError("ERROR to initialize ExternalMapsService.");
+                            r_logger.LogError("Failed to initialize ExternalMapsService.");
                         }
                     }
                 }
