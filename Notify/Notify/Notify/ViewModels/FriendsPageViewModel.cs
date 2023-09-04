@@ -65,11 +65,11 @@ namespace Notify.ViewModels
         {
             EditFriendPopupPage popup = new EditFriendPopupPage();
 
-            MessagingCenter.Subscribe<EditFriendPopupPage, (string, string, string)>(this, "EditFriendValues", (sender, args) =>
+            MessagingCenter.Subscribe<EditFriendPopupPage, (string, string, string)>(this, "EditFriendValues", (sender, newPermissionValues) =>
             {
-                string selectedLocation = args.Item1;
-                string selectedTime = args.Item2;
-                string selectedDynamic = args.Item3;
+                string selectedLocation = newPermissionValues.Item1;
+                string selectedTime = newPermissionValues.Item2;
+                string selectedDynamic = newPermissionValues.Item3;
 
                 r_Logger.LogInformation($"Selected Location: {selectedLocation}, Selected Time: {selectedTime}, Selected Dynamic: {selectedDynamic}");
 
