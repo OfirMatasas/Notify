@@ -9,8 +9,10 @@ using Notify.Azure.HttpClient;
 using Notify.Core;
 using Notify.Helpers;
 using Notify.Services;
+using Notify.ViewModels.Popups;
 using Notify.Views.SubViews;
 using Notify.Views.Views;
+using Rg.Plugins.Popup.Services;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -28,6 +30,8 @@ namespace Notify.ViewModels
         public Command DeleteFriendCommand { get; set; }
         public Command ShowPendingFriendRequestsCommand { get; set; }
         public Command ExecuteSearchCommand { get; set; }
+        public Command EditFriendCommand { get; set; }
+
 
         private bool m_IsRefreshing;
         public bool IsRefreshing { set => SetField(ref m_IsRefreshing, value); }
@@ -51,9 +55,35 @@ namespace Notify.ViewModels
             ShowFriendRequestsCommand = new Command(onShowFriendRequestsClicked);
             SelectedFriendCommand = new Command(onSelectedFriendClicked);
             ExecuteSearchCommand = new Command(applyFilterAndSearch);
-
+            EditFriendCommand = new Command<User>(onEditFriendButtonClicked);
+            
             RefreshFriendsList();
             onRefreshFriendsClicked();
+        }
+
+        private async void onEditFriendButtonClicked(User friend)
+        {
+            EditFriendPopupPage popup = new EditFriendPopupPage();
+
+            MessagingCenter.Subscribe<EditFriendPopupPage, (string, string, string)>(this, "EditFriendValues", (sender, args) =>
+            {
+                string selectedLocation = args.Item1;
+                string selectedTime = args.Item2;
+                string selectedDynamic = args.Item3;
+
+                r_Logger.LogInformation($"Selected Location: {selectedLocation}, Selected Time: {selectedTime}, Selected Dynamic: {selectedDynamic}");
+
+                MessagingCenter.Unsubscribe<EditFriendPopupPage, (string, string, string)>(this, "EditFriendValues");
+                Device.BeginInvokeOnMainThread(async () =>
+                {
+                    await PopupNavigation.Instance.PopAsync();
+                });
+            });
+
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                await PopupNavigation.Instance.PushAsync(popup);
+            });
         }
         
         private async void RefreshFriendsList()
