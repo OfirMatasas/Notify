@@ -63,13 +63,16 @@ namespace Notify.ViewModels
 
         private async void onEditFriendButtonClicked(User friend)
         {
+            string selectedLocation, selectedTime, selectedDynamic;
+            bool isSucceeded; 
             EditFriendPopupPage popup = new EditFriendPopupPage();
+
 
             MessagingCenter.Subscribe<EditFriendPopupPage, (string, string, string)>(this, "EditFriendValues", (sender, newPermissionValues) =>
             {
-                string selectedLocation = newPermissionValues.Item1;
-                string selectedTime = newPermissionValues.Item2;
-                string selectedDynamic = newPermissionValues.Item3;
+                 selectedLocation = newPermissionValues.Item1;
+                 selectedTime = newPermissionValues.Item2;
+                 selectedDynamic = newPermissionValues.Item3;
 
                 r_Logger.LogInformation($"Selected Location: {selectedLocation}, Selected Time: {selectedTime}, Selected Dynamic: {selectedDynamic}");
 
@@ -84,6 +87,9 @@ namespace Notify.ViewModels
             {
                 await PopupNavigation.Instance.PushAsync(popup);
             });
+
+            isSucceeded = await AzureHttpClient.Instance.UpdateFriendPermissionsAsync(friend.UserName, selectedLocation, selectedTime,
+                selectedDynamic);
         }
         
         private async void RefreshFriendsList()
