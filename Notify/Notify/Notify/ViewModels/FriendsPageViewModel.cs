@@ -61,37 +61,57 @@ namespace Notify.ViewModels
             onRefreshFriendsClicked();
         }
 
-        private async void onEditFriendButtonClicked(User friend)
+        private void onEditFriendButtonClicked(User friend)
         {
-            string selectedLocation, selectedTime, selectedDynamic;
-            bool isSucceeded; 
             EditFriendPopupPage popup = new EditFriendPopupPage();
+            
+            string newLocation, newTime, newDynamic;
+            string selectedLocation = friend.Permissions.LocationNotificationPermission;
+            string selectedTime = friend.Permissions.TimeNotificationPermission;
+            string selectedDynamic = friend.Permissions.DynamicNotificationPermission;
 
+            bool isSucceeded;
 
-            MessagingCenter.Subscribe<EditFriendPopupPage, (string, string, string)>(this, "EditFriendValues", (sender, newPermissionValues) =>
-            {
-                 selectedLocation = newPermissionValues.Item1;
-                 selectedTime = newPermissionValues.Item2;
-                 selectedDynamic = newPermissionValues.Item3;
-
-                r_Logger.LogInformation($"Selected Location: {selectedLocation}, Selected Time: {selectedTime}, Selected Dynamic: {selectedDynamic}");
-
-                MessagingCenter.Unsubscribe<EditFriendPopupPage, (string, string, string)>(this, "EditFriendValues");
-                Device.BeginInvokeOnMainThread(async () =>
+            MessagingCenter.Subscribe<EditFriendPopupPage, (string, string, string)>(this, "EditFriendValues",
+                async (sender, newPermissionValues) =>
                 {
-                    await PopupNavigation.Instance.PopAsync();
+                    newLocation = newPermissionValues.Item1 ?? selectedLocation;
+                    newTime = newPermissionValues.Item2 ?? selectedTime;
+                    newDynamic = newPermissionValues.Item3 ?? selectedDynamic;
+
+                    if (newLocation != selectedLocation || newTime != selectedTime || newDynamic != selectedDynamic)
+                    {
+                        isSucceeded = await AzureHttpClient.Instance.UpdateFriendPermissionsAsync(friend.UserName,
+                            newLocation, newTime, newDynamic);
+
+                        if (isSucceeded)
+                        {
+                            await Application.Current.MainPage.DisplayAlert("Success",
+                                "User permissions updated successfully.", "OK");
+                            onRefreshFriendsClicked();
+                        }
+                        else
+                        {
+                            await Application.Current.MainPage.DisplayAlert("Error",
+                                "There was a problem updating user permissions.", "OK");
+                        }
+                    }
+
+                    MessagingCenter
+                        .Unsubscribe<EditFriendPopupPage, (string, string, string)>(this, "EditFriendValues");
+
+                    Device.BeginInvokeOnMainThread(async () =>
+                    {
+                        if (PopupNavigation.Instance.PopupStack.Count > 0)
+                        {
+                            await PopupNavigation.Instance.PopAsync();
+                        }
+                    });
                 });
-            });
 
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                await PopupNavigation.Instance.PushAsync(popup);
-            });
-
-            isSucceeded = await AzureHttpClient.Instance.UpdateFriendPermissionsAsync(friend.UserName, selectedLocation, selectedTime,
-                selectedDynamic);
+            Device.BeginInvokeOnMainThread(async () => { await PopupNavigation.Instance.PushAsync(popup); });
         }
-        
+
         private async void RefreshFriendsList()
         {
             string friendsJson;

@@ -205,7 +205,7 @@
                                                     <Label
                                                         FontAttributes="Bold"
                                                         FontSize="Small"
-                                                        Margin="20,0"
+                                                        Margin="20,0,20,10"
                                                         Opacity="0.8"
                                                         Text="{Binding Permissions.DynamicNotificationPermission, StringFormat='Dynamic: {0}'}"
                                                         TextColor="#2F3246" />
