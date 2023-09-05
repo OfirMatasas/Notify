@@ -10,7 +10,7 @@ namespace Notify.ViewModels.Popups
         public Picker TimePermissionPicker { get; set; }
         public Picker DynamicPermissionPicker { get; set; }
         
-        public EditFriendPopupPage()
+        public EditFriendPopupPage(string currentLocation, string currentTime, string currentDynamic)
         {
             Label titleLabel;
             Button updatePermissionsButton;
@@ -23,6 +23,10 @@ namespace Notify.ViewModels.Popups
             LocationPermissionPicker = CreatePicker("Location");
             TimePermissionPicker = CreatePicker("Time");  
             DynamicPermissionPicker = CreatePicker("Dynamic");
+            
+            LocationPermissionPicker.SelectedItem = currentLocation;
+            TimePermissionPicker.SelectedItem = currentTime;
+            DynamicPermissionPicker.SelectedItem = currentDynamic;
 
             titleLabel = new Label
             {

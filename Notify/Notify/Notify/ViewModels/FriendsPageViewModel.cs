@@ -62,11 +62,11 @@ namespace Notify.ViewModels
 
         private void onEditFriendButtonClicked(User friend)
         {
-            EditFriendPopupPage popup = new EditFriendPopupPage();
             string newLocationPermission, newTimePermission, newDynamicPermission;
             string selectedLocationPermission = friend.Permissions.LocationNotificationPermission;
             string selectedTimePermission = friend.Permissions.TimeNotificationPermission;
             string selectedDynamicPermission = friend.Permissions.DynamicNotificationPermission;
+            EditFriendPopupPage popup = new EditFriendPopupPage(selectedLocationPermission, selectedTimePermission, selectedDynamicPermission);
             bool isSucceeded;
 
             MessagingCenter.Subscribe<EditFriendPopupPage, (string, string, string)>(this, "EditFriendValues",
