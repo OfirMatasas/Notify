@@ -31,8 +31,7 @@ namespace Notify.ViewModels
         public Command ShowPendingFriendRequestsCommand { get; set; }
         public Command ExecuteSearchCommand { get; set; }
         public Command EditFriendCommand { get; set; }
-
-
+        
         private bool m_IsRefreshing;
         public bool IsRefreshing { set => SetField(ref m_IsRefreshing, value); }
         
@@ -64,37 +63,32 @@ namespace Notify.ViewModels
         private void onEditFriendButtonClicked(User friend)
         {
             EditFriendPopupPage popup = new EditFriendPopupPage();
-            
-            string newLocation, newTime, newDynamic;
-            string selectedLocation = friend.Permissions.LocationNotificationPermission;
-            string selectedTime = friend.Permissions.TimeNotificationPermission;
-            string selectedDynamic = friend.Permissions.DynamicNotificationPermission;
-
+            string newLocationPermission, newTimePermission, newDynamicPermission;
+            string selectedLocationPermission = friend.Permissions.LocationNotificationPermission;
+            string selectedTimePermission = friend.Permissions.TimeNotificationPermission;
+            string selectedDynamicPermission = friend.Permissions.DynamicNotificationPermission;
             bool isSucceeded;
 
             MessagingCenter.Subscribe<EditFriendPopupPage, (string, string, string)>(this, "EditFriendValues",
                 async (sender, newPermissionValues) =>
                 {
-                    newLocation = newPermissionValues.Item1 ?? selectedLocation;
-                    newTime = newPermissionValues.Item2 ?? selectedTime;
-                    newDynamic = newPermissionValues.Item3 ?? selectedDynamic;
+                    newLocationPermission = newPermissionValues.Item1 ?? selectedLocationPermission;
+                    newTimePermission = newPermissionValues.Item2 ?? selectedTimePermission;
+                    newDynamicPermission = newPermissionValues.Item3 ?? selectedDynamicPermission;
 
-                    if (newLocation != selectedLocation || newTime != selectedTime || newDynamic != selectedDynamic)
+                    if (newLocationPermission != selectedLocationPermission || newTimePermission != selectedTimePermission || newDynamicPermission != selectedDynamicPermission)
                     {
                         isSucceeded = await AzureHttpClient.Instance.UpdateFriendPermissionsAsync(friend.UserName,
-                            newLocation, newTime, newDynamic);
+                            newLocationPermission, newTimePermission, newDynamicPermission);
 
-                        if (isSucceeded)
-                        {
-                            await Application.Current.MainPage.DisplayAlert("Success",
-                                "User permissions updated successfully.", "OK");
-                            onRefreshFriendsClicked();
-                        }
-                        else
+                        if (!isSucceeded)
                         {
                             await Application.Current.MainPage.DisplayAlert("Error",
                                 "There was a problem updating user permissions.", "OK");
+
                         }
+
+                        onRefreshFriendsClicked();
                     }
 
                     MessagingCenter

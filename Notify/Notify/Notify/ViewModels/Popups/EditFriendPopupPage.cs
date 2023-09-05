@@ -1,3 +1,4 @@
+using Notify.Helpers;
 using Rg.Plugins.Popup.Pages;
 using Xamarin.Forms;
 
@@ -5,45 +6,47 @@ namespace Notify.ViewModels.Popups
 {
     public class EditFriendPopupPage : PopupPage
     {
-        public Picker LocationPicker { get; set; }
-        public Picker TimePicker { get; set; }
-        public Picker DynamicPicker { get; set; }
-
+        public Picker LocationPermissionPicker { get; set; }
+        public Picker TimePermissionPicker { get; set; }
+        public Picker DynamicPermissionPicker { get; set; }
+        
         public EditFriendPopupPage()
         {
-            LocationPicker = new Picker { Title = "Location" };
-            TimePicker = new Picker { Title = "Time" };
-            DynamicPicker = new Picker { Title = "Dynamic" };
+            Label titleLabel;
+            Button updatePermissionsButton;
+            Frame locationFrame;
+            Frame timeFrame;
+            Frame dynamicFrame;
+            StackLayout stackLayout;
+            Frame frame;
+            
+            LocationPermissionPicker = CreatePicker("Location");
+            TimePermissionPicker = CreatePicker("Time");  
+            DynamicPermissionPicker = CreatePicker("Dynamic");
 
-            LocationPicker.Items.Add("Allow");
-            LocationPicker.Items.Add("Disallow");
-            TimePicker.Items.Add("Allow");
-            TimePicker.Items.Add("Disallow");
-            DynamicPicker.Items.Add("Allow");
-            DynamicPicker.Items.Add("Disallow");
-
-            Label titleLabel = new Label
+            titleLabel = new Label
             {
-                Text = "Edit Friend Settings",
+                Text = "Edit Friend Permissions",
                 FontSize = 24,
                 FontAttributes = FontAttributes.Bold,
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.Center
             };
 
-            Button acceptButton = new Button
+            updatePermissionsButton = new Button
             {
-                Text = "Accept",
+                Text = "Update Permissions",
                 VerticalOptions = LayoutOptions.End,
                 HorizontalOptions = LayoutOptions.FillAndExpand
             };
-            acceptButton.Clicked += AcceptButton_Clicked;
+            
+            updatePermissionsButton.Clicked += UpdatePermissionsButton_Clicked;
 
-            var locationFrame = new Frame { Content = LocationPicker, CornerRadius = 5, Padding = 10, BackgroundColor = Color.LightGray };
-            var timeFrame = new Frame { Content = TimePicker, CornerRadius = 5, Padding = 10, BackgroundColor = Color.LightGray };
-            var dynamicFrame = new Frame { Content = DynamicPicker, CornerRadius = 5, Padding = 10, BackgroundColor = Color.LightGray };
+            locationFrame = new Frame { Content = LocationPermissionPicker, CornerRadius = 5, Padding = 10, BackgroundColor = Color.LightGray };
+            timeFrame = new Frame { Content = TimePermissionPicker, CornerRadius = 5, Padding = 10, BackgroundColor = Color.LightGray };
+            dynamicFrame = new Frame { Content = DynamicPermissionPicker, CornerRadius = 5, Padding = 10, BackgroundColor = Color.LightGray };
 
-            var stackLayout = new StackLayout
+            stackLayout = new StackLayout
             {
                 Children =
                 {
@@ -51,13 +54,13 @@ namespace Notify.ViewModels.Popups
                     locationFrame,
                     timeFrame,
                     dynamicFrame,
-                    acceptButton
+                    updatePermissionsButton
                 },
                 Padding = new Thickness(20),
                 Spacing = 20
             };
 
-            var frame = new Frame
+            frame = new Frame
             {
                 Content = stackLayout,
                 VerticalOptions = LayoutOptions.CenterAndExpand,
@@ -75,12 +78,21 @@ namespace Notify.ViewModels.Popups
                 HorizontalOptions = LayoutOptions.CenterAndExpand,
             };
         }
-
-        private void AcceptButton_Clicked(object sender, System.EventArgs e)
+        
+        private Picker CreatePicker(string title)
         {
-            string selectedLocation = LocationPicker.SelectedItem?.ToString();
-            string selectedTime = TimePicker.SelectedItem?.ToString();
-            string selectedDynamic = DynamicPicker.SelectedItem?.ToString();
+            Picker picker = new Picker { Title = title };
+            picker.Items.Add(Constants.NOTIFICATION_PERMISSION_ALLOW);
+            picker.Items.Add(Constants.NOTIFICATION_PERMISSION_DISALLOW);
+            
+            return picker;
+        }
+
+        private void UpdatePermissionsButton_Clicked(object sender, System.EventArgs e)
+        {
+            string selectedLocation = LocationPermissionPicker.SelectedItem?.ToString();
+            string selectedTime = TimePermissionPicker.SelectedItem?.ToString();
+            string selectedDynamic = DynamicPermissionPicker.SelectedItem?.ToString();
 
             MessagingCenter.Send<EditFriendPopupPage, (string, string, string)>(this, "EditFriendValues", (selectedLocation, selectedTime, selectedDynamic));
         }
