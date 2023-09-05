@@ -222,3 +222,4 @@ namespace Notify.ViewModels
         }
     }
 }
+
