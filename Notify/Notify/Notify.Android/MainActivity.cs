@@ -38,6 +38,7 @@ namespace Notify.Droid
             Platform.Init(this, savedInstanceState);
             Forms.Init(this, savedInstanceState);
             Plugin.MaterialDesignControls.Android.Renderer.Init();
+            Rg.Plugins.Popup.Popup.Init(this);
 
             serviceIntent = new Intent(this, typeof(AndroidLocationService));
             SetServiceMethods();
