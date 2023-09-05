@@ -814,6 +814,8 @@ namespace Notify.Azure.HttpClient
                 { "id", notificationID }
             };
             
+            r_Logger.LogInformation($"request:{Environment.NewLine}{data}");
+            
             try
             {
                 response = await deleteAsync(

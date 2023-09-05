@@ -12,13 +12,10 @@ namespace Notify.ViewModels.Popups
         
         public EditFriendPopupPage(string currentLocation, string currentTime, string currentDynamic)
         {
-            Label titleLabel;
+            Label titleLabel, locationLabel, timeLabel, dynamicLabel;
             Button updatePermissionsButton;
-            Frame locationFrame;
-            Frame timeFrame;
-            Frame dynamicFrame;
+            Frame locationFrame, timeFrame, dynamicFrame, frame;
             StackLayout stackLayout;
-            Frame frame;
             
             LocationPermissionPicker = CreatePicker("Location");
             TimePermissionPicker = CreatePicker("Time");  
@@ -34,7 +31,38 @@ namespace Notify.ViewModels.Popups
                 FontSize = 24,
                 FontAttributes = FontAttributes.Bold,
                 VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.Center
+                HorizontalOptions = LayoutOptions.Center,
+                TextColor = Color.Black
+            };
+
+            locationLabel = new Label
+            {
+                Text = "Location",
+                FontSize = 18,
+                FontAttributes = FontAttributes.Bold,
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center,
+                TextColor = Color.Black
+            };
+            
+            timeLabel = new Label
+            {
+                Text = "Time",
+                FontSize = 18,
+                FontAttributes = FontAttributes.Bold,
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center,
+                TextColor = Color.Black
+            };
+            
+            dynamicLabel = new Label
+            {
+                Text = "Dynamic",
+                FontSize = 18,
+                FontAttributes = FontAttributes.Bold,
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center,
+                TextColor = Color.Black
             };
 
             updatePermissionsButton = new Button
@@ -46,22 +74,25 @@ namespace Notify.ViewModels.Popups
             
             updatePermissionsButton.Clicked += UpdatePermissionsButton_Clicked;
 
-            locationFrame = new Frame { Content = LocationPermissionPicker, CornerRadius = 5, Padding = 10, BackgroundColor = Color.LightGray };
-            timeFrame = new Frame { Content = TimePermissionPicker, CornerRadius = 5, Padding = 10, BackgroundColor = Color.LightGray };
-            dynamicFrame = new Frame { Content = DynamicPermissionPicker, CornerRadius = 5, Padding = 10, BackgroundColor = Color.LightGray };
+            locationFrame = new Frame { Content = LocationPermissionPicker, CornerRadius = 5, Padding = 5, BackgroundColor = Color.LightGray };
+            timeFrame = new Frame { Content = TimePermissionPicker, CornerRadius = 5, Padding = 5, BackgroundColor = Color.LightGray };
+            dynamicFrame = new Frame { Content = DynamicPermissionPicker, CornerRadius = 5, Padding = 5, BackgroundColor = Color.LightGray };
 
             stackLayout = new StackLayout
             {
                 Children =
                 {
                     titleLabel,
+                    locationLabel,
                     locationFrame,
+                    timeLabel,
                     timeFrame,
+                    dynamicLabel,
                     dynamicFrame,
                     updatePermissionsButton
                 },
-                Padding = new Thickness(20),
-                Spacing = 20
+                Padding = new Thickness(15),
+                Spacing = 15
             };
 
             frame = new Frame

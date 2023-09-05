@@ -32,6 +32,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="140" />
                 <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
@@ -39,6 +40,7 @@
                 BackgroundColor="#F3F5F9"
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions="FillAndExpand">
+
                 <StackLayout
                     HorizontalOptions="Center"
                     Margin="0,-40,0,0"
@@ -61,6 +63,7 @@
                     </Label>
                 </StackLayout>
             </Grid>
+
             <SearchBar
                 BackgroundColor="WhiteSmoke"
                 Grid.Row="0"
@@ -71,48 +74,57 @@
                 SearchCommand="{Binding ExecuteSearchCommand}"
                 SearchCommandParameter="{Binding .}"
                 Text="{Binding SearchTerm}" />
+
             <ActivityIndicator
                 Color="#393E46"
                 IsRunning="{Binding IsLoading}"
                 IsVisible="{Binding IsLoading}" />
-            <CollectionView
+
+            <materialDesignControls:MaterialPicker
+                BackgroundColor="Transparent"
+                BorderColor="Transparent"
+                Grid.Column="0"
                 Grid.Row="2"
+                ItemsSource="{Binding FilterTypes}"
+                Margin="0,-30,0,0"
+                Placeholder="Filter by"
+                PlaceholderColor="Black"
+                SelectedItem="{Binding SelectedFilter}"
+                TextColor="Black" />
+
+            <Label
+                FontAttributes="Bold"
+                FontSize="Large"
+                Grid.Row="2"
+                HorizontalOptions="End"
+                Margin="0,-20,20,0"
+                Text="+"
+                TextColor="Black">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding CreateNotificationCommand}" />
+                </Label.GestureRecognizers>
+            </Label>
+
+            <CollectionView
+                Grid.Row="3"
                 HorizontalOptions="FillAndExpand"
                 ItemsSource="{Binding FilteredNotifications}"
-                Margin="15,-10,15,0"
+                Margin="15,-20,15,0"
                 SelectionMode="None"
                 VerticalOptions="FillAndExpand"
                 VerticalScrollBarVisibility="Always">
+
                 <CollectionView.Header>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <materialDesignControls:MaterialPicker
-                            BackgroundColor="Transparent"
-                            BorderColor="Transparent"
-                            Grid.Column="0"
-                            ItemsSource="{Binding FilterTypes}"
-                            Placeholder="Filter by"
-                            PlaceholderColor="Black"
-                            SelectedItem="{Binding SelectedFilter}" />
-                        <Label
-                            FontAttributes="Bold"
-                            FontSize="Large"
-                            Grid.Column="1"
-                            HorizontalOptions="End"
-                            Margin="0,0,10,0"
-                            Text="+"
-                            TextColor="Black">
-                            <Label.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding CreateNotificationCommand}" />
-                            </Label.GestureRecognizers>
-                        </Label>
+
                     </Grid>
                 </CollectionView.Header>
                 <CollectionView.ItemsLayout>
-                    <LinearItemsLayout ItemSpacing="20" Orientation="Vertical" />
+                    <LinearItemsLayout ItemSpacing="10" Orientation="Vertical" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
@@ -131,6 +143,7 @@
                                     </SwipeItem>
                                 </SwipeItems>
                             </SwipeView.LeftItems>
+
                             <SwipeView.RightItems>
                                 <SwipeItems Mode="Reveal">
                                     <SwipeItem
@@ -168,21 +181,25 @@
                                     </SwipeItem>
                                 </SwipeItems>
                             </SwipeView.RightItems>
+
                             <SwipeView.Content>
                                 <pancakeView:PancakeView
                                     BackgroundColor="White"
                                     HorizontalOptions="FillAndExpand"
                                     VerticalOptions="StartAndExpand">
                                     <Grid HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand">
+
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
+
                                         <BoxView
                                             BackgroundColor="{Binding Type, Converter={StaticResource TypeToColorConverter}}"
                                             HorizontalOptions="Start"
                                             VerticalOptions="FillAndExpand"
                                             WidthRequest="3" />
+
                                         <views:Expander Grid.Column="1" IsExpanded="{Binding ID, Converter={StaticResource IdToIsExpandedConverter}, ConverterParameter={Binding Source={x:Reference NotificationForm}, Path=BindingContext.ExpandedNotificationId}}">
                                             <views:Expander.Header>
                                                 <Grid HorizontalOptions="FillAndExpand">
@@ -191,6 +208,7 @@
                                                         <ColumnDefinition Width="Auto" />
                                                         <ColumnDefinition Width="3.5*" />
                                                     </Grid.ColumnDefinitions>
+
                                                     <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
                                                         <Image
                                                             Aspect="AspectFill"
@@ -198,22 +216,26 @@
                                                             HorizontalOptions="Center"
                                                             Source="{Binding Type, Converter={StaticResource TypeToIconConverter}}" />
                                                     </StackLayout>
+
                                                     <BoxView
                                                         BackgroundColor="#F2F4F8"
                                                         Grid.Column="1"
                                                         HorizontalOptions="Start"
                                                         VerticalOptions="FillAndExpand"
                                                         WidthRequest="1" />
+
                                                     <StackLayout
                                                         Grid.Column="2"
                                                         HorizontalOptions="Start"
                                                         Margin="20,20,20,20"
                                                         VerticalOptions="Center">
+
                                                         <Label
                                                             FontAttributes="Bold"
                                                             FontSize="Medium"
                                                             Text="{Binding Name}"
                                                             TextColor="Black" />
+
                                                         <Label
                                                             FontSize="Medium"
                                                             Margin="0,-5,0,0"
@@ -222,18 +244,21 @@
                                                     </StackLayout>
                                                 </Grid>
                                             </views:Expander.Header>
+
                                             <Grid HorizontalOptions="FillAndExpand">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="3.5*" />
                                                 </Grid.ColumnDefinitions>
+
                                                 <BoxView
                                                     BackgroundColor="#F2F4F8"
                                                     Grid.Column="1"
                                                     HorizontalOptions="Start"
                                                     VerticalOptions="FillAndExpand"
                                                     WidthRequest="1" />
+
                                                 <StackLayout Grid.Column="2" Spacing="10">
                                                     <Label
                                                         FontAttributes="Bold"
@@ -242,6 +267,7 @@
                                                         Opacity="0.8"
                                                         Text="{Binding Status, StringFormat='Status: {0}'}"
                                                         TextColor="#2F3246" />
+
                                                     <Label
                                                         FontAttributes="Bold"
                                                         FontSize="Small"
@@ -249,6 +275,7 @@
                                                         Opacity="0.8"
                                                         Text="{Binding Creator, StringFormat='Creator: {0}'}"
                                                         TextColor="#2F3246" />
+
                                                     <Label
                                                         FontAttributes="Bold"
                                                         FontSize="Small"
@@ -256,12 +283,14 @@
                                                         Opacity="0.8"
                                                         Text="{Binding CreationDateTime, StringFormat='Creation Date: {0}'}"
                                                         TextColor="#2F3246" />
+
                                                     <Label
                                                         FontAttributes="Bold"
                                                         FontSize="Small"
                                                         Margin="20,0"
                                                         Opacity="0.8"
                                                         TextColor="#2F3246">
+
                                                         <Label.FormattedText>
                                                             <FormattedString>
                                                                 <Span Text="{Binding Type, Converter={StaticResource TypeInfoConverter}}" />
@@ -270,6 +299,7 @@
                                                             </FormattedString>
                                                         </Label.FormattedText>
                                                     </Label>
+
                                                     <Label
                                                         FontAttributes="Bold"
                                                         FontSize="Small"
@@ -278,6 +308,7 @@
                                                         Opacity="0.8"
                                                         Text="{Binding Activation, StringFormat='Activate on: {0}'}"
                                                         TextColor="#2F3246" />
+
                                                     <Label
                                                         FontAttributes="Bold"
                                                         FontSize="Small"
@@ -286,18 +317,21 @@
                                                         Opacity="0.8"
                                                         Text="{Binding IsPermanent, StringFormat='Permanent: {0}'}"
                                                         TextColor="#2F3246" />
+
                                                     <Label
                                                         FontAttributes="Bold"
                                                         FontSize="Small"
-                                                        Margin="20,1"
+                                                        Margin="20,0,20,10"
                                                         Opacity="0.8"
                                                         Text="{Binding Target, StringFormat='Target User: {0}'}"
                                                         TextColor="#2F3246" />
+
                                                     <StackLayout
                                                         IsVisible="{Binding IsDynamicLocation}"
                                                         Margin="20,0,20,10"
                                                         Orientation="Horizontal"
                                                         Spacing="5">
+
                                                         <Label
                                                             FontAttributes="Bold"
                                                             FontSize="Small"
@@ -305,6 +339,7 @@
                                                             Text="Open in:"
                                                             TextColor="#2F3246"
                                                             VerticalOptions="Center" />
+
                                                         <ImageButton
                                                             BackgroundColor="Transparent"
                                                             Command="{Binding Path=BindingContext.OpenMapCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
