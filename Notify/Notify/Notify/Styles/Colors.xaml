@@ -24,5 +24,5 @@
     <Color x:Key="DarkButtonColor">#D0E9EA</Color>
     <Color x:Key="DarkButtonTextColor">#222831</Color>
     <Color x:Key="DarkPageBackgroundColor">#3e3e42</Color>
-    <Color x:Key="DarkTabBarBackgroundColor">#FFC436</Color>
+    <Color x:Key="DarkTabBarBackgroundColor">#053B50</Color>
 </ResourceDictionary>
