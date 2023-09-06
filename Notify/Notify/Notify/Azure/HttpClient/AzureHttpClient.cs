@@ -188,43 +188,6 @@ namespace Notify.Azure.HttpClient
             return isSuccess;
         }
         
-        // public async Task<bool> RemoveDestinationOLD(string destinationName, NotificationType notificationType) // TODO - delete
-        // {
-        //     string username = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
-        //     string locationType = notificationType.ToString();
-        //     HttpResponseMessage response;
-        //     bool isSuccess;
-        //
-        //     try
-        //     {
-        //         dynamic data = new JObject();
-        //         data.user = username;
-        //         data.location = new JObject();
-        //         data.location.name = destinationName;
-        //         data.location.type = locationType;
-        //
-        //         string json = JsonConvert.SerializeObject(data);
-        //         r_Logger.LogInformation($"request:{Environment.NewLine}{data}");
-        //
-        //         response = await postAsync(
-        //             requestUri: Constants.AZURE_FUNCTIONS_PATTERN_DESTINATION_DELETE,
-        //             content: createJsonStringContent(json)
-        //         );
-        //
-        //         response.EnsureSuccessStatusCode();
-        //         isSuccess = true;
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         r_Logger.LogError($"Error occurred while deleting location setting: {Environment.NewLine}{ex.Message}");
-        //         isSuccess = false;
-        //     }
-        //
-        //     return isSuccess;
-        // }
-        //
-
-
         #endregion
 
         

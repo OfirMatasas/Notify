@@ -128,6 +128,18 @@
                                                 Dark={StaticResource DarkButtonTextColor}}" />
                 
                 <Button
+                    Grid.Row="8"
+                    Margin="50,120,50,40"
+                    CornerRadius="30"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
+                                      Dark={StaticResource DarkButtonColor}}"
+                    Command="{Binding RemoveLocationDestinationCommand}"
+                    Text="{Binding RemoveLocationButtonText}"
+                    TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
+                                Dark={StaticResource DarkButtonTextColor}}"
+                    IsEnabled="{Binding IsRemoveButtonEnabled}" />
+                
+                <Button
                     Grid.Row="9"
                     Margin="50,-15,50,180"
                     BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},

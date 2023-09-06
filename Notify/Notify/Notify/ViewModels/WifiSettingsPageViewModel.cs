@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Xamarin.Forms;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Microsoft.IdentityModel.Tokens;
@@ -6,7 +7,6 @@ using Notify.Azure.HttpClient;
 using Notify.Core;
 using Notify.Helpers;
 using Notify.WiFi;
-using Xamarin.Forms;
 
 namespace Notify.ViewModels
 {
@@ -35,9 +35,22 @@ namespace Notify.ViewModels
         #endregion
 
         #region Location_Selection
-        
-        public string SelectedLocation { get; set; }
+
+        private string m_SelectedLocation;
         public List<string> LocationSelectionList { get; set; } = Constants.LOCATIONS_LIST;
+        
+        public string SelectedLocation
+        {
+            get => m_SelectedLocation;
+            set
+            {
+                if (SetField(ref m_SelectedLocation, value))
+                {
+                    RemoveWifiButtonText = $"REMOVE {value} WI-FI";
+                    IsRemoveButtonEnabled = true;
+                }
+            }
+        }
 
         #endregion
 
@@ -104,14 +117,11 @@ namespace Notify.ViewModels
         private async void onRemoveWifiDestinationClicked()
         {
             bool successfulUpdate;
-            
-            // if(SelectedLocation.IsNullOrEmpty())
-            // {
-            //     await App.Current.MainPage.DisplayAlert("Error", "Please select a location and a WiFi network", "OK");
-            // }
-            // else
-            // {
-                successfulUpdate =  AzureHttpClient.Instance.RemoveDestination("Home", NotificationType.WiFi).Result;
+            bool isConfirmed = await App.Current.MainPage.DisplayAlert("Confirmation", $"Are you sure you want to remove {SelectedLocation} Wi-Fi Destination from preferences?", "Yes", "No");
+
+            if (isConfirmed)
+            {
+                successfulUpdate = AzureHttpClient.Instance.RemoveDestination(m_SelectedLocation, NotificationType.WiFi).Result;
                 
                 if (successfulUpdate)
                 {
@@ -122,7 +132,21 @@ namespace Notify.ViewModels
                 {
                     App.Current.MainPage.DisplayAlert("Error", "Something went wrong", "OK");
                 }
-            // }
+            }
+        }
+        
+        private string m_RemoveWifiButtonText = "PLEASE CHOOSE DESTINATION";
+        public string RemoveWifiButtonText
+        {
+            get => m_RemoveWifiButtonText;
+            set => SetField(ref m_RemoveWifiButtonText, value);
+        }
+
+        private bool m_IsRemoveButtonEnabled;
+        public bool IsRemoveButtonEnabled
+        {
+            get => m_IsRemoveButtonEnabled;
+            set => SetField(ref m_IsRemoveButtonEnabled, value);
         }
         
         #endregion

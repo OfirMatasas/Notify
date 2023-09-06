@@ -43,8 +43,8 @@
                     LabelMargin="3"
                     LabelSize="16"
                     Margin="30,60,30,0"
-                    LabelText="Select Location"
-                    Placeholder="Select Location"
+                    LabelText="Select Destination"
+                    Placeholder="Select Destination"
                     LabelTextColor="Black"
                     BackgroundColor="White"
                     ItemsSource="{Binding LocationSelectionList}"
@@ -64,6 +64,18 @@
                     ItemsSource="{Binding BluetoothSelectionList}"
                     SelectedItem="{Binding SelectedBluetoothID}"
                     TabIndex="1"/>
+                
+                <Button
+                    Grid.Row="8"
+                    Margin="50,320,50,-60"
+                    CornerRadius="30"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
+                                      Dark={StaticResource DarkButtonColor}}"
+                    Command="{Binding RemoveBluetoothDestinationCommand}"
+                    Text="{Binding RemoveBluetoothButtonText}"
+                    TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
+                                Dark={StaticResource DarkButtonTextColor}}"
+                    IsEnabled="{Binding IsRemoveButtonEnabled}" />
 
                 <Button
                     Grid.Row="9"
