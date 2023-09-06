@@ -18,6 +18,7 @@ namespace Notify.ViewModels
         {
             BackCommand = new Command(onBackButtonClicked);
             UpdateWifiSettingsCommand = new Command(onUpdateWifiSettingsClicked);
+            RemoveWifiDestinationCommand = new Command(onRemoveWifiDestinationClicked);
         }
 
         #endregion
@@ -94,6 +95,36 @@ namespace Notify.ViewModels
             return true;
         }
 
+        #endregion
+        
+        #region Remove_Destination
+        
+        public Command RemoveWifiDestinationCommand { get; set; }
+        
+        private async void onRemoveWifiDestinationClicked()
+        {
+            bool successfulUpdate;
+            
+            // if(SelectedLocation.IsNullOrEmpty())
+            // {
+            //     await App.Current.MainPage.DisplayAlert("Error", "Please select a location and a WiFi network", "OK");
+            // }
+            // else
+            // {
+                successfulUpdate =  AzureHttpClient.Instance.RemoveDestination("Home", NotificationType.WiFi).Result;
+                
+                if (successfulUpdate)
+                {
+                    App.Current.MainPage.DisplayAlert("Remove", $"Remove success!", "OK");
+                    await AzureHttpClient.Instance.GetDestinations();
+                }
+                else
+                {
+                    App.Current.MainPage.DisplayAlert("Error", "Something went wrong", "OK");
+                }
+            // }
+        }
+        
         #endregion
     }
 }

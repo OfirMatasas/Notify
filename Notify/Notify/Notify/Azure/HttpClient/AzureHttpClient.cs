@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
@@ -53,6 +52,7 @@ namespace Notify.Azure.HttpClient
             }
         }
 
+        #region  Destination
         public async Task<bool> UpdateDestination<T>(string destinationName, T locationData, NotificationType notificationType)
         {
             dynamic data = new JObject();
@@ -112,130 +112,124 @@ namespace Notify.Azure.HttpClient
 
             return isSuccess;
         }
+        
+        public async Task<List<Destination>> GetDestinations()
+        {
+            List<Destination> destinations = await GetData(
+                endpoint: Constants.AZURE_FUNCTIONS_PATTERN_DESTINATION,
+                preferencesKey: Constants.PREFERENCES_DESTINATIONS,
+                converter: Converter.ToDestination);
 
-        public bool SendSMSVerificationCode(string telephoneNumber, string verificationCode)
+            foreach (string dynamicDestination in Constants.DYNAMIC_PLACE_LIST)
+            {
+                destinations.Add(new Destination(dynamicDestination, true));
+            }
+            
+            LoggerService.Instance.LogInformation($"Destinations: {string.Join(", ", destinations.Select(destination => destination.Name))}");
+            
+            Preferences.Set(Constants.PREFERENCES_DESTINATIONS, JsonConvert.SerializeObject(destinations));
+            return destinations;
+        }
+
+        public async Task<bool> RemoveDestination(string destinationName, NotificationType notificationType)
         {
             dynamic data = new JObject();
-            string json;
+            string json, content;
             HttpResponseMessage response;
             bool isSuccess;
 
             try
             {
-                data.telephone = telephoneNumber;
-                data.verificationCode = verificationCode;
-                
+                data.user = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
+                data.location = new JObject();
+                data.location.name = destinationName;
+
+                if (notificationType.Equals(NotificationType.Location))
+                {
+                    data.location.type = NotificationType.Location.ToString();
+                    data.location.longitude = null;
+                    data.location.latitude = null;
+                }
+                else if (notificationType.Equals(NotificationType.WiFi))
+                {
+                    data.location.type = NotificationType.WiFi.ToString();
+                    data.location.ssid = null;
+                }
+                else if (notificationType.Equals(NotificationType.Bluetooth))
+                {
+                    data.location.type = NotificationType.Bluetooth.ToString();
+                    data.location.device = null;
+                }
+                else
+                {
+                    throw new Exception("Error in 'RemoveDestination' function regarding NotificationType.");
+                }
+
                 json = JsonConvert.SerializeObject(data);
                 r_Logger.LogInformation($"request:{Environment.NewLine}{data}");
 
                 response = postAsync(
-                    requestUri: Constants.AZURE_FUNCTIONS_PATTERN_SEND_SMS,
+                    requestUri: Constants.AZURE_FUNCTIONS_PATTERN_DESTINATION_UPDATE,
                     content: createJsonStringContent(json)
                 ).Result;
 
                 response.EnsureSuccessStatusCode();
-                r_Logger.LogInformation($"Successful status code from Azure Function from sendSMSVerificationCode, telephone: {telephoneNumber}, verificationCode: {verificationCode}");
+                content = await response.Content.ReadAsStringAsync();
+                r_Logger.LogDebug(content);
+                r_Logger.LogInformation($"Successful status code from Azure Function from RemoveDestination for {destinationName}");
                 isSuccess = true;
             }
             catch (Exception ex)
             {
-                r_Logger.LogError($"Error occured on sendSMSVerificationCode: {Environment.NewLine}{ex.Message}");
+                r_Logger.LogError($"Error occurred on RemoveDestination: {Environment.NewLine}{ex.Message}");
                 isSuccess = false;
             }
 
             return isSuccess;
         }
-
-        public bool RegisterUser(string name, string userName, string password, string telephone)
-        {
-            dynamic data = new JObject();
-            string json;
-            HttpResponseMessage response;
-            bool registered;
-
-            try
-            {
-                data.name = name;
-                data.userName = userName;
-                data.password = password;
-                data.telephone = telephone;
-
-                json = JsonConvert.SerializeObject(data);
-                r_Logger.LogInformation($"request:{Environment.NewLine}{data}");
-
-                response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_REGISTER, createJsonStringContent(json)).Result;
-                response.EnsureSuccessStatusCode();
-                r_Logger.LogInformation($"Successful status code from Azure Function from RegisterUser, name: {name}, userName: {userName}, password: {password}, telephone: {telephone}");
-
-                registered = true;
-            }
-            catch (HttpRequestException ex)
-            {
-                r_Logger.LogError($"Error occurred on RegisterUser: {ex.Message}");
-                registered = false;
-            }
-
-            return registered;
-        }
-
-        public bool CheckUserExists(string userName, string telephone, out string errorMessage)
-        {
-            dynamic data = new JObject();
-            string json;
-            HttpResponseMessage response;
-            bool userExists = false;
-            errorMessage = string.Empty;
-
-            try
-            {
-                data.userName = userName;
-                data.telephone = telephone;
-
-                json = JsonConvert.SerializeObject(data);
-                r_Logger.LogInformation($"request:{Environment.NewLine}{data}");
-
-                response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_CHECK_USER_EXISTS, createJsonStringContent(json)).Result;
         
-                if (response.StatusCode == HttpStatusCode.Conflict)
-                {
-                    errorMessage = response.Content.ReadAsStringAsync().Result;
-                    userExists = true;
-                }
-                else
-                {
-                    response.EnsureSuccessStatusCode();
-                    r_Logger.LogDebug($"Successful status code from Azure Function from CheckUserExists");
-                }
-            }
-            catch (HttpRequestException ex)
-            {
-                r_Logger.LogError($"Error occurred on CheckUserExists: {ex.Message}");
-                errorMessage = ex.Message;
-                userExists = true;
-            }
+        // public async Task<bool> RemoveDestinationOLD(string destinationName, NotificationType notificationType) // TODO - delete
+        // {
+        //     string username = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
+        //     string locationType = notificationType.ToString();
+        //     HttpResponseMessage response;
+        //     bool isSuccess;
+        //
+        //     try
+        //     {
+        //         dynamic data = new JObject();
+        //         data.user = username;
+        //         data.location = new JObject();
+        //         data.location.name = destinationName;
+        //         data.location.type = locationType;
+        //
+        //         string json = JsonConvert.SerializeObject(data);
+        //         r_Logger.LogInformation($"request:{Environment.NewLine}{data}");
+        //
+        //         response = await postAsync(
+        //             requestUri: Constants.AZURE_FUNCTIONS_PATTERN_DESTINATION_DELETE,
+        //             content: createJsonStringContent(json)
+        //         );
+        //
+        //         response.EnsureSuccessStatusCode();
+        //         isSuccess = true;
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         r_Logger.LogError($"Error occurred while deleting location setting: {Environment.NewLine}{ex.Message}");
+        //         isSuccess = false;
+        //     }
+        //
+        //     return isSuccess;
+        // }
+        //
 
-            return userExists;
-        }
+
+        #endregion
+
         
-        private async Task<HttpResponseMessage> postAsync(string requestUri, StringContent content)
-        {
-            HttpResponseMessage response = await m_HttpClient.PostAsync(requestUri, content).ConfigureAwait(false);
-            
-            return response;
-        }
-
-        private async Task<dynamic> DeserializeObjectFromResponseAsync(HttpResponseMessage response)
-        {
-            string responseJson = await response.Content.ReadAsStringAsync();
-            
-            return JsonConvert.DeserializeObject(responseJson);
-        }
-
-        private StringContent createJsonStringContent(string json)
-        {
-            return new StringContent(json, Encoding.UTF8, "application/json");
-        }
-
+        #region Notification
+        
         public bool CreateTimeNotification(string notificationName, string description, string notificationType, 
             DateTime dateTime, List<string> users)
         {
@@ -313,83 +307,7 @@ namespace Notify.Azure.HttpClient
 
             return JsonConvert.SerializeObject(request);
         }
-
-        private async Task<HttpResponseMessage> getAsync(string requestUri, string query = null)
-        {
-            r_Logger.LogDebug($"Sending HTTP GET request to {requestUri + query} endpoint");
-            HttpResponseMessage response = await m_HttpClient.GetAsync(requestUri + query).ConfigureAwait(false);
-            
-            return response;
-        }
-
-        public bool CheckIfCredentialsAreValid(string userName, string password)
-        {
-            bool validCredentials;
-            dynamic request = new JObject();
-            string json;
-            HttpResponseMessage response;
-
-            try
-            {
-                request.userName = userName;
-                request.password = password;
-                r_Logger.LogDebug($"request: {request}");
-
-                json = JsonConvert.SerializeObject(request);
-                response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_LOGIN, createJsonStringContent(json)).Result;
-                response.EnsureSuccessStatusCode();
-                r_Logger.LogDebug($"Successful status code from Azure Function from CheckIfCredentialsAreValid");
-
-                userName = response.Content.ReadAsStringAsync().Result;
-                Preferences.Set(Constants.PREFERENCES_USERNAME, userName);
-                
-                validCredentials = true;
-            }
-            catch (Exception ex)
-            {
-                r_Logger.LogError($"Error occured on CheckIfCredentialsAreValid: {ex.Message}");
-                validCredentials = false;
-            }
-
-            return validCredentials;
-        }
-
-        private async Task<List<T>> GetData<T>(string endpoint, string preferencesKey, Func<dynamic, T> converter)
-        {
-            string userName = Preferences.Get(Constants.PREFERENCES_USERNAME, String.Empty);
-            string query = $"?username={userName}";
-            HttpResponseMessage response;
-            dynamic returnedObject;
-            List<T> data = new List<T>();
-                    
-            r_Logger.LogDebug($"Getting data from endpoint {endpoint}");
-
-            try
-            {
-                response = await getAsync(endpoint, query);
-                response.EnsureSuccessStatusCode();
-                r_Logger.LogDebug($"Successful status code from Azure Function from {endpoint}!");
-
-                returnedObject = await DeserializeObjectFromResponseAsync(response);
-                r_Logger.LogDebug($"Returned object from {endpoint}:\n{returnedObject.ToString()}");
-
-                foreach (dynamic item in returnedObject)
-                {
-                    T itemConverted = converter(item);
-                    data.Add(itemConverted);
-                }
-
-                Preferences.Set(preferencesKey, JsonConvert.SerializeObject(data));
-                r_Logger.LogInformation($"{preferencesKey} from {endpoint} was saved in preferences");
-            }
-            catch (Exception ex)
-            {
-                r_Logger.LogError($"Error occurred on {endpoint}: {ex.Message}");
-            }
-
-            return data;
-        }
-
+        
         public async Task<List<Notification>> GetNotifications()
         {
             List<Notification> notifications = await GetData(
@@ -401,63 +319,6 @@ namespace Notify.Azure.HttpClient
             DependencyService.Get<IWiFiManager>().SendNotifications(null, null);
 
             return notifications;
-        }
-
-        private void createNewDynamicDestinations(List<Notification> notifications)
-        {
-            List<string> newDynamicDestinations;
-            string destinationsJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, string.Empty);
-            List<Destination> destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationsJson);
-            
-            newDynamicDestinations = Constants.DYNAMIC_PLACE_LIST.FindAll(place =>
-            {
-                bool isPlaceInDestinations = destinations.Any(destination => destination.Name.Equals(place));
-                bool isPlaceInNotifications = notifications.Any(notification =>
-                    notification.Type.Equals(NotificationType.Dynamic) && notification.TypeInfo.Equals(place));
-                
-                return !isPlaceInDestinations && isPlaceInNotifications;
-            });
-            
-            if(newDynamicDestinations.Count > 0)
-            {
-                LoggerService.Instance.LogInformation($"New dynamic destinations: {string.Join(", ", newDynamicDestinations)}");
-            }
-            
-            foreach (string dynamicDestination in newDynamicDestinations)
-            {
-                destinations.Add(new Destination(dynamicDestination, true));
-            }
-            
-            LoggerService.Instance.LogDebug($"New destinations: {string.Join(", ", destinations.Select(destination => destination.Name))}");
-            Preferences.Set(Constants.PREFERENCES_DESTINATIONS, JsonConvert.SerializeObject(destinations));
-        }
-
-        public async Task<List<User>> GetFriends()
-        {
-            await GetFriendsPermissions();
-            
-            return await GetData(
-                endpoint: Constants.AZURE_FUNCTIONS_PATTERN_FRIEND, 
-                preferencesKey: Constants.PREFERENCES_FRIENDS, 
-                converter: Converter.ToFriend);
-        }
-
-        public async Task<List<Destination>> GetDestinations()
-        {
-            List<Destination> destinations = await GetData(
-                endpoint: Constants.AZURE_FUNCTIONS_PATTERN_DESTINATION,
-                preferencesKey: Constants.PREFERENCES_DESTINATIONS,
-                converter: Converter.ToDestination);
-
-            foreach (string dynamicDestination in Constants.DYNAMIC_PLACE_LIST)
-            {
-                destinations.Add(new Destination(dynamicDestination, true));
-            }
-            
-            LoggerService.Instance.LogInformation($"Destinations: {string.Join(", ", destinations.Select(destination => destination.Name))}");
-            
-            Preferences.Set(Constants.PREFERENCES_DESTINATIONS, JsonConvert.SerializeObject(destinations));
-            return destinations;
         }
 
         public bool UpdateNotificationsStatus(List<Notification> notifications, string newStatus)
@@ -503,59 +364,145 @@ namespace Notify.Azure.HttpClient
             return isSuccess;
         }
 
-        public async Task<Location> GetCoordinatesFromAddress(string selectedAddress)
+        public async Task<bool> DeleteNotificationAsync(string notificationID)
         {
-            string query = $"?address={selectedAddress}";
-            string requestUri = Constants.AZURE_FUNCTIONS_PATTERN_DESTINATION_COORDINATES + query;
             HttpResponseMessage response;
-            dynamic returnedObject;
-            Location location = null;
-
+            bool isDeleted;
+            string json;
+            List<Notification> notifications;
+            dynamic data = new JObject
+            {
+                { "id", notificationID }
+            };
+            
             try
             {
-                response = await m_HttpClient.GetAsync(requestUri);
-                response.EnsureSuccessStatusCode();
+                response = await deleteAsync(
+                    requestUri: Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION,
+                    content: createJsonStringContent(JsonConvert.SerializeObject(data)));
 
-                returnedObject = await DeserializeObjectFromResponseAsync(response);
-                location = new Location(
-                    longitude: Convert.ToDouble(returnedObject.longitude),
-                    latitude: Convert.ToDouble(returnedObject.latitude));
+                response.EnsureSuccessStatusCode();
+                LoggerService.Instance.LogDebug($"Notification with id {notificationID} was deleted");
+                isDeleted = true;
+
+                json = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
+                notifications = JsonConvert.DeserializeObject<List<Notification>>(json);
+                notifications.RemoveAll(notification => notification.ID == notificationID);
+                Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
             }
             catch (Exception ex)
             {
-                r_Logger.LogError($"Error occured on GetAddressSuggestions: {Environment.NewLine}{ex.Message}");
+                LoggerService.Instance.LogError($"Error occured on DeleteNotificationAsync: {ex.Message}");
+                isDeleted = false;
             }
             
-            return location;
+            return isDeleted;
         }
 
-        public async Task<List<string>> GetAddressSuggestions(string searchAddress)
+         public async Task<bool> RenewNotificationAsync(string creator, string notificationID)
         {
-            string query = $"?address={searchAddress}";
-            string requestUri = Constants.AZURE_FUNCTIONS_PATTERN_DESTINATION_SUGGESTIONS + query;
+            string json;
+            bool isRenewed;
             HttpResponseMessage response;
-            string responseJson;
-            List<string> suggestions;
+            dynamic data = new JObject
+            {
+                { "creator", creator },
+                { "id", notificationID }
+            };
 
             try
             {
-                r_Logger.LogInformation($"Getting address suggestions from {requestUri}");
-                response = await m_HttpClient.GetAsync(requestUri);
-                response.EnsureSuccessStatusCode();
+                r_Logger.LogInformation($"request:{Environment.NewLine}{data}");
                 
-                responseJson = await response.Content.ReadAsStringAsync();
-                suggestions = JsonConvert.DeserializeObject<List<string>>(responseJson);
-                r_Logger.LogInformation($"Got {suggestions.Count} suggestions from {requestUri}:{Environment.NewLine}{string.Join($"{Environment.NewLine}- ", suggestions)}");
+                json = JsonConvert.SerializeObject(data);
+                response = await postAsync(
+                    requestUri: Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_RENEW, 
+                    content: createJsonStringContent(json));
+                response.EnsureSuccessStatusCode();
+                r_Logger.LogDebug($"Successful status code from Azure Function from createNotification");
+                isRenewed = true;
             }
             catch (Exception ex)
             {
-                r_Logger.LogError($"Error occured on GetAddressSuggestions: {Environment.NewLine}{ex.Message}");
-                suggestions = new List<string>();
+                r_Logger.LogError($"Error occured on createNotification: {ex.Message}");
+                isRenewed = false;
             }
-            
-            return suggestions;
+
+            return isRenewed;
         }
 
+        public async Task<bool> UpdateTimeNotificationAsync(string ID, string name, string description, string type, DateTime dateTime)
+        {
+            long timestamp = ((DateTimeOffset)dateTime).ToUnixTimeSeconds();
+
+            return await updateNotification(ID, name, description, type, "timestamp", timestamp, 
+                Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_UPDATE_TIME);
+        }
+        
+        public async Task<bool> UpdateLocationNotificationAsync(string ID, string name, string description, string type, string location, string activation, bool permanent)
+        {
+            return await updateNotification(ID, name, description, type, "location", location, Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_UPDATE_LOCATION, activation, permanent);
+        }
+        
+        public async Task<bool> UpdateDynamicNotificationAsync(string ID, string name, string description, string type, string location)
+        {
+            return await updateNotification(ID, name, description, type, "location", location, Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_UPDATE_DYNAMIC);
+        }
+        
+        private async Task<bool> updateNotification(string ID, string name, string description, string type, string key, JToken value, string requestUri, string activation = "", bool permanent = false)
+        {
+            string json;
+            bool isUpdated;
+            HttpResponseMessage response;
+            dynamic data = new JObject
+            {
+                { "id", ID },
+                { "name", name },
+                { "description", description },
+                { "type", type },
+                { key, value }
+            };
+            
+            if (type.Equals(Constants.LOCATION))
+            {
+                data.activation = activation;
+                data.permanent = permanent;
+            }
+
+            try
+            {
+                json = JsonConvert.SerializeObject(data);
+                r_Logger.LogInformation($"request:{Environment.NewLine}{json}");
+                
+                response = await postAsync(requestUri, createJsonStringContent(json));
+                response.EnsureSuccessStatusCode();
+                r_Logger.LogDebug($"Successful status code from Azure Function from updateNotification");
+                isUpdated = true;
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error occured on updateNotification: {ex.Message}");
+                isUpdated = false;
+            }
+
+            return isUpdated;
+        }
+        
+        #endregion
+        
+        
+        #region Friends
+        
+        public async Task<List<User>> GetFriends()
+        {
+            await GetFriendsPermissions();
+            
+            return await GetData(
+                endpoint: Constants.AZURE_FUNCTIONS_PATTERN_FRIEND, 
+                preferencesKey: Constants.PREFERENCES_FRIENDS, 
+                converter: Converter.ToFriend);
+        }
+        
         public async Task<List<User>> GetNotFriendsUsers()
         {
             return await GetData(
@@ -668,6 +615,350 @@ namespace Notify.Azure.HttpClient
             return isSuccess;
         }
         
+        public async Task<List<Permission>> GetFriendsPermissions()
+        {
+            return await GetData(
+                endpoint: Constants.AZURE_FUNCTIONS_PATTERN_PERMISSION,
+                preferencesKey: Constants.PREFERENCES_FRIENDS_PERMISSIONS, 
+                converter: Converter.ToPermission);
+        }
+
+        public async Task<bool> UpdateFriendPermissionsAsync(string friendUsername, string locationNotificationsPermission, string timeNotificationsPermission, string dynamicNotificationsPermission)
+        {
+            bool isUpdated;
+            string username = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
+            dynamic data = new JObject
+            {
+                { "permit", username },
+                { "username", friendUsername },
+                { "location", locationNotificationsPermission },
+                { "time", timeNotificationsPermission },
+                { "dynamic", dynamicNotificationsPermission }
+            };
+            string json = JsonConvert.SerializeObject(data);
+            
+            r_Logger.LogInformation($"request:{Environment.NewLine}{json}");
+
+            try
+            {
+                HttpResponseMessage responseMessage = await postAsync(requestUri: Constants.AZURE_FUNCTIONS_PATTERN_PERMISSION, createJsonStringContent(json));
+                responseMessage.EnsureSuccessStatusCode();
+                
+                r_Logger.LogDebug($"Successful status code from Azure Function from UpdateFriendPermissionsAsync");
+                isUpdated = true;
+                
+                await GetFriendsPermissions();
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error occured on UpdateFriendPermissionsAsync: {ex.Message}");
+                isUpdated = false;
+            }
+            
+            return isUpdated;
+        }
+
+        public async Task<bool> DeleteFriendAsync(string friendUserName)
+        {
+            bool isDeleted;
+            string username = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
+            dynamic data = new JObject
+            {
+                { "username", username },
+                { "friendUsername", friendUserName }
+            };
+            string json = JsonConvert.SerializeObject(data);
+            
+            r_Logger.LogInformation($"request:{Environment.NewLine}{json}");
+
+            try
+            {
+                HttpResponseMessage responseMessage = await deleteAsync(requestUri: Constants.AZURE_FUNCTIONS_PATTERN_FRIEND, createJsonStringContent(json));
+                responseMessage.EnsureSuccessStatusCode();
+                
+                r_Logger.LogDebug($"Successful status code from Azure Function from DeleteFriendAsync");
+                isDeleted = true;
+                
+                await GetFriends();
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error occured on DeleteFriendAsync: {ex.Message}");
+                r_Logger.LogDebug(ex.Data.ToString());
+                isDeleted = false;
+            }
+            
+            return isDeleted;
+        }
+        
+        #endregion
+        
+        public bool SendSMSVerificationCode(string telephoneNumber, string verificationCode)
+        {
+            dynamic data = new JObject();
+            string json;
+            HttpResponseMessage response;
+            bool isSuccess;
+
+            try
+            {
+                data.telephone = telephoneNumber;
+                data.verificationCode = verificationCode;
+                
+                json = JsonConvert.SerializeObject(data);
+                r_Logger.LogInformation($"request:{Environment.NewLine}{data}");
+
+                response = postAsync(
+                    requestUri: Constants.AZURE_FUNCTIONS_PATTERN_SEND_SMS,
+                    content: createJsonStringContent(json)
+                ).Result;
+
+                response.EnsureSuccessStatusCode();
+                r_Logger.LogInformation($"Successful status code from Azure Function from sendSMSVerificationCode, telephone: {telephoneNumber}, verificationCode: {verificationCode}");
+                isSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error occured on sendSMSVerificationCode: {Environment.NewLine}{ex.Message}");
+                isSuccess = false;
+            }
+
+            return isSuccess;
+        }
+
+        public bool RegisterUser(string name, string userName, string password, string telephone)
+        {
+            dynamic data = new JObject();
+            string json;
+            HttpResponseMessage response;
+            bool registered;
+
+            try
+            {
+                data.name = name;
+                data.userName = userName;
+                data.password = password;
+                data.telephone = telephone;
+
+                json = JsonConvert.SerializeObject(data);
+                r_Logger.LogInformation($"request:{Environment.NewLine}{data}");
+
+                response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_REGISTER, createJsonStringContent(json)).Result;
+                response.EnsureSuccessStatusCode();
+                r_Logger.LogInformation($"Successful status code from Azure Function from RegisterUser, name: {name}, userName: {userName}, password: {password}, telephone: {telephone}");
+
+                registered = true;
+            }
+            catch (HttpRequestException ex)
+            {
+                r_Logger.LogError($"Error occurred on RegisterUser: {ex.Message}");
+                registered = false;
+            }
+
+            return registered;
+        }
+
+        public bool CheckUserExists(string userName, string telephone, out string errorMessage)
+        {
+            dynamic data = new JObject();
+            string json;
+            HttpResponseMessage response;
+            bool userExists = false;
+            errorMessage = string.Empty;
+
+            try
+            {
+                data.userName = userName;
+                data.telephone = telephone;
+
+                json = JsonConvert.SerializeObject(data);
+                r_Logger.LogInformation($"request:{Environment.NewLine}{data}");
+
+                response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_CHECK_USER_EXISTS, createJsonStringContent(json)).Result;
+        
+                if (response.StatusCode == HttpStatusCode.Conflict)
+                {
+                    errorMessage = response.Content.ReadAsStringAsync().Result;
+                    userExists = true;
+                }
+                else
+                {
+                    response.EnsureSuccessStatusCode();
+                    r_Logger.LogDebug($"Successful status code from Azure Function from CheckUserExists");
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                r_Logger.LogError($"Error occurred on CheckUserExists: {ex.Message}");
+                errorMessage = ex.Message;
+                userExists = true;
+            }
+
+            return userExists;
+        }
+        
+        private async Task<dynamic> DeserializeObjectFromResponseAsync(HttpResponseMessage response)
+        {
+            string responseJson = await response.Content.ReadAsStringAsync();
+            
+            return JsonConvert.DeserializeObject(responseJson);
+        }
+
+        private StringContent createJsonStringContent(string json)
+        {
+            return new StringContent(json, Encoding.UTF8, "application/json");
+        }
+        
+        public bool CheckIfCredentialsAreValid(string userName, string password)
+        {
+            bool validCredentials;
+            dynamic request = new JObject();
+            string json;
+            HttpResponseMessage response;
+
+            try
+            {
+                request.userName = userName;
+                request.password = password;
+                r_Logger.LogDebug($"request: {request}");
+
+                json = JsonConvert.SerializeObject(request);
+                response = postAsync(Constants.AZURE_FUNCTIONS_PATTERN_LOGIN, createJsonStringContent(json)).Result;
+                response.EnsureSuccessStatusCode();
+                r_Logger.LogDebug($"Successful status code from Azure Function from CheckIfCredentialsAreValid");
+
+                userName = response.Content.ReadAsStringAsync().Result;
+                Preferences.Set(Constants.PREFERENCES_USERNAME, userName);
+                
+                validCredentials = true;
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error occured on CheckIfCredentialsAreValid: {ex.Message}");
+                validCredentials = false;
+            }
+
+            return validCredentials;
+        }
+
+        private async Task<List<T>> GetData<T>(string endpoint, string preferencesKey, Func<dynamic, T> converter)
+        {
+            string userName = Preferences.Get(Constants.PREFERENCES_USERNAME, String.Empty);
+            string query = $"?username={userName}";
+            HttpResponseMessage response;
+            dynamic returnedObject;
+            List<T> data = new List<T>();
+                    
+            r_Logger.LogDebug($"Getting data from endpoint {endpoint}");
+
+            try
+            {
+                response = await getAsync(endpoint, query);
+                response.EnsureSuccessStatusCode();
+                r_Logger.LogDebug($"Successful status code from Azure Function from {endpoint}!");
+
+                returnedObject = await DeserializeObjectFromResponseAsync(response);
+                r_Logger.LogDebug($"Returned object from {endpoint}:\n{returnedObject.ToString()}");
+
+                foreach (dynamic item in returnedObject)
+                {
+                    T itemConverted = converter(item);
+                    data.Add(itemConverted);
+                }
+
+                Preferences.Set(preferencesKey, JsonConvert.SerializeObject(data));
+                r_Logger.LogInformation($"{preferencesKey} from {endpoint} was saved in preferences");
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error occurred on {endpoint}: {ex.Message}");
+            }
+
+            return data;
+        }
+        
+        private void createNewDynamicDestinations(List<Notification> notifications)
+        {
+            List<string> newDynamicDestinations;
+            string destinationsJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, string.Empty);
+            List<Destination> destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationsJson);
+            
+            newDynamicDestinations = Constants.DYNAMIC_PLACE_LIST.FindAll(place =>
+            {
+                bool isPlaceInDestinations = destinations.Any(destination => destination.Name.Equals(place));
+                bool isPlaceInNotifications = notifications.Any(notification =>
+                    notification.Type.Equals(NotificationType.Dynamic) && notification.TypeInfo.Equals(place));
+                
+                return !isPlaceInDestinations && isPlaceInNotifications;
+            });
+            
+            if(newDynamicDestinations.Count > 0)
+            {
+                LoggerService.Instance.LogInformation($"New dynamic destinations: {string.Join(", ", newDynamicDestinations)}");
+            }
+            
+            foreach (string dynamicDestination in newDynamicDestinations)
+            {
+                destinations.Add(new Destination(dynamicDestination, true));
+            }
+            
+            LoggerService.Instance.LogDebug($"New destinations: {string.Join(", ", destinations.Select(destination => destination.Name))}");
+            Preferences.Set(Constants.PREFERENCES_DESTINATIONS, JsonConvert.SerializeObject(destinations));
+        }
+        
+        public async Task<Location> GetCoordinatesFromAddress(string selectedAddress)
+        {
+            string query = $"?address={selectedAddress}";
+            string requestUri = Constants.AZURE_FUNCTIONS_PATTERN_DESTINATION_COORDINATES + query;
+            HttpResponseMessage response;
+            dynamic returnedObject;
+            Location location = null;
+
+            try
+            {
+                response = await m_HttpClient.GetAsync(requestUri);
+                response.EnsureSuccessStatusCode();
+
+                returnedObject = await DeserializeObjectFromResponseAsync(response);
+                location = new Location(
+                    longitude: Convert.ToDouble(returnedObject.longitude),
+                    latitude: Convert.ToDouble(returnedObject.latitude));
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error occured on GetAddressSuggestions: {Environment.NewLine}{ex.Message}");
+            }
+            
+            return location;
+        }
+
+        public async Task<List<string>> GetAddressSuggestions(string searchAddress)
+        {
+            string query = $"?address={searchAddress}";
+            string requestUri = Constants.AZURE_FUNCTIONS_PATTERN_DESTINATION_SUGGESTIONS + query;
+            HttpResponseMessage response;
+            string responseJson;
+            List<string> suggestions;
+
+            try
+            {
+                r_Logger.LogInformation($"Getting address suggestions from {requestUri}");
+                response = await m_HttpClient.GetAsync(requestUri);
+                response.EnsureSuccessStatusCode();
+                
+                responseJson = await response.Content.ReadAsStringAsync();
+                suggestions = JsonConvert.DeserializeObject<List<string>>(responseJson);
+                r_Logger.LogInformation($"Got {suggestions.Count} suggestions from {requestUri}:{Environment.NewLine}{string.Join($"{Environment.NewLine}- ", suggestions)}");
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error occured on GetAddressSuggestions: {Environment.NewLine}{ex.Message}");
+                suggestions = new List<string>();
+            }
+            
+            return suggestions;
+        }
+
         public async Task<string> UploadProfilePictureToBLOB(string base64Image)
         {
             dynamic data = new JObject();
@@ -801,42 +1092,22 @@ namespace Notify.Azure.HttpClient
             
             return nearbyPlaces;
         }
-
-        public async Task<bool> DeleteNotificationAsync(string notificationID)
-        {
-            HttpResponseMessage response;
-            bool isDeleted;
-            string json;
-            List<Notification> notifications;
-            dynamic data = new JObject
-            {
-                { "id", notificationID }
-            };
-            
-            try
-            {
-                response = await deleteAsync(
-                    requestUri: Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION,
-                    content: createJsonStringContent(JsonConvert.SerializeObject(data)));
-
-                response.EnsureSuccessStatusCode();
-                LoggerService.Instance.LogDebug($"Notification with id {notificationID} was deleted");
-                isDeleted = true;
-
-                json = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
-                notifications = JsonConvert.DeserializeObject<List<Notification>>(json);
-                notifications.RemoveAll(notification => notification.ID == notificationID);
-                Preferences.Set(Constants.PREFERENCES_NOTIFICATIONS, JsonConvert.SerializeObject(notifications));
-            }
-            catch (Exception ex)
-            {
-                LoggerService.Instance.LogError($"Error occured on DeleteNotificationAsync: {ex.Message}");
-                isDeleted = false;
-            }
-            
-            return isDeleted;
-        }
         
+        private async Task<HttpResponseMessage> getAsync(string requestUri, string query = null)
+        {
+            r_Logger.LogDebug($"Sending HTTP GET request to {requestUri + query} endpoint");
+            HttpResponseMessage response = await m_HttpClient.GetAsync(requestUri + query).ConfigureAwait(false);
+            
+            return response;
+        }
+
+        private async Task<HttpResponseMessage> postAsync(string requestUri, StringContent content)
+        {
+            HttpResponseMessage response = await m_HttpClient.PostAsync(requestUri, content).ConfigureAwait(false);
+            
+            return response;
+        }
+
         private async Task<HttpResponseMessage> deleteAsync(string requestUri, StringContent content)
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Delete, requestUri)
@@ -847,171 +1118,6 @@ namespace Notify.Azure.HttpClient
             r_Logger.LogInformation($"request:{Environment.NewLine}{request}");
 
             return await m_HttpClient.SendAsync(request);
-        }
-
-        public async Task<bool> RenewNotificationAsync(string creator, string notificationID)
-        {
-            string json;
-            bool isRenewed;
-            HttpResponseMessage response;
-            dynamic data = new JObject
-            {
-                { "creator", creator },
-                { "id", notificationID }
-            };
-
-            try
-            {
-                r_Logger.LogInformation($"request:{Environment.NewLine}{data}");
-                
-                json = JsonConvert.SerializeObject(data);
-                response = await postAsync(
-                    requestUri: Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_RENEW, 
-                    content: createJsonStringContent(json));
-                response.EnsureSuccessStatusCode();
-                r_Logger.LogDebug($"Successful status code from Azure Function from createNotification");
-                isRenewed = true;
-            }
-            catch (Exception ex)
-            {
-                r_Logger.LogError($"Error occured on createNotification: {ex.Message}");
-                isRenewed = false;
-            }
-
-            return isRenewed;
-        }
-
-        public async Task<bool> UpdateTimeNotificationAsync(string ID, string name, string description, string type, DateTime dateTime)
-        {
-            long timestamp = ((DateTimeOffset)dateTime).ToUnixTimeSeconds();
-
-            return await updateNotification(ID, name, description, type, "timestamp", timestamp, 
-                Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_UPDATE_TIME);
-        }
-        
-        public async Task<bool> UpdateLocationNotificationAsync(string ID, string name, string description, string type, string location, string activation, bool permanent)
-        {
-            return await updateNotification(ID, name, description, type, "location", location, Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_UPDATE_LOCATION, activation, permanent);
-        }
-        
-        public async Task<bool> UpdateDynamicNotificationAsync(string ID, string name, string description, string type, string location)
-        {
-            return await updateNotification(ID, name, description, type, "location", location, Constants.AZURE_FUNCTIONS_PATTERN_NOTIFICATION_UPDATE_DYNAMIC);
-        }
-        
-        private async Task<bool> updateNotification(string ID, string name, string description, string type, string key, JToken value, string requestUri, string activation = "", bool permanent = false)
-        {
-            string json;
-            bool isUpdated;
-            HttpResponseMessage response;
-            dynamic data = new JObject
-            {
-                { "id", ID },
-                { "name", name },
-                { "description", description },
-                { "type", type },
-                { key, value }
-            };
-            
-            if (type.Equals(Constants.LOCATION))
-            {
-                data.activation = activation;
-                data.permanent = permanent;
-            }
-
-            try
-            {
-                json = JsonConvert.SerializeObject(data);
-                r_Logger.LogInformation($"request:{Environment.NewLine}{json}");
-                
-                response = await postAsync(requestUri, createJsonStringContent(json));
-                response.EnsureSuccessStatusCode();
-                r_Logger.LogDebug($"Successful status code from Azure Function from updateNotification");
-                isUpdated = true;
-            }
-            catch (Exception ex)
-            {
-                r_Logger.LogError($"Error occured on updateNotification: {ex.Message}");
-                isUpdated = false;
-            }
-
-            return isUpdated;
-        }
-
-        public async Task<List<Permission>> GetFriendsPermissions()
-        {
-            return await GetData(
-                endpoint: Constants.AZURE_FUNCTIONS_PATTERN_PERMISSION,
-                preferencesKey: Constants.PREFERENCES_FRIENDS_PERMISSIONS, 
-                converter: Converter.ToPermission);
-        }
-
-        public async Task<bool> UpdateFriendPermissionsAsync(string friendUsername, string locationNotificationsPermission, string timeNotificationsPermission, string dynamicNotificationsPermission)
-        {
-            bool isUpdated;
-            string username = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
-            dynamic data = new JObject
-            {
-                { "permit", username },
-                { "username", friendUsername },
-                { "location", locationNotificationsPermission },
-                { "time", timeNotificationsPermission },
-                { "dynamic", dynamicNotificationsPermission }
-            };
-            string json = JsonConvert.SerializeObject(data);
-            
-            r_Logger.LogInformation($"request:{Environment.NewLine}{json}");
-
-            try
-            {
-                HttpResponseMessage responseMessage = await postAsync(requestUri: Constants.AZURE_FUNCTIONS_PATTERN_PERMISSION, createJsonStringContent(json));
-                responseMessage.EnsureSuccessStatusCode();
-                
-                r_Logger.LogDebug($"Successful status code from Azure Function from UpdateFriendPermissionsAsync");
-                isUpdated = true;
-                
-                await GetFriendsPermissions();
-            }
-            catch (Exception ex)
-            {
-                r_Logger.LogError($"Error occured on UpdateFriendPermissionsAsync: {ex.Message}");
-                isUpdated = false;
-            }
-            
-            return isUpdated;
-        }
-
-        public async Task<bool> DeleteFriendAsync(string friendUserName)
-        {
-            bool isDeleted;
-            string username = Preferences.Get(Constants.PREFERENCES_USERNAME, string.Empty);
-            dynamic data = new JObject
-            {
-                { "username", username },
-                { "friendUsername", friendUserName }
-            };
-            string json = JsonConvert.SerializeObject(data);
-            
-            r_Logger.LogInformation($"request:{Environment.NewLine}{json}");
-
-            try
-            {
-                HttpResponseMessage responseMessage = await deleteAsync(requestUri: Constants.AZURE_FUNCTIONS_PATTERN_FRIEND, createJsonStringContent(json));
-                responseMessage.EnsureSuccessStatusCode();
-                
-                r_Logger.LogDebug($"Successful status code from Azure Function from DeleteFriendAsync");
-                isDeleted = true;
-                
-                await GetFriends();
-            }
-            catch (Exception ex)
-            {
-                r_Logger.LogError($"Error occured on DeleteFriendAsync: {ex.Message}");
-                r_Logger.LogDebug(ex.Data.ToString());
-                isDeleted = false;
-            }
-            
-            return isDeleted;
         }
     }
 }

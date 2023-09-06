@@ -43,26 +43,26 @@
                     LabelMargin="3"
                     LabelSize="16"
                     Margin="30,60,30,0"
-                    LabelText="Select Bluetooth"
-                    Placeholder="Select Bluetooth"
-                    LabelTextColor="Black"
-                    BackgroundColor="White"
-                    ItemsSource="{Binding BluetoothSelectionList}"
-                    SelectedItem="{Binding SelectedBluetoothID}"
-                    TabIndex="1"/>
-
-                <materialDesignControls:MaterialPicker
-                    Grid.Row="3"
-                    CornerRadius="10"
-                    LabelMargin="3"
-                    LabelSize="16"
-                    Margin="30,20,30,0"
                     LabelText="Select Location"
                     Placeholder="Select Location"
                     LabelTextColor="Black"
                     BackgroundColor="White"
                     ItemsSource="{Binding LocationSelectionList}"
                     SelectedItem="{Binding SelectedLocation}"
+                    TabIndex="1"/>
+                
+                <materialDesignControls:MaterialPicker
+                    Grid.Row="3"
+                    CornerRadius="10"
+                    LabelMargin="3"
+                    LabelSize="16"
+                    Margin="30,20,30,0"
+                    LabelText="Select Bluetooth"
+                    Placeholder="Select Bluetooth"
+                    LabelTextColor="Black"
+                    BackgroundColor="White"
+                    ItemsSource="{Binding BluetoothSelectionList}"
+                    SelectedItem="{Binding SelectedBluetoothID}"
                     TabIndex="1"/>
 
                 <Button
