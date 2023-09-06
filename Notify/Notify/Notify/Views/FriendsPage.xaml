@@ -39,7 +39,7 @@
                                 <FormattedString.Spans>
                                     <Span
                                         FontAttributes="Bold"
-                                        FontSize="40"
+                                        FontSize="Title"
                                         Text="Friends"
                                         TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
                                                                     Light={StaticResource LightPrimaryTextColor}}" />
