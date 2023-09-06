@@ -8,6 +8,7 @@
     xmlns:views="http://xamarin.com/schemas/2020/toolkit"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
+
     <RefreshView Command="{Binding RefreshFriendsCommand}" IsRefreshing="{Binding IsRefreshing}">
         <Grid
             BackgroundColor="#F3F5F9"
