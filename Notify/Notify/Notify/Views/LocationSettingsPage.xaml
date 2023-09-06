@@ -5,7 +5,7 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:materialDesignControls1="clr-namespace:Plugin.MaterialDesignControls;assembly=Plugin.MaterialDesignControls"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
-    
+
     <ContentPage.Content>
         <ScrollView>
             <Grid
@@ -13,101 +13,100 @@
                                                   Dark={StaticResource DarkPageBackgroundColor}}"
                 Row="9"
                 RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, *">
-              
+
                 <Button
-                    Grid.Row="0"
-                    Margin="-20, 0, 0, 0"
                     Background="Transparent"
                     BackgroundColor="Transparent"
                     Command="{Binding BackCommand}"
                     FontAttributes="Bold"
                     FontSize="25"
+                    Grid.Row="0"
                     HorizontalOptions="Start"
+                    Margin="-20,0,0,0"
                     Text="❮"
                     TextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
                                                 Dark={StaticResource LightEntryBackgroundColor}}"
                     VerticalOptions="Start" />
 
                 <Label
-                    Grid.Row="1"
                     FontAttributes="Bold"
                     FontSize="30"
+                    Grid.Row="1"
                     HorizontalTextAlignment="Center"
                     Style="{StaticResource Body1FontSize_ExoBold}"
                     Text="Location Settings"
                     VerticalTextAlignment="Center" />
-                
+
                 <materialDesignControls1:MaterialPicker
-                    Grid.Row="2"
-                    FontSize="16"
-                    CornerRadius="10"
-                    ItemsSource="{Binding LocationSelectionList}"
-                    Margin="30,60,30,0"
-                    LabelText="Select Destination"
-                    Placeholder="Select Destination"
-                    LabelSize="16"
-                    LabelTextColor="Black"
                     BackgroundColor="White"
-                    SelectedItem="{Binding SelectedLocation}"/>
-                
+                    CornerRadius="10"
+                    FontSize="16"
+                    Grid.Row="2"
+                    ItemsSource="{Binding LocationSelectionList}"
+                    LabelSize="16"
+                    LabelText="Select Destination"
+                    LabelTextColor="Black"
+                    Margin="30,60,30,0"
+                    Placeholder="Select Destination"
+                    SelectedItem="{Binding SelectedLocation}" />
+
                 <StackLayout
                     Grid.Row="3"
                     HeightRequest="20"
                     Orientation="Horizontal"
                     Spacing="10">
-                    <CheckBox Color="Black" IsChecked="{Binding IsCurrentLocationEnabled, Mode=TwoWay}" Margin="30,0,0,0" />
+                    <CheckBox
+                        Color="Black"
+                        IsChecked="{Binding IsCurrentLocationEnabled, Mode=TwoWay}"
+                        Margin="30,0,0,0" />
                     <Label
                         Text="Use Current Location"
                         TextColor="Black"
                         VerticalOptions="Center" />
                 </StackLayout>
-                
-                <Grid
-                    Grid.Row="4"
-                    IsEnabled="{Binding m_IsOtherLocationEnabled}">
+
+                <Grid Grid.Row="4" IsEnabled="{Binding m_IsOtherLocationEnabled}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <materialDesignControls1:MaterialEntry
+                        BackgroundColor="{Binding EntryBackgroundColor}"
+                        BorderColor="Transparent"
+                        CornerRadius="10"
                         FontSize="16"
                         Grid.Column="0"
                         HeightRequest="70"
-                        CornerRadius="10"
-                        Margin="30,30,30,0"
-                        LabelText="Enter Address"
-                        Placeholder="Enter Address"
                         LabelSize="16"
+                        LabelText="Enter Address"
                         LabelTextColor="Black"
-                        PlaceholderColor="Gray"
-                        BackgroundColor="{Binding EntryBackgroundColor}"
-                        BorderColor="Transparent"
+                        Margin="30,30,30,0"
                         MaxLength="100"
+                        Placeholder="Enter Address"
+                        PlaceholderColor="Gray"
                         ReturnType="Next"
                         TabIndex="1"
                         Text="{Binding SearchAddress}"
                         TextColor="Black" />
                 </Grid>
-                
-                <Grid
-                    Grid.Row="5"
-                    IsEnabled="{Binding m_IsOtherLocationEnabled}">
+
+                <Grid Grid.Row="5" IsEnabled="{Binding m_IsOtherLocationEnabled}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <materialDesignControls1:MaterialPicker
+                        BackgroundColor="{Binding EntryBackgroundColor}"
+                        CornerRadius="10"
                         FontSize="16"
                         Grid.Column="0"
                         HeightRequest="70"
-                        CornerRadius="10"
-                        Margin="30,10,30,0"
-                        LabelText="Suggestions"
-                        Placeholder="Suggestions"
                         LabelSize="16"
+                        LabelText="Suggestions"
                         LabelTextColor="Black"
+                        Margin="30,10,30,0"
+                        Placeholder="Suggestions"
                         PlaceholderColor="Gray"
-                        BackgroundColor="{Binding EntryBackgroundColor}"
                         SelectedItem="{Binding SelectedAddress}">
                         <materialDesignControls1:MaterialPicker.ItemsSource>
                             <Binding Path="DropBoxOptions" />
@@ -116,24 +115,24 @@
                 </Grid>
 
                 <Button
-                    Grid.Row="6"
-                    Margin="80,20,80,20"
                     BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
                                                       Dark={StaticResource DarkButtonColor}}"
                     Command="{Binding GetAddressSuggestionsCommand}"
-                    IsEnabled="{Binding m_IsOtherLocationEnabled}"
                     CornerRadius="30"
+                    Grid.Row="6"
+                    IsEnabled="{Binding m_IsOtherLocationEnabled}"
+                    Margin="80,20,80,20"
                     Text="Get Address Suggestion"
                     TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
                                                 Dark={StaticResource DarkButtonTextColor}}" />
-                
+
                 <Button
-                    Grid.Row="9"
-                    Margin="50,-15,50,180"
                     BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
                                                       Dark={StaticResource DarkButtonColor}}"
                     Command="{Binding UpdateLocationCommand}"
                     CornerRadius="30"
+                    Grid.Row="9"
+                    Margin="50,-15,50,180"
                     Text="UPDATE LOCATION"
                     TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
                                                 Dark={StaticResource DarkButtonTextColor}}" />

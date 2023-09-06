@@ -397,6 +397,7 @@ namespace Notify.Azure.HttpClient
                 preferencesKey: Constants.PREFERENCES_NOTIFICATIONS, 
                 converter: Converter.ToNotification);
 
+            Utils.CheckForExpiredPendingTimeNotifications(notifications);
             createNewDynamicDestinations(notifications);
             DependencyService.Get<IWiFiManager>().SendNotifications(null, null);
 
@@ -812,6 +813,8 @@ namespace Notify.Azure.HttpClient
             {
                 { "id", notificationID }
             };
+            
+            r_Logger.LogInformation($"request:{Environment.NewLine}{data}");
             
             try
             {

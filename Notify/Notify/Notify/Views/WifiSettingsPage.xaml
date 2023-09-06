@@ -3,75 +3,75 @@
     NavigationPage.HasNavigationBar="False"
     x:Class="Notify.Views.WifiSettingsPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:materialDesignControls="clr-namespace:Plugin.MaterialDesignControls;assembly=Plugin.MaterialDesignControls">
+    xmlns:materialDesignControls="clr-namespace:Plugin.MaterialDesignControls;assembly=Plugin.MaterialDesignControls"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
     <ContentPage.Content>
         <ScrollView>
 
             <Grid
                 BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor},
                                                   Dark={StaticResource DarkPageBackgroundColor}}"
-                Row="9"
-                RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, *">
-                
+                Row="6"
+                RowDefinitions="Auto, Auto, Auto, Auto, Auto, *">
+
                 <Button
-                    Grid.Row="0"
-                    Margin="-20, 0, 0, 0"
                     Background="Transparent"
                     BackgroundColor="Transparent"
                     Command="{Binding BackCommand}"
                     FontAttributes="Bold"
                     FontSize="25"
+                    Grid.Row="0"
                     HorizontalOptions="Start"
+                    Margin="-20,0,0,0"
                     Text="❮"
                     TextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
                                                 Dark={StaticResource LightEntryBackgroundColor}}"
                     VerticalOptions="Start" />
-                
+
                 <Label
-                    Grid.Row="1"
                     FontAttributes="Bold"
                     FontSize="30"
+                    Grid.Row="1"
                     HorizontalTextAlignment="Center"
                     Style="{StaticResource Body1FontSize_ExoBold}"
                     Text="Wi-Fi Settings"
                     VerticalTextAlignment="Center" />
-                
-                <materialDesignControls:MaterialPicker
-                    Grid.Row="2"
-                    CornerRadius="10"
-                    LabelMargin="3"
-                    LabelSize="16"
-                    Margin="30,60,30,0"
-                    LabelText="Select Wi-Fi"
-                    Placeholder="Select Wi-Fi"
-                    LabelTextColor="Black"
-                    BackgroundColor="White"
-                    ItemsSource="{Binding WiFiSelectionList}"
-                    SelectedItem="{Binding SelectedWiFiSSID}"
-                    TabIndex="1"/>
 
                 <materialDesignControls:MaterialPicker
-                    Grid.Row="3"
+                    BackgroundColor="White"
                     CornerRadius="10"
+                    Grid.Row="2"
+                    ItemsSource="{Binding WiFiSelectionList}"
                     LabelMargin="3"
                     LabelSize="16"
-                    Margin="30,20,30,0"
-                    LabelText="Select Location"
-                    Placeholder="Select Location"
+                    LabelText="Select Wi-Fi"
                     LabelTextColor="Black"
+                    Margin="30,60,30,0"
+                    Placeholder="Select Wi-Fi"
+                    SelectedItem="{Binding SelectedWiFiSSID}"
+                    TabIndex="1" />
+
+                <materialDesignControls:MaterialPicker
                     BackgroundColor="White"
+                    CornerRadius="10"
+                    Grid.Row="3"
                     ItemsSource="{Binding LocationSelectionList}"
+                    LabelMargin="3"
+                    LabelSize="16"
+                    LabelText="Select Location"
+                    LabelTextColor="Black"
+                    Margin="30,20,30,0"
+                    Placeholder="Select Location"
                     SelectedItem="{Binding SelectedLocation}"
-                    TabIndex="1"/>
-                
+                    TabIndex="1" />
+
                 <Button
-                    Grid.Row="9"
-                    Margin="50,80,50,180"
                     BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
                                                       Dark={StaticResource DarkButtonColor}}"
                     Command="{Binding UpdateWifiSettingsCommand}"
                     CornerRadius="30"
+                    Grid.Row="4"
+                    Margin="50,80,50,180"
                     Text="UPDATE Wi-Fi"
                     TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
                                                 Dark={StaticResource DarkButtonTextColor}}" />
