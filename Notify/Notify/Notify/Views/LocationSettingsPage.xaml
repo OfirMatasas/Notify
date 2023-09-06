@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     NavigationPage.HasNavigationBar="False"
     x:Class="Notify.Views.LocationSettingsPage"
@@ -8,18 +8,23 @@
 
     <ContentPage.Content>
         <ScrollView>
-            <Grid
-                BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor},
-                                                  Dark={StaticResource DarkPageBackgroundColor}}"
-                Row="9"
-                RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, *">
+            <Grid Row="9" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, *">
+
+                <BoxView.Background>
+                    <LinearGradientBrush>
+                        <GradientStopCollection>
+                            <GradientStop Color="{AppThemeBinding Dark={StaticResource DarkPageBackgroundColor}, Light={StaticResource LightPageBackgroundColor}}" Offset="0" />
+                            <GradientStop Color="{AppThemeBinding Dark={StaticResource DarkButtonTextColor}, Light={StaticResource LightEntryBackgroundColor}}" Offset="0.4" />
+                        </GradientStopCollection>
+                    </LinearGradientBrush>
+                </BoxView.Background>
 
                 <Button
                     Background="Transparent"
                     BackgroundColor="Transparent"
                     Command="{Binding BackCommand}"
                     FontAttributes="Bold"
-                    FontSize="25"
+                    FontSize="Title"
                     Grid.Row="0"
                     HorizontalOptions="Start"
                     Margin="-20,0,0,0"
@@ -30,7 +35,7 @@
 
                 <Label
                     FontAttributes="Bold"
-                    FontSize="30"
+                    FontSize="Title"
                     Grid.Row="1"
                     HorizontalTextAlignment="Center"
                     Style="{StaticResource Body1FontSize_ExoBold}"
@@ -45,7 +50,8 @@
                     ItemsSource="{Binding LocationSelectionList}"
                     LabelSize="16"
                     LabelText="Select Destination"
-                    LabelTextColor="Black"
+                    LabelTextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
+                                                     Dark={StaticResource LightEntryBackgroundColor}}"
                     Margin="30,60,30,0"
                     Placeholder="Select Destination"
                     SelectedItem="{Binding SelectedLocation}" />
@@ -56,12 +62,14 @@
                     Orientation="Horizontal"
                     Spacing="10">
                     <CheckBox
-                        Color="Black"
+                        Color="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
+                                                Dark={StaticResource LightEntryBackgroundColor}}"
                         IsChecked="{Binding IsCurrentLocationEnabled, Mode=TwoWay}"
                         Margin="30,0,0,0" />
                     <Label
                         Text="Use Current Location"
-                        TextColor="Black"
+                        TextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
+                                                    Dark={StaticResource LightEntryBackgroundColor}}"
                         VerticalOptions="Center" />
                 </StackLayout>
 
@@ -79,15 +87,18 @@
                         HeightRequest="70"
                         LabelSize="16"
                         LabelText="Enter Address"
-                        LabelTextColor="Black"
+                        LabelTextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
+                                                         Dark={StaticResource LightEntryBackgroundColor}}"
                         Margin="30,30,30,0"
                         MaxLength="100"
                         Placeholder="Enter Address"
-                        PlaceholderColor="Gray"
+                        PlaceholderColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
+                                                           Dark={StaticResource LightEntryBackgroundColor}}"
                         ReturnType="Next"
                         TabIndex="1"
                         Text="{Binding SearchAddress}"
-                        TextColor="Black" />
+                        TextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
+                                                    Dark={StaticResource LightEntryBackgroundColor}}" />
                 </Grid>
 
                 <Grid Grid.Row="5" IsEnabled="{Binding m_IsOtherLocationEnabled}">
@@ -103,10 +114,12 @@
                         HeightRequest="70"
                         LabelSize="16"
                         LabelText="Suggestions"
-                        LabelTextColor="Black"
+                        LabelTextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
+                                                         Dark={StaticResource LightEntryBackgroundColor}}"
                         Margin="30,10,30,0"
                         Placeholder="Suggestions"
-                        PlaceholderColor="Gray"
+                        PlaceholderColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
+                                                           Dark={StaticResource LightEntryBackgroundColor}}"
                         SelectedItem="{Binding SelectedAddress}">
                         <materialDesignControls1:MaterialPicker.ItemsSource>
                             <Binding Path="DropBoxOptions" />
@@ -123,8 +136,8 @@
                     IsEnabled="{Binding m_IsOtherLocationEnabled}"
                     Margin="80,20,80,20"
                     Text="Get Address Suggestion"
-                    TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
-                                                Dark={StaticResource DarkButtonTextColor}}" />
+                    TextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
+                                                Dark={StaticResource LightEntryBackgroundColor}}" />
 
                 <Button
                     BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
@@ -132,12 +145,14 @@
                     Command="{Binding UpdateLocationCommand}"
                     CornerRadius="30"
                     Grid.Row="9"
-                    Margin="50,-15,50,180"
+                    Margin="50,0,50,140"
                     Text="UPDATE LOCATION"
-                    TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
-                                                Dark={StaticResource DarkButtonTextColor}}" />
+                    TextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
+                                                Dark={StaticResource LightEntryBackgroundColor}}" />
+
 
             </Grid>
         </ScrollView>
+
     </ContentPage.Content>
 </ContentPage>

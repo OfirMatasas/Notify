@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     NavigationPage.HasNavigationBar="False"
     x:Class="Notify.Views.WifiSettingsPage"
@@ -11,55 +11,71 @@
             <Grid
                 BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor},
                                                   Dark={StaticResource DarkPageBackgroundColor}}"
-                Row="6"
-                RowDefinitions="Auto, Auto, Auto, Auto, Auto, *">
+                Row="9"
+                RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, *">
+
+                <BoxView.Background>
+                    <LinearGradientBrush>
+                        <GradientStopCollection>
+                            <GradientStop Color="{AppThemeBinding Dark={StaticResource DarkPageBackgroundColor}, Light={StaticResource LightPageBackgroundColor}}" Offset="0" />
+                            <GradientStop Color="{AppThemeBinding Dark={StaticResource DarkButtonTextColor}, Light={StaticResource LightEntryBackgroundColor}}" Offset="0.4" />
+                        </GradientStopCollection>
+                    </LinearGradientBrush>
+                </BoxView.Background>
 
                 <Button
                     Background="Transparent"
                     BackgroundColor="Transparent"
                     Command="{Binding BackCommand}"
+                    Font="Title"
                     FontAttributes="Bold"
-                    FontSize="25"
+                    FontSize="Title"
                     Grid.Row="0"
                     HorizontalOptions="Start"
                     Margin="-20,0,0,0"
                     Text="❮"
-                    TextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
-                                                Dark={StaticResource LightEntryBackgroundColor}}"
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}"
                     VerticalOptions="Start" />
 
                 <Label
                     FontAttributes="Bold"
-                    FontSize="30"
+                    FontSize="Title"
                     Grid.Row="1"
                     HorizontalTextAlignment="Center"
                     Style="{StaticResource Body1FontSize_ExoBold}"
                     Text="Wi-Fi Settings"
+                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}"
                     VerticalTextAlignment="Center" />
 
                 <materialDesignControls:MaterialPicker
-                    BackgroundColor="White"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                      Dark={StaticResource DarkPrimaryTextColor}}"
                     CornerRadius="10"
                     Grid.Row="2"
                     ItemsSource="{Binding WiFiSelectionList}"
                     LabelMargin="3"
                     LabelSize="16"
                     LabelText="Select Wi-Fi"
-                    LabelTextColor="Black"
+                    LabelTextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                     Dark={StaticResource DarkPrimaryTextColor}}"
                     Margin="30,60,30,0"
                     Placeholder="Select Wi-Fi"
                     SelectedItem="{Binding SelectedWiFiSSID}"
                     TabIndex="1" />
 
                 <materialDesignControls:MaterialPicker
-                    BackgroundColor="White"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                      Dark={StaticResource DarkPrimaryTextColor}}"
                     CornerRadius="10"
                     Grid.Row="3"
                     ItemsSource="{Binding LocationSelectionList}"
                     LabelMargin="3"
                     LabelSize="16"
                     LabelText="Select Location"
-                    LabelTextColor="Black"
+                    LabelTextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
+                                                     Dark={StaticResource DarkPrimaryTextColor}}"
                     Margin="30,20,30,0"
                     Placeholder="Select Location"
                     SelectedItem="{Binding SelectedLocation}"
@@ -70,11 +86,11 @@
                                                       Dark={StaticResource DarkButtonColor}}"
                     Command="{Binding UpdateWifiSettingsCommand}"
                     CornerRadius="30"
-                    Grid.Row="4"
+                    Grid.Row="9"
                     Margin="50,80,50,180"
                     Text="UPDATE Wi-Fi"
-                    TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
-                                                Dark={StaticResource DarkButtonTextColor}}" />
+                    TextColor="{AppThemeBinding Light={StaticResource DarkPrimaryTextColor},
+                                                Dark={StaticResource LightPrimaryTextColor}}" />
 
             </Grid>
         </ScrollView>
