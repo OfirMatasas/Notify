@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -43,6 +44,7 @@ namespace Notify.Functions.NotifyFunctions.Destination
                 locationName = Convert.ToString(data.location.name);
                 
                 log.LogInformation($"Searching for existing document in database by user {userName} and location {locationName}");
+                
                 filter = Filter.And(
                     Filter.Eq("user", userName), 
                     Filter.Eq("location.name", locationName)
@@ -58,8 +60,24 @@ namespace Notify.Functions.NotifyFunctions.Destination
                 }
                 else
                 {
-                    document = await createNewDocument(data, log, collection);
-                    result = new CreatedResult("", document.ToJson());
+                    string type = Convert.ToString(data.location.type);
+
+                    if ((type.Equals(Constants.NOTIFICATION_TYPE_LOCATION) &&
+                         (data.location.longitude == null || data.location.latitude == null)) ||
+                        (type.Equals(Constants.NOTIFICATION_TYPE_WIFI) && data.location.ssid == null) ||
+                        (type.Equals(Constants.NOTIFICATION_TYPE_BLUETOOTH) && data.location.device == null))
+                    {
+                        log.LogInformation($"User want to remove {locationName} {type} destination from preferences but there is no document for {locationName} in database.");
+                        result = new ObjectResult(true)
+                        {
+                            StatusCode = (int)HttpStatusCode.OK
+                        };
+                    }
+                    else
+                    {
+                        document = await createNewDocument(data, log, collection);
+                        result = new CreatedResult("", document.ToJson());
+                    }
                 }
             }
             catch (Exception ex)
