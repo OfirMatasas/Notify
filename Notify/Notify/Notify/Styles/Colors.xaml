@@ -11,6 +11,7 @@
     <Color x:Key="LightPrimaryTextColor">#212121</Color>
     <Color x:Key="LightSecondaryTextColor">#757575</Color>
     <Color x:Key="LightButtonColor">#71C9CE</Color>
+    <Color x:Key="LightPlaceholderTextColor">WhiteSmoke</Color>
     <Color x:Key="LightButtonTextColor">#252A34</Color>
     <Color x:Key="LightEntryBackgroundColor">#B7C4CF</Color>
     <Color x:Key="LightPageBackgroundColor">#DBE2EF</Color>
@@ -23,5 +24,5 @@
     <Color x:Key="DarkButtonColor">#D0E9EA</Color>
     <Color x:Key="DarkButtonTextColor">#222831</Color>
     <Color x:Key="DarkPageBackgroundColor">#3e3e42</Color>
-    <Color x:Key="DarkTabBarBackgroundColor">#128C7E</Color>
+    <Color x:Key="DarkTabBarBackgroundColor">#FFC436</Color>
 </ResourceDictionary>
