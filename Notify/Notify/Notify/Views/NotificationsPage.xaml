@@ -88,31 +88,6 @@
                 IsRunning="{Binding IsLoading}"
                 IsVisible="{Binding IsLoading}" />
 
-            <materialDesignControls:MaterialPicker
-                BackgroundColor="Transparent"
-                BorderColor="Transparent"
-                Grid.Column="0"
-                Grid.Row="2"
-                ItemsSource="{Binding FilterTypes}"
-                Margin="0,-30,0,0"
-                Placeholder="Filter by"
-                PlaceholderColor="Black"
-                SelectedItem="{Binding SelectedFilter}"
-                TextColor="Black" />
-
-            <Label
-                FontAttributes="Bold"
-                FontSize="Large"
-                Grid.Row="2"
-                HorizontalOptions="End"
-                Margin="0,-20,20,0"
-                Text="+"
-                TextColor="Black">
-                <Label.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding CreateNotificationCommand}" />
-                </Label.GestureRecognizers>
-            </Label>
-
             <CollectionView
                 Grid.Row="3"
                 HorizontalOptions="FillAndExpand"
