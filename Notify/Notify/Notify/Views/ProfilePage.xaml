@@ -62,7 +62,8 @@
                     TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
                                                 Light={StaticResource LightPrimaryTextColor}}" />
                 <Frame
-                    BackgroundColor="#EEEEEE"
+                    BackgroundColor="{AppThemeBinding Dark={StaticResource DarkCollectionViewColor},
+                                                      Light={StaticResource LightCollectionViewColor}}"
                     CornerRadius="20"
                     HasShadow="True"
                     HeightRequest="70"
@@ -77,7 +78,8 @@
                             Grid.Row="0"
                             Source="location_icon.png" />
                         <BoxView
-                            BackgroundColor="#393E46"
+                            BackgroundColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                              Light={StaticResource LightPrimaryTextColor}}"
                             Grid.Column="1"
                             Grid.Row="0"
                             Opacity="0.3" />
@@ -88,7 +90,8 @@
                             Grid.Row="0"
                             Source="bluetooth_icon.png" />
                         <BoxView
-                            BackgroundColor="#393E46"
+                            BackgroundColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                              Light={StaticResource LightPrimaryTextColor}}"
                             Grid.Column="3"
                             Grid.Row="0"
                             Opacity="0.3" />

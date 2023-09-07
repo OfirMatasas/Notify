@@ -8,21 +8,23 @@
     <Color x:Key="AccentColor">#252A34</Color>
 
     <!--  App Theme Light  -->
-    <Color x:Key="LightPrimaryTextColor">#212121</Color>
+    <Color x:Key="LightPrimaryTextColor">#303841</Color>
+    <Color x:Key="LightCollectionViewColor">#A9907E</Color>
     <Color x:Key="LightSecondaryTextColor">#757575</Color>
-    <Color x:Key="LightButtonColor">#71C9CE</Color>
+    <Color x:Key="LightButtonColor">#C8B6A6</Color>
     <Color x:Key="LightPlaceholderTextColor">WhiteSmoke</Color>
     <Color x:Key="LightButtonTextColor">#252A34</Color>
-    <Color x:Key="LightEntryBackgroundColor">#B7C4CF</Color>
-    <Color x:Key="LightPageBackgroundColor">#DBE2EF</Color>
-    <Color x:Key="LightTabBarBackgroundColor">#3282B8</Color>
+    <Color x:Key="LightEntryBackgroundColor">#F8F0E5</Color>
+    <Color x:Key="LightPageBackgroundColor">#EADBC8</Color>
+    <Color x:Key="LightTabBarBackgroundColor">#D7C0AE</Color>
 
     <!--  App Theme Dark  -->
     <Color x:Key="DarkPrimaryTextColor">#F5F5F5</Color>
+    <Color x:Key="DarkCollectionViewColor">#393E46</Color>
     <Color x:Key="DarkSecondaryTextColor">#DBE2EF</Color>
     <Color x:Key="DarkPlaceholderTextColor">#757575</Color>
-    <Color x:Key="DarkButtonColor">#D0E9EA</Color>
-    <Color x:Key="DarkButtonTextColor">#222831</Color>
+    <Color x:Key="DarkButtonColor">#9BA4B4</Color>
+    <Color x:Key="DarkButtonTextColor">#444F5A</Color>
     <Color x:Key="DarkPageBackgroundColor">#3e3e42</Color>
-    <Color x:Key="DarkTabBarBackgroundColor">#053B50</Color>
+    <Color x:Key="DarkTabBarBackgroundColor">#3E4149</Color>
 </ResourceDictionary>

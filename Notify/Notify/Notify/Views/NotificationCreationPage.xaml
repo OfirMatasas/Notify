@@ -274,10 +274,9 @@
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <Frame
-                                    BackgroundColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
-                                                                      Light={StaticResource LightPrimaryTextColor}}"
+                                    BackgroundColor="{AppThemeBinding Dark={StaticResource DarkCollectionViewColor},
+                                                                      Light={StaticResource LightCollectionViewColor}}"
                                     BorderColor="Transparent"
-                                    CornerRadius="8"
                                     Margin="10"
                                     Padding="10">
                                     <StackLayout Orientation="Horizontal">
@@ -291,6 +290,8 @@
                                             BackgroundColor="Transparent"
                                             FontAttributes="Bold"
                                             FontSize="16"
+                                            TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                    Light={StaticResource LightPrimaryTextColor}}"
                                             Margin="5,0,0,0"
                                             Text="{Binding UserName}"
                                             VerticalOptions="CenterAndExpand" />
@@ -314,8 +315,8 @@
                         IsVisible="{Binding IsCreating}"
                         Style="{StaticResource Button_ExoRegular}"
                         Text="Create"
-                        TextColor="{AppThemeBinding Dark={StaticResource LightPrimaryTextColor},
-                                                    Light={StaticResource DarkPrimaryTextColor}}"
+                        TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                    Light={StaticResource LightPrimaryTextColor}}"
                         VerticalOptions="End"
                         WidthRequest="250" />
 
@@ -327,8 +328,8 @@
                         IsVisible="{Binding IsEditing}"
                         Style="{StaticResource Button_ExoRegular}"
                         Text="Update"
-                        TextColor="{AppThemeBinding Dark={StaticResource LightPrimaryTextColor},
-                                                    Light={StaticResource DarkPrimaryTextColor}}"
+                        TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                    Light={StaticResource LightPrimaryTextColor}}"
                         VerticalOptions="End"
                         WidthRequest="250" />
                 </StackLayout>

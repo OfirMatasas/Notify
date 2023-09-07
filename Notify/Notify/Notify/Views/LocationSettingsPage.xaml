@@ -30,8 +30,8 @@
                 HorizontalOptions="Start"
                 Margin="-20,0,0,0"
                 Text="❮"
-                TextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
-                                            Dark={StaticResource LightEntryBackgroundColor}}"
+                TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                            Light={StaticResource LightPrimaryTextColor}}"
                 VerticalOptions="Start" />
 
             <Label
@@ -45,16 +45,19 @@
 
             <materialDesignControls1:MaterialPicker
                 BackgroundColor="White"
+                BorderColor="Transparent"
                 CornerRadius="10"
                 FontSize="16"
                 Grid.Row="2"
                 ItemsSource="{Binding LocationSelectionList}"
                 LabelSize="16"
                 LabelText="Select Destination"
-                LabelTextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
-                                                 Dark={StaticResource LightEntryBackgroundColor}}"
+                LabelTextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                 Light={StaticResource LightPrimaryTextColor}}"
                 Margin="30,60,30,0"
                 Placeholder="Select Destination"
+                PlaceholderColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
+                                                   Dark={StaticResource LightButtonTextColor}}"
                 SelectedItem="{Binding SelectedLocation}" />
 
             <StackLayout
@@ -80,7 +83,7 @@
                 </Grid.ColumnDefinitions>
 
                 <materialDesignControls1:MaterialEntry
-                    BackgroundColor="{Binding EntryBackgroundColor}"
+                    BackgroundColor="White"
                     BorderColor="Transparent"
                     CornerRadius="10"
                     FontSize="16"
@@ -94,7 +97,7 @@
                     MaxLength="100"
                     Placeholder="Enter Address"
                     PlaceholderColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
-                                                       Dark={StaticResource LightEntryBackgroundColor}}"
+                                                       Dark={StaticResource LightButtonTextColor}}"
                     ReturnType="Next"
                     TabIndex="1"
                     Text="{Binding SearchAddress}"
@@ -108,7 +111,8 @@
                 </Grid.ColumnDefinitions>
 
                 <materialDesignControls1:MaterialPicker
-                    BackgroundColor="{Binding EntryBackgroundColor}"
+                    BackgroundColor="White"
+                    BorderColor="Transparent"
                     CornerRadius="10"
                     FontSize="16"
                     Grid.Column="0"
@@ -120,7 +124,7 @@
                     Margin="30,10,30,0"
                     Placeholder="Suggestions"
                     PlaceholderColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
-                                                       Dark={StaticResource LightEntryBackgroundColor}}"
+                                                       Dark={StaticResource LightButtonTextColor}}"
                     SelectedItem="{Binding SelectedAddress}">
                     <materialDesignControls1:MaterialPicker.ItemsSource>
                         <Binding Path="DropBoxOptions" />
@@ -138,7 +142,7 @@
                 Margin="80,20,80,20"
                 Text="Get Address Suggestion"
                 TextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
-                                            Dark={StaticResource LightEntryBackgroundColor}}" />
+                                            Dark={StaticResource LightButtonTextColor}}" />
 
             <Button
                 BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
@@ -149,7 +153,7 @@
                 Margin="50,0,50,20"
                 Text="UPDATE LOCATION"
                 TextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
-                                            Dark={StaticResource LightEntryBackgroundColor}}" />
+                                            Dark={StaticResource LightButtonTextColor}}" />
         </Grid>
     </ContentPage.Content>
 </ContentPage>

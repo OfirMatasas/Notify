@@ -29,8 +29,8 @@
                 HorizontalOptions="Start"
                 Margin="-20,0,0,0"
                 Text="❮"
-                TextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
-                                            Dark={StaticResource LightEntryBackgroundColor}}"
+                TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
+                                            Dark={StaticResource DarkPrimaryTextColor}}"
                 VerticalOptions="Start" />
 
             <Label
@@ -40,6 +40,8 @@
                 HorizontalTextAlignment="Center"
                 Style="{StaticResource Body1FontSize_ExoBold}"
                 Text="Wi-Fi Settings"
+                TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
+                                            Dark={StaticResource DarkPrimaryTextColor}}"
                 VerticalTextAlignment="Center" />
 
             <materialDesignControls:MaterialPicker
@@ -49,8 +51,8 @@
                 ItemsSource="{Binding WiFiSelectionList}"
                 LabelSize="16"
                 LabelText="Select Wi-Fi"
-                LabelTextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
-                                                 Dark={StaticResource LightEntryBackgroundColor}}"
+                LabelTextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
+                                                 Dark={StaticResource DarkPrimaryTextColor}}"
                 Margin="30,60,30,0"
                 Placeholder="Select Wi-Fi"
                 SelectedItem="{Binding SelectedWiFiSSID}" />
@@ -62,8 +64,8 @@
                 ItemsSource="{Binding LocationSelectionList}"
                 LabelSize="16"
                 LabelText="Select Location"
-                LabelTextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
-                                                 Dark={StaticResource LightEntryBackgroundColor}}"
+                LabelTextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
+                                                 Dark={StaticResource DarkPrimaryTextColor}}"
                 Margin="30,20,30,0"
                 Placeholder="Select Location"
                 SelectedItem="{Binding SelectedLocation}" />
@@ -76,8 +78,8 @@
                 Grid.Row="9"
                 Margin="50,0,50,20"
                 Text="UPDATE Wi-Fi"
-                TextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
-                                            Dark={StaticResource LightEntryBackgroundColor}}" />
+                TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
+                                            Dark={StaticResource DarkButtonTextColor}}" />
         </Grid>
     </ContentPage.Content>
 </ContentPage>

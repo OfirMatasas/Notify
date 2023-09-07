@@ -215,8 +215,8 @@
 
                             <SwipeView.Content>
                                 <pancakeView:PancakeView
-                                    BackgroundColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
-                                                                      Light={StaticResource LightPrimaryTextColor}}"
+                                    BackgroundColor="{AppThemeBinding Dark={StaticResource DarkCollectionViewColor},
+                                                                      Light={StaticResource LightCollectionViewColor}}"
                                     HorizontalOptions="FillAndExpand"
                                     VerticalOptions="StartAndExpand">
                                     <Grid HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand">
@@ -250,8 +250,8 @@
                                                     </StackLayout>
 
                                                     <BoxView
-                                                        BackgroundColor="{AppThemeBinding Dark={StaticResource LightPrimaryTextColor},
-                                                                                          Light={StaticResource DarkPrimaryTextColor}}"
+                                                        BackgroundColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                                                          Light={StaticResource LightPrimaryTextColor}}"
                                                         Grid.Column="1"
                                                         HorizontalOptions="Start"
                                                         VerticalOptions="FillAndExpand"
@@ -267,14 +267,14 @@
                                                             FontAttributes="Bold"
                                                             FontSize="Medium"
                                                             Text="{Binding Name}"
-                                                            TextColor="{AppThemeBinding Dark={StaticResource LightPrimaryTextColor},
-                                                                                        Light={StaticResource DarkPrimaryTextColor}}" />
+                                                            TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                                                        Light={StaticResource LightPrimaryTextColor}}" />
                                                         <Label
                                                             FontSize="Medium"
                                                             Margin="0,-5,0,0"
                                                             Text="{Binding Description}"
-                                                            TextColor="{AppThemeBinding Dark={StaticResource LightPrimaryTextColor},
-                                                                                        Light={StaticResource DarkPrimaryTextColor}}" />
+                                                            TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                                                        Light={StaticResource LightPrimaryTextColor}}" />
                                                     </StackLayout>
                                                 </Grid>
                                             </views:Expander.Header>
@@ -287,8 +287,8 @@
                                                 </Grid.ColumnDefinitions>
 
                                                 <BoxView
-                                                    BackgroundColor="{AppThemeBinding Dark={StaticResource LightPrimaryTextColor},
-                                                                                      Light={StaticResource DarkPrimaryTextColor}}"
+                                                    BackgroundColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                                                      Light={StaticResource LightPrimaryTextColor}}"
                                                     Grid.Column="1"
                                                     HorizontalOptions="Start"
                                                     VerticalOptions="FillAndExpand"
@@ -299,33 +299,29 @@
                                                         FontAttributes="Bold"
                                                         FontSize="Small"
                                                         Margin="20,0"
-                                                        Opacity="0.8"
                                                         Text="{Binding Status, StringFormat='Status: {0}'}"
-                                                        TextColor="{AppThemeBinding Dark={StaticResource LightPrimaryTextColor},
-                                                                                    Light={StaticResource DarkPrimaryTextColor}}" />
+                                                        TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                                                    Light={StaticResource LightPrimaryTextColor}}" />
                                                     <Label
                                                         FontAttributes="Bold"
                                                         FontSize="Small"
                                                         Margin="20,0"
-                                                        Opacity="0.8"
                                                         Text="{Binding Creator, StringFormat='Creator: {0}'}"
-                                                        TextColor="{AppThemeBinding Dark={StaticResource LightPrimaryTextColor},
-                                                                                    Light={StaticResource DarkPrimaryTextColor}}" />
+                                                        TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                                                    Light={StaticResource LightPrimaryTextColor}}" />
                                                     <Label
                                                         FontAttributes="Bold"
                                                         FontSize="Small"
                                                         Margin="20,0"
-                                                        Opacity="0.8"
                                                         Text="{Binding CreationDateTime, StringFormat='Creation Date: {0}'}"
-                                                        TextColor="{AppThemeBinding Dark={StaticResource LightPrimaryTextColor},
-                                                                                    Light={StaticResource DarkPrimaryTextColor}}" />
+                                                        TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                                                    Light={StaticResource LightPrimaryTextColor}}" />
                                                     <Label
                                                         FontAttributes="Bold"
                                                         FontSize="Small"
                                                         Margin="20,0"
-                                                        Opacity="0.8"
-                                                        TextColor="{AppThemeBinding Dark={StaticResource LightPrimaryTextColor},
-                                                                                    Light={StaticResource DarkPrimaryTextColor}}">
+                                                        TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                                                    Light={StaticResource LightPrimaryTextColor}}">
                                                         <Label.FormattedText>
                                                             <FormattedString>
                                                                 <Span Text="{Binding Type, Converter={StaticResource TypeInfoConverter}}" />
@@ -340,27 +336,24 @@
                                                         FontSize="Small"
                                                         IsVisible="{Binding IsLocationType}"
                                                         Margin="20,0"
-                                                        Opacity="0.8"
                                                         Text="{Binding Activation, StringFormat='Activate on: {0}'}"
-                                                        TextColor="{AppThemeBinding Dark={StaticResource LightPrimaryTextColor},
-                                                                                    Light={StaticResource DarkPrimaryTextColor}}" />
+                                                        TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                                                    Light={StaticResource LightPrimaryTextColor}}" />
                                                     <Label
                                                         FontAttributes="Bold"
                                                         FontSize="Small"
                                                         IsVisible="{Binding IsLocationType}"
                                                         Margin="20,0"
-                                                        Opacity="0.8"
                                                         Text="{Binding IsPermanent, StringFormat='Permanent: {0}'}"
-                                                        TextColor="{AppThemeBinding Dark={StaticResource LightPrimaryTextColor},
-                                                                                    Light={StaticResource DarkPrimaryTextColor}}" />
+                                                        TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                                                    Light={StaticResource LightPrimaryTextColor}}" />
                                                     <Label
                                                         FontAttributes="Bold"
                                                         FontSize="Small"
-                                                        Margin="20,0,20,10"
-                                                        Opacity="0.8"
+                                                        Margin="20,1"
                                                         Text="{Binding Target, StringFormat='Target User: {0}'}"
-                                                        TextColor="{AppThemeBinding Dark={StaticResource LightPrimaryTextColor},
-                                                                                    Light={StaticResource DarkPrimaryTextColor}}" />
+                                                        TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                                                    Light={StaticResource LightPrimaryTextColor}}" />
                                                     <StackLayout
                                                         IsVisible="{Binding IsDynamicLocation}"
                                                         Margin="20,0,20,10"
@@ -372,8 +365,8 @@
                                                             FontSize="Small"
                                                             Opacity="0.8"
                                                             Text="Open in:"
-                                                            TextColor="{AppThemeBinding Dark={StaticResource LightPrimaryTextColor},
-                                                                                        Light={StaticResource DarkPrimaryTextColor}}"
+                                                            TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                                                        Light={StaticResource LightPrimaryTextColor}}"
                                                             VerticalOptions="Center" />
 
                                                         <ImageButton
@@ -381,7 +374,6 @@
                                                             Command="{Binding Path=BindingContext.OpenMapCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
                                                             CommandParameter="{Binding .}"
                                                             HeightRequest="30"
-                                                            Opacity="0.8"
                                                             Source="google_maps_icon.png" />
                                                     </StackLayout>
                                                 </StackLayout>

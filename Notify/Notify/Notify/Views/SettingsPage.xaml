@@ -42,7 +42,7 @@
                 Margin="40,5,40,5"
                 Text="Location Settings"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
-                                            Dark={StaticResource DarkButtonTextColor}}" />
+                                            Dark={StaticResource LightButtonTextColor}}" />
 
             <Button
                 BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
@@ -55,7 +55,7 @@
                 Margin="40,5,40,5"
                 Text="Wi-Fi Settings"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
-                                            Dark={StaticResource DarkButtonTextColor}}" />
+                                            Dark={StaticResource LightButtonTextColor}}" />
 
             <Button
                 BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
@@ -68,7 +68,7 @@
                 Margin="40,5,40,5"
                 Text="Bluetooth Settings"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
-                                            Dark={StaticResource DarkButtonTextColor}}" />
+                                            Dark={StaticResource LightButtonTextColor}}" />
 
             <Label
                 Grid.Column="0"
