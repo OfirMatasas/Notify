@@ -67,7 +67,7 @@ namespace Notify.Functions.NotifyFunctions.Destination
                         (type.Equals(Constants.NOTIFICATION_TYPE_WIFI) && data.location.ssid == null) ||
                         (type.Equals(Constants.NOTIFICATION_TYPE_BLUETOOTH) && data.location.device == null))
                     {
-                        log.LogInformation($"User want to remove {locationName} {type} destination from preferences but there is no document for {locationName} in database.");
+                        log.LogInformation($"No document exists for location '{locationName}' of type '{type}'
                         result = new ObjectResult(true)
                         {
                             StatusCode = (int)HttpStatusCode.OK
