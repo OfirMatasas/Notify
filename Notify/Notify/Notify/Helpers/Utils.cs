@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
@@ -13,7 +14,27 @@ namespace Notify.Helpers
         private static readonly LoggerService r_Logger = LoggerService.Instance;
         private static readonly object r_Lock = new object();
 
-        public static void updateNotificationsStatus(List<Notification> notificationsToUpdate, string newStatus)
+        public static void CheckForExpiredPendingTimeNotifications(List<Notification> notifications)
+        {
+            List<Notification> expiredPendingTimeNotifications = notifications.FindAll(notification =>
+                notification.Status.Equals(Constants.NOTIFICATION_STATUS_PENDING) &&
+                notification.Type.Equals(NotificationType.Time) &&
+                (DateTime)notification.TypeInfo < DateTime.Now);
+
+            if (expiredPendingTimeNotifications.Count > 0)
+            {
+                r_Logger.LogInformation($"Expired pending time notifications: {string.Join(", ", expiredPendingTimeNotifications.Select(notification => notification.Name))}");
+            }
+
+            foreach (Notification expiredPendingTimeNotification in expiredPendingTimeNotifications)
+            {
+                expiredPendingTimeNotification.Status = Constants.NOTIFICATION_STATUS_EXPIRED;
+            }
+            
+            UpdateNotificationsStatus(expiredPendingTimeNotifications, Constants.NOTIFICATION_STATUS_EXPIRED);
+        }
+        
+        public static void UpdateNotificationsStatus(List<Notification> notificationsToUpdate, string newStatus)
         {
             lock (r_Lock)
             {
