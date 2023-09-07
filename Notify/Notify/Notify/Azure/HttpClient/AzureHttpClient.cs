@@ -453,7 +453,6 @@ namespace Notify.Azure.HttpClient
         
         #endregion
         
-        
         #region Friends
         
         public async Task<List<User>> GetFriends()

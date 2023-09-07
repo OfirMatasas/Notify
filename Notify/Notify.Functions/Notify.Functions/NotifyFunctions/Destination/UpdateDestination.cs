@@ -62,16 +62,10 @@ namespace Notify.Functions.NotifyFunctions.Destination
                 {
                     string type = Convert.ToString(data.location.type);
 
-                    if ((type.Equals(Constants.NOTIFICATION_TYPE_LOCATION) &&
-                         (data.location.longitude == null || data.location.latitude == null)) ||
-                        (type.Equals(Constants.NOTIFICATION_TYPE_WIFI) && data.location.ssid == null) ||
-                        (type.Equals(Constants.NOTIFICATION_TYPE_BLUETOOTH) && data.location.device == null))
+                    if (removeDestination(type, data))
                     {
-                        log.LogInformation($"No document exists for location '{locationName}' of type '{type}'
-                        result = new ObjectResult(true)
-                        {
-                            StatusCode = (int)HttpStatusCode.OK
-                        };
+                        log.LogInformation($"No document exists for location '{locationName}' of type '{type}'");
+                        result = new AcceptedResult();
                     }
                     else
                     {
@@ -87,6 +81,16 @@ namespace Notify.Functions.NotifyFunctions.Destination
             }
 
             return result;
+        }
+        
+        private static bool removeDestination(string type, dynamic data)
+        {
+            bool answer = (type.Equals(Constants.NOTIFICATION_TYPE_LOCATION) && 
+                           (data.location.longitude == null || data.location.latitude == null)) ||
+                           (type.Equals(Constants.NOTIFICATION_TYPE_WIFI) && data.location.ssid == null) ||
+                           (type.Equals(Constants.NOTIFICATION_TYPE_BLUETOOTH) && data.location.device == null);
+
+            return answer;
         }
 
         private static async void updateExistedDocument(dynamic data, ILogger log, BsonDocument document, IMongoCollection<BsonDocument> collection, FilterDefinition<BsonDocument> filter) 
