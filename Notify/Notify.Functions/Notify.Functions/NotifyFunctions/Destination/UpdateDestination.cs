@@ -65,7 +65,7 @@ namespace Notify.Functions.NotifyFunctions.Destination
                     if (removeDestination(type, data))
                     {
                         log.LogInformation($"No document exists for location '{locationName}' of type '{type}'");
-                        result = new AcceptedResult();
+                        result = new OkObjectResult(document.ToJson());
                     }
                     else
                     {
