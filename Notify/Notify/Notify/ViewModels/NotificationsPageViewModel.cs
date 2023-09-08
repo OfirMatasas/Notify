@@ -266,7 +266,7 @@ namespace Notify.ViewModels
         {
             string messageTitle = "Notification Acceptance";
             string messageBody = "Notification accepted successfully";
-            bool isConfirmed;
+            bool isConfirmed, isSucceeded;
             Notification notification;
 
             isConfirmed = await App.Current.MainPage.DisplayAlert(messageTitle,
@@ -277,12 +277,19 @@ namespace Notify.ViewModels
             {
                 notification = new Notification(notificationID);
 
-                AzureHttpClient.Instance.UpdateNotificationsStatus(
+                isSucceeded = AzureHttpClient.Instance.UpdateNotificationsStatus(
                     new List<Notification> { notification },
                     Constants.NOTIFICATION_STATUS_ACTIVE
                 );
 
-                OnNotificationsRefreshClicked();
+                if (isSucceeded)
+                {
+                    OnNotificationsRefreshClicked();
+                }
+                else
+                {
+                    messageBody = "Failed to accept notification";
+                }
                 
                 await App.Current.MainPage.DisplayAlert(messageTitle, messageBody, "OK");
             }

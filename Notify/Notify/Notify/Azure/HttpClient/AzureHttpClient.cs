@@ -1055,7 +1055,7 @@ namespace Notify.Azure.HttpClient
             return nearbyPlaces;
         }
         
-        private async Task<HttpResponseMessage> getAsync(string requestUri, string query = null)
+       private async Task<HttpResponseMessage> getAsync(string requestUri, string query = null)
         {
             r_Logger.LogDebug($"Sending HTTP GET request to {requestUri + query} endpoint");
             HttpResponseMessage response = await m_HttpClient.GetAsync(requestUri + query).ConfigureAwait(false);

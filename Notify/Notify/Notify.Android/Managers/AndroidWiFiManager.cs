@@ -89,8 +89,8 @@ namespace Notify.Droid.Managers
                 else
                 {
                     sendNotificationsForLeaveDestinations(notifications, destinations, ref sentNotifications, ref permanentNotifications);
-                    Utils.updateNotificationsStatus(sentNotifications, Constants.NOTIFICATION_STATUS_EXPIRED);
-                    Utils.updateNotificationsStatus(permanentNotifications, Constants.NOTIFICATION_STATUS_ACTIVE);
+                    Utils.UpdateNotificationsStatus(sentNotifications, Constants.NOTIFICATION_STATUS_EXPIRED);
+                    Utils.UpdateNotificationsStatus(permanentNotifications, Constants.NOTIFICATION_STATUS_ACTIVE);
                 }
             }
         }
@@ -123,9 +123,9 @@ namespace Notify.Droid.Managers
 
                 r_Logger.LogInformation("Finished sending Wi-Fi notifications");
                 
-                Utils.updateNotificationsStatus(sentNotifications, Constants.NOTIFICATION_STATUS_EXPIRED);
-                Utils.updateNotificationsStatus(arrivedNotifications, Constants.NOTIFICATION_STATUS_ARRIVED);
-                Utils.updateNotificationsStatus(permanentNotifications, Constants.NOTIFICATION_STATUS_ACTIVE);
+                Utils.UpdateNotificationsStatus(sentNotifications, Constants.NOTIFICATION_STATUS_EXPIRED);
+                Utils.UpdateNotificationsStatus(arrivedNotifications, Constants.NOTIFICATION_STATUS_ARRIVED);
+                Utils.UpdateNotificationsStatus(permanentNotifications, Constants.NOTIFICATION_STATUS_ACTIVE);
             }
         }
         

@@ -9,8 +9,10 @@ using Notify.Azure.HttpClient;
 using Notify.Core;
 using Notify.Helpers;
 using Notify.Services;
+using Notify.ViewModels.Popups;
 using Notify.Views.SubViews;
 using Notify.Views.Views;
+using Rg.Plugins.Popup.Services;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -28,7 +30,8 @@ namespace Notify.ViewModels
         public Command DeleteFriendCommand { get; set; }
         public Command ShowPendingFriendRequestsCommand { get; set; }
         public Command ExecuteSearchCommand { get; set; }
-
+        public Command EditFriendCommand { get; set; }
+        
         private bool m_IsRefreshing;
         public bool IsRefreshing { set => SetField(ref m_IsRefreshing, value); }
         
@@ -51,11 +54,58 @@ namespace Notify.ViewModels
             ShowFriendRequestsCommand = new Command(onShowFriendRequestsClicked);
             SelectedFriendCommand = new Command(onSelectedFriendClicked);
             ExecuteSearchCommand = new Command(applyFilterAndSearch);
-
+            EditFriendCommand = new Command<User>(onEditFriendButtonClicked);
+            
             RefreshFriendsList();
             onRefreshFriendsClicked();
         }
-        
+
+        private void onEditFriendButtonClicked(User friend)
+        {
+            string newLocationPermission, newTimePermission, newDynamicPermission;
+            string selectedLocationPermission = friend.Permissions.LocationNotificationPermission;
+            string selectedTimePermission = friend.Permissions.TimeNotificationPermission;
+            string selectedDynamicPermission = friend.Permissions.DynamicNotificationPermission;
+            EditFriendPopupPage popup = new EditFriendPopupPage(selectedLocationPermission, selectedTimePermission, selectedDynamicPermission);
+            bool isSucceeded;
+
+            MessagingCenter.Subscribe<EditFriendPopupPage, (string, string, string)>(this, "EditFriendValues",
+                async (sender, newPermissionValues) =>
+                {
+                    newLocationPermission = newPermissionValues.Item1 ?? selectedLocationPermission;
+                    newTimePermission = newPermissionValues.Item2 ?? selectedTimePermission;
+                    newDynamicPermission = newPermissionValues.Item3 ?? selectedDynamicPermission;
+
+                    if (newLocationPermission != selectedLocationPermission || newTimePermission != selectedTimePermission || newDynamicPermission != selectedDynamicPermission)
+                    {
+                        isSucceeded = await AzureHttpClient.Instance.UpdateFriendPermissionsAsync(friend.UserName,
+                            newLocationPermission, newTimePermission, newDynamicPermission);
+
+                        if (!isSucceeded)
+                        {
+                            await Application.Current.MainPage.DisplayAlert("Error",
+                                "There was a problem updating user permissions.", "OK");
+
+                        }
+
+                        onRefreshFriendsClicked();
+                    }
+
+                    MessagingCenter
+                        .Unsubscribe<EditFriendPopupPage, (string, string, string)>(this, "EditFriendValues");
+
+                    Device.BeginInvokeOnMainThread(async () =>
+                    {
+                        if (PopupNavigation.Instance.PopupStack.Count > 0)
+                        {
+                            await PopupNavigation.Instance.PopAsync();
+                        }
+                    });
+                });
+
+            Device.BeginInvokeOnMainThread(async () => { await PopupNavigation.Instance.PushAsync(popup); });
+        }
+
         private async void RefreshFriendsList()
         {
             string friendsJson;
@@ -172,3 +222,4 @@ namespace Notify.ViewModels
         }
     }
 }
+

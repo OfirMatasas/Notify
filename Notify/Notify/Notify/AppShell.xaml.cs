@@ -152,6 +152,8 @@ namespace Notify
 
         private void sendAllRelevantLocationNotifications(Location location)
         {
+            string notificationsJson = Preferences.Get(Constants.PREFERENCES_NOTIFICATIONS, string.Empty);
+            List<Notification> notifications = JsonConvert.DeserializeObject<List<Notification>>(notificationsJson);
             List<Notification> sentNotifications = new List<Notification>();
             List<Notification> arrivedNotifications = new List<Notification>();
             List<Notification> permanentNotifications = new List<Notification>();
@@ -161,6 +163,7 @@ namespace Notify
                 getAllNotificationsForArrivalDestinations(location, ref sentNotifications, ref arrivedNotifications);
                 getAllNotificationsForLeaveDestinations(location, ref sentNotifications, ref permanentNotifications);
                 getAllNotificationsForElapsedTime(ref sentNotifications);
+                Utils.CheckForExpiredPendingTimeNotifications(notifications);
 
                 updateStatusOfNotifications(Constants.NOTIFICATION_STATUS_EXPIRED, sentNotifications);
                 updateStatusOfNotifications(Constants.NOTIFICATION_STATUS_ARRIVED, arrivedNotifications);
