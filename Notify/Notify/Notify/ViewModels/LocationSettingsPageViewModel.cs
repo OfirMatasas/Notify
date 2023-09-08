@@ -41,7 +41,7 @@ namespace Notify.ViewModels
             {
                 if (SetField(ref m_SelectedLocation, value))
                 {
-                    RemoveLocationButtonText = $"REMOVE {value} WI-FI";
+                    RemoveLocationButtonText = $"REMOVE {value} LOCATION";
                     IsRemoveButtonEnabled = true;
                 }
             }
@@ -303,7 +303,7 @@ namespace Notify.ViewModels
             }
         }
         
-        private string m_RemoveLocationButtonText = "PLEASE CHOOSE DESTINATION";
+        private string m_RemoveLocationButtonText = "CHOOSE DESTINATION";
         public string RemoveLocationButtonText
         {
             get => m_RemoveLocationButtonText;

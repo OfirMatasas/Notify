@@ -135,7 +135,7 @@ namespace Notify.ViewModels
             }
         }
         
-        private string m_RemoveWifiButtonText = "PLEASE CHOOSE DESTINATION";
+        private string m_RemoveWifiButtonText = "CHOOSE DESTINATION";
         public string RemoveWifiButtonText
         {
             get => m_RemoveWifiButtonText;

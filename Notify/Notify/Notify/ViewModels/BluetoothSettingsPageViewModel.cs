@@ -109,7 +109,7 @@ namespace Notify.ViewModels
             }
         }
         
-        private string m_RemoveBluetoothButtonText = "PLEASE CHOOSE DESTINATION";
+        private string m_RemoveBluetoothButtonText = "CHOOSE DESTINATION";
         public string RemoveBluetoothButtonText
         {
             get => m_RemoveBluetoothButtonText;
