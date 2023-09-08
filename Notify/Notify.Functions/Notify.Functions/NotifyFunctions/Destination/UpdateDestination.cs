@@ -62,9 +62,9 @@ namespace Notify.Functions.NotifyFunctions.Destination
                 {
                     string type = Convert.ToString(data.location.type);
 
-                    if (removeDestination(type, data))
+                    if (isUserWantsToRemoveDestination(type, data))
                     {
-                        log.LogInformation($"No document exists for location '{locationName}' of type '{type}'");
+                        log.LogWarning($"No document exists for location '{locationName}' of type '{type}'");
                         result = new AcceptedResult();                    }
                     else
                     {
@@ -82,7 +82,7 @@ namespace Notify.Functions.NotifyFunctions.Destination
             return result;
         }
         
-        private static bool removeDestination(string type, dynamic data)
+        private static bool isUserWantsToRemoveDestination(string type, dynamic data)
         {
             bool shouldRemoveDestination = (type.Equals(Constants.NOTIFICATION_TYPE_LOCATION) && 
                                             (data.location.longitude == null || data.location.latitude == null)) ||
