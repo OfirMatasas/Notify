@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Notify.Azure.HttpClient;
@@ -106,17 +105,17 @@ namespace Notify.ViewModels
         
         private async void onRemoveBluetoothDestinationClicked()
         {
-            bool successfulUpdate;
-            bool isConfirmed = await App.Current.MainPage.DisplayAlert("Confirmation", $"Are you sure you want to remove {SelectedLocation} bluetooth destination from preferences?", "Yes", "No");
+            bool isSucceeded;
+            bool isConfirmed = await App.Current.MainPage.DisplayAlert("Confirmation", $"Are you sure you want to remove the bluetooth device from your {SelectedLocation} destination?", "Yes", "No");
 
             if (isConfirmed)
             {
-                successfulUpdate = AzureHttpClient.Instance
+                isSucceeded = AzureHttpClient.Instance
                     .RemoveDestination(m_SelectedLocation, NotificationType.Bluetooth).Result;
 
-                if (successfulUpdate)
+                if (isSucceeded)
                 {
-                    App.Current.MainPage.DisplayAlert("Remove", $"Remove success!", "OK");
+                    App.Current.MainPage.DisplayAlert("Remove", $"Removal of bluetooth device from {SelectedLocation} succeeded successfully", "OK");
                     await AzureHttpClient.Instance.GetDestinations();
                 }
                 else

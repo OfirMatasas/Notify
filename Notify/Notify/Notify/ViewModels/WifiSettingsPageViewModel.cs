@@ -131,16 +131,16 @@ namespace Notify.ViewModels
         
         private async void onRemoveWifiDestinationClicked()
         {
-            bool successfulUpdate;
-            bool isConfirmed = await App.Current.MainPage.DisplayAlert("Confirmation", $"Are you sure you want to remove {SelectedLocation} Wi-Fi Destination from preferences?", "Yes", "No");
+            bool isSucceeded;
+            bool isConfirmed = await App.Current.MainPage.DisplayAlert("Confirmation", $"Are you sure you want to remove the Wi-Fi network from your {SelectedLocation} destination?", "Yes", "No");
 
             if (isConfirmed)
             {
-                successfulUpdate = AzureHttpClient.Instance.RemoveDestination(m_SelectedLocation, NotificationType.WiFi).Result;
+                isSucceeded = AzureHttpClient.Instance.RemoveDestination(m_SelectedLocation, NotificationType.WiFi).Result;
                 
-                if (successfulUpdate)
+                if (isSucceeded)
                 {
-                    App.Current.MainPage.DisplayAlert("Remove", $"Remove success!", "OK");
+                    App.Current.MainPage.DisplayAlert("Remove", $"Removal of Wi-Fi network from {SelectedLocation} succeeded successfully", "OK");
                     await AzureHttpClient.Instance.GetDestinations();
                 }
                 else

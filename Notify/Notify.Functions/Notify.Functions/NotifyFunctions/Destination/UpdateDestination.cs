@@ -72,20 +72,6 @@ namespace Notify.Functions.NotifyFunctions.Destination
 
             return result;
         }
-        
-        private static bool shouldRemoveDestination(string type, dynamic data)
-        {
-            bool shouldRemoveDestination, shouldRemoveLocation, shouldRemoveWifi, shouldRemoveBluetooth;
-
-            shouldRemoveLocation = type.Equals(Constants.NOTIFICATION_TYPE_LOCATION) &&
-                                   (data.location.longitude == null && data.location.latitude == null);
-            shouldRemoveWifi = type.Equals(Constants.NOTIFICATION_TYPE_WIFI) && data.location.ssid == null;
-            shouldRemoveBluetooth = type.Equals(Constants.NOTIFICATION_TYPE_BLUETOOTH) && data.location.device == null;
-
-            shouldRemoveDestination = shouldRemoveLocation || shouldRemoveWifi || shouldRemoveBluetooth;
-            
-            return shouldRemoveDestination;
-        }
 
         private static async void updateExistedDocument(dynamic data, ILogger log, BsonDocument document, IMongoCollection<BsonDocument> collection, FilterDefinition<BsonDocument> filter) 
         {
@@ -125,9 +111,13 @@ namespace Notify.Functions.NotifyFunctions.Destination
             else if (type.Equals(Constants.NOTIFICATION_TYPE_BLUETOOTH))
             {
                 if (data.location.device == null)
+                {
                     document["location"].AsBsonDocument.Remove("device");
+                }
                 else
+                {
                     document["location"].AsBsonDocument["device"] = Convert.ToString(data.location.device);
+                }
             }
             else
             {

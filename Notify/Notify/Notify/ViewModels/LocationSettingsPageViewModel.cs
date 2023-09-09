@@ -298,16 +298,16 @@ namespace Notify.ViewModels
         
         private async void onRemoveLocationDestinationClicked()
         {
-            bool successfulUpdate;
-            bool isConfirmed = await App.Current.MainPage.DisplayAlert("Confirmation", $"Are you sure you want to remove {SelectedLocation} Location destination from preferences?", "Yes", "No");
+            bool isSucceeded;
+            bool isConfirmed = await App.Current.MainPage.DisplayAlert("Confirmation", $"Are you sure you want to remove the location from your {SelectedLocation} destination?", "Yes", "No");
 
             if (isConfirmed)
             {
-                successfulUpdate = AzureHttpClient.Instance.RemoveDestination(m_SelectedLocation, NotificationType.Location).Result;
+                isSucceeded = AzureHttpClient.Instance.RemoveDestination(m_SelectedLocation, NotificationType.Location).Result;
                 
-                if (successfulUpdate)
+                if (isSucceeded)
                 {
-                    App.Current.MainPage.DisplayAlert("Remove", $"Remove success!", "OK");
+                    App.Current.MainPage.DisplayAlert("Remove", $"Removal of location from {SelectedLocation} succeeded successfully", "OK");
                     await AzureHttpClient.Instance.GetDestinations();
                 }
                 else
