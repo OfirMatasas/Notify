@@ -15,8 +15,8 @@
             <BoxView.Background>
                 <LinearGradientBrush>
                     <GradientStopCollection>
-                        <GradientStop Color="#161616" Offset="0" />
-                        <GradientStop Color="#30343F" Offset="1" />
+                        <GradientStop Color="{AppThemeBinding Dark={StaticResource DarkPageBackgroundColor}, Light={StaticResource LightPageBackgroundColor}}" Offset="0" />
+                        <GradientStop Color="{AppThemeBinding Dark={StaticResource DarkButtonTextColor}, Light={StaticResource LightEntryBackgroundColor}}" Offset="0.4" />
                     </GradientStopCollection>
                 </LinearGradientBrush>
             </BoxView.Background>
@@ -25,7 +25,9 @@
             <Path
                 Aspect="Fill"
                 Data="M0,0H375V262.033s-9.025,4.813-55.426-10.71-70.141-83.047-130.3-83.22-83.544,67.7-130.893,83.22S0,262.033,0,262.033Z"
-                Fill="#FFBE00" />
+                Fill="{AppThemeBinding Dark={StaticResource DarkTabBarBackgroundColor},
+                                       Light={StaticResource LightTabBarBackgroundColor}}"
+                Opacity="0.9" />
         </Grid>
         <StackLayout
             Grid.Row="1"
@@ -57,11 +59,12 @@
                     FontSize="Large"
                     HorizontalOptions="Center"
                     Text="{Binding UserName, StringFormat='Hello, {0}'}"
-                    TextColor="White" />
+                    TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                Light={StaticResource LightPrimaryTextColor}}" />
                 <Frame
-                    BackgroundColor="#EEEEEE"
+                    BackgroundColor="{AppThemeBinding Dark={StaticResource DarkCollectionViewColor},
+                                                      Light={StaticResource LightCollectionViewColor}}"
                     CornerRadius="20"
-                    Grid.Row="3"
                     HasShadow="True"
                     HeightRequest="70"
                     Margin="20,30,20,0"
@@ -75,7 +78,8 @@
                             Grid.Row="0"
                             Source="location_icon.png" />
                         <BoxView
-                            BackgroundColor="#393E46"
+                            BackgroundColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                              Light={StaticResource LightPrimaryTextColor}}"
                             Grid.Column="1"
                             Grid.Row="0"
                             Opacity="0.3" />
@@ -86,7 +90,8 @@
                             Grid.Row="0"
                             Source="bluetooth_icon.png" />
                         <BoxView
-                            BackgroundColor="#393E46"
+                            BackgroundColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                              Light={StaticResource LightPrimaryTextColor}}"
                             Grid.Column="3"
                             Grid.Row="0"
                             Opacity="0.3" />
