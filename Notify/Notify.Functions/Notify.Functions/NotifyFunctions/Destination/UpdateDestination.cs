@@ -28,7 +28,7 @@ namespace Notify.Functions.NotifyFunctions.Destination
         {
             IMongoCollection<BsonDocument> collection;
             dynamic data;
-            string userName, locationName;
+            string userName, locationName, type;
             FilterDefinition<BsonDocument> filter;
             BsonDocument document;
             ObjectResult result;
@@ -60,7 +60,7 @@ namespace Notify.Functions.NotifyFunctions.Destination
                 }
                 else
                 {
-                    string type = Convert.ToString(data.location.type);
+                    type = Convert.ToString(data.location.type);
 
                     if (shouldRemoveDestination(type, data))
                     {
