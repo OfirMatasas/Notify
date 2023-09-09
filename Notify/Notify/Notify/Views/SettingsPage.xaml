@@ -7,18 +7,25 @@
     xmlns:xct="http://xamarin.com/schemas/2020/toolkit">
     <ContentPage.Content>
         <Grid
-            BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor},
-                                              Dark={StaticResource DarkPageBackgroundColor}}"
             Column="2"
             Row="6"
             RowDefinitions="Auto, Auto, Auto, Auto, *, Auto">
-            
+
+            <BoxView.Background>
+                <LinearGradientBrush>
+                    <GradientStopCollection>
+                        <GradientStop Color="{AppThemeBinding Dark={StaticResource DarkPageBackgroundColor}, Light={StaticResource LightPageBackgroundColor}}" Offset="0" />
+                        <GradientStop Color="{AppThemeBinding Dark={StaticResource DarkButtonTextColor}, Light={StaticResource LightEntryBackgroundColor}}" Offset="0.4" />
+                    </GradientStopCollection>
+                </LinearGradientBrush>
+            </BoxView.Background>
+
             <Label
                 FontAttributes="Bold"
+                FontSize="Title"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Grid.Row="0"
-                FontSize="35"
                 HorizontalTextAlignment="Center"
                 Margin="40"
                 Style="{StaticResource Headline3_ExoBold}"
@@ -29,39 +36,39 @@
                                                   Dark={StaticResource DarkButtonColor}}"
                 Command="{Binding GoLocationSettingsPageCommand}"
                 CornerRadius="30"
-                Margin="40 , 5, 40, 5"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Grid.Row="1"
+                Margin="40,5,40,5"
                 Text="Location Settings"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
-                                            Dark={StaticResource DarkButtonTextColor}}" />
+                                            Dark={StaticResource LightButtonTextColor}}" />
 
             <Button
                 BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
                                                   Dark={StaticResource DarkButtonColor}}"
                 Command="{Binding GoWifiSettingsPageCommand}"
                 CornerRadius="30"
-                Margin="40 , 5, 40, 5"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Grid.Row="2"
+                Margin="40,5,40,5"
                 Text="Wi-Fi Settings"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
-                                            Dark={StaticResource DarkButtonTextColor}}" />
+                                            Dark={StaticResource LightButtonTextColor}}" />
 
             <Button
                 BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
                                                   Dark={StaticResource DarkButtonColor}}"
                 Command="{Binding GoBluetoothSettingsPageCommand}"
                 CornerRadius="30"
-                Margin="40 , 5, 40, 5"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Grid.Row="3"
+                Margin="40,5,40,5"
                 Text="Bluetooth Settings"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
-                                            Dark={StaticResource DarkButtonTextColor}}" />
+                                            Dark={StaticResource LightButtonTextColor}}" />
 
             <Label
                 Grid.Column="0"

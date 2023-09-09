@@ -29,6 +29,16 @@
             HorizontalOptions="FillAndExpand"
             RowSpacing="0"
             VerticalOptions="FillAndExpand">
+
+            <BoxView.Background>
+                <LinearGradientBrush>
+                    <GradientStopCollection>
+                        <GradientStop Color="{AppThemeBinding Dark={StaticResource DarkPageBackgroundColor}, Light={StaticResource LightPageBackgroundColor}}" Offset="0" />
+                        <GradientStop Color="{AppThemeBinding Dark={StaticResource DarkButtonTextColor}, Light={StaticResource LightEntryBackgroundColor}}" Offset="0.4" />
+                    </GradientStopCollection>
+                </LinearGradientBrush>
+            </BoxView.Background>
+
             <Grid.RowDefinitions>
                 <RowDefinition Height="140" />
                 <RowDefinition Height="40" />
@@ -36,11 +46,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Grid
-                BackgroundColor="#F3F5F9"
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="FillAndExpand">
-
+            <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                 <StackLayout
                     HorizontalOptions="Center"
                     Margin="0,-40,0,0"
@@ -54,9 +60,10 @@
                                 <FormattedString.Spans>
                                     <Span
                                         FontAttributes="Bold"
-                                        FontSize="40"
+                                        FontSize="Title"
                                         Text="Notifications"
-                                        TextColor="#222831" />
+                                        TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                                    Light={StaticResource LightPrimaryTextColor}}" />
                                 </FormattedString.Spans>
                             </FormattedString>
                         </Label.FormattedText>
@@ -65,45 +72,21 @@
             </Grid>
 
             <SearchBar
-                BackgroundColor="WhiteSmoke"
                 Grid.Row="0"
                 IsSpellCheckEnabled="False"
                 Margin="0,100,0,0"
                 Placeholder="Search a notification"
-                PlaceholderColor="#2F3246"
+                PlaceholderColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                   Light={StaticResource LightPrimaryTextColor}}"
                 SearchCommand="{Binding ExecuteSearchCommand}"
                 SearchCommandParameter="{Binding .}"
                 Text="{Binding SearchTerm}" />
 
             <ActivityIndicator
-                Color="#393E46"
+                Color="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                        Light={StaticResource LightPrimaryTextColor}}"
                 IsRunning="{Binding IsLoading}"
                 IsVisible="{Binding IsLoading}" />
-
-            <materialDesignControls:MaterialPicker
-                BackgroundColor="Transparent"
-                BorderColor="Transparent"
-                Grid.Column="0"
-                Grid.Row="2"
-                ItemsSource="{Binding FilterTypes}"
-                Margin="0,-30,0,0"
-                Placeholder="Filter by"
-                PlaceholderColor="Black"
-                SelectedItem="{Binding SelectedFilter}"
-                TextColor="Black" />
-
-            <Label
-                FontAttributes="Bold"
-                FontSize="Large"
-                Grid.Row="2"
-                HorizontalOptions="End"
-                Margin="0,-20,20,0"
-                Text="+"
-                TextColor="Black">
-                <Label.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding CreateNotificationCommand}" />
-                </Label.GestureRecognizers>
-            </Label>
 
             <CollectionView
                 Grid.Row="3"
@@ -120,7 +103,30 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-
+                        <materialDesignControls:MaterialPicker
+                            BackgroundColor="Transparent"
+                            BorderColor="Transparent"
+                            Grid.Column="0"
+                            ItemsSource="{Binding FilterTypes}"
+                            Placeholder="Filter by"
+                            PlaceholderColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                               Light={StaticResource LightPrimaryTextColor}}"
+                            SelectedItem="{Binding SelectedFilter}"
+                            TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                        Light={StaticResource LightPrimaryTextColor}}" />
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="Large"
+                            Grid.Column="1"
+                            HorizontalOptions="End"
+                            Margin="0,0,10,0"
+                            Text="+"
+                            TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                        Light={StaticResource LightPrimaryTextColor}}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding CreateNotificationCommand}" />
+                            </Label.GestureRecognizers>
+                        </Label>
                     </Grid>
                 </CollectionView.Header>
                 <CollectionView.ItemsLayout>
@@ -184,7 +190,8 @@
 
                             <SwipeView.Content>
                                 <pancakeView:PancakeView
-                                    BackgroundColor="White"
+                                    BackgroundColor="{AppThemeBinding Dark={StaticResource DarkCollectionViewColor},
+                                                                      Light={StaticResource LightCollectionViewColor}}"
                                     HorizontalOptions="FillAndExpand"
                                     VerticalOptions="StartAndExpand">
                                     <Grid HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand">
@@ -218,7 +225,8 @@
                                                     </StackLayout>
 
                                                     <BoxView
-                                                        BackgroundColor="#F2F4F8"
+                                                        BackgroundColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                                                          Light={StaticResource LightPrimaryTextColor}}"
                                                         Grid.Column="1"
                                                         HorizontalOptions="Start"
                                                         VerticalOptions="FillAndExpand"
@@ -234,13 +242,14 @@
                                                             FontAttributes="Bold"
                                                             FontSize="Medium"
                                                             Text="{Binding Name}"
-                                                            TextColor="Black" />
-
+                                                            TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                                                        Light={StaticResource LightPrimaryTextColor}}" />
                                                         <Label
                                                             FontSize="Medium"
                                                             Margin="0,-5,0,0"
                                                             Text="{Binding Description}"
-                                                            TextColor="#2F3246" />
+                                                            TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                                                        Light={StaticResource LightPrimaryTextColor}}" />
                                                     </StackLayout>
                                                 </Grid>
                                             </views:Expander.Header>
@@ -253,7 +262,8 @@
                                                 </Grid.ColumnDefinitions>
 
                                                 <BoxView
-                                                    BackgroundColor="#F2F4F8"
+                                                    BackgroundColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                                                      Light={StaticResource LightPrimaryTextColor}}"
                                                     Grid.Column="1"
                                                     HorizontalOptions="Start"
                                                     VerticalOptions="FillAndExpand"
@@ -264,33 +274,29 @@
                                                         FontAttributes="Bold"
                                                         FontSize="Small"
                                                         Margin="20,0"
-                                                        Opacity="0.8"
                                                         Text="{Binding Status, StringFormat='Status: {0}'}"
-                                                        TextColor="#2F3246" />
-
+                                                        TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                                                    Light={StaticResource LightPrimaryTextColor}}" />
                                                     <Label
                                                         FontAttributes="Bold"
                                                         FontSize="Small"
                                                         Margin="20,0"
-                                                        Opacity="0.8"
                                                         Text="{Binding Creator, StringFormat='Creator: {0}'}"
-                                                        TextColor="#2F3246" />
-
+                                                        TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                                                    Light={StaticResource LightPrimaryTextColor}}" />
                                                     <Label
                                                         FontAttributes="Bold"
                                                         FontSize="Small"
                                                         Margin="20,0"
-                                                        Opacity="0.8"
                                                         Text="{Binding CreationDateTime, StringFormat='Creation Date: {0}'}"
-                                                        TextColor="#2F3246" />
-
+                                                        TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                                                    Light={StaticResource LightPrimaryTextColor}}" />
                                                     <Label
                                                         FontAttributes="Bold"
                                                         FontSize="Small"
                                                         Margin="20,0"
-                                                        Opacity="0.8"
-                                                        TextColor="#2F3246">
-
+                                                        TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                                                    Light={StaticResource LightPrimaryTextColor}}">
                                                         <Label.FormattedText>
                                                             <FormattedString>
                                                                 <Span Text="{Binding Type, Converter={StaticResource TypeInfoConverter}}" />
@@ -305,27 +311,24 @@
                                                         FontSize="Small"
                                                         IsVisible="{Binding IsLocationType}"
                                                         Margin="20,0"
-                                                        Opacity="0.8"
                                                         Text="{Binding Activation, StringFormat='Activate on: {0}'}"
-                                                        TextColor="#2F3246" />
-
+                                                        TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                                                    Light={StaticResource LightPrimaryTextColor}}" />
                                                     <Label
                                                         FontAttributes="Bold"
                                                         FontSize="Small"
                                                         IsVisible="{Binding IsLocationType}"
                                                         Margin="20,0"
-                                                        Opacity="0.8"
                                                         Text="{Binding IsPermanent, StringFormat='Permanent: {0}'}"
-                                                        TextColor="#2F3246" />
-
+                                                        TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                                                    Light={StaticResource LightPrimaryTextColor}}" />
                                                     <Label
                                                         FontAttributes="Bold"
                                                         FontSize="Small"
-                                                        Margin="20,0,20,10"
-                                                        Opacity="0.8"
+                                                        Margin="20,1"
                                                         Text="{Binding Target, StringFormat='Target User: {0}'}"
-                                                        TextColor="#2F3246" />
-
+                                                        TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                                                    Light={StaticResource LightPrimaryTextColor}}" />
                                                     <StackLayout
                                                         IsVisible="{Binding IsDynamicLocation}"
                                                         Margin="20,0,20,10"
@@ -337,7 +340,8 @@
                                                             FontSize="Small"
                                                             Opacity="0.8"
                                                             Text="Open in:"
-                                                            TextColor="#2F3246"
+                                                            TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                                                        Light={StaticResource LightPrimaryTextColor}}"
                                                             VerticalOptions="Center" />
 
                                                         <ImageButton
@@ -345,7 +349,6 @@
                                                             Command="{Binding Path=BindingContext.OpenMapCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
                                                             CommandParameter="{Binding .}"
                                                             HeightRequest="30"
-                                                            Opacity="0.8"
                                                             Source="google_maps_icon.png" />
                                                     </StackLayout>
                                                 </StackLayout>
