@@ -1,12 +1,15 @@
 ﻿using Xamarin.Forms;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using Notify.Azure.HttpClient;
 using Notify.Core;
 using Notify.Helpers;
 using Notify.WiFi;
+using Xamarin.Essentials;
 
 namespace Notify.ViewModels
 {
@@ -46,8 +49,20 @@ namespace Notify.ViewModels
             {
                 if (SetField(ref m_SelectedLocation, value))
                 {
-                    RemoveWifiButtonText = $"REMOVE {value} WI-FI";
-                    IsRemoveButtonEnabled = true;
+                    string destinationsJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, string.Empty);
+                    List<Destination> destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationsJson);
+                    bool isDestinationExists = destinations.Any(destination => destination.Name == m_SelectedLocation);
+
+                    if (isDestinationExists)
+                    {
+                        RemoveWifiButtonText = $"REMOVE {value} WI-FI";
+                        IsRemoveButtonEnabled = true;
+                    }
+                    else
+                    {
+                        RemoveWifiButtonText = $"No {m_SelectedLocation} destination defined";
+                        IsRemoveButtonEnabled = false;
+                    }
                 }
             }
         }

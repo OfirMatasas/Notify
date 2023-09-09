@@ -28,7 +28,7 @@ namespace Notify.Functions.NotifyFunctions.Destination
         {
             IMongoCollection<BsonDocument> collection;
             dynamic data;
-            string userName, locationName, type;
+            string userName, locationName;
             FilterDefinition<BsonDocument> filter;
             BsonDocument document;
             ObjectResult result;
@@ -60,17 +60,8 @@ namespace Notify.Functions.NotifyFunctions.Destination
                 }
                 else
                 {
-                    type = Convert.ToString(data.location.type);
-
-                    if (shouldRemoveDestination(type, data))
-                    {
-                        log.LogWarning($"No document exists for location '{locationName}' of type '{type}'");
-                        result = new AcceptedResult();                    }
-                    else
-                    {
-                        document = await createNewDocument(data, log, collection);
-                        result = new CreatedResult("", document.ToJson());
-                    }
+                    document = await createNewDocument(data, log, collection);
+                    result = new CreatedResult("", document.ToJson());
                 }
             }
             catch (Exception ex)
@@ -84,11 +75,15 @@ namespace Notify.Functions.NotifyFunctions.Destination
         
         private static bool shouldRemoveDestination(string type, dynamic data)
         {
-            bool shouldRemoveDestination = (type.Equals(Constants.NOTIFICATION_TYPE_LOCATION) && 
-                                            (data.location.longitude == null || data.location.latitude == null)) ||
-                                            (type.Equals(Constants.NOTIFICATION_TYPE_WIFI) && data.location.ssid == null) ||
-                                            (type.Equals(Constants.NOTIFICATION_TYPE_BLUETOOTH) && data.location.device == null);
+            bool shouldRemoveDestination, shouldRemoveLocation, shouldRemoveWifi, shouldRemoveBluetooth;
 
+            shouldRemoveLocation = type.Equals(Constants.NOTIFICATION_TYPE_LOCATION) &&
+                                   (data.location.longitude == null && data.location.latitude == null);
+            shouldRemoveWifi = type.Equals(Constants.NOTIFICATION_TYPE_WIFI) && data.location.ssid == null;
+            shouldRemoveBluetooth = type.Equals(Constants.NOTIFICATION_TYPE_BLUETOOTH) && data.location.device == null;
+
+            shouldRemoveDestination = shouldRemoveLocation || shouldRemoveWifi || shouldRemoveBluetooth;
+            
             return shouldRemoveDestination;
         }
 
@@ -100,7 +95,7 @@ namespace Notify.Functions.NotifyFunctions.Destination
 
             if (type.Equals(Constants.NOTIFICATION_TYPE_LOCATION))
             {
-                if (data.location.longitude == null || data.location.latitude == null)
+                if (data.location.longitude == null && data.location.latitude == null)
                 {
                     document["location"].AsBsonDocument.Remove("latitude");
                     document["location"].AsBsonDocument.Remove("longitude");

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using Newtonsoft.Json;
 using Notify.Azure.HttpClient;
 using Notify.Core;
 using Notify.Helpers;
@@ -41,8 +43,20 @@ namespace Notify.ViewModels
             {
                 if (SetField(ref m_SelectedLocation, value))
                 {
-                    RemoveLocationButtonText = $"REMOVE {value} LOCATION";
-                    IsRemoveButtonEnabled = true;
+                    string destinationsJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, string.Empty);
+                    List<Destination> destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationsJson);
+                    bool isDestinationExists = destinations.Any(destination => destination.Name == m_SelectedLocation);
+
+                    if (isDestinationExists)
+                    {
+                        RemoveLocationButtonText = $"REMOVE {value} LOCATION";
+                        IsRemoveButtonEnabled = true;
+                    }
+                    else
+                    {
+                        RemoveLocationButtonText = $"No {m_SelectedLocation} destination defined";
+                        IsRemoveButtonEnabled = false;
+                    }
                 }
             }
         }

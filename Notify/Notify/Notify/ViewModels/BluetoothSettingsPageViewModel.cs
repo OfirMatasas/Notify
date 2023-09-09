@@ -2,11 +2,15 @@ using Xamarin.Forms;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using Notify.Azure.HttpClient;
 using Notify.Bluetooth;
 using Notify.Core;
+using Xamarin.Essentials;
 using Constants = Notify.Helpers.Constants;
 
 namespace Notify.ViewModels
@@ -52,8 +56,20 @@ namespace Notify.ViewModels
             {
                 if (SetField(ref m_SelectedLocation, value))
                 {
-                    RemoveBluetoothButtonText = $"REMOVE {value} BLUETOOTH";
-                    IsRemoveButtonEnabled = true;
+                    string destinationsJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, string.Empty);
+                    List<Destination> destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationsJson);
+                    bool isDestinationExists = destinations.Any(destination => destination.Name == m_SelectedLocation);
+
+                    if (isDestinationExists)
+                    {
+                        RemoveBluetoothButtonText = $"REMOVE {value} BLUETOOTH";
+                        IsRemoveButtonEnabled = true;
+                    }
+                    else
+                    {
+                        RemoveBluetoothButtonText = $"No {m_SelectedLocation} destination defined";
+                        IsRemoveButtonEnabled = false;
+                    }
                 }
             }
         }
@@ -95,8 +111,9 @@ namespace Notify.ViewModels
 
             if (isConfirmed)
             {
-                successfulUpdate = AzureHttpClient.Instance.RemoveDestination(m_SelectedLocation, NotificationType.Bluetooth).Result;
-                
+                successfulUpdate = AzureHttpClient.Instance
+                    .RemoveDestination(m_SelectedLocation, NotificationType.Bluetooth).Result;
+
                 if (successfulUpdate)
                 {
                     App.Current.MainPage.DisplayAlert("Remove", $"Remove success!", "OK");

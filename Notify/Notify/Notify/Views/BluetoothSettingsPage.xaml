@@ -6,14 +6,20 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:materialDesignControls="clr-namespace:Plugin.MaterialDesignControls;assembly=Plugin.MaterialDesignControls">
     <ContentPage.Content>
-        <ScrollView>
+        <Grid 
+            RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, *, Auto">
 
-            <Grid
-                BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor},
-                                                  Dark={StaticResource DarkPageBackgroundColor}}"
-                Row="9"
-                RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, *">
-                
+            <BoxView Grid.RowSpan="10">
+                <BoxView.Background>
+                    <LinearGradientBrush>
+                        <GradientStopCollection>
+                            <GradientStop Color="{AppThemeBinding Dark={StaticResource DarkPageBackgroundColor}, Light={StaticResource LightPageBackgroundColor}}" Offset="0" />
+                            <GradientStop Color="{AppThemeBinding Dark={StaticResource DarkButtonTextColor}, Light={StaticResource LightEntryBackgroundColor}}" Offset="0.4" />
+                        </GradientStopCollection>
+                    </LinearGradientBrush>
+                </BoxView.Background>
+            </BoxView>
+            
                 <Button
                     Grid.Row="0"
                     Margin="-20, 0, 0, 0"
@@ -24,8 +30,8 @@
                     FontSize="30"
                     HorizontalOptions="Start"
                     Text="❮"
-                    TextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
-                                                Dark={StaticResource LightEntryBackgroundColor}}"
+                    TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}"
                     VerticalOptions="Start" />
                 
                 <Label
@@ -35,6 +41,8 @@
                     HorizontalTextAlignment="Center"
                     Style="{StaticResource Body1FontSize_ExoBold}"
                     Text="Bluetooth Settings"
+                    TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
+                                            Dark={StaticResource DarkPrimaryTextColor}}"
                     VerticalTextAlignment="Center" />
                 
                 <materialDesignControls:MaterialPicker
@@ -45,7 +53,8 @@
                     Margin="30,60,30,0"
                     LabelText="Select Destination"
                     Placeholder="Select Destination"
-                    LabelTextColor="Black"
+                    LabelTextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
+                                                 Dark={StaticResource DarkPrimaryTextColor}}"
                     BackgroundColor="White"
                     ItemsSource="{Binding LocationSelectionList}"
                     SelectedItem="{Binding SelectedLocation}"
@@ -59,7 +68,8 @@
                     Margin="30,20,30,0"
                     LabelText="Select Bluetooth"
                     Placeholder="Select Bluetooth"
-                    LabelTextColor="Black"
+                    LabelTextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
+                                                 Dark={StaticResource DarkPrimaryTextColor}}"
                     BackgroundColor="White"
                     ItemsSource="{Binding BluetoothSelectionList}"
                     SelectedItem="{Binding SelectedBluetoothID}"
@@ -67,7 +77,7 @@
                 
                 <Button
                     Grid.Row="8"
-                    Margin="50,320,50,-60"
+                    Margin="50,290,50,0"
                     CornerRadius="30"
                     BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
                                       Dark={StaticResource DarkButtonColor}}"
@@ -79,17 +89,15 @@
 
                 <Button
                     Grid.Row="9"
-                    Margin="50,80,50,180"
+                    Margin="50,10,50,40"
                     BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
                                                       Dark={StaticResource DarkButtonColor}}"
                     Command="{Binding UpdateBluetoothSettingsCommand}"
                     CornerRadius="30"
                     Text="UPDATE BLUETOOTH"
-                    TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
-                                                Dark={StaticResource DarkButtonTextColor}}" />
-            </Grid>
+                    TextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
+                                            Dark={StaticResource LightButtonTextColor}}" />
                 
-        </ScrollView>
-
+            </Grid>
     </ContentPage.Content>
 </ContentPage>
