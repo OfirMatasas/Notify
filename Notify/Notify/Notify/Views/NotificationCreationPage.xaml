@@ -4,11 +4,17 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:materialDesignControls="clr-namespace:Plugin.MaterialDesignControls;assembly=Plugin.MaterialDesignControls"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
-    <FlexLayout
-        BackgroundColor="{AppThemeBinding Light={StaticResource LightPageBackgroundColor},
-                                          Dark={StaticResource DarkPageBackgroundColor}}"
-        Direction="Column"
-        JustifyContent="SpaceBetween">
+    <FlexLayout Direction="Column" JustifyContent="SpaceBetween">
+
+        <BoxView.Background>
+            <LinearGradientBrush>
+                <GradientStopCollection>
+                    <GradientStop Color="{AppThemeBinding Dark={StaticResource DarkPageBackgroundColor}, Light={StaticResource LightPageBackgroundColor}}" Offset="0" />
+                    <GradientStop Color="{AppThemeBinding Dark={StaticResource DarkButtonTextColor}, Light={StaticResource LightEntryBackgroundColor}}" Offset="0.4" />
+                </GradientStopCollection>
+            </LinearGradientBrush>
+        </BoxView.Background>
+
         <ScrollView>
             <Grid
                 ColumnSpacing="20"
@@ -40,25 +46,25 @@
                     BackgroundColor="Transparent"
                     Command="{Binding BackCommand}"
                     FontAttributes="Bold"
-                    FontSize="Small"
+                    FontSize="Title"
                     HorizontalOptions="Start"
                     Padding="0,0,100,0"
                     Text="❮"
-                    TextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
-                                                Dark={StaticResource LightEntryBackgroundColor}}"
+                    TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                Light={StaticResource LightPrimaryTextColor}}"
                     VerticalOptions="Center" />
 
                 <Label
                     FontAttributes="Bold"
-                    FontSize="Large"
+                    FontSize="Title"
                     Grid.Column="0"
                     Grid.ColumnSpan="3"
                     Grid.Row="0"
                     HorizontalOptions="CenterAndExpand"
                     HorizontalTextAlignment="Center"
                     Text="{Binding PageTitle}"
-                    TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},
-                                                Dark={StaticResource DarkPrimaryTextColor}}"
+                    TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                Light={StaticResource LightPrimaryTextColor}}"
                     VerticalOptions="Center"
                     VerticalTextAlignment="Center" />
 
@@ -70,6 +76,8 @@
                     LabelMargin="3"
                     LabelSize="16"
                     LabelText="Notification Name"
+                    LabelTextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                     Light={StaticResource LightPrimaryTextColor}}"
                     MaxLength="25"
                     Placeholder="Notification Name"
                     ReturnType="Next"
@@ -83,6 +91,8 @@
                     LabelMargin="3"
                     LabelSize="16"
                     LabelText="Notification Description"
+                    LabelTextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                     Light={StaticResource LightPrimaryTextColor}}"
                     MaxLength="25"
                     Placeholder="Notification Description"
                     ReturnType="Next"
@@ -98,6 +108,8 @@
                     LabelMargin="3"
                     LabelSize="16"
                     LabelText="Notification Type"
+                    LabelTextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                     Light={StaticResource LightPrimaryTextColor}}"
                     Placeholder="Notification Type"
                     SelectedItem="{Binding SelectedNotificationType}"
                     TabIndex="1" />
@@ -109,6 +121,8 @@
                     <Label
                         FontSize="16"
                         Text="Time"
+                        TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                    Light={StaticResource LightPrimaryTextColor}}"
                         VerticalOptions="Start" />
                     <Frame
                         BorderColor="Transparent"
@@ -133,6 +147,8 @@
                     <Label
                         FontSize="16"
                         Text="Date"
+                        TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                    Light={StaticResource LightPrimaryTextColor}}"
                         VerticalOptions="Start" />
                     <Frame
                         BorderColor="Transparent"
@@ -155,6 +171,8 @@
                     <Label
                         FontSize="16"
                         Text="Location Option"
+                        TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                    Light={StaticResource LightPrimaryTextColor}}"
                         VerticalOptions="Start" />
                     <Frame
                         BorderColor="Transparent"
@@ -176,6 +194,8 @@
                     <Label
                         FontSize="16"
                         Text="Activate on"
+                        TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                    Light={StaticResource LightPrimaryTextColor}}"
                         VerticalOptions="Start" />
                     <Frame
                         BorderColor="Transparent"
@@ -199,9 +219,10 @@
                     Spacing="10">
                     <Label
                         Text="Permanent"
-                        TextColor="Gray"
+                        TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                    Light={StaticResource LightPrimaryTextColor}}"
                         VerticalOptions="Center" />
-                    <CheckBox Color="Black" IsChecked="{Binding IsPermanent}" />
+                    <CheckBox Color="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor}, Light={StaticResource LightPrimaryTextColor}}" IsChecked="{Binding IsPermanent}" />
                 </StackLayout>
 
                 <StackLayout
@@ -211,6 +232,8 @@
                     <Label
                         FontSize="16"
                         Text="Place Option"
+                        TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                    Light={StaticResource LightPrimaryTextColor}}"
                         VerticalOptions="Start" />
                     <Frame
                         BorderColor="Transparent"
@@ -232,7 +255,9 @@
                         FontSize="Large"
                         IsVisible="{Binding IsCreating}"
                         Style="{StaticResource Body1FontSize_ExoBold}"
-                        Text="Friends" />
+                        Text="Friends"
+                        TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                    Light={StaticResource LightPrimaryTextColor}}" />
 
                     <CollectionView
                         HorizontalOptions="FillAndExpand"
@@ -249,8 +274,9 @@
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <Frame
+                                    BackgroundColor="{AppThemeBinding Dark={StaticResource DarkCollectionViewColor},
+                                                                      Light={StaticResource LightCollectionViewColor}}"
                                     BorderColor="Transparent"
-                                    CornerRadius="8"
                                     Margin="10"
                                     Padding="10">
                                     <StackLayout Orientation="Horizontal">
@@ -264,6 +290,8 @@
                                             BackgroundColor="Transparent"
                                             FontAttributes="Bold"
                                             FontSize="16"
+                                            TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                    Light={StaticResource LightPrimaryTextColor}}"
                                             Margin="5,0,0,0"
                                             Text="{Binding UserName}"
                                             VerticalOptions="CenterAndExpand" />
@@ -287,8 +315,8 @@
                         IsVisible="{Binding IsCreating}"
                         Style="{StaticResource Button_ExoRegular}"
                         Text="Create"
-                        TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
-                                                    Dark={StaticResource DarkButtonTextColor}}"
+                        TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                    Light={StaticResource LightPrimaryTextColor}}"
                         VerticalOptions="End"
                         WidthRequest="250" />
 
@@ -300,8 +328,8 @@
                         IsVisible="{Binding IsEditing}"
                         Style="{StaticResource Button_ExoRegular}"
                         Text="Update"
-                        TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
-                                                    Dark={StaticResource DarkButtonTextColor}}"
+                        TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                    Light={StaticResource LightPrimaryTextColor}}"
                         VerticalOptions="End"
                         WidthRequest="250" />
                 </StackLayout>
