@@ -1,5 +1,6 @@
 using System;
-using System.IO;
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,6 @@ using Microsoft.AspNetCore.Http;
 using MongoDB.Driver; 
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
-using Newtonsoft.Json;
 using Notify.Functions.Core;
 using Notify.Functions.HTTPClients;
 using Notify.Functions.Utils;
@@ -44,6 +44,7 @@ namespace Notify.Functions.NotifyFunctions.Destination
                 locationName = Convert.ToString(data.location.name);
                 
                 log.LogInformation($"Searching for existing document in database by user {userName} and location {locationName}");
+                
                 filter = Filter.And(
                     Filter.Eq("user", userName), 
                     Filter.Eq("location.name", locationName)
@@ -80,20 +81,43 @@ namespace Notify.Functions.NotifyFunctions.Destination
 
             if (type.Equals(Constants.NOTIFICATION_TYPE_LOCATION))
             {
-                double latitude = Convert.ToDouble(data.location.latitude), longitude = Convert.ToDouble(data.location.longitude);
-                string address = GoogleHttpClient.Instance.GetAddressFromCoordinatesAsync(latitude, longitude, log).Result;
+                if (data.location.longitude == null && data.location.latitude == null)
+                {
+                    document["location"].AsBsonDocument.Remove("latitude");
+                    document["location"].AsBsonDocument.Remove("longitude");
+                    document["location"].AsBsonDocument.Remove("address");
+                }
+                else
+                {
+                    double latitude = Convert.ToDouble(data.location.latitude), longitude = Convert.ToDouble(data.location.longitude);
+                    string address = GoogleHttpClient.Instance.GetAddressFromCoordinatesAsync(latitude, longitude, log).Result;
 
-                document["location"].AsBsonDocument["latitude"] = latitude;
-                document["location"].AsBsonDocument["longitude"] = longitude;
-                document["location"].AsBsonDocument["address"] = address;
+                    document["location"].AsBsonDocument["latitude"] = latitude;
+                    document["location"].AsBsonDocument["longitude"] = longitude;
+                    document["location"].AsBsonDocument["address"] = address;
+                }
             }
             else if (type.Equals(Constants.NOTIFICATION_TYPE_WIFI))
             {
-                document["location"].AsBsonDocument["ssid"] = Convert.ToString(data.location.ssid);
+                if (data.location.ssid == null)
+                {
+                    document["location"].AsBsonDocument.Remove("ssid");
+                }
+                else
+                {
+                    document["location"].AsBsonDocument["ssid"] = Convert.ToString(data.location.ssid);
+                }
             }
             else if (type.Equals(Constants.NOTIFICATION_TYPE_BLUETOOTH))
             {
-                document["location"].AsBsonDocument["device"] = Convert.ToString(data.location.device);
+                if (data.location.device == null)
+                {
+                    document["location"].AsBsonDocument.Remove("device");
+                }
+                else
+                {
+                    document["location"].AsBsonDocument["device"] = Convert.ToString(data.location.device);
+                }
             }
             else
             {

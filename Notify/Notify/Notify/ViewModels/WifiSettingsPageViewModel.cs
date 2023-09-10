@@ -1,12 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using Xamarin.Forms;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using Notify.Azure.HttpClient;
 using Notify.Core;
 using Notify.Helpers;
 using Notify.WiFi;
-using Xamarin.Forms;
+using Xamarin.Essentials;
+
 
 namespace Notify.ViewModels
 {
@@ -18,6 +22,7 @@ namespace Notify.ViewModels
         {
             BackCommand = new Command(onBackButtonClicked);
             UpdateWifiSettingsCommand = new Command(onUpdateWifiSettingsClicked);
+            RemoveWifiDestinationCommand = new Command(onRemoveWifiDestinationClicked);
         }
 
         #endregion
@@ -34,9 +39,42 @@ namespace Notify.ViewModels
         #endregion
 
         #region Location_Selection
-        
-        public string SelectedLocation { get; set; }
+
+        private string m_SelectedLocation;
         public List<string> LocationSelectionList { get; set; } = Constants.LOCATIONS_LIST;
+        
+        public string SelectedLocation
+        {
+            get => m_SelectedLocation;
+            set
+            {
+                if (SetField(ref m_SelectedLocation, value))
+                {
+                    string destinationsJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, string.Empty);
+                    List<Destination> destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationsJson);
+                    Destination chosenDestination = destinations.FirstOrDefault(destination => destination.Name == m_SelectedLocation);
+                    
+                    if (chosenDestination != null)
+                    {
+                        if (chosenDestination.SSID.IsNullOrEmpty())
+                        {
+                            RemoveWifiButtonText = $"{m_SelectedLocation} WI-FI IS NOT DEFINED";
+                            IsRemoveButtonEnabled = false;
+                        }
+                        else
+                        {
+                            RemoveWifiButtonText = $"REMOVE {m_SelectedLocation} WI-FI";
+                            IsRemoveButtonEnabled = true;
+                        }
+                    }
+                    else
+                    {
+                        RemoveWifiButtonText = $"NO {m_SelectedLocation} DESTINATION DEFINED";
+                        IsRemoveButtonEnabled = false;
+                    }
+                }
+            }
+        }
 
         #endregion
 
@@ -67,6 +105,7 @@ namespace Notify.ViewModels
                 {
                     App.Current.MainPage.DisplayAlert("Update", $"Updated {SelectedWiFiSSID} as your {SelectedLocation}", "OK");
                     await AzureHttpClient.Instance.GetDestinations();
+                    reloadRemoveButton();
                 }
                 else
                 {
@@ -95,5 +134,54 @@ namespace Notify.ViewModels
         }
 
         #endregion
+        
+        #region Remove_Destination
+        
+        public Command RemoveWifiDestinationCommand { get; set; }
+        
+        private async void onRemoveWifiDestinationClicked()
+        {
+            bool isSucceeded;
+            bool isConfirmed = await App.Current.MainPage.DisplayAlert("Confirmation", $"Are you sure you want to remove the Wi-Fi network from your {SelectedLocation} destination?", "Yes", "No");
+
+            if (isConfirmed)
+            {
+                isSucceeded = AzureHttpClient.Instance.RemoveDestination(m_SelectedLocation, NotificationType.WiFi).Result;
+                
+                if (isSucceeded)
+                {
+                    App.Current.MainPage.DisplayAlert("Remove Succeeded", $"Removal of Wi-Fi network from {SelectedLocation} succeeded", "OK");
+                    await AzureHttpClient.Instance.GetDestinations();
+                    reloadRemoveButton();
+                }
+                else
+                {
+                    App.Current.MainPage.DisplayAlert("Error", "Something went wrong", "OK");
+                }
+            }
+        }
+        
+        private string m_RemoveWifiButtonText = "CHOOSE DESTINATION";
+        public string RemoveWifiButtonText
+        {
+            get => m_RemoveWifiButtonText;
+            set => SetField(ref m_RemoveWifiButtonText, value);
+        }
+
+        private bool m_IsRemoveButtonEnabled;
+        public bool IsRemoveButtonEnabled
+        {
+            get => m_IsRemoveButtonEnabled;
+            set => SetField(ref m_IsRemoveButtonEnabled, value);
+        }
+        
+        #endregion
+        
+        private void reloadRemoveButton()
+        {
+            string currentDestination = SelectedLocation;
+            SelectedLocation = null;
+            SelectedLocation = currentDestination;
+        }
     }
 }

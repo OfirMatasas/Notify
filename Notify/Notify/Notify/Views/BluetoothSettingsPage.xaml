@@ -3,8 +3,8 @@
     NavigationPage.HasNavigationBar="False"
     x:Class="Notify.Views.BluetoothSettingsPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:materialDesignControls="clr-namespace:Plugin.MaterialDesignControls;assembly=Plugin.MaterialDesignControls"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:materialDesignControls="clr-namespace:Plugin.MaterialDesignControls;assembly=Plugin.MaterialDesignControls">
     <ContentPage.Content>
         <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, *, Auto">
 
@@ -20,64 +20,88 @@
             </BoxView>
 
             <Button
+                Grid.Row="0"
+                Margin="-20,0,0,0"
                 Background="Transparent"
                 BackgroundColor="Transparent"
                 Command="{Binding BackCommand}"
                 FontAttributes="Bold"
                 FontSize="Title"
-                Grid.Row="0"
                 HorizontalOptions="Start"
-                Margin="-20,0,0,0"
                 Text="❮"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
-                                            Dark={StaticResource DarkPrimaryTextColor}}"
+                                                Dark={StaticResource DarkPrimaryTextColor}}"
                 VerticalOptions="Start" />
 
             <Label
+                Grid.Row="1"
                 FontAttributes="Bold"
                 FontSize="Title"
-                Grid.Row="1"
                 HorizontalTextAlignment="Center"
                 Style="{StaticResource Body1FontSize_ExoBold}"
                 Text="Bluetooth Settings"
+                TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
+                                            Dark={StaticResource DarkPrimaryTextColor}}"
                 VerticalTextAlignment="Center" />
 
             <materialDesignControls:MaterialPicker
-                BackgroundColor="White"
-                CornerRadius="10"
                 Grid.Row="2"
-                ItemsSource="{Binding BluetoothSelectionList}"
+                CornerRadius="10"
+                LabelMargin="3"
                 LabelSize="16"
-                LabelText="Select Bluetooth"
+                Margin="30,60,30,0"
+                LabelText="Select Destination"
+                Placeholder="Select Destination"
                 LabelTextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
                                                  Dark={StaticResource DarkPrimaryTextColor}}"
-                Margin="30,60,30,0"
-                Placeholder="Select Bluetooth"
-                SelectedItem="{Binding SelectedBluetoothID}" />
+                BackgroundColor="White"
+                ItemsSource="{Binding LocationSelectionList}"
+                SelectedItem="{Binding SelectedLocation}"
+                TabIndex="1"/>
 
             <materialDesignControls:MaterialPicker
-                BackgroundColor="White"
-                CornerRadius="10"
                 Grid.Row="3"
-                ItemsSource="{Binding LocationSelectionList}"
+                CornerRadius="10"
+                LabelMargin="3"
                 LabelSize="16"
-                LabelText="Select Location"
+                Margin="30,20,30,0"
+                LabelText="Select Bluetooth"
+                Placeholder="Select Bluetooth"
                 LabelTextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
                                                  Dark={StaticResource DarkPrimaryTextColor}}"
-                Margin="30,20,30,0"
-                Placeholder="Select Location"
-                SelectedItem="{Binding SelectedLocation}" />
+                BackgroundColor="White"
+                ItemsSource="{Binding BluetoothSelectionList}"
+                SelectedItem="{Binding SelectedBluetoothID}"
+                TabIndex="1"/>
 
             <Button
-                BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
-                                                  Dark={StaticResource DarkButtonColor}}"
-                Command="{Binding UpdateBluetoothSettingsCommand}"
+                Grid.Row="8"
+                VerticalOptions="End"
+                HorizontalOptions="Center"
+                Margin="0, 0, 0, 10"
+                WidthRequest="300"
                 CornerRadius="30"
+                BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
+                                  Dark={StaticResource DarkButtonColor}}"
+                Command="{Binding RemoveBluetoothDestinationCommand}"
+                Text="{Binding RemoveBluetoothButtonText}"
+                TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
+                            Dark={StaticResource DarkButtonTextColor}}"
+                IsEnabled="{Binding IsRemoveButtonEnabled}" />
+
+            <Button
                 Grid.Row="9"
-                Margin="50,0,50,20"
+                VerticalOptions="End"
+                HorizontalOptions="Center"
+                Margin="0, 0, 0, 40"
+                WidthRequest="300"
+                CornerRadius="30"
+                BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
+                                  Dark={StaticResource DarkButtonColor}}"
+                Command="{Binding UpdateBluetoothSettingsCommand}"
                 Text="UPDATE BLUETOOTH"
                 TextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
-                                            Dark={StaticResource LightButtonTextColor}}" />
+                            Dark={StaticResource LightButtonTextColor}}" />
         </Grid>
     </ContentPage.Content>
 </ContentPage>
