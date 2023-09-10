@@ -2,6 +2,10 @@ using Xamarin.Forms;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using Newtonsoft.Json;
 using Notify.Azure.HttpClient;
 using Notify.Core;
 using Notify.Helpers;
@@ -11,7 +15,7 @@ using Location = Notify.Core.Location;
 
 namespace Notify.ViewModels
 {
-    public class LocationSettingsPageViewModel : BaseViewModel
+    public class LocationSettingsPageViewModel : INotifyPropertyChanged
     {
         private readonly LoggerService r_Logger = LoggerService.Instance;
 
@@ -22,6 +26,7 @@ namespace Notify.ViewModels
             BackCommand = new Command(onBackButtonClicked);
             UpdateLocationCommand = new Command(onUpdateLocationButtonClicked);
             GetAddressSuggestionsCommand = new Command(onGetAddressSuggestionsButtonClicked);
+            RemoveLocationDestinationCommand = new Command(onRemoveLocationDestinationClicked);
         }
 
         #endregion
@@ -34,7 +39,34 @@ namespace Notify.ViewModels
         public string SelectedLocation
         {
             get => m_SelectedLocation;
-            set => SetProperty(ref m_SelectedLocation, value);
+            set
+            {
+                if (SetField(ref m_SelectedLocation, value))
+                {
+                    string destinationsJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, string.Empty);
+                    List<Destination> destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationsJson);
+                    Destination chosenDestination = destinations.FirstOrDefault(destination => destination.Name == m_SelectedLocation);
+
+                    if (chosenDestination != null)
+                    {
+                        if (chosenDestination.Locations[0].Longitude == 0 && chosenDestination.Locations[0].Latitude == 0)
+                        {
+                            RemoveLocationButtonText = $"{m_SelectedLocation} LOCATION IS NOT DEFINED";
+                            IsRemoveButtonEnabled = false;
+                        }
+                        else
+                        {
+                            RemoveLocationButtonText = $"REMOVE {m_SelectedLocation} LOCATION";
+                            IsRemoveButtonEnabled = true;
+                        }
+                    }
+                    else
+                    {
+                        RemoveLocationButtonText = $"No {m_SelectedLocation} destination defined";
+                        IsRemoveButtonEnabled = false;
+                    }
+                }
+            }
         }
         
         public Command UpdateLocationCommand { get; set; }
@@ -43,14 +75,14 @@ namespace Notify.ViewModels
         public string Longitude
         {
             get => m_Longitude;
-            set => SetProperty(ref m_Longitude, value);
+            set => SetField(ref m_Longitude, value);
         }
         
         private string m_Latitude;
         public string Latitude
         {
             get => m_Latitude;
-            set => SetProperty(ref m_Latitude, value);
+            set => SetField(ref m_Latitude, value);
         }
         
         #endregion
@@ -67,7 +99,7 @@ namespace Notify.ViewModels
             get => m_SelectedAddress;
             set
             {
-                SetProperty(ref m_SelectedAddress, value);
+                SetField(ref m_SelectedAddress, value);
                 OnPropertyChanged(nameof(SelectedAddress));
                 onGetGeographicCoordinatesButtonClicked();
                 SearchAddress = value;
@@ -77,7 +109,7 @@ namespace Notify.ViewModels
         public string SearchAddress
         {
             get => m_SearchedAddress;
-            set { SetProperty(ref m_SearchedAddress, value); }
+            set { SetField(ref m_SearchedAddress, value); }
         }
 
         public List<string> DropBoxOptions
@@ -85,7 +117,7 @@ namespace Notify.ViewModels
             get => m_DropBoxSuggestions;
             set 
             { 
-                SetProperty(ref m_DropBoxSuggestions, value);
+                SetField(ref m_DropBoxSuggestions, value);
                 OnPropertyChanged(nameof(DropBoxOptions));
             }
         }
@@ -119,10 +151,12 @@ namespace Notify.ViewModels
 
             if (successfulUpdate)
             {
+                await AzureHttpClient.Instance.GetDestinations();
                 await App.Current.MainPage.DisplayAlert(
                     title: "Location Updated", 
                     message: $"{SelectedLocation} has been updated successfully", 
                     cancel: "OK");
+                reloadRemoveButton();
             }
             else
             {
@@ -266,6 +300,74 @@ namespace Notify.ViewModels
             r_Logger.LogDebug($"Getting suggestions for {SearchAddress}");
 
             DropBoxOptions = await AzureHttpClient.Instance.GetAddressSuggestions(SearchAddress);
+        }
+        
+        #region Remove_Destination
+        
+        public Command RemoveLocationDestinationCommand { get; set; }
+        
+        private async void onRemoveLocationDestinationClicked()
+        {
+            bool isSucceeded;
+            bool isConfirmed = await App.Current.MainPage.DisplayAlert("Confirmation", $"Are you sure you want to remove the location from your {SelectedLocation} destination?", "Yes", "No");
+
+            if (isConfirmed)
+            {
+                isSucceeded = AzureHttpClient.Instance.RemoveDestination(m_SelectedLocation, NotificationType.Location).Result;
+                
+                if (isSucceeded)
+                {
+                    App.Current.MainPage.DisplayAlert("Remove Succeeded", $"Removal of location from {SelectedLocation} succeeded", "OK");
+                    await AzureHttpClient.Instance.GetDestinations();
+                    reloadRemoveButton();
+                }
+                else
+                {
+                    App.Current.MainPage.DisplayAlert("Error", "Something went wrong", "OK");
+                }
+            }
+        }
+        
+        private string m_RemoveLocationButtonText = "CHOOSE DESTINATION";
+        public string RemoveLocationButtonText
+        {
+            get => m_RemoveLocationButtonText;
+            set => SetField(ref m_RemoveLocationButtonText, value);
+        }
+
+        private bool m_IsRemoveButtonEnabled;
+        public bool IsRemoveButtonEnabled
+        {
+            get => m_IsRemoveButtonEnabled;
+            set => SetField(ref m_IsRemoveButtonEnabled, value);
+        }
+        
+        #endregion
+        
+        #region Interface_Implementation
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+            field = value;
+            OnPropertyChanged(propertyName);
+            return true;
+        }
+
+        #endregion
+        
+        private void reloadRemoveButton()
+        {
+            string currentDestination = SelectedLocation;
+            SelectedLocation = null;
+            SelectedLocation = currentDestination;
         }
     }
 }
