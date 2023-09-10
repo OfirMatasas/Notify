@@ -288,7 +288,7 @@
                                                         FontAttributes="Bold"
                                                         FontSize="Small"
                                                         Margin="20,0"
-                                                        Text="{Binding CreationDateTime, StringFormat='Creation Date: {0}'}"
+                                                        Text="{Binding CreationDateTime, StringFormat='Creation Date: {0:MM/dd/yyyy HH:mm}'}"
                                                         TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
                                                                                     Light={StaticResource LightPrimaryTextColor}}" />
                                                     <Label

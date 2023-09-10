@@ -78,7 +78,7 @@
                     LabelText="Notification Name"
                     LabelTextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
                                                      Light={StaticResource LightPrimaryTextColor}}"
-                    MaxLength="25"
+                    MaxLength="33"
                     Placeholder="Notification Name"
                     ReturnType="Next"
                     TabIndex="1"
@@ -93,7 +93,7 @@
                     LabelText="Notification Description"
                     LabelTextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
                                                      Light={StaticResource LightPrimaryTextColor}}"
-                    MaxLength="25"
+                    MaxLength="33"
                     Placeholder="Notification Description"
                     ReturnType="Next"
                     TabIndex="1"
@@ -290,10 +290,10 @@
                                             BackgroundColor="Transparent"
                                             FontAttributes="Bold"
                                             FontSize="16"
-                                            TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
-                                                    Light={StaticResource LightPrimaryTextColor}}"
                                             Margin="5,0,0,0"
                                             Text="{Binding UserName}"
+                                            TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                                        Light={StaticResource LightPrimaryTextColor}}"
                                             VerticalOptions="CenterAndExpand" />
                                     </StackLayout>
                                 </Frame>
