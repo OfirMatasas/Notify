@@ -11,6 +11,7 @@ using Notify.Helpers;
 using Notify.WiFi;
 using Xamarin.Essentials;
 
+
 namespace Notify.ViewModels
 {
     public class WifiSettingsPageViewModel : INotifyPropertyChanged
@@ -51,16 +52,24 @@ namespace Notify.ViewModels
                 {
                     string destinationsJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, string.Empty);
                     List<Destination> destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationsJson);
-                    bool isDestinationExists = destinations.Any(destination => destination.Name == m_SelectedLocation);
-
-                    if (isDestinationExists)
+                    Destination chosenDestination = destinations.FirstOrDefault(destination => destination.Name == m_SelectedLocation);
+                    
+                    if (chosenDestination != null)
                     {
-                        RemoveWifiButtonText = $"REMOVE {value} WI-FI";
-                        IsRemoveButtonEnabled = true;
+                        if (chosenDestination.SSID.IsNullOrEmpty())
+                        {
+                            RemoveWifiButtonText = $"{m_SelectedLocation} WI-FI IS NOT DEFINED";
+                            IsRemoveButtonEnabled = false;
+                        }
+                        else
+                        {
+                            RemoveWifiButtonText = $"REMOVE {m_SelectedLocation} WI-FI";
+                            IsRemoveButtonEnabled = true;
+                        }
                     }
                     else
                     {
-                        RemoveWifiButtonText = $"No {m_SelectedLocation} destination defined";
+                        RemoveWifiButtonText = $"NO {m_SelectedLocation} DESTINATION DEFINED";
                         IsRemoveButtonEnabled = false;
                     }
                 }
@@ -96,6 +105,7 @@ namespace Notify.ViewModels
                 {
                     App.Current.MainPage.DisplayAlert("Update", $"Updated {SelectedWiFiSSID} as your {SelectedLocation}", "OK");
                     await AzureHttpClient.Instance.GetDestinations();
+                    reloadRemoveButton();
                 }
                 else
                 {
@@ -140,8 +150,9 @@ namespace Notify.ViewModels
                 
                 if (isSucceeded)
                 {
-                    App.Current.MainPage.DisplayAlert("Remove", $"Removal of Wi-Fi network from {SelectedLocation} succeeded successfully", "OK");
+                    App.Current.MainPage.DisplayAlert("Remove Succeeded", $"Removal of Wi-Fi network from {SelectedLocation} succeeded", "OK");
                     await AzureHttpClient.Instance.GetDestinations();
+                    reloadRemoveButton();
                 }
                 else
                 {
@@ -165,5 +176,12 @@ namespace Notify.ViewModels
         }
         
         #endregion
+        
+        private void reloadRemoveButton()
+        {
+            string currentDestination = SelectedLocation;
+            SelectedLocation = null;
+            SelectedLocation = currentDestination;
+        }
     }
 }

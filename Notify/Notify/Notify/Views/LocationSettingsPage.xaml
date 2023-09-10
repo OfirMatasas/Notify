@@ -28,7 +28,7 @@
                 BackgroundColor="Transparent"
                 Command="{Binding BackCommand}"
                 FontAttributes="Bold"
-                FontSize="25"
+                FontSize="Title"
                 HorizontalOptions="Start"
                 Text="❮"
                 TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
@@ -38,7 +38,7 @@
             <Label
                 Grid.Row="1"
                 FontAttributes="Bold"
-                FontSize="30"
+                FontSize="Title"
                 HorizontalTextAlignment="Center"
                 Style="{StaticResource Body1FontSize_ExoBold}"
                 Text="Location Settings"
@@ -141,7 +141,10 @@
             
             <Button
                 Grid.Row="8"
-                Margin="50,100,50,-25"
+                VerticalOptions="End"
+                HorizontalOptions="Center"
+                Margin="0, 0, 0, 10"
+                WidthRequest="300"
                 CornerRadius="30"
                 BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
                                   Dark={StaticResource DarkButtonColor}}"
@@ -153,11 +156,14 @@
             
             <Button
                 Grid.Row="9"
-                Margin="50,40,50,35"
+                VerticalOptions="End"
+                HorizontalOptions="Center"
+                Margin="0, 0, 0, 40"
+                WidthRequest="300"
+                CornerRadius="30"
                 BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
                                                   Dark={StaticResource DarkButtonColor}}"
                 Command="{Binding UpdateLocationCommand}"
-                CornerRadius="30"
                 Text="UPDATE LOCATION"
                 TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
                                             Light={StaticResource LightPrimaryTextColor}}" />

@@ -57,16 +57,24 @@ namespace Notify.ViewModels
                 {
                     string destinationsJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, string.Empty);
                     List<Destination> destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationsJson);
-                    bool isDestinationExists = destinations.Any(destination => destination.Name == m_SelectedLocation);
+                    Destination chosenDestination = destinations.FirstOrDefault(destination => destination.Name == m_SelectedLocation);
 
-                    if (isDestinationExists)
+                    if (chosenDestination != null)
                     {
-                        RemoveBluetoothButtonText = $"REMOVE {value} BLUETOOTH";
-                        IsRemoveButtonEnabled = true;
+                        if (chosenDestination.Bluetooth.IsNullOrEmpty())
+                        {
+                            RemoveBluetoothButtonText = $"{m_SelectedLocation} BLUETOOTH IS NOT DEFINED";
+                            IsRemoveButtonEnabled = false;
+                        }
+                        else
+                        {
+                            RemoveBluetoothButtonText = $"REMOVE {m_SelectedLocation} BLUETOOTH";
+                            IsRemoveButtonEnabled = true;
+                        }
                     }
                     else
                     {
-                        RemoveBluetoothButtonText = $"No {m_SelectedLocation} destination defined";
+                        RemoveBluetoothButtonText = $"NO {m_SelectedLocation} DESTINATION DEFINED";
                         IsRemoveButtonEnabled = false;
                     }
                 }
@@ -91,6 +99,7 @@ namespace Notify.ViewModels
                     App.Current.MainPage.DisplayAlert("Update",
                         $"Updated {SelectedBluetoothID} as your {SelectedLocation}", "OK");
                     await AzureHttpClient.Instance.GetDestinations();
+                    reloadRemoveButton();
                 }
                 else
                 {
@@ -115,8 +124,9 @@ namespace Notify.ViewModels
 
                 if (isSucceeded)
                 {
-                    App.Current.MainPage.DisplayAlert("Remove", $"Removal of bluetooth device from {SelectedLocation} succeeded successfully", "OK");
+                    App.Current.MainPage.DisplayAlert("Remove Succeeded", $"Removal of bluetooth device from {SelectedLocation} succeeded", "OK");
                     await AzureHttpClient.Instance.GetDestinations();
+                    reloadRemoveButton();
                 }
                 else
                 {
@@ -159,5 +169,12 @@ namespace Notify.ViewModels
         }
 
         #endregion
+        
+        private void reloadRemoveButton()
+        {
+            string currentDestination = SelectedLocation;
+            SelectedLocation = null;
+            SelectedLocation = currentDestination;
+        }
     }
 }

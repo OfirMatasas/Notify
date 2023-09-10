@@ -45,12 +45,20 @@ namespace Notify.ViewModels
                 {
                     string destinationsJson = Preferences.Get(Constants.PREFERENCES_DESTINATIONS, string.Empty);
                     List<Destination> destinations = JsonConvert.DeserializeObject<List<Destination>>(destinationsJson);
-                    bool isDestinationExists = destinations.Any(destination => destination.Name == m_SelectedLocation);
+                    Destination chosenDestination = destinations.FirstOrDefault(destination => destination.Name == m_SelectedLocation);
 
-                    if (isDestinationExists)
+                    if (chosenDestination != null)
                     {
-                        RemoveLocationButtonText = $"REMOVE {value} LOCATION";
-                        IsRemoveButtonEnabled = true;
+                        if (chosenDestination.Locations[0].Longitude == 0 && chosenDestination.Locations[0].Latitude == 0)
+                        {
+                            RemoveLocationButtonText = $"{m_SelectedLocation} LOCATION IS NOT DEFINED";
+                            IsRemoveButtonEnabled = false;
+                        }
+                        else
+                        {
+                            RemoveLocationButtonText = $"REMOVE {m_SelectedLocation} LOCATION";
+                            IsRemoveButtonEnabled = true;
+                        }
                     }
                     else
                     {
@@ -143,10 +151,12 @@ namespace Notify.ViewModels
 
             if (successfulUpdate)
             {
+                await AzureHttpClient.Instance.GetDestinations();
                 await App.Current.MainPage.DisplayAlert(
                     title: "Location Updated", 
                     message: $"{SelectedLocation} has been updated successfully", 
                     cancel: "OK");
+                reloadRemoveButton();
             }
             else
             {
@@ -307,8 +317,9 @@ namespace Notify.ViewModels
                 
                 if (isSucceeded)
                 {
-                    App.Current.MainPage.DisplayAlert("Remove", $"Removal of location from {SelectedLocation} succeeded successfully", "OK");
+                    App.Current.MainPage.DisplayAlert("Remove Succeeded", $"Removal of location from {SelectedLocation} succeeded", "OK");
                     await AzureHttpClient.Instance.GetDestinations();
+                    reloadRemoveButton();
                 }
                 else
                 {
@@ -351,6 +362,13 @@ namespace Notify.ViewModels
         }
 
         #endregion
+        
+        private void reloadRemoveButton()
+        {
+            string currentDestination = SelectedLocation;
+            SelectedLocation = null;
+            SelectedLocation = currentDestination;
+        }
     }
 }
 

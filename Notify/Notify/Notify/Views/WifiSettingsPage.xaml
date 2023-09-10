@@ -27,7 +27,7 @@
                 BackgroundColor="Transparent"
                 Command="{Binding BackCommand}"
                 FontAttributes="Bold"
-                FontSize="25"
+                FontSize="Title"
                 HorizontalOptions="Start"
                 Text="❮"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
@@ -37,7 +37,7 @@
             <Label
                 Grid.Row="1"
                 FontAttributes="Bold"
-                FontSize="30"
+                FontSize="Title"
                 HorizontalTextAlignment="Center"
                 Style="{StaticResource Body1FontSize_ExoBold}"
                 Text="Wi-Fi Settings"
@@ -76,7 +76,10 @@
             
             <Button
                 Grid.Row="8"
-                Margin="50,295,50,0"
+                VerticalOptions="End"
+                HorizontalOptions="Center"
+                Margin="0, 0, 0, 10"
+                WidthRequest="300"
                 CornerRadius="30"
                 BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
                                   Dark={StaticResource DarkButtonColor}}"
@@ -88,11 +91,14 @@
 
             <Button
                 Grid.Row="9"
-                Margin="50,10,50,40"
+                VerticalOptions="End"
+                HorizontalOptions="Center"
+                Margin="0, 0, 0, 40"
+                WidthRequest="300"
+                CornerRadius="30"                
                 BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
                                                   Dark={StaticResource DarkButtonColor}}"
                 Command="{Binding UpdateWifiSettingsCommand}"
-                CornerRadius="30"
                 Text="UPDATE Wi-Fi"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
                                             Dark={StaticResource DarkButtonTextColor}}" />
