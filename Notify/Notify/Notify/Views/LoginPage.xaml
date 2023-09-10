@@ -124,6 +124,7 @@
                             HorizontalOptions="EndAndExpand"
                             HorizontalTextAlignment="Center"
                             Text="Forgot Password"
+                            IsVisible="False"
                             TextColor="#EEEEEE"
                             VerticalTextAlignment="Center" />
                     </StackLayout>
@@ -155,6 +156,7 @@
                                 BackgroundColor="DarkGray"
                                 HeightRequest="1"
                                 HorizontalOptions="Center"
+                                IsVisible="False"
                                 VerticalOptions="Center"
                                 WidthRequest="150" />
                             <Frame
@@ -164,12 +166,14 @@
                                 HasShadow="False"
                                 HeightRequest="45"
                                 HorizontalOptions="Center"
+                                IsVisible="False"
                                 Margin="0"
                                 Padding="0"
                                 WidthRequest="45">
                                 <Label
                                     FontSize="Small"
                                     HorizontalTextAlignment="Center"
+                                    IsVisible="False"
                                     Text="OR"
                                     TextColor="#222831"
                                     VerticalTextAlignment="Center" />
@@ -182,6 +186,7 @@
                             BackgroundColor="#d34836"
                             CornerRadius="30"
                             ImageSource="google.png"
+                            IsVisible="False"
                             Text="SIGN UP WITH GOOGLE"
                             TextColor="#EEEEEE" />
                     </StackLayout>
@@ -190,6 +195,7 @@
                             BackgroundColor="#395697"
                             CornerRadius="30"
                             ImageSource="facebook.png"
+                            IsVisible="False"
                             Text="SIGN UP WITH FACEBOOK"
                             TextColor="#EEEEEE" />
                     </StackLayout>
