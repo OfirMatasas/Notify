@@ -22,37 +22,37 @@ namespace Notify.Functions.NotifyFunctions.Friend
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "friend")]
-            HttpRequest req, ILogger log)
+            HttpRequest request, ILogger logger)
         {
             string lowerCasedUsername, response;
             List<BsonDocument> friendshipDocuments;
             List<string> friendUsernames;
             ObjectResult result;
 
-            if (string.IsNullOrEmpty(req.Query["username"]))
+            if (string.IsNullOrEmpty(request.Query["username"]))
             {
-                log.LogError("The 'username' query parameter is required");
+                logger.LogError("The 'username' query parameter is required");
                 result = new BadRequestObjectResult("The 'username' query parameter is required.");
             }
             else
             {
-                lowerCasedUsername = req.Query["username"].ToString().ToLower();
-                log.LogInformation($"Got client's HTTP request to get friends of user {lowerCasedUsername}");
+                lowerCasedUsername = request.Query["username"].ToString().ToLower();
+                logger.LogInformation($"Got client's HTTP request to get friends of user {lowerCasedUsername}");
 
                 friendshipDocuments = await GetFriendshipOfSelectedUsernameDocuments(lowerCasedUsername);
                 friendUsernames = GetFriendUsernames(friendshipDocuments, lowerCasedUsername);
 
                 if (friendUsernames.Count.Equals(0))
                 {
-                    log.LogInformation($"No friends found for user {lowerCasedUsername}");
+                    logger.LogInformation($"No friends found for user {lowerCasedUsername}");
                     result = new NotFoundObjectResult($"No friends found for user {lowerCasedUsername}");
                 }
                 else
                 {
                     response = await getAllFriendsOfUser(friendUsernames);
-                    log.LogInformation($"Retrieved {friendUsernames.Count} friends of user {lowerCasedUsername}:");
-                    log.LogInformation(string.Join(Environment.NewLine, friendUsernames.Select(username => $"- {username}")));
-                    log.LogInformation(response);
+                    logger.LogInformation($"Retrieved {friendUsernames.Count} friends of user {lowerCasedUsername}:");
+                    logger.LogInformation(string.Join(Environment.NewLine, friendUsernames.Select(username => $"- {username}")));
+                    logger.LogInformation(response);
                     result = new OkObjectResult(response);
                 }
             }

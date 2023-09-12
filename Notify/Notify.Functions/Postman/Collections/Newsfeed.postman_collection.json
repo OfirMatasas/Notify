@@ -1,0 +1,60 @@
+{
+	"info": {
+		"_postman_id": "1877ce27-5acd-4fb8-bcf9-7f2ca4afc74b",
+		"name": "Newsfeed",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26136776",
+		"_collection_link": "https://warped-shadow-814178.postman.co/workspace/My-Workspace~54429c37-4045-4a7c-8a63-dc888dec1345/collection/26136776-1877ce27-5acd-4fb8-bcf9-7f2ca4afc74b?action=share&source=collection_link&creator=26136776"
+	},
+	"item": [
+		{
+			"name": "Get newsfeed",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HTTP}}/newsfeed?username=matasas",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"newsfeed"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "matasas"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create newsfeed",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"MaTaSaS\",\n    \"title\": \"This is testing newsfeed\",\n    \"content\": \"This is the content\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HTTP}}/newsfeed",
+					"host": [
+						"{{HTTP}}"
+					],
+					"path": [
+						"newsfeed"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

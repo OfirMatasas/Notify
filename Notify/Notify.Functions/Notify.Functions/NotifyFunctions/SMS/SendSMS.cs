@@ -12,91 +12,93 @@ using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
 
-namespace Notify.Functions.NotifyFunctions.SMS;
-
-public static class SendSMS
+namespace Notify.Functions.NotifyFunctions.SMS
 {
-    [FunctionName("SendSMS")]
-    [AllowAnonymous]
-    public static async Task<IActionResult> RunAsync(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "SendSMS")]
-        HttpRequest req, ILogger log)
+    public static class SendSMS
     {
-        dynamic data;
-        string telephoneNumber;
-        string verificationCode;
-        bool successfulSMSSend;
-        ObjectResult result;
-
-        log.LogInformation("Got client's HTTP request to send SMS");
-        
-        data = await ConversionUtils.ExtractBodyContentAsync(req);
-        log.LogInformation($"Data:{Environment.NewLine}{data}");
-        
-        try
+        [FunctionName("SendSMS")]
+        [AllowAnonymous]
+        public static async Task<IActionResult> RunAsync(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "SendSMS")]
+            HttpRequest request, ILogger logger)
         {
-            telephoneNumber = data.telephone;
-            verificationCode = data.verificationCode;
+            dynamic data;
+            string telephoneNumber, verificationCode;
+            bool successfulSMSSend;
+            ObjectResult result;
 
-            successfulSMSSend = await sendSMSVerificationCode(telephoneNumber, verificationCode, log);
+            logger.LogInformation("Got client's HTTP request to send SMS");
 
-            if (successfulSMSSend)
+            data = await ConversionUtils.ExtractBodyContentAsync(request);
+            logger.LogInformation($"Data:{Environment.NewLine}{data}");
+
+            try
             {
-                result = new OkObjectResult(
-                    $"SMS sent to {telephoneNumber}{Environment.NewLine}Verification code: {verificationCode}");
+                telephoneNumber = data.telephone;
+                verificationCode = data.verificationCode;
+
+                successfulSMSSend = await sendSMSVerificationCode(telephoneNumber, verificationCode, logger);
+
+                if (successfulSMSSend)
+                {
+                    result = new OkObjectResult(
+                        $"SMS sent to {telephoneNumber}{Environment.NewLine}Verification code: {verificationCode}");
+                }
+                else
+                {
+                    result = new BadRequestObjectResult($"Failed to send SMS message to {telephoneNumber}");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                result = new BadRequestObjectResult($"Failed to send SMS message to {telephoneNumber}");
+                logger.LogError($"Failed to send SMS message. {ex.Message}");
+                result = new BadRequestObjectResult("Failed to send SMS message");
             }
-        }
-        catch (Exception ex)
-        {
-            log.LogError($"Failed to send SMS message. {ex.Message}");
-            result = new BadRequestObjectResult("Failed to send SMS message");
+
+            return result;
         }
 
-        return result;
-    }
-
-    private static async Task<bool> sendSMSVerificationCode(string telephoneNumber, string verificationCode,
-        ILogger log)
-    {
-        string accountSid;
-        string authToken;
-        string twilioPhoneNumber;
-        CreateMessageOptions messageOptions;
-        MessageResource message;
-        bool successfulSend = false;
-        
-        try
+        private static async Task<bool> sendSMSVerificationCode(string telephoneNumber, string verificationCode,
+            ILogger log)
         {
-            accountSid = await AzureVault.AzureVault.GetSecretFromVault(Constants.TWILIO_ACCOUNT_SID);
-            authToken = await AzureVault.AzureVault.GetSecretFromVault(Constants.TWILIO_AUTH_TOKEN);
-            twilioPhoneNumber = await AzureVault.AzureVault.GetSecretFromVault(Constants.TWILIO_PHONE_NUMBER);
+            string accountSid;
+            string authToken;
+            string twilioPhoneNumber;
+            CreateMessageOptions messageOptions;
+            MessageResource message;
+            bool successfulSend = false;
 
-            log.LogInformation($"Twilio Account SID: {accountSid}, Twilio Auth Token: {authToken}," +
-                          $" Twilio Phone Number: {twilioPhoneNumber}");
-
-            TwilioClient.Init(accountSid, authToken);
-
-            messageOptions = new CreateMessageOptions(new PhoneNumber(telephoneNumber))
+            try
             {
-                From = new PhoneNumber(twilioPhoneNumber),
-                Body = $"Your Notify verification code: {verificationCode}"
-            };
+                accountSid = await AzureVault.AzureVault.GetSecretFromVault(Constants.TWILIO_ACCOUNT_SID);
+                authToken = await AzureVault.AzureVault.GetSecretFromVault(Constants.TWILIO_AUTH_TOKEN);
+                twilioPhoneNumber = await AzureVault.AzureVault.GetSecretFromVault(Constants.TWILIO_PHONE_NUMBER);
 
-            message = await MessageResource.CreateAsync(messageOptions);
+                log.LogInformation($"Twilio Account SID: {accountSid}, Twilio Auth Token: {authToken}," +
+                                   $" Twilio Phone Number: {twilioPhoneNumber}");
 
-            log.LogInformation($"SMS sent successfully to {message.To}.{Environment.NewLine}Message content: {message.Body}");
+                TwilioClient.Init(accountSid, authToken);
 
-            successfulSend = true;
+                messageOptions = new CreateMessageOptions(new PhoneNumber(telephoneNumber))
+                {
+                    From = new PhoneNumber(twilioPhoneNumber),
+                    Body = $"Your Notify verification code: {verificationCode}"
+                };
+
+                message = await MessageResource.CreateAsync(messageOptions);
+
+                log.LogInformation(
+                    $"SMS sent successfully to {message.To}.{Environment.NewLine}Message content: {message.Body}");
+
+                successfulSend = true;
+            }
+            catch (Exception ex)
+            {
+                log.LogError(
+                    $"Failed to send SMS message to {telephoneNumber}.{Environment.NewLine}Error: {ex.Message}");
+            }
+
+            return successfulSend;
         }
-        catch (Exception ex)
-        {
-            log.LogError($"Failed to send SMS message to {telephoneNumber}.{Environment.NewLine}Error: {ex.Message}");
-        }
-
-        return successfulSend;
     }
 }

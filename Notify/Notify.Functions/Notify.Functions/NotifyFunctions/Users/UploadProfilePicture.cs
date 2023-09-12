@@ -17,7 +17,7 @@ namespace Notify.Functions.NotifyFunctions.Users
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "uploadProfilePicture")]
-            HttpRequest req, ILogger log)
+            HttpRequest request, ILogger logger)
         {
             string base64Image, fileName, imageUrl;
             dynamic data;
@@ -25,12 +25,12 @@ namespace Notify.Functions.NotifyFunctions.Users
             Stream imageStream;
             byte[] imageBytes;
 
-            log.LogInformation("Got client's HTTP request to upload profile picture to BLOB storage");
+            logger.LogInformation("Got client's HTTP request to upload profile picture to BLOB storage");
 
             try
             {
-                data = await ConversionUtils.ExtractBodyContentAsync(req);
-                log.LogInformation($"Data:{Environment.NewLine}{data}");
+                data = await ConversionUtils.ExtractBodyContentAsync(request);
+                logger.LogInformation($"Data:{Environment.NewLine}{data}");
 
                 base64Image = Convert.ToString(data.image);
                 if (string.IsNullOrEmpty(base64Image))
@@ -45,13 +45,13 @@ namespace Notify.Functions.NotifyFunctions.Users
 
                 imageUrl = await AzureBlob.AzureBlob.UploadImageToBlobStorage(imageStream, fileName);
 
-                log.LogInformation($"Profile picture uploaded successfully to {imageUrl}");
+                logger.LogInformation($"Profile picture uploaded successfully to {imageUrl}");
 
                 result = new OkObjectResult(new { imageUrl });
             }
             catch (Exception ex)
             {
-                log.LogError($"Failed to upload profile picture. Reason: {ex.Message}");
+                logger.LogError($"Failed to upload profile picture. Reason: {ex.Message}");
                 result = new ObjectResult($"Failed to upload profile picture.{Environment.NewLine}Error: {ex.Message}");
             }
 

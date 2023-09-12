@@ -12,13 +12,13 @@ namespace Notify.Functions.Utils
 {
     public static class ValidationUtils
     {
-        public static bool ValidateUsername(HttpRequest req, ILogger log)
+        public static bool ValidateUsername(HttpRequest request, ILogger logger)
         {
             bool valid = false;
 
-            if (string.IsNullOrEmpty(req.Query["username"]))
+            if (string.IsNullOrEmpty(request.Query["username"]))
             {
-                log.LogError("The 'username' query parameter is required");
+                logger.LogError("The 'username' query parameter is required");
             }
             else
             {

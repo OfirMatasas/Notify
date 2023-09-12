@@ -22,27 +22,27 @@ namespace Notify.Functions.NotifyFunctions.Notification
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "put", "post", Route = "notification/update/{type}")]
-            HttpRequest req, ILogger log, string type)
+            HttpRequest request, ILogger logger, string type)
         {
-            dynamic data = await ConversionUtils.ExtractBodyContentAsync(req);
+            dynamic data = await ConversionUtils.ExtractBodyContentAsync(request);
             ActionResult result;
 
-            log.LogInformation($"Got client's HTTP request to update notification based on {type}");
+            logger.LogInformation($"Got client's HTTP request to update notification based on {type}");
             
             try
             {
-                result = await updateNotificationAsync(data, log, type);
+                result = await updateNotificationAsync(data, logger, type);
             }
             catch (Exception ex)
             {
-                log.LogError(ex, $"Error updating notification. Error message: {ex.Message}");
+                logger.LogError(ex, $"Error updating notification. Error message: {ex.Message}");
                 result = new BadRequestObjectResult(ex.Message);
             }
             
             return result;
         }
 
-        private static async Task<ActionResult> updateNotificationAsync(dynamic data, ILogger log, string type)
+        private static async Task<ActionResult> updateNotificationAsync(dynamic data, ILogger logger, string type)
         {
             string lowerCasedType = type.ToLower();
             IMongoCollection<BsonDocument> collection = MongoUtils.GetCollection(Constants.COLLECTION_NOTIFICATION);
@@ -75,9 +75,9 @@ namespace Notify.Functions.NotifyFunctions.Notification
                 throw new ArgumentException($"Type {type} is not supported");
             }
 
-            log.LogInformation($"Attempting to update notification {data.id}");
+            logger.LogInformation($"Attempting to update notification {data.id}");
             await collection.UpdateOneAsync(filter, updateBuilder.Combine(updates));
-            log.LogInformation($"Successfully updated notification {data.id}");
+            logger.LogInformation($"Successfully updated notification {data.id}");
             
             return new OkObjectResult($"Successfully updated notification {data.id}");
         }

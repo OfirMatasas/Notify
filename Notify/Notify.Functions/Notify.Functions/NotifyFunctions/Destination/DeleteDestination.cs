@@ -20,24 +20,24 @@ namespace Notify.Functions.NotifyFunctions.Destination
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "destination/delete")]
-            HttpRequest req, ILogger log)
+            HttpRequest request, ILogger logger)
         {
             IMongoCollection<BsonDocument> collection;
             dynamic data;
             FilterDefinition<BsonDocument> filter;
             DeleteResult result;
 
-            log.LogInformation($"Got client's HTTP request to delete destination");
+            logger.LogInformation($"Got client's HTTP request to delete destination");
             
-            data = await ConversionUtils.ExtractBodyContentAsync(req);;
-            log.LogInformation($"Data:{Environment.NewLine}{data}");
+            data = await ConversionUtils.ExtractBodyContentAsync(request);;
+            logger.LogInformation($"Data:{Environment.NewLine}{data}");
             
             filter = Builders<BsonDocument>.Filter.Eq("user", Convert.ToString(data.user)) & 
                      Builders<BsonDocument>.Filter.Eq("location.name", Convert.ToString(data.location));
             
             collection = MongoUtils.GetCollection(Constants.COLLECTION_DESTINATION);
             result = collection.DeleteMany(filter);
-            log.LogInformation($"Deleted {result.DeletedCount} documents");
+            logger.LogInformation($"Deleted {result.DeletedCount} documents");
 
             return new OkResult();
         }

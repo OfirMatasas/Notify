@@ -20,7 +20,7 @@ namespace Notify.Functions.NotifyFunctions.Notification
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "notification")]
-            HttpRequest req, ILogger log)
+            HttpRequest request, ILogger logger)
         {
             IMongoCollection<BsonDocument> collection;
             dynamic data;
@@ -28,12 +28,12 @@ namespace Notify.Functions.NotifyFunctions.Notification
             DeleteResult deleteResult;
             ActionResult result;
 
-            log.LogInformation($"Got client's HTTP request to delete notifications");
+            logger.LogInformation($"Got client's HTTP request to delete notifications");
 
             collection = MongoUtils.GetCollection(Constants.COLLECTION_NOTIFICATION);
-            data = await ConversionUtils.ExtractBodyContentAsync(req);
+            data = await ConversionUtils.ExtractBodyContentAsync(request);
 
-            log.LogInformation($"Data:{Environment.NewLine}{data}");
+            logger.LogInformation($"Data:{Environment.NewLine}{data}");
 
             if(null != data.user)
             {
@@ -48,12 +48,12 @@ namespace Notify.Functions.NotifyFunctions.Notification
 
             if (deleteResult.DeletedCount.Equals(0))
             {
-                log.LogError("No documents were deleted");
+                logger.LogError("No documents were deleted");
                 result = new NotFoundResult();
             }
             else
             {
-                log.LogInformation($"Deleted {deleteResult.DeletedCount} documents");
+                logger.LogInformation($"Deleted {deleteResult.DeletedCount} documents");
                 result = new OkResult();
             }
 

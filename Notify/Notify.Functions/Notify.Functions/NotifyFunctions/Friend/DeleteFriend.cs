@@ -19,7 +19,8 @@ namespace Notify.Functions.NotifyFunctions.Friend
         [FunctionName("DeleteFriend")]
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "friend")] HttpRequest req, ILogger log)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "friend")] 
+            HttpRequest request, ILogger logger)
         {
             IMongoCollection<BsonDocument> collection;
             dynamic data;
@@ -27,10 +28,10 @@ namespace Notify.Functions.NotifyFunctions.Friend
             DeleteResult deleteResult;
             ObjectResult result;
 
-            log.LogInformation($"Got client's HTTP request to delete friend");
+            logger.LogInformation($"Got client's HTTP request to delete friend");
 
             collection = MongoUtils.GetCollection(Constants.COLLECTION_FRIEND);
-            data = await ConversionUtils.ExtractBodyContentAsync(req);
+            data = await ConversionUtils.ExtractBodyContentAsync(request);
             
             username = data.username;
             friendUsername = data.friendUsername;
@@ -47,7 +48,7 @@ namespace Notify.Functions.NotifyFunctions.Friend
                 result = new OkObjectResult(message);
             }
             
-            log.LogInformation(message);
+            logger.LogInformation(message);
 
             return result;
         }

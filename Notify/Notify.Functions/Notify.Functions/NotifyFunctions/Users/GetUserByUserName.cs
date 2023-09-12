@@ -19,7 +19,7 @@ namespace Notify.Functions.NotifyFunctions.Users
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "user/{userName}")]
-            HttpRequest req, string userName, ILogger log)
+            HttpRequest request, string userName, ILogger logger)
         {
             IMongoCollection<BsonDocument> collection;
             FilterDefinition<BsonDocument> userFilter;
@@ -29,7 +29,7 @@ namespace Notify.Functions.NotifyFunctions.Users
 
             try
             {
-                log.LogInformation($"Received request to get user profile for username: {userName}");
+                logger.LogInformation($"Received request to get user profile for username: {userName}");
 
                 collection = MongoUtils.GetCollection(Constants.COLLECTION_USER);
                 userFilter = Builders<BsonDocument>.Filter.Eq("userName", userName);
@@ -38,18 +38,18 @@ namespace Notify.Functions.NotifyFunctions.Users
 
                 if (user != null)
                 {
-                    log.LogInformation($"Successfully retrieved user profile for username: {userName}");
+                    logger.LogInformation($"Successfully retrieved user profile for username: {userName}");
                     result = new OkObjectResult(user.ToJson());
                 }
                 else
                 {
-                    log.LogInformation($"No user found with username: {userName}");
+                    logger.LogInformation($"No user found with username: {userName}");
                     result = new NotFoundObjectResult($"Username '{userName}' not found");
                 }
             }
             catch (Exception ex)
             {
-                log.LogError($"Failed to get user details. Reason: {ex.Message}");
+                logger.LogError($"Failed to get user details. Reason: {ex.Message}");
                 result = new BadRequestObjectResult(
                     $"Failed to get user details.{Environment.NewLine}Error: {ex.Message}");
             }

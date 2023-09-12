@@ -21,7 +21,7 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "friend/reject")]
-            HttpRequest req, ILogger log)
+            HttpRequest request, ILogger logger)
         {
             dynamic data;
             string requester, username;
@@ -29,18 +29,18 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
 
             try
             {
-                data = await ConversionUtils.ExtractBodyContentAsync(req);
+                data = await ConversionUtils.ExtractBodyContentAsync(request);
                 requester = Convert.ToString(data.requester);
                 username = Convert.ToString(data.userName);
                 
-                log.LogInformation($"Rejecting friend request from {requester} to {username}");
+                logger.LogInformation($"Rejecting friend request from {requester} to {username}");
                 await deletePendingFriendRequest(requester, username);
 
-                log.LogInformation($"Friend request rejected. requester: {requester}, username: {username}");
+                logger.LogInformation($"Friend request rejected. requester: {requester}, username: {username}");
             }
             catch (Exception ex)
             {
-                log.LogError($"Error rejecting friend request: {ex.Message}");
+                logger.LogError($"Error rejecting friend request: {ex.Message}");
                 result = new ExceptionResult(ex, false);
             }
 

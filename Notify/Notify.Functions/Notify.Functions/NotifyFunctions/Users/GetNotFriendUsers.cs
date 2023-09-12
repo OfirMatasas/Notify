@@ -23,13 +23,13 @@ namespace Notify.Functions.NotifyFunctions.Users
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "user/notfriends")]
-            HttpRequest req, ILogger log)
+            HttpRequest request, ILogger logger)
         {
-            string username = req.Query["username"];
+            string username = request.Query["username"];
             List<BsonDocument> userDocuments;
             ObjectResult result;
 
-            if (!ValidationUtils.ValidateUsername(req, log))
+            if (!ValidationUtils.ValidateUsername(request, logger))
             {
                 result = new BadRequestObjectResult("Missing username parameter in query string");
             }
@@ -39,7 +39,7 @@ namespace Notify.Functions.NotifyFunctions.Users
             }
             else
             {
-                userDocuments = await getAllUsersWhichAreNotFriendsOfUser(username, log);
+                userDocuments = await getAllUsersWhichAreNotFriendsOfUser(username, logger);
 
                 result = new OkObjectResult(ConversionUtils.ConvertBsonDocumentListToJson(userDocuments));
             }
@@ -47,26 +47,26 @@ namespace Notify.Functions.NotifyFunctions.Users
             return result;
         }
         
-        private static async Task<List<BsonDocument>> getAllUsersWhichAreNotFriendsOfUser(string username, ILogger log)
+        private static async Task<List<BsonDocument>> getAllUsersWhichAreNotFriendsOfUser(string username, ILogger logger)
         {
             List<string> friendsUsernamesList;
             List<string> friendRequestsUsernamesList;
             List<string> usersToExclude;
             List<BsonDocument> userDocuments;
 
-            log.LogInformation($"Getting all users which are friends of user {username}");
+            logger.LogInformation($"Getting all users which are friends of user {username}");
             friendsUsernamesList = await getUsersFriendsUsername(username.ToLower());
-            log.LogInformation($"Got all {friendsUsernamesList.Count} friends of user {username}");
+            logger.LogInformation($"Got all {friendsUsernamesList.Count} friends of user {username}");
             
-            log.LogInformation($"Getting all users which {username} has sent them a friend request");
+            logger.LogInformation($"Getting all users which {username} has sent them a friend request");
             friendRequestsUsernamesList = await getUsersFromSentFriendRequests(username.ToLower());
-            log.LogInformation($"Got all {friendRequestsUsernamesList.Count} users which {username} has sent them a friend request");
+            logger.LogInformation($"Got all {friendRequestsUsernamesList.Count} users which {username} has sent them a friend request");
             
             usersToExclude = friendsUsernamesList.Union(friendRequestsUsernamesList).ToList();
             
-            log.LogInformation($"Getting all users which are not friends of user {username} and which {username} has not sent them a friend request");
+            logger.LogInformation($"Getting all users which are not friends of user {username} and which {username} has not sent them a friend request");
             userDocuments = await getAllOtherUsers(usersToExclude);
-            log.LogInformation($"Got all {userDocuments.Count} users which are not friends of user {username} and which {username} has not sent them a friend request");
+            logger.LogInformation($"Got all {userDocuments.Count} users which are not friends of user {username} and which {username} has not sent them a friend request");
             
             return userDocuments;
         }

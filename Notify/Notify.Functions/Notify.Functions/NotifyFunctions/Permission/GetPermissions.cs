@@ -20,19 +20,19 @@ namespace Notify.Functions.NotifyFunctions.Permission
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "permission")]
-            HttpRequest req, ILogger logger)
+            HttpRequest request, ILogger logger)
         {
             string lowerCasedUsername;
             List<BsonDocument> documents;
             ActionResult result;
             
-            if (!ValidationUtils.ValidateUsername(req, logger))
+            if (!ValidationUtils.ValidateUsername(request, logger))
             {
                 result = new BadRequestObjectResult("Invalid username provided");
             }
             else
             {
-                lowerCasedUsername = req.Query["username"].ToString().ToLower();
+                lowerCasedUsername = request.Query["username"].ToString().ToLower();
                 documents = await getPermissionDocumentsAsync(lowerCasedUsername, logger);
 
                 if (documents.Count.Equals(0))

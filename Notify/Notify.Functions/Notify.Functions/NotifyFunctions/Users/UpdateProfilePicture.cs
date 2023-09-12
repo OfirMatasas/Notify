@@ -21,7 +21,7 @@ namespace Notify.Functions.NotifyFunctions.Users
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "put", "post", Route = "user/profilePicture")]
-            HttpRequest req, ILogger log)
+            HttpRequest request, ILogger logger)
         {
             IMongoCollection<BsonDocument> collection;
             dynamic data;
@@ -30,18 +30,18 @@ namespace Notify.Functions.NotifyFunctions.Users
             ObjectResult result;
             UpdateResult updateResult;
 
-            log.LogInformation("Received request to update user profile picture");
+            logger.LogInformation("Received request to update user profile picture");
 
             try
             {
-                data = await ConversionUtils.ExtractBodyContentAsync(req);
+                data = await ConversionUtils.ExtractBodyContentAsync(request);
 
                 filter = Builders<BsonDocument>.Filter.Eq("userName", Convert.ToString(data.userName));
                 update = BuildUpdateDefinition(data);
 
                 if (update == null)
                 {
-                    log.LogWarning("No updates provided.");
+                    logger.LogWarning("No updates provided.");
                     return new BadRequestObjectResult("No updates provided.");
                 }
 
@@ -50,18 +50,18 @@ namespace Notify.Functions.NotifyFunctions.Users
 
                 if (updateResult.ModifiedCount > 0)
                 {
-                    log.LogInformation($"Successfully updated profile picture for username: {data.userName}");
+                    logger.LogInformation($"Successfully updated profile picture for username: {data.userName}");
                     result = new OkObjectResult(JsonConvert.SerializeObject(data));
                 }
                 else
                 {
-                    log.LogInformation($"No user found with username: {data.userName}");
+                    logger.LogInformation($"No user found with username: {data.userName}");
                     result = new NotFoundObjectResult($"Username '{data.userName}' not found");
                 }
             }
             catch (Exception ex)
             {
-                log.LogError($"Failed to update user details. Reason: {ex.Message}");
+                logger.LogError($"Failed to update user details. Reason: {ex.Message}");
                 result = new ObjectResult($"Failed to update user details.{Environment.NewLine}Error: {ex.Message}");
             }
 

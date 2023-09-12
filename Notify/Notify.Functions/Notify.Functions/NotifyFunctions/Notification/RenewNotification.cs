@@ -20,21 +20,21 @@ namespace Notify.Functions.NotifyFunctions.Notification
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "put", "post", Route = "notification/renew")]
-            HttpRequest req, ILogger log)
+            HttpRequest request, ILogger logger)
         {
             string notificationID, creator;
             dynamic json;
             ActionResult result;
 
-            log.LogInformation($"Got client's HTTP request to renew notification");
+            logger.LogInformation($"Got client's HTTP request to renew notification");
 
             try
             {
-                json = await ConversionUtils.ExtractBodyContentAsync(req);
+                json = await ConversionUtils.ExtractBodyContentAsync(request);
                 notificationID = json.id;
                 creator = json.creator;
 
-                log.LogInformation($"User {creator} requested to renew notification {notificationID}");
+                logger.LogInformation($"User {creator} requested to renew notification {notificationID}");
 
                 if (!await ValidationUtils.CheckIfUserExistsAsync(creator))
                 {
@@ -42,20 +42,19 @@ namespace Notify.Functions.NotifyFunctions.Notification
                 }
                 else
                 {
-                    result = await renewNotificationAsync(notificationID, creator, log);
+                    result = await renewNotificationAsync(notificationID, creator, logger);
                 }
             }
             catch (Exception ex)
             {
-                log.LogError(ex, "Error renewing notification");
+                logger.LogError(ex, "Error renewing notification");
                 result = new BadRequestObjectResult(ex);
             }
 
             return result;
         }
 
-        private static async Task<ActionResult> renewNotificationAsync(string notificationID, string creator,
-            ILogger log)
+        private static async Task<ActionResult> renewNotificationAsync(string notificationID, string creator, ILogger logger)
         {
             IMongoCollection<BsonDocument> collection = MongoUtils.GetCollection(Constants.COLLECTION_NOTIFICATION);
             FilterDefinition<BsonDocument> filter =
@@ -66,7 +65,7 @@ namespace Notify.Functions.NotifyFunctions.Notification
 
             if (notificationDocument == null)
             {
-                log.LogError($"Notification {notificationID} does not exist");
+                logger.LogError($"Notification {notificationID} does not exist");
                 result = new NotFoundResult();
             }
             else
@@ -90,10 +89,10 @@ namespace Notify.Functions.NotifyFunctions.Notification
                     { "user", notificationDocument["user"] }
                 };
                 
-                log.LogInformation($"renewedNotificationDocument:{Environment.NewLine}{renewedNotificationDocument}");
+                logger.LogInformation($"renewedNotificationDocument:{Environment.NewLine}{renewedNotificationDocument}");
 
                 await collection.InsertOneAsync(renewedNotificationDocument);
-                log.LogInformation($"Renewed notification {notificationID}");
+                logger.LogInformation($"Renewed notification {notificationID}");
 
                 result = new OkObjectResult(renewedNotificationDocument["_id"].ToString());
             }
