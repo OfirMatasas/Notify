@@ -142,6 +142,7 @@ namespace Notify.Helpers
         public static readonly string AZURE_FUNCTIONS_PATTERN_NOTIFICATION_UPDATE_DYNAMIC = $"{AZURE_FUNCTIONS_PATTERN_NOTIFICATION_UPDATE}/dynamic";
         public static readonly string AZURE_FUNCTIONS_PATTERN_NOTIFICATION_UPDATE_STATUS = $"{AZURE_FUNCTIONS_PATTERN_NOTIFICATION}/status";
         public static readonly string AZURE_FUNCTIONS_PATTERN_NOTIFICATION_RENEW = $"{AZURE_FUNCTIONS_PATTERN_NOTIFICATION}/renew";
+        public static readonly string AZURE_FUNCTIONS_PATTERN_NEWSFEED = "newsfeed";
         public static readonly string AZURE_FUNCTIONS_PATTERN_DESTINATION = "destination";
         public static readonly string AZURE_FUNCTIONS_PATTERN_DESTINATION_UPDATE = AZURE_FUNCTIONS_PATTERN_DESTINATION + "/update";
         public static readonly string AZURE_FUNCTIONS_PATTERN_DESTINATION_SUGGESTIONS = AZURE_FUNCTIONS_PATTERN_DESTINATION + "/suggestions";
@@ -198,6 +199,7 @@ namespace Notify.Helpers
         #region Prefrences_Keys
 
         public static readonly string PREFERENCES_NOTIFICATIONS = "Notifications";
+        public static readonly string PREFERENCES_NEWSFEED = "Newsfeed";
         public static readonly string PREFERENCES_DESTINATIONS = "Destinations";
         public static readonly string PREFERENCES_FRIENDS = "Friends";
         public static readonly string PREFERENCES_PENDING_FRIEND_REQUESTS = "PendingFriendRequests";

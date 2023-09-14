@@ -1081,5 +1081,13 @@ namespace Notify.Azure.HttpClient
 
             return await m_HttpClient.SendAsync(request);
         }
+
+        public async Task<List<Newsfeed>> GetNewsfeeds()
+        {
+            return await GetData(
+                endpoint: Constants.AZURE_FUNCTIONS_PATTERN_NEWSFEED,
+                preferencesKey: Constants.PREFERENCES_NEWSFEED, 
+                converter: Converter.ToNewsfeed);
+        }
     }
 }

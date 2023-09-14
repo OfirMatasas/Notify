@@ -28,6 +28,7 @@ namespace Notify
         private static readonly object m_InitializeLock = new object();
         private static bool m_IsInitialized;
         private BluetoothManager m_BluetoothManager;
+        private DateTime m_LastTimeCheckedForNewsfeeds = DateTime.MinValue;
 
         public AppShell()
         {
@@ -45,7 +46,7 @@ namespace Notify
                     Connectivity.ConnectivityChanged += internetConnectivityChanged;
                     m_BluetoothManager = BluetoothManager.Instance;
                     m_BluetoothManager.StartBluetoothScanning();
-                    setNoficicationManagerNotificationReceived();
+                    setNotificationManagerNotificationReceived();
                     setMessagingCenterSubscriptions();
                     
                     if (Preferences.Get(Constants.START_LOCATION_SERVICE, false))
@@ -53,7 +54,7 @@ namespace Notify
                         startService();
                     }
 
-                    retriveDestinations();
+                    retrieveDestinations();
                 }
             }
         }
@@ -72,7 +73,7 @@ namespace Notify
             setMessagingCenterLocationArrivedMessageSubscription();
         }
 
-        private async void retriveDestinations()
+        private async void retrieveDestinations()
         {
             await Task.Run(() =>
             {
@@ -128,7 +129,26 @@ namespace Notify
                 
                 checkIfDynamicLocationNotificationShouldBeUpdated(location);
                 sendAllRelevantLocationNotifications(location);
+                getNewsfeeds();
             });
+        }
+        
+        private async void getNewsfeeds()
+        {
+            if (DateTime.Now - m_LastTimeCheckedForNewsfeeds > TimeSpan.FromMinutes(1))
+            {
+                LoggerService.Instance.LogInformation("Getting newsfeeds");
+                List<Newsfeed> newsfeeds = await AzureHttpClient.Instance.GetNewsfeeds();
+                LoggerService.Instance.LogInformation($"Got {newsfeeds.Count} newsfeeds");
+
+                foreach (Newsfeed newsfeed in newsfeeds)
+                {
+                    LoggerService.Instance.LogDebug($"Sending newsfeed {newsfeed.ID}");
+                    DependencyService.Get<INotificationManager>().SendNewsfeed(newsfeed);
+                }
+                
+                m_LastTimeCheckedForNewsfeeds = DateTime.Now;
+            }
         }
         
         private async void checkIfDynamicLocationNotificationShouldBeUpdated(Location location)
@@ -368,7 +388,7 @@ namespace Notify
             AzureHttpClient.Instance.UpdateNotificationsStatus(sentNotifications, newStatus);
         }
 
-        private void setNoficicationManagerNotificationReceived()
+        private void setNotificationManagerNotificationReceived()
         {
             notificationManager.NotificationReceived += (sender, eventArgs) =>
             {

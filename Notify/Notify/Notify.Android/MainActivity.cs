@@ -142,13 +142,16 @@ namespace Notify.Droid
                 string message = intent.GetStringExtra(AndroidNotificationManager.messageKey);
                 string data = intent.GetStringExtra(AndroidNotificationManager.dataKey);
                 Notification notification = Newtonsoft.Json.JsonConvert.DeserializeObject<Notification>(data);
-
                 NotificationsPageViewModel viewModel = NotificationsPageViewModel.Instance;
-                viewModel.ExpandedNotificationId = notification.ID;
-                viewModel.SelectedFilter = Constants.FILTER_TYPE_ALL;
                 
                 DependencyService.Get<INotificationManager>().ReceiveNotification(title, message, notification);
-                App.Current.MainPage.Navigation.PushAsync(new NotificationsPage(viewModel));
+
+                if (notification != null)
+                {
+                    viewModel.ExpandedNotificationId = notification.ID;
+                    viewModel.SelectedFilter = Constants.FILTER_TYPE_ALL;
+                    App.Current.MainPage.Navigation.PushAsync(new NotificationsPage(viewModel));
+                }
             }
         }
     }

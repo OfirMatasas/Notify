@@ -282,5 +282,13 @@ namespace Notify.Helpers
                 timeNotificationPermission: (string)permission.time,
                 dynamicNotificationPermission: (string)permission.dynamic);
         }
+        
+        public static Newsfeed ToNewsfeed(dynamic newsfeed)
+        {
+            return new Newsfeed(
+                id: (string)newsfeed.id,
+                title: (string)newsfeed.title,
+                content: (string)newsfeed.content);
+        }
     }
 }

@@ -1,15 +1,16 @@
 using System;
 using Android.App;
 using Android.Content;
-using Android.Graphics;
 using Android.OS;
 using AndroidX.Core.App;
 using Newtonsoft.Json;
+using Notify.Core;
 using Notify.Helpers;
 using Notify.Notifications;
 using Notify.Services;
 using Xamarin.Forms;
 using AndroidApp = Android.App.Application;
+using Notification = Android.App.Notification;
 
 [assembly: Dependency(typeof(Notify.Droid.Notifications.AndroidNotificationManager))]
 namespace Notify.Droid.Notifications
@@ -158,6 +159,21 @@ namespace Notify.Droid.Notifications
             long utcAlarmTime = utcTime.AddSeconds(-epochDiff).Ticks / 10000;
 
             return utcAlarmTime; // milliseconds
+        }
+        
+        public void SendNewsfeed(Newsfeed newsfeed)
+        {
+            r_Logger.LogDebug($"Sending newsfeed with title: {newsfeed.Title} and content: {newsfeed.Content}");
+            
+            try
+            {
+                DependencyService.Get<INotificationManager>()
+                    .SendNotification(newsfeed.Title, newsfeed.Content, null);
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error sending notification: {ex.Message}");
+            }
         }
     }
 }
