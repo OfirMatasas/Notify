@@ -96,7 +96,8 @@ namespace Notify.Functions.NotifyFunctions.Notification
                             extraElement
                         }
                     },
-                    { "user", user }
+                    { "user", user },
+                    { "shouldBeNotified", Convert.ToString(json["shouldBeNotified"] ?? user) }
                 };
 
                 if (type.ToLower().Equals(Constants.NOTIFICATION_TYPE_LOCATION_LOWER))

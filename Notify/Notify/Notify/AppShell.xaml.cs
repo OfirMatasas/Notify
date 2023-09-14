@@ -143,7 +143,7 @@ namespace Notify
 
                 foreach (Newsfeed newsfeed in newsfeeds)
                 {
-                    LoggerService.Instance.LogDebug($"Sending newsfeed {newsfeed.ID}");
+                    LoggerService.Instance.LogDebug($"Sending newsfeed: {newsfeed.Title}, {newsfeed.Content}");
                     DependencyService.Get<INotificationManager>().SendNewsfeed(newsfeed);
                 }
                 

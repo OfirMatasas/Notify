@@ -230,7 +230,8 @@ namespace Notify.Helpers
                 typeInfo: notificationTypeValue,
                 activation: activation,
                 permanent: notification.notification.permanent != null && (bool)notification.notification.permanent,
-                target: (string)notification.user);
+                target: (string)notification.user,
+                shouldBeNotified: (string)notification.shouldBeNotified ?? (string)notification.user);
         }
         
         public static User ToFriend(dynamic friend)
@@ -286,7 +287,7 @@ namespace Notify.Helpers
         public static Newsfeed ToNewsfeed(dynamic newsfeed)
         {
             return new Newsfeed(
-                id: (string)newsfeed.id,
+                username: (string)newsfeed.username,
                 title: (string)newsfeed.title,
                 content: (string)newsfeed.content);
         }
