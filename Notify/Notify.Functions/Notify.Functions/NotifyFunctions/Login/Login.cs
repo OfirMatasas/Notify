@@ -20,7 +20,7 @@ namespace Notify.Functions.NotifyFunctions.Login
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "login")]
-            HttpRequest req, ILogger log)
+            HttpRequest request, ILogger logger)
         {
             IMongoCollection<BsonDocument> collection;
             dynamic data;
@@ -29,12 +29,12 @@ namespace Notify.Functions.NotifyFunctions.Login
             string decryptedPassword, storedEncryptedPassword;
             BsonDocument user;
 
-            log.LogInformation("Got client's HTTP request to login");
+            logger.LogInformation("Got client's HTTP request to login");
 
             try
             {
-                data = await ConversionUtils.ExtractBodyContentAsync(req);
-                log.LogInformation($"Data:{Environment.NewLine}{data}");
+                data = await ConversionUtils.ExtractBodyContentAsync(request);
+                logger.LogInformation($"Data:{Environment.NewLine}{data}");
 
                 filter = Builders<BsonDocument>.Filter.And(
                     Builders<BsonDocument>.Filter.Regex("userName",
@@ -46,7 +46,7 @@ namespace Notify.Functions.NotifyFunctions.Login
 
                 if (user.IsBsonNull)
                 {
-                    log.LogInformation($"No user found with username {data.userName}");
+                    logger.LogInformation($"No user found with username {data.userName}");
                     result = new NotFoundObjectResult("Invalid username or password");
                 }
                 else
@@ -57,19 +57,19 @@ namespace Notify.Functions.NotifyFunctions.Login
 
                     if (decryptedPassword.Equals(data.password.ToString()))
                     {
-                        log.LogInformation($"User logged in successfully: {data.userName}");
+                        logger.LogInformation($"User logged in successfully: {data.userName}");
                         result = new OkObjectResult(user["userName"].ToString());
                     }
                     else
                     {
-                        log.LogInformation($"Invalid password for username {data.userName}");
+                        logger.LogInformation($"Invalid password for username {data.userName}");
                         result = new UnauthorizedObjectResult("Invalid username or password");
                     }
                 }
             }
             catch (Exception ex)
             {
-                log.LogError(ex.Message);
+                logger.LogError(ex.Message);
                 result = new BadRequestObjectResult($"Failed to login: {ex.Message}");
             }
 

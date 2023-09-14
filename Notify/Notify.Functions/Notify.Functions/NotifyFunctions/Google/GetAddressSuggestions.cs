@@ -18,43 +18,43 @@ namespace Notify.Functions.NotifyFunctions.Google
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "destination/suggestions")]
-            HttpRequest req, ILogger log)
+            HttpRequest request, ILogger logger)
         {
             string address;
             List<string> suggestions;
             ObjectResult result;
 
-            log.LogInformation("Got client's HTTP request to get suggestions for address");
+            logger.LogInformation("Got client's HTTP request to get suggestions for address");
 
-            address = req.Query["address"];
+            address = request.Query["address"];
             if (string.IsNullOrEmpty(address))
             {
-                log.LogError("No address provided");
+                logger.LogError("No address provided");
                 result = new BadRequestObjectResult("Please provide an address");
             }
             else
             {
-                log.LogInformation($"Address passed: {address}");
+                logger.LogInformation($"Address passed: {address}");
 
                 try
                 {
-                    suggestions = await GoogleHttpClient.Instance.GetAddressSuggestionsAsync(address, log);
+                    suggestions = await GoogleHttpClient.Instance.GetAddressSuggestionsAsync(address, logger);
                     
                     if (suggestions.Count.Equals(0))
                     {
-                        log.LogInformation("No suggestions found");
+                        logger.LogInformation("No suggestions found");
                         result = new NotFoundObjectResult("No suggestions found");
                     }
                     else
                     {
-                        log.LogInformation($"Suggestions found: {suggestions.Count}");
-                        log.LogInformation($"{string.Join($"{Environment.NewLine}, ", suggestions)}");
+                        logger.LogInformation($"Suggestions found: {suggestions.Count}");
+                        logger.LogInformation($"{string.Join($"{Environment.NewLine}, ", suggestions)}");
                         result = new OkObjectResult(JsonConvert.SerializeObject(suggestions));
                     }
                 }
                 catch (Exception ex)
                 {
-                    log.LogError(ex, "Error getting suggestions");
+                    logger.LogError(ex, "Error getting suggestions");
                     result = new BadRequestObjectResult(ex);
                 }
             }

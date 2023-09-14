@@ -18,32 +18,32 @@ namespace Notify.Functions.NotifyFunctions.Google
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "destination/coordinates")]
-            HttpRequest req, ILogger log)
+            HttpRequest request, ILogger logger)
         {
             string address;
             GoogleHttpClient.Coordinates coordinates;
             dynamic responseJson;
             ObjectResult result;
 
-            log.LogInformation("Got client's HTTP request to get coordinates for address");
+            logger.LogInformation("Got client's HTTP request to get coordinates for address");
 
-            address = req.Query["address"];
+            address = request.Query["address"];
             if (string.IsNullOrEmpty(address))
             {
-                log.LogError("No address provided");
+                logger.LogError("No address provided");
                 result = new BadRequestObjectResult("Please provide an address");
             }
             else
             {
-                log.LogInformation($"Address passed: {address}");
+                logger.LogInformation($"Address passed: {address}");
 
                 try
                 {
-                    coordinates = await GoogleHttpClient.Instance.GetCoordinatesFromAddressAsync(address, log);
+                    coordinates = await GoogleHttpClient.Instance.GetCoordinatesFromAddressAsync(address, logger);
 
                     if (coordinates.Equals(null))
                     {
-                        log.LogError("No coordinates found");
+                        logger.LogError("No coordinates found");
                         result = new NotFoundObjectResult($"No coordinates found for {address}");
                     }
                     else
@@ -59,7 +59,7 @@ namespace Notify.Functions.NotifyFunctions.Google
                 }
                 catch (Exception ex)
                 {
-                    log.LogError(ex, "Error getting coordinates");
+                    logger.LogError(ex, "Error getting coordinates");
                     result = new BadRequestObjectResult(ex);
                 }
             }

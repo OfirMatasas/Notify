@@ -21,12 +21,12 @@ namespace Notify.Functions.NotifyFunctions.Permission
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "put", "post", Route = "permission")]
-            HttpRequest req, ILogger log)
+            HttpRequest request, ILogger logger)
         {
-            dynamic data = await ConversionUtils.ExtractBodyContentAsync(req);
+            dynamic data = await ConversionUtils.ExtractBodyContentAsync(request);
             ActionResult result;
 
-            log.LogInformation($"Got client's HTTP request to update permission");
+            logger.LogInformation($"Got client's HTTP request to update permission");
 
             if (data.permit == null || data.username == null)
             {
@@ -38,7 +38,7 @@ namespace Notify.Functions.NotifyFunctions.Permission
             }
             else
             {
-                result = await updatePermissionAsync(data, log);
+                result = await updatePermissionAsync(data, logger);
             }
 
             return result;

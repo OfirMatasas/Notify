@@ -21,7 +21,7 @@ namespace Notify.Functions.NotifyFunctions.Login
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "checkUserExists")]
-            HttpRequest req, ILogger log)
+            HttpRequest request, ILogger logger)
         {
             IMongoCollection<BsonDocument> collection;
             dynamic data;
@@ -29,12 +29,12 @@ namespace Notify.Functions.NotifyFunctions.Login
             FilterDefinition<BsonDocument> filterUsername, filterTelephone;
             long countUsername, countTelephone;
 
-            log.LogInformation("Got client's HTTP request to check if user exists");
+            logger.LogInformation("Got client's HTTP request to check if user exists");
 
             try
             {
-                data = await ConversionUtils.ExtractBodyContentAsync(req);
-                log.LogInformation($"Data:{Environment.NewLine}{data}");
+                data = await ConversionUtils.ExtractBodyContentAsync(request);
+                logger.LogInformation($"Data:{Environment.NewLine}{data}");
 
                 if (data.userName == null || data.telephone == null)
                 {
@@ -71,7 +71,7 @@ namespace Notify.Functions.NotifyFunctions.Login
             }
             catch (Exception ex)
             {
-                log.LogError(ex.Message);
+                logger.LogError(ex.Message);
                 result = new BadRequestObjectResult($"Failed to check if user exists: {ex.Message}");
             }
 

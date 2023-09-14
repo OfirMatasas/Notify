@@ -19,7 +19,7 @@ namespace Notify.Functions.NotifyFunctions.Google
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "destination/dynamic")]
-            HttpRequest req, ILogger log)
+            HttpRequest request, ILogger logger)
         {
             dynamic data;
             double longitude, latitude;
@@ -29,27 +29,27 @@ namespace Notify.Functions.NotifyFunctions.Google
             try
             {
                 
-                data = await ConversionUtils.ExtractBodyContentAsync(req);
-                log.LogInformation($"Data:{Environment.NewLine}{data}");
+                data = await ConversionUtils.ExtractBodyContentAsync(request);
+                logger.LogInformation($"Data:{Environment.NewLine}{data}");
                 
                 longitude = Convert.ToDouble(data.longitude);
                 latitude = Convert.ToDouble(data.latitude);
                 type = Convert.ToString(data.type);
 
-                log.LogInformation($"Got client's HTTP request to get dynamic locations of type {type} near {longitude}, {latitude}");
+                logger.LogInformation($"Got client's HTTP request to get dynamic locations of type {type} near {longitude}, {latitude}");
                 
                 results = await GoogleHttpClient.Instance.SearchPlacesNearby(
                     longitude: longitude, 
                     latitude: latitude, 
                     radius: Constants.GOOGLE_API_RADIUS, 
                     type: type,
-                    logger: log);
+                    logger: logger);
 
                 return new OkObjectResult(results);
             }
             catch (Exception ex)
             {
-                log.LogError(ex, "Error getting dynamic locations");
+                logger.LogError(ex, "Error getting dynamic locations");
                 return new BadRequestObjectResult(ex);
             }
         }

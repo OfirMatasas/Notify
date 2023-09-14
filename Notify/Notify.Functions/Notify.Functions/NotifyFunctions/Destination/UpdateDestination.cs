@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +22,7 @@ namespace Notify.Functions.NotifyFunctions.Destination
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "put", "post", Route = "destination/update")]
-            HttpRequest req, ILogger log)
+            HttpRequest request, ILogger logger)
         {
             IMongoCollection<BsonDocument> collection;
             dynamic data;
@@ -33,17 +31,17 @@ namespace Notify.Functions.NotifyFunctions.Destination
             BsonDocument document;
             ObjectResult result;
             
-            log.LogInformation($"Got client's updated destination location HTTP request");
+            logger.LogInformation($"Got client's updated destination location HTTP request");
             
-            data = await ConversionUtils.ExtractBodyContentAsync(req);
-            log.LogInformation($"Data:{Environment.NewLine}{data}");
+            data = await ConversionUtils.ExtractBodyContentAsync(request);
+            logger.LogInformation($"Data:{Environment.NewLine}{data}");
 
             try
             {
                 userName = Convert.ToString(data.user);
                 locationName = Convert.ToString(data.location.name);
                 
-                log.LogInformation($"Searching for existing document in database by user {userName} and location {locationName}");
+                logger.LogInformation($"Searching for existing document in database by user {userName} and location {locationName}");
                 
                 filter = Filter.And(
                     Filter.Eq("user", userName), 
@@ -55,29 +53,29 @@ namespace Notify.Functions.NotifyFunctions.Destination
                 
                 if (document != null)
                 {
-                    updateExistedDocument(data, log, document, collection, filter);
+                    updateExistedDocument(data, logger, document, collection, filter);
                     result = new OkObjectResult(document.ToJson());
                 }
                 else
                 {
-                    document = await createNewDocument(data, log, collection);
+                    document = await createNewDocument(data, logger, collection);
                     result = new CreatedResult("", document.ToJson());
                 }
             }
             catch (Exception ex)
             {
-                log.LogError(ex.Message);
+                logger.LogError(ex.Message);
                 result = new BadRequestObjectResult(ex.Message);
             }
 
             return result;
         }
 
-        private static async void updateExistedDocument(dynamic data, ILogger log, BsonDocument document, IMongoCollection<BsonDocument> collection, FilterDefinition<BsonDocument> filter) 
+        private static async void updateExistedDocument(dynamic data, ILogger logger, BsonDocument document, IMongoCollection<BsonDocument> collection, FilterDefinition<BsonDocument> filter) 
         {
             string type = Convert.ToString(data.location.type);
             
-            log.LogInformation($"Found existing document for user {data.user} and location {data.location.name}. Updating it");
+            logger.LogInformation($"Found existing document for user {data.user} and location {data.location.name}. Updating it");
 
             if (type.Equals(Constants.NOTIFICATION_TYPE_LOCATION))
             {
@@ -90,7 +88,7 @@ namespace Notify.Functions.NotifyFunctions.Destination
                 else
                 {
                     double latitude = Convert.ToDouble(data.location.latitude), longitude = Convert.ToDouble(data.location.longitude);
-                    string address = GoogleHttpClient.Instance.GetAddressFromCoordinatesAsync(latitude, longitude, log).Result;
+                    string address = GoogleHttpClient.Instance.GetAddressFromCoordinatesAsync(latitude, longitude, logger).Result;
 
                     document["location"].AsBsonDocument["latitude"] = latitude;
                     document["location"].AsBsonDocument["longitude"] = longitude;
@@ -125,15 +123,15 @@ namespace Notify.Functions.NotifyFunctions.Destination
             }
             
             await collection.ReplaceOneAsync(filter, document);
-            log.LogInformation("Document updated successfully");
+            logger.LogInformation("Document updated successfully");
         }
 
-        private static async Task<BsonDocument> createNewDocument(dynamic data, ILogger log, IMongoCollection<BsonDocument> collection)
+        private static async Task<BsonDocument> createNewDocument(dynamic data, ILogger logger, IMongoCollection<BsonDocument> collection)
         {
             BsonDocument document;
             string type = Convert.ToString(data.location.type);
 
-            log.LogInformation($"No document found for user {data.user} and location {data.location.name}. Creating a brand new one");
+            logger.LogInformation($"No document found for user {data.user} and location {data.location.name}. Creating a brand new one");
 
             document = new BsonDocument
             {
@@ -148,7 +146,7 @@ namespace Notify.Functions.NotifyFunctions.Destination
             if (type.Equals(Constants.NOTIFICATION_TYPE_LOCATION))
             {
                 double latitude = Convert.ToDouble(data.location.latitude), longitude = Convert.ToDouble(data.location.longitude);
-                string address = GoogleHttpClient.Instance.GetAddressFromCoordinatesAsync(latitude, longitude, log).Result;
+                string address = GoogleHttpClient.Instance.GetAddressFromCoordinatesAsync(latitude, longitude, logger).Result;
                 
                 document["location"].AsBsonDocument.Add("latitude", latitude);
                 document["location"].AsBsonDocument.Add("longitude", longitude);
@@ -167,10 +165,10 @@ namespace Notify.Functions.NotifyFunctions.Destination
                 throw new ArgumentException($"Invalid location type: {type}");
             }
             
-            log.LogInformation($"Created document:{Environment.NewLine}{document}");
+            logger.LogInformation($"Created document:{Environment.NewLine}{document}");
             
             await collection.InsertOneAsync(document);
-            log.LogInformation("Document inserted successfully");
+            logger.LogInformation("Document inserted successfully");
 
             return document;
         }

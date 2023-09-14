@@ -21,7 +21,7 @@ namespace Notify.Functions.NotifyFunctions.Login
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "register")]
-            HttpRequest req, ILogger log)
+            HttpRequest request, ILogger logger)
         {
             IMongoCollection<BsonDocument> collection;
             dynamic data;
@@ -29,15 +29,15 @@ namespace Notify.Functions.NotifyFunctions.Login
             long usersCount;
             ObjectResult result;
 
-            log.LogInformation("Got client's HTTP request to register");
+            logger.LogInformation("Got client's HTTP request to register");
 
             try
             {
                 collection = MongoUtils.GetCollection(Constants.COLLECTION_USER);
-                await MongoUtils.CreatePropertyIndexesAsync(collection, log, "userName", "telephone");
+                await MongoUtils.CreatePropertyIndexesAsync(collection, logger, "userName", "telephone");
                 
-                data = await ConversionUtils.ExtractBodyContentAsync(req);
-                log.LogInformation($"Data:{Environment.NewLine}{data}");
+                data = await ConversionUtils.ExtractBodyContentAsync(request);
+                logger.LogInformation($"Data:{Environment.NewLine}{data}");
 
                 filter = Builders<BsonDocument>.Filter.Regex("userName",
                     new BsonRegularExpression(Convert.ToString(data.userName), "i"));
@@ -45,7 +45,7 @@ namespace Notify.Functions.NotifyFunctions.Login
                 usersCount = await collection.CountDocumentsAsync(filter);
                 if (usersCount > 0)
                 {
-                    log.LogInformation($"Username '{data.userName}' already exists");
+                    logger.LogInformation($"Username '{data.userName}' already exists");
                     result = new ConflictObjectResult($"Username '{data.userName}' already exists");
                 }
                 else
@@ -64,7 +64,7 @@ namespace Notify.Functions.NotifyFunctions.Login
                     };
                     
                     await collection.InsertOneAsync(userDocument);
-                    log.LogInformation(
+                    logger.LogInformation(
                         $"Inserted user with username {data.userName} and telephone {data.telephone} into database");
 
                     result = new OkObjectResult(JsonConvert.SerializeObject(data));
@@ -72,7 +72,7 @@ namespace Notify.Functions.NotifyFunctions.Login
             }
             catch (Exception ex)
             {
-                log.LogError($"Failed to insert user. Reason: {ex.Message}");
+                logger.LogError($"Failed to insert user. Reason: {ex.Message}");
                 result = new ObjectResult($"Failed to register.{Environment.NewLine}Error: {ex.Message}");
             }
 

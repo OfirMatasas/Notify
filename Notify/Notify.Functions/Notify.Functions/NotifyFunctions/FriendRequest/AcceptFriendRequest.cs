@@ -22,7 +22,7 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "friend/accept")]
-            HttpRequest req, ILogger log)
+            HttpRequest request, ILogger logger)
         {
             string requester, username;
             ObjectResult result;
@@ -30,32 +30,33 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
 
             try
             {
-                data = await ConversionUtils.ExtractBodyContentAsync(req);
+                data = await ConversionUtils.ExtractBodyContentAsync(request);
                 requester = Convert.ToString(data.requester);
                 username = Convert.ToString(data.userName);
                 
-                if(!checkIfFriendshipRequestExists(requester, username, log))
+                if(!checkIfFriendshipRequestExists(requester, username, logger))
                 {
                     throw new Exception($"Friendship request does not exist between {requester} and {username}");
                 }
                 
-                log.LogInformation($"Accepting friend request from {requester} to {username}");
-                await createFriendshipAsync(requester, username, log);
-                await createPermissionsAsync(requester, username, log);
-                await deleteFriendRequestAsync(requester, username, log);
+                logger.LogInformation($"Accepting friend request from {requester} to {username}");
+                await createFriendshipAsync(requester, username, logger);
+                await createPermissionsAsync(requester, username, logger);
+                await deleteFriendRequestAsync(requester, username, logger);
+                await createNewsfeedAsync(requester, username, logger);
                 
                 result = new OkObjectResult("Friend request accepted");
             }
             catch (Exception ex)
             {
-                log.LogError($"Error accepting friend request: {ex.Message}");
+                logger.LogError($"Error accepting friend request: {ex.Message}");
                 result = new ExceptionResult(ex, false);
             }
 
             return result;
         }
 
-        private static bool checkIfFriendshipRequestExists(string requester, string username, ILogger log)
+        private static bool checkIfFriendshipRequestExists(string requester, string username, ILogger logger)
         {
             IMongoCollection<BsonDocument> friendRequestsCollection =
                 MongoUtils.GetCollection(Constants.COLLECTION_FRIEND_REQUEST);
@@ -66,7 +67,7 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
                     new BsonRegularExpression($"^{Regex.Escape(username)}$", "i"))
             );
             
-            log.LogInformation($"Checking if friendship request exists between {requester} and {username}");
+            logger.LogInformation($"Checking if friendship request exists between {requester} and {username}");
             return friendRequestsCollection.Find(friendRequestsFilter).Any();
         }
 
@@ -78,7 +79,7 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
             await createAndInsertPermissionDocument(username, requester, permissionsCollection, log);
         }
 
-        private static async Task createAndInsertPermissionDocument(string permit, string username, IMongoCollection<BsonDocument> collection, ILogger log)
+        private static async Task createAndInsertPermissionDocument(string permit, string username, IMongoCollection<BsonDocument> collection, ILogger logger)
         {
             BsonDocument permissionsDocument = new BsonDocument
             {
@@ -89,12 +90,12 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
                 { Constants.NOTIFICATION_TYPE_TIME_LOWER, Constants.PERMISSION_DISALLOW }
             };
 
-            log.LogInformation($"Creating permissions document for {permit} and {username}");
+            logger.LogInformation($"Creating permissions document for {permit} and {username}");
             await collection.InsertOneAsync(permissionsDocument);
-            log.LogInformation($"Permissions document for {permit} and {username} created successfully");
+            logger.LogInformation($"Permissions document for {permit} and {username} created successfully");
         }
 
-        private static async Task createFriendshipAsync(string requester, string username, ILogger log)
+        private static async Task createFriendshipAsync(string requester, string username, ILogger logger)
         {
             IMongoCollection<BsonDocument> friendsCollection;
             BsonDocument friendDocument;
@@ -105,15 +106,15 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
                     { "userName2", username }
                 };
 
-            log.LogInformation($"Creating friendship document between {requester} and {username}");
+            logger.LogInformation($"Creating friendship document between {requester} and {username}");
             
             friendsCollection = MongoUtils.GetCollection(Constants.COLLECTION_FRIEND);
             await friendsCollection.InsertOneAsync(friendDocument);
 
-            log.LogInformation($"Friendship document between {requester} and {username} created successfully");
+            logger.LogInformation($"Friendship document between {requester} and {username} created successfully");
         }
         
-        private static async Task deleteFriendRequestAsync(string requester, string username, ILogger log)
+        private static async Task deleteFriendRequestAsync(string requester, string username, ILogger logger)
         {
             IMongoCollection<BsonDocument> friendRequestsCollection;
             FilterDefinition<BsonDocument> friendRequestsFilter;
@@ -127,11 +128,31 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
                     new BsonRegularExpression($"^{Regex.Escape(username)}$", "i"))
             );
 
-            log.LogInformation($"Deleting the pending friend request document from {requester} to {username}");
+            logger.LogInformation($"Deleting the pending friend request document from {requester} to {username}");
 
             await friendRequestsCollection.DeleteOneAsync(friendRequestsFilter);
 
-            log.LogInformation($"Friend request document between {requester} and {username} deleted successfully");
+            logger.LogInformation($"Friend request document between {requester} and {username} deleted successfully");
+        }
+        
+        private static async Task createNewsfeedAsync(string requester, string username, ILogger logger)
+        {
+            IMongoCollection<BsonDocument> newsfeedCollection;
+            BsonDocument newsfeedDocument;
+            
+            newsfeedDocument = new BsonDocument
+            {
+                { "username", requester },
+                { "title", "New Friend Approval" },
+                { "content", $"{username} has accepted your friend request" }
+            };
+
+            logger.LogInformation($"Creating newsfeed document for {username} and {requester}");
+            
+            newsfeedCollection = MongoUtils.GetCollection(Constants.COLLECTION_NEWSFEED);
+            await newsfeedCollection.InsertOneAsync(newsfeedDocument);
+
+            logger.LogInformation($"Newsfeed document for {username} and {requester} created successfully");
         }
     }
 }

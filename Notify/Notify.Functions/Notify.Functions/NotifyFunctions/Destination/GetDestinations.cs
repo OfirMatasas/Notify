@@ -10,7 +10,6 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Notify.Functions.Core;
-using Notify.Functions.HTTPClients;
 using Notify.Functions.Utils;
 using MongoUtils = Notify.Functions.Utils.MongoUtils;
 
@@ -22,43 +21,43 @@ namespace Notify.Functions.NotifyFunctions.Destination
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "destination")]
-            HttpRequest req, ILogger log)
+            HttpRequest request, ILogger logger)
         {
             string lowerCasedUsername, destinations;
             ObjectResult result;
 
             try
             {
-                if (!ValidationUtils.ValidateUsername(req, log))
+                if (!ValidationUtils.ValidateUsername(request, logger))
                 {
                     result = new BadRequestObjectResult("Invalid username provided");
                 }
                 else
                 {
-                    lowerCasedUsername = req.Query["username"].ToString().ToLower();
-                    log.LogInformation($"Got client's HTTP request to get friends of user {lowerCasedUsername}");
+                    lowerCasedUsername = request.Query["username"].ToString().ToLower();
+                    logger.LogInformation($"Got client's HTTP request to get friends of user {lowerCasedUsername}");
 
-                    destinations = await GetAllUserDestinations(lowerCasedUsername, log);
+                    destinations = await GetAllUserDestinations(lowerCasedUsername, logger);
                     result = new OkObjectResult(destinations);
                 }
             }
             catch (Exception ex)
             {
-                log.LogError(ex, "Error getting destinations");
+                logger.LogError(ex, "Error getting destinations");
                 result = new BadRequestObjectResult(ex);
             }
 
             return result;
         }
 
-        private static async Task<string> GetAllUserDestinations(string lowerCasedUsername, ILogger log)
+        private static async Task<string> GetAllUserDestinations(string lowerCasedUsername, ILogger logger)
         {
             IMongoCollection<BsonDocument> collection;
             FilterDefinition<BsonDocument> userFilter;
             List<BsonDocument> destinations;
             string response;
 
-            log.LogInformation($"Getting all destinations of user {lowerCasedUsername}");
+            logger.LogInformation($"Getting all destinations of user {lowerCasedUsername}");
             
             collection = MongoUtils.GetCollection(Constants.COLLECTION_DESTINATION);
             userFilter = Builders<BsonDocument>.Filter

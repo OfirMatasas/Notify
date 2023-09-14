@@ -27,6 +27,7 @@ namespace Notify.Functions.NotifyFunctions.Notification
             IMongoCollection<BsonDocument> collection;
             JToken json;
             List<BsonDocument> documentsList = new List<BsonDocument>();
+            List<BsonDocument> newsfeedDocumentsList = new List<BsonDocument>();
             ActionResult result;
 
             log.LogInformation($"Got client's HTTP request to create notification based on {type}");
@@ -38,11 +39,18 @@ namespace Notify.Functions.NotifyFunctions.Notification
                 json = convertRequestBodyIntoJsonAsync(request).Result;
                 log.LogInformation($"Data:{Environment.NewLine}{json}");
 
-                createDocumentForEachUser(json, type, ref documentsList);
+                createDocumentForEachUser(json, type, ref documentsList, ref newsfeedDocumentsList);
                 log.LogInformation($"Converted JSON into {documentsList.Count} different documents");
 
                 await collection.InsertManyAsync(documentsList);
                 log.LogInformation($"{documentsList.Count} documents inserted successfully");
+                
+                if(newsfeedDocumentsList.Count > 0)
+                {
+                    collection = MongoUtils.GetCollection(Constants.COLLECTION_NEWSFEED);
+                    await collection.InsertManyAsync(newsfeedDocumentsList);
+                    log.LogInformation($"{newsfeedDocumentsList.Count} newsfeed documents inserted successfully");
+                }
 
                 result = new OkResult();
             }
@@ -62,7 +70,7 @@ namespace Notify.Functions.NotifyFunctions.Notification
             return JToken.Parse(requestBody);
         }
 
-        private static void createDocumentForEachUser(JToken json, string type, ref List<BsonDocument> documentsList)
+        private static void createDocumentForEachUser(JToken json, string type, ref List<BsonDocument> documentsList, ref List<BsonDocument> newsfeedDocumentsList)
         {
             BsonDocument document;
             BsonElement extraElement;
@@ -98,6 +106,16 @@ namespace Notify.Functions.NotifyFunctions.Notification
                 }
 
                 documentsList.Add(document);
+
+                if (!user.Equals(creator))
+                {
+                    newsfeedDocumentsList.Add(new BsonDocument
+                    {
+                        { "username", user },
+                        { "title", $"New {type} notification" },
+                        { "content", $"You have a new {type} notification from {creator}" }
+                    });
+                }
             }
         }
 

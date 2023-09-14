@@ -9,6 +9,7 @@ namespace Notify.Functions.Core
         public static readonly string COLLECTION_FRIEND = "Friend";
         public static readonly string COLLECTION_FRIEND_REQUEST = "Friend_Request";
         public static readonly string COLLECTION_PERMISSION = "Permission";
+        public static readonly string COLLECTION_NEWSFEED = "NewsFeed";
         public static readonly string ENCRYPT_OPERATION = "encrypt";
         public static readonly string DECRYPT_OPERATION = "decrypt";
         public static readonly string AZURE_BLOB_CONTAINER_NAME = "notifycontainer";

@@ -21,28 +21,28 @@ namespace Notify.Functions.NotifyFunctions.Notification
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "notification")]
-            HttpRequest req, ILogger log)
+            HttpRequest request, ILogger logger)
         {
             string username, notifications;
             ObjectResult result;
 
-            if (!ValidationUtils.ValidateUsername(req, log))
+            if (!ValidationUtils.ValidateUsername(request, logger))
             {
                 result = new BadRequestObjectResult("Invalid username provided");
             }
             else
             {
-                username = req.Query["username"].ToString().ToLower();
-                log.LogInformation($"Got client's HTTP request to get notifications of user {username}");
+                username = request.Query["username"].ToString().ToLower();
+                logger.LogInformation($"Got client's HTTP request to get notifications of user {username}");
 
                 try
                 {
-                    notifications = await GetAllUserNotifications(username, log);
+                    notifications = await GetAllUserNotifications(username, logger);
                     result = new OkObjectResult(notifications);
                 }
                 catch (Exception ex)
                 {
-                    log.LogError(ex, "Error getting notifications");
+                    logger.LogError(ex, "Error getting notifications");
                     result = new BadRequestObjectResult(ex);
                 }
             }
@@ -50,7 +50,7 @@ namespace Notify.Functions.NotifyFunctions.Notification
             return result;
         }
 
-        private static async Task<string> GetAllUserNotifications(string username, ILogger log)
+        private static async Task<string> GetAllUserNotifications(string username, ILogger logger)
         {
             IMongoCollection<BsonDocument> collection = MongoUtils.GetCollection(Constants.COLLECTION_NOTIFICATION);
             FilterDefinition<BsonDocument> userFilter = Builders<BsonDocument>.Filter
@@ -58,7 +58,7 @@ namespace Notify.Functions.NotifyFunctions.Notification
             List<BsonDocument> notifications;
             string response;
 
-            log.LogInformation($"Getting all notifications of user {username}");
+            logger.LogInformation($"Getting all notifications of user {username}");
 
             notifications = await collection.Find(userFilter).ToListAsync();
             response = ConversionUtils.ConvertBsonDocumentListToJson(notifications);

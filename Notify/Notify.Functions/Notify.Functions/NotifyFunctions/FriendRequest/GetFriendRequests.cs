@@ -21,15 +21,15 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
         [AllowAnonymous]
         public static async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "friend/request")]
-            HttpRequest req, ILogger log)
+            HttpRequest request, ILogger logger)
         {
             string response, username;
             List<BsonDocument> friendRequestDocuments;
             ObjectResult result;
 
-            username = req.Query["username"];
+            username = request.Query["username"];
 
-            if (!ValidationUtils.ValidateUsername(req, log))
+            if (!ValidationUtils.ValidateUsername(request, logger))
             {
                 result = new BadRequestObjectResult("Missing username parameter in query string");
             }
@@ -39,25 +39,25 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
             }
             else
             {
-                log.LogInformation(
+                logger.LogInformation(
                     $"Got client's HTTP request to list all pending friend requests of user {username}");
 
                 friendRequestDocuments = await GetPendingFriendRequestOfSelectedUsernameDocuments(username);
 
                 if (friendRequestDocuments.Count.Equals(0))
                 {
-                    log.LogInformation($"No pending friend requests found for user {username}");
+                    logger.LogInformation($"No pending friend requests found for user {username}");
                     result = new NotFoundObjectResult($"No pending friend requests found for user {username}");
                 }
                 else
                 {
-                    log.LogInformation("Getting profile pictures of users who sent friend requests");
-                    await GetProfilePicturesOfUsersAsync(friendRequestDocuments, log);
+                    logger.LogInformation("Getting profile pictures of users who sent friend requests");
+                    await GetProfilePicturesOfUsersAsync(friendRequestDocuments, logger);
                     
                     response = ConversionUtils.ConvertBsonDocumentListToJson(friendRequestDocuments);
-                    log.LogInformation(
+                    logger.LogInformation(
                         $"Retrieved {friendRequestDocuments.Count} pending friend requests of user {username}:");
-                    log.LogInformation(response);
+                    logger.LogInformation(response);
                     result = new OkObjectResult(response);
                 }
             }
@@ -65,8 +65,7 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
             return result;
         }
 
-        private static async Task<List<BsonDocument>> GetPendingFriendRequestOfSelectedUsernameDocuments(
-            string username)
+        private static async Task<List<BsonDocument>> GetPendingFriendRequestOfSelectedUsernameDocuments(string username)
         {
             IMongoCollection<BsonDocument> pendingFriendRequestsCollection;
             FilterDefinition<BsonDocument> pendingFriendRequestFilter;
@@ -88,7 +87,7 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
             return pendingFriendRequestsList;
         }
         
-        private static async Task GetProfilePicturesOfUsersAsync(List<BsonDocument> requestDocuments, ILogger log)
+        private static async Task GetProfilePicturesOfUsersAsync(List<BsonDocument> requestDocuments, ILogger logger)
         {
             IMongoCollection<BsonDocument> usersCollection = Utils.MongoUtils.GetCollection(Constants.COLLECTION_USER);
             FilterDefinition<BsonDocument> userFilter;
@@ -114,7 +113,7 @@ namespace Notify.Functions.NotifyFunctions.FriendRequest
                 }
                 else
                 {
-                    log.LogWarning($"User {requestDocument["requester"].AsString} not found");
+                    logger.LogWarning($"User {requestDocument["requester"].AsString} not found");
                     requestDocument["profilePicture"] = "to_be_removed";
                 }
             }
