@@ -25,6 +25,7 @@ namespace Notify.Core
         public string Activation { get; set; }
         public bool IsPermanent { get; set; }
         public string Target { get; set; }
+        public string ShouldBeNotified { get; set; }
         
         public bool IsPending => Status == Constants.NOTIFICATION_STATUS_PENDING;
         public bool IsRenewable => Status == Constants.NOTIFICATION_STATUS_EXPIRED && Type != NotificationType.Time;
@@ -37,7 +38,7 @@ namespace Notify.Core
             
         }
         
-        public Notification(string id, string name, string description, DateTime creationDateTime, string status, string creator, NotificationType type, object typeInfo, string target, string activation, bool permanent)
+        public Notification(string id, string name, string description, DateTime creationDateTime, string status, string creator, NotificationType type, object typeInfo, string target, string activation, bool permanent, string shouldBeNotified)
         {
             ID = id;
             Name = name;
@@ -50,6 +51,7 @@ namespace Notify.Core
             Activation = activation;
             IsPermanent = permanent;
             Target = target;
+            ShouldBeNotified = shouldBeNotified;
         }
         
         public Notification(string id)

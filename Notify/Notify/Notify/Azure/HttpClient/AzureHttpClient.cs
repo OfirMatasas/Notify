@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Notify.Core;
 using Notify.Helpers;
+using Notify.Notifications;
 using Notify.Services;
 using Notify.WiFi;
 using Xamarin.Essentials;
@@ -281,6 +282,8 @@ namespace Notify.Azure.HttpClient
             createNewDynamicDestinations(notifications);
             DependencyService.Get<IWiFiManager>().SendNotifications(null, null);
 
+            GetNewsfeedsAndSendThem();
+
             return notifications;
         }
 
@@ -457,6 +460,7 @@ namespace Notify.Azure.HttpClient
         
         public async Task<List<User>> GetFriends()
         {
+            GetNewsfeedsAndSendThem();
             await GetFriendsPermissions();
             
             return await GetData(
@@ -1080,6 +1084,53 @@ namespace Notify.Azure.HttpClient
             r_Logger.LogInformation($"request:{Environment.NewLine}{request}");
 
             return await m_HttpClient.SendAsync(request);
+        }
+
+        public async Task<List<Newsfeed>> GetNewsfeeds()
+        {
+            return await GetData(
+                endpoint: Constants.AZURE_FUNCTIONS_PATTERN_NEWSFEED,
+                preferencesKey: Constants.PREFERENCES_NEWSFEED, 
+                converter: Converter.ToNewsfeed);
+        }
+
+        public async void GetNewsfeedsAndSendThem()
+        {
+            List<Newsfeed> newsfeeds = await GetNewsfeeds();
+            
+            foreach (Newsfeed newsfeed in newsfeeds)
+            {
+                DependencyService.Get<INotificationManager>().SendNewsfeed(newsfeed);
+            }
+        }
+
+        public void SendNewsfeed(Newsfeed newsfeed)
+        {
+            HttpResponseMessage response;
+            string json;
+            dynamic data = new JObject
+            {
+                { "username", newsfeed.Username },
+                { "title", newsfeed.Title },
+                { "content", newsfeed.Content },
+            };
+            
+            json = JsonConvert.SerializeObject(data);
+            r_Logger.LogInformation($"request:{Environment.NewLine}{json}");
+
+            try
+            {
+                response = postAsync(
+                    requestUri: Constants.AZURE_FUNCTIONS_PATTERN_NEWSFEED,
+                    content: createJsonStringContent(json)).Result;
+
+                response.EnsureSuccessStatusCode();
+                r_Logger.LogInformation($"Successful status code from Azure Function from SendNewsfeeds");
+            }
+            catch (Exception ex)
+            {
+                r_Logger.LogError($"Error occurred on SendNewsfeeds: {ex.Message}");
+            }
         }
     }
 }
