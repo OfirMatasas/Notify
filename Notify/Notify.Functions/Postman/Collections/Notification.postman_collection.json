@@ -4,7 +4,7 @@
 		"name": "Notification",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "26136776",
-		"_collection_link": "https://warped-shadow-814178.postman.co/workspace/My-Workspace~54429c37-4045-4a7c-8a63-dc888dec1345/collection/26136776-740a4a1b-479f-4716-af2e-faba52e58f30?action=share&creator=26136776&source=collection_link"
+		"_collection_link": "https://warped-shadow-814178.postman.co/workspace/My-Workspace~54429c37-4045-4a7c-8a63-dc888dec1345/collection/26136776-740a4a1b-479f-4716-af2e-faba52e58f30?action=share&source=collection_link&creator=26136776"
 	},
 	"item": [
 		{
@@ -17,7 +17,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"creator\": \"Ofir\",\n    \"creation_timestamp\": 45235235,\n    \"notification\": {\n        \"name\": \"Testing\",\n        \"type\": \"Location\",\n        \"location\": \"Home\"\n    },\n    \"users\": [\n        \"Dekel\",\n        \"Lin\"\n    ]\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -49,7 +49,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"creator\": \"MaTaSaS\",\n    \"description\": \"Perm Arrival destination\",\n    \"notification\": {\n        \"name\": \"Perm Location Arrival Notification\",\n        \"type\": \"Location\",\n        \"location\": \"Work\",\n        \"activation\": \"Arrival\",\n        \"permanent\": \"true\"\n    },\n    \"users\": [\n        \"MaTaSaS\"\n    ]\n}",
+					"raw": "{\n    \"creator\": \"linkimos\",\n    \"description\": \"location desc\",\n    \"notification\": {\n        \"name\": \"Testing location\",\n        \"type\": \"Location\",\n        \"location\": \"Home\",\n        \"permanent\": \"true\",\n        \"activation\": \"Arrival\"\n    },\n    \"shouldBeNotified\": \"linkimos\",\n    \"users\": [\n        \"MaTaSaS\"\n    ]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -105,7 +105,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"creator\": \"MaTaSaS\",\n    \"description\": \"This is a time notification\",\n    \"notification\": {\n        \"name\": \"Timer Notification\",\n        \"type\": \"Time\",\n        \"timestamp\": 1683999900\n    },\n    \"users\": [\n        \"MaTaSaS\"\n    ]\n}",
+					"raw": "{\n    \"creator\": \"MaTaSaS\",\n    \"description\": \"This is a time notification\",\n    \"notification\": {\n        \"name\": \"Timer Notification\",\n        \"type\": \"Time\",\n        \"timestamp\": 1693936080\n    },\n    \"users\": [\n        \"MaTaSaS\"\n    ]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -133,7 +133,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"notifications\": [\n        \"64d52b18c77b86c624ff4e74\"\n    ],\n    \"status\": \"Active\"\n}",
+					"raw": "{\n    \"notifications\": [\n        \"64e62254cb3daa47b0232ff8\"\n    ],\n    \"status\": \"Arrived\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -295,7 +295,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\": \"64d52b18c77b86c624ff4e74\",\n    \"name\": \"Timer Notification 1\",\n    \"description\": \"This is a time notification\",\n    \"type\": \"Time\",\n    \"timestamp\": 37346306400\n}",
+					"raw": "{\n    \"id\": \"64d52b18c77b86c624ff4e74\",\n    \"name\": \"Timer Notification 1\",\n    \"description\": \"This is a time notification\",\n    \"type\": \"Time\",\n    \"timestamp\": 10000000\n}",
 					"options": {
 						"raw": {
 							"language": "json"
