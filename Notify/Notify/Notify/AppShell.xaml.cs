@@ -232,8 +232,16 @@ namespace Notify
                 {
                     if (isArrivalNotification)
                     {
-                        r_Logger.LogInformation($"Sending notification for arrival notification: {notification.Name}");
-                        DependencyService.Get<INotificationManager>().SendNotification(notification);
+                        if (notification.ShouldBeNotified.Equals(notification.Creator))
+                        {
+                            r_Logger.LogInformation($"Sending newsfeed to creator {notification.Creator} for arrival notification: {notification.Name}");
+                            AzureHttpClient.Instance.SendNewsfeed(new Newsfeed(notification.Creator, $"{notification.Target} Arrived {notification.TypeInfo}", $"{notification.Target} has arrived to their {notification.TypeInfo} destination"));
+                        }
+                        else
+                        {
+                            r_Logger.LogInformation($"Sending notification for arrival notification: {notification.Name}");
+                            DependencyService.Get<INotificationManager>().SendNotification(notification);
+                        }
 
                         if (notification.IsPermanent)
                         {
@@ -298,8 +306,16 @@ namespace Notify
                 {
                     if (isLeaveNotification)
                     {
-                        r_Logger.LogInformation($"Sending notification for leave notification: {notification.Name}");
-                        DependencyService.Get<INotificationManager>().SendNotification(notification);
+                        if (notification.ShouldBeNotified.Equals(notification.Creator))
+                        {
+                            r_Logger.LogInformation($"Sending newsfeed to creator {notification.Creator} for leave notification: {notification.Name}");
+                            AzureHttpClient.Instance.SendNewsfeed(new Newsfeed(notification.Creator, $"{notification.Target} Left {notification.TypeInfo}", $"{notification.Target} has left their {notification.TypeInfo} destination"));
+                        }
+                        else
+                        {
+                            r_Logger.LogInformation($"Sending notification for leave notification: {notification.Name}");
+                            DependencyService.Get<INotificationManager>().SendNotification(notification);
+                        }
                         
                         if(notification.IsPermanent)
                         {

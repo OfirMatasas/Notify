@@ -150,7 +150,7 @@ namespace Notify.Droid.Managers
                             if (notification.ShouldBeNotified.Equals(notification.Creator))
                             {
                                 r_Logger.LogInformation($"Sending newsfeed to creator {notification.Creator} for arrival notification: {notification.Name}");
-                                 AzureHttpClient.Instance.SendNewsfeed(new Newsfeed(notification.Creator, $"{notification.Target} Arrived {notification.TypeInfo}", $"{notification.Target} has arrived to {notification.TypeInfo}"));
+                                AzureHttpClient.Instance.SendNewsfeed(new Newsfeed(notification.Creator, $"{notification.Target} Arrived {notification.TypeInfo}", $"{notification.Target} has arrived to their {notification.TypeInfo} destination"));
                             }
                             else
                             {
@@ -202,7 +202,7 @@ namespace Notify.Droid.Managers
                             if(notification.ShouldBeNotified.Equals(notification.Creator))
                             {
                                 r_Logger.LogInformation($"Sending newsfeed to creator {notification.Creator} for leave notification: {notification.Name}");
-                                AzureHttpClient.Instance.SendNewsfeed(new Newsfeed(notification.Creator, $"{notification.Target} Left {notification.TypeInfo}", $"{notification.Target} has left {notification.TypeInfo}"));
+                                AzureHttpClient.Instance.SendNewsfeed(new Newsfeed(notification.Creator, $"{notification.Target} Left {notification.TypeInfo}", $"{notification.Target} has left their {notification.TypeInfo} destination"));
                             }
                             else
                             {
