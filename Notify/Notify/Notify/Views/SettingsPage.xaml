@@ -21,66 +21,96 @@
             </BoxView.Background>
 
             <Label
-                FontAttributes="Bold"
-                FontSize="Title"
+                Grid.Row="0"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
-                Grid.Row="0"
+                FontAttributes="Bold"
+                FontSize="Title"
                 HorizontalTextAlignment="Center"
                 Margin="40"
                 Style="{StaticResource Headline3_ExoBold}"
-                Text="Settings" />
+                Text="Settings">
+            </Label>
+            
+            <Frame
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                BackgroundColor="Transparent"
+                BorderColor="White"
+                CornerRadius="105"
+                HeightRequest="170"
+                WidthRequest="170"
+                HorizontalOptions="Center"
+                IsClippedToBounds="True"
+                Padding="0"
+                VerticalOptions="Center">
+                <Image
+                    Aspect="AspectFill"
+                    HorizontalOptions="FillAndExpand"
+                    Source="{Binding ProfilePicture}"
+                    VerticalOptions="FillAndExpand">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding LoadProfilePictureCommand}" NumberOfTapsRequired="1" />
+                    </Image.GestureRecognizers>
+                </Image>
+            </Frame>
 
             <Button
+                Grid.Row="2"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
                 BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
                                                   Dark={StaticResource DarkButtonColor}}"
                 Command="{Binding GoLocationSettingsPageCommand}"
                 CornerRadius="30"
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                Grid.Row="1"
-                Margin="40,5,40,5"
+                Margin="40,40,40,5"
                 Text="Location Settings"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
-                                            Dark={StaticResource LightButtonTextColor}}" />
+                                            Dark={StaticResource LightButtonTextColor}}">
+            </Button>
 
             <Button
+                Grid.Row="3"
+                Grid.ColumnSpan="2"
+                Grid.Column="0"
                 BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
                                                   Dark={StaticResource DarkButtonColor}}"
                 Command="{Binding GoWifiSettingsPageCommand}"
                 CornerRadius="30"
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                Grid.Row="2"
                 Margin="40,5,40,5"
                 Text="Wi-Fi Settings"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
-                                            Dark={StaticResource LightButtonTextColor}}" />
+                                            Dark={StaticResource LightButtonTextColor}}">
+            </Button>
 
             <Button
+                Grid.Row="4"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
                 BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
                                                   Dark={StaticResource DarkButtonColor}}"
                 Command="{Binding GoBluetoothSettingsPageCommand}"
                 CornerRadius="30"
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                Grid.Row="3"
-                Margin="40,5,40,5"
+                Margin="40,5,40,90"
                 Text="Bluetooth Settings"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
-                                            Dark={StaticResource LightButtonTextColor}}" />
-
+                                            Dark={StaticResource LightButtonTextColor}}">
+            </Button>
+            
             <Label
+                Grid.Row="6"
                 Grid.Column="0"
-                Grid.Row="5"
                 HorizontalOptions="EndAndExpand"
                 Margin="0,0,0,50"
                 Style="{StaticResource Body1FontSize_ExoRegular}"
                 Text="Dark Mode"
-                VerticalTextAlignment="End" />
+                VerticalTextAlignment="End">
+            </Label>
+            
             <Switch
+                Grid.Row="6"
                 Grid.Column="1"
-                Grid.Row="5"
                 HorizontalOptions="Start"
                 IsToggled="{Binding IsDarkMode}"
                 Margin="0,0,0,50"
@@ -93,6 +123,7 @@
                     <xct:EventToCommandBehavior Command="{Binding DarkModeToggleCommand}" EventName="Toggled" />
                 </Switch.Behaviors>
             </Switch>
+            
         </Grid>
     </ContentPage.Content>
 </ContentPage>
