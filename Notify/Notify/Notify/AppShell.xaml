@@ -62,6 +62,10 @@
     <ShellItem Route="bluetooth_settings">
         <ShellContent ContentTemplate="{DataTemplate Views:BluetoothSettingsPage}" />
     </ShellItem>
+    
+    <ShellItem Route="user_destinations_settings">
+        <ShellContent ContentTemplate="{DataTemplate Views:DestinationsDefinedPage}" />
+    </ShellItem>
 
     <TabBar Route="main">
         <Tab

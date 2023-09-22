@@ -17,7 +17,6 @@ namespace Notify.ViewModels
 {
     public sealed class ProfilePageViewModel : INotifyPropertyChanged
     {
-        
         private readonly LoggerService r_Logger = LoggerService.Instance;
         private string m_UserName;
         private ImageSource m_ProfilePicture;

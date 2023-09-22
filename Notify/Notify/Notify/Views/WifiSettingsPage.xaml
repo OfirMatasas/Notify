@@ -32,7 +32,8 @@
                 Text="❮"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
                                             Dark={StaticResource DarkPrimaryTextColor}}"
-                VerticalOptions="Start" />
+                VerticalOptions="Start">
+            </Button>
             
             <Label
                 Grid.Row="1"
@@ -43,7 +44,8 @@
                 Text="Wi-Fi Settings"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
                                             Dark={StaticResource DarkPrimaryTextColor}}"
-                VerticalTextAlignment="Center" />
+                VerticalTextAlignment="Center">
+            </Label>
             
             <materialDesignControls:MaterialPicker
                 Grid.Row="2"
@@ -58,7 +60,8 @@
                 BackgroundColor="White"
                 ItemsSource="{Binding LocationSelectionList}"
                 SelectedItem="{Binding SelectedLocation}"
-                TabIndex="1"/>
+                TabIndex="1">
+            </materialDesignControls:MaterialPicker>
             
             <materialDesignControls:MaterialPicker
                 Grid.Row="3"
@@ -72,7 +75,8 @@
                                                  Dark={StaticResource DarkPrimaryTextColor}}"                BackgroundColor="White"
                 ItemsSource="{Binding WiFiSelectionList}"
                 SelectedItem="{Binding SelectedWiFiSSID}"
-                TabIndex="1"/>
+                TabIndex="1">
+            </materialDesignControls:MaterialPicker>
             
             <Button
                 Grid.Row="8"
@@ -87,7 +91,8 @@
                 Text="{Binding RemoveWifiButtonText}"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
                                             Dark={StaticResource DarkButtonTextColor}}"
-                IsEnabled="{Binding IsRemoveButtonEnabled}" />
+                IsEnabled="{Binding IsRemoveButtonEnabled}">
+            </Button>
 
             <Button
                 Grid.Row="9"
@@ -101,7 +106,8 @@
                 Command="{Binding UpdateWifiSettingsCommand}"
                 Text="UPDATE Wi-Fi"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
-                                            Dark={StaticResource DarkButtonTextColor}}" />
+                                            Dark={StaticResource DarkButtonTextColor}}">
+               </Button>
             
         </Grid>
     </ContentPage.Content>

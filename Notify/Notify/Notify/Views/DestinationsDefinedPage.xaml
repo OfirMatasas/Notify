@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    NavigationPage.HasNavigationBar="False"
+    x:Class="Notify.Views.DestinationsDefinedPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:Notify.Helpers;assembly=Notify">
+    
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <helpers:NullOrEmptyToBoolConverter x:Key="NullOrEmptyToBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
+    <ContentPage.Content>
+        <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, *, Auto">
+
+            <BoxView Grid.RowSpan="10">
+                <BoxView.Background>
+                    <LinearGradientBrush>
+                        <GradientStopCollection>
+                            <GradientStop Color="{AppThemeBinding Dark={StaticResource DarkPageBackgroundColor}, Light={StaticResource LightPageBackgroundColor}}" Offset="0" />
+                            <GradientStop Color="{AppThemeBinding Dark={StaticResource DarkButtonTextColor}, Light={StaticResource LightEntryBackgroundColor}}" Offset="0.4" />
+                        </GradientStopCollection>
+                    </LinearGradientBrush>
+                </BoxView.Background>
+            </BoxView>
+                
+            <Button
+                Grid.Row="0"
+                Margin="-20, 0, 0, 0"
+                Background="Transparent"
+                BackgroundColor="Transparent"
+                Command="{Binding BackCommand}"
+                FontAttributes="Bold"
+                FontSize="Title"
+                HorizontalOptions="Start"
+                Text="❮"
+                TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}"
+                VerticalOptions="Start">
+            </Button>
+            
+            <Label
+                Grid.Row="1"
+                FontAttributes="Bold"
+                FontSize="Title"
+                HorizontalTextAlignment="Center"
+                Style="{StaticResource Body1FontSize_ExoBold}"
+                Text="Destinations Defined"
+                TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
+                                                Dark={StaticResource DarkPrimaryTextColor}}"
+                VerticalTextAlignment="Center">
+            </Label>
+               
+            <Frame
+                Grid.Row="2"
+                BackgroundColor="{AppThemeBinding Dark={StaticResource DarkCollectionViewColor},
+                                                  Light={StaticResource LightCollectionViewColor}}"
+                CornerRadius="20"
+                HasShadow="True"
+                HeightRequest="70"
+                Margin="20,30,20,0"
+                Opacity="0.8"
+                WidthRequest="300">
+                <Grid ColumnDefinitions="*,2,*,2,*" VerticalOptions="Center">
+                    <ImageButton
+                        BackgroundColor="Transparent"
+                        Command="{Binding LocationButtonCommand}"
+                        Grid.Column="0"
+                        Grid.Row="0"
+                        Source="location_icon.png" />
+                    <BoxView
+                        BackgroundColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                          Light={StaticResource LightPrimaryTextColor}}"
+                        Grid.Column="1"
+                        Grid.Row="0"
+                        Opacity="0.3" />
+                    <ImageButton
+                        BackgroundColor="Transparent"
+                        Command="{Binding BlueToothButtonCommand}"
+                        Grid.Column="2"
+                        Grid.Row="0"
+                        Source="bluetooth_icon.png" />
+                    <BoxView
+                        BackgroundColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                          Light={StaticResource LightPrimaryTextColor}}"
+                        Grid.Column="3"
+                        Grid.Row="0"
+                        Opacity="0.3" />
+                    <ImageButton
+                        BackgroundColor="Transparent"
+                        Command="{Binding WifiButtonCommand}"
+                        Grid.Column="4"
+                        Grid.Row="0"
+                        Source="wifi_icon.png" />
+                </Grid>
+            </Frame>
+            
+            <CollectionView
+                Grid.Row="3"
+                BackgroundColor="transparent"
+                HeightRequest="600"
+                IsVisible="True"
+                ItemsSource="{Binding ScrollViewContent}"
+                Margin="20,30,20,0"
+                Opacity="0.8"
+                x:Name="profileCollectionView">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame
+                            BackgroundColor="#FFFFFF"
+                            HeightRequest="{OnPlatform Android=120, iOS=140}"
+                            Padding="10">
+                            <StackLayout>
+                                <Label
+                                    FontSize="Medium"
+                                    FontAttributes="Bold"
+                                    HorizontalOptions="Center"
+                                    Text="{Binding Name, StringFormat='Name: {0}'}"
+                                    TextColor="#393E46" />
+                                <Label
+                                    FontSize="Medium"
+                                    IsVisible="{Binding Address, Converter={StaticResource NullOrEmptyToBoolConverter}}"
+                                    Text="{Binding Address, StringFormat='Location: {0}'}"
+                                    TextColor="#393E46" />
+                                <Label
+                                    FontSize="Medium"
+                                    IsVisible="{Binding SSID, Converter={StaticResource NullOrEmptyToBoolConverter}}"
+                                    Text="{Binding SSID, StringFormat='SSID: {0}'}"
+                                    TextColor="#393E46" />
+                                <Label
+                                    FontSize="Medium"
+                                    IsVisible="{Binding Bluetooth, Converter={StaticResource NullOrEmptyToBoolConverter}}"
+                                    Text="{Binding Bluetooth, StringFormat='Bluetooth: {0}'}"
+                                    TextColor="#393E46" />
+                            </StackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
+

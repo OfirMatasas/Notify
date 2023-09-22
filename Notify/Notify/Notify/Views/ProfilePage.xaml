@@ -29,6 +29,7 @@
                                        Light={StaticResource LightTabBarBackgroundColor}}"
                 Opacity="0.9" />
         </Grid>
+        
         <StackLayout
             Grid.Row="1"
             HorizontalOptions="Center"
@@ -61,6 +62,7 @@
                     Text="{Binding UserName, StringFormat='Hello, {0}'}"
                     TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
                                                 Light={StaticResource LightPrimaryTextColor}}" />
+                
                 <Frame
                     BackgroundColor="{AppThemeBinding Dark={StaticResource DarkCollectionViewColor},
                                                       Light={StaticResource LightCollectionViewColor}}"
@@ -103,21 +105,21 @@
                             Source="wifi_icon.png" />
                     </Grid>
                 </Frame>
-                <CarouselView
+                
+                <CollectionView
                     BackgroundColor="transparent"
                     HeightRequest="140"
                     IsVisible="True"
                     ItemsSource="{Binding ScrollViewContent}"
                     Margin="20,30,20,0"
                     Opacity="0.8"
-                    x:Name="profileCarouselView">
-                    <CarouselView.ItemTemplate>
+                    x:Name="profileCollectionView">
+                    <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Frame
                                 BackgroundColor="#FFFFFF"
                                 CornerRadius="30"
-                                HeightRequest="{OnPlatform Android=120,
-                                                           iOS=140}"
+                                HeightRequest="{OnPlatform Android=120, iOS=140}"
                                 Padding="0">
                                 <StackLayout>
                                     <Label
@@ -152,8 +154,9 @@
                                 </StackLayout>
                             </Frame>
                         </DataTemplate>
-                    </CarouselView.ItemTemplate>
-                </CarouselView>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                
             </StackLayout>
         </StackLayout>
     </Grid>

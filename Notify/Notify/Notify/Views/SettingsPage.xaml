@@ -92,8 +92,22 @@
                                                   Dark={StaticResource DarkButtonColor}}"
                 Command="{Binding GoBluetoothSettingsPageCommand}"
                 CornerRadius="30"
-                Margin="40,5,40,90"
+                Margin="40,5,40,5"
                 Text="Bluetooth Settings"
+                TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
+                                            Dark={StaticResource LightButtonTextColor}}">
+            </Button>
+            
+            <Button
+                Grid.Row="5"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                BackgroundColor="{AppThemeBinding Light={StaticResource LightButtonColor},
+                                                  Dark={StaticResource DarkButtonColor}}"
+                Command="{Binding GoDestinationsSettingsPageCommand}"
+                CornerRadius="30"
+                Margin="40,5,40,120"
+                Text="Destinations Defined"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
                                             Dark={StaticResource LightButtonTextColor}}">
             </Button>
@@ -102,7 +116,7 @@
                 Grid.Row="6"
                 Grid.Column="0"
                 HorizontalOptions="EndAndExpand"
-                Margin="0,0,0,50"
+                Margin="0,0,0,33"
                 Style="{StaticResource Body1FontSize_ExoRegular}"
                 Text="Dark Mode"
                 VerticalTextAlignment="End">
@@ -113,7 +127,7 @@
                 Grid.Column="1"
                 HorizontalOptions="Start"
                 IsToggled="{Binding IsDarkMode}"
-                Margin="0,0,0,50"
+                Margin="0,0,0,30"
                 OnColor="{AppThemeBinding Light={StaticResource LightSecondaryTextColor},
                                           Dark={StaticResource DarkSecondaryTextColor}}"
                 ThumbColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor},

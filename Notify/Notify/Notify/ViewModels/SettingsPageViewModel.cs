@@ -34,6 +34,21 @@ namespace Notify.ViewModels
             }
         }
         
+        public SettingsPageViewModel()
+        {
+            setUser();
+            
+            LoadProfilePictureCommand = new Command(onLoadProfilePicture);
+            GoLocationSettingsPageCommand = new Command(onLocationSettingsButtonClicked);
+            GoNotificationSettingsPageCommand = new Command(onNotificationSettingsButtonClicked);
+            GoWifiSettingsPageCommand = new Command(onWifiSettingsButtonClicked);
+            GoBluetoothSettingsPageCommand = new Command(onBluetoothSettingsButtonClicked);
+            GoDestinationsSettingsPageCommand = new Command(onDestinationsSettingsButtonClicked);
+            DarkModeToggleCommand = new Command(DarkModeToggleCommandHandler);
+
+            Init = Initialize();
+        }
+        
         #region Profile_Picture
         
         private ImageSource m_ProfilePicture;
@@ -137,24 +152,11 @@ namespace Notify.ViewModels
         public Command GoNotificationSettingsPageCommand { get; set; }
         public Command GoWifiSettingsPageCommand { get; set; }
         public Command GoBluetoothSettingsPageCommand { get; set; }
+        public Command GoDestinationsSettingsPageCommand { get; set; }
         public Command DarkModeToggleCommand { get; set; }
         
         public Task Init { get; }
         public bool IsDarkMode { get; set; }
-
-        public SettingsPageViewModel()
-        {
-            setUser();
-            
-            LoadProfilePictureCommand = new Command(onLoadProfilePicture);
-            GoLocationSettingsPageCommand = new Command(onLocationSettingsButtonClicked);
-            GoNotificationSettingsPageCommand = new Command(onNotificationSettingsButtonClicked);
-            GoWifiSettingsPageCommand = new Command(onWifiSettingsButtonClicked);
-            GoBluetoothSettingsPageCommand = new Command(onBluetoothSettingsButtonClicked);
-            DarkModeToggleCommand = new Command(DarkModeToggleCommandHandler);
-
-            Init = Initialize();
-        }
         
         private async void setUser()
         {
@@ -187,6 +189,10 @@ namespace Notify.ViewModels
         private async void onBluetoothSettingsButtonClicked()
         {
             await Shell.Current.Navigation.PushAsync(new BluetoothSettingsPage());
+        }
+        private async void onDestinationsSettingsButtonClicked()
+        {
+            await Shell.Current.Navigation.PushAsync(new DestinationsDefinedPage());
         }
         
         private void DarkModeToggleCommandHandler()

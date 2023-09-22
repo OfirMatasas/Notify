@@ -12,9 +12,9 @@ namespace Notify.Views
         {
             InitializeComponent();
             BindingContext = new ProfilePageViewModel();
-            ((ProfilePageViewModel)BindingContext).LocationButtonCommand.CanExecuteChanged += (s, e) => profileCarouselView.IsVisible = true;
-            ((ProfilePageViewModel)BindingContext).BlueToothButtonCommand.CanExecuteChanged += (s, e) => profileCarouselView.IsVisible = true;
-            ((ProfilePageViewModel)BindingContext).WifiButtonCommand.CanExecuteChanged += (s, e) => profileCarouselView.IsVisible = true;
+            // ((ProfilePageViewModel)BindingContext).LocationButtonCommand.CanExecuteChanged += (s, e) => profileCarouselView.IsVisible = true;
+            // ((ProfilePageViewModel)BindingContext).BlueToothButtonCommand.CanExecuteChanged += (s, e) => profileCarouselView.IsVisible = true;
+            // ((ProfilePageViewModel)BindingContext).WifiButtonCommand.CanExecuteChanged += (s, e) => profileCarouselView.IsVisible = true;
         }
 
     }

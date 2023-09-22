@@ -5,6 +5,7 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:materialDesignControls="clr-namespace:Plugin.MaterialDesignControls;assembly=Plugin.MaterialDesignControls">
+    
     <ContentPage.Content>
         <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, *, Auto">
 
@@ -31,7 +32,8 @@
                 Text="❮"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}"
-                VerticalOptions="Start" />
+                VerticalOptions="Start">
+            </Button>
 
             <Label
                 Grid.Row="1"
@@ -42,7 +44,8 @@
                 Text="Bluetooth Settings"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
                                             Dark={StaticResource DarkPrimaryTextColor}}"
-                VerticalTextAlignment="Center" />
+                VerticalTextAlignment="Center">
+            </Label>
 
             <materialDesignControls:MaterialPicker
                 Grid.Row="2"
@@ -57,7 +60,8 @@
                 BackgroundColor="White"
                 ItemsSource="{Binding LocationSelectionList}"
                 SelectedItem="{Binding SelectedLocation}"
-                TabIndex="1"/>
+                TabIndex="1">
+            </materialDesignControls:MaterialPicker>
 
             <materialDesignControls:MaterialPicker
                 Grid.Row="3"
@@ -72,7 +76,8 @@
                 BackgroundColor="White"
                 ItemsSource="{Binding BluetoothSelectionList}"
                 SelectedItem="{Binding SelectedBluetoothID}"
-                TabIndex="1"/>
+                TabIndex="1">
+            </materialDesignControls:MaterialPicker>
 
             <Button
                 Grid.Row="8"
@@ -87,7 +92,8 @@
                 Text="{Binding RemoveBluetoothButtonText}"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
                             Dark={StaticResource DarkButtonTextColor}}"
-                IsEnabled="{Binding IsRemoveButtonEnabled}" />
+                IsEnabled="{Binding IsRemoveButtonEnabled}">
+            </Button>
 
             <Button
                 Grid.Row="9"
@@ -101,7 +107,9 @@
                 Command="{Binding UpdateBluetoothSettingsCommand}"
                 Text="UPDATE BLUETOOTH"
                 TextColor="{AppThemeBinding Light={StaticResource DarkButtonTextColor},
-                            Dark={StaticResource LightButtonTextColor}}" />
+                            Dark={StaticResource LightButtonTextColor}}">
+            </Button>
+            
         </Grid>
     </ContentPage.Content>
 </ContentPage>
