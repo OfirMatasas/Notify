@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     NavigationPage.HasNavigationBar="False"
-    x:Class="Notify.Views.DestinationsDefinedPage"
+    x:Class="Notify.Views.DefinedDestinationsPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:helpers="clr-namespace:Notify.Helpers;assembly=Notify">
@@ -47,7 +47,7 @@
                 FontSize="Title"
                 HorizontalTextAlignment="Center"
                 Style="{StaticResource Body1FontSize_ExoBold}"
-                Text="Destinations Defined"
+                Text="Defined Destinations"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
                                                 Dark={StaticResource DarkPrimaryTextColor}}"
                 VerticalTextAlignment="Center">
@@ -65,11 +65,27 @@
                 WidthRequest="300">
                 <Grid ColumnDefinitions="*,2,*,2,*" VerticalOptions="Center">
                     <ImageButton
+                        x:Name="LocationButton"
                         BackgroundColor="Transparent"
                         Command="{Binding LocationButtonCommand}"
                         Grid.Column="0"
                         Grid.Row="0"
-                        Source="location_icon.png" />
+                        Source="location_icon.png">
+                        <ImageButton.Triggers>
+                            <DataTrigger
+                                TargetType="ImageButton"
+                                Binding="{Binding IsLocationButtonSelected}"
+                                Value="True">
+                                <Setter Property="BackgroundColor" Value="White" />
+                            </DataTrigger>
+                            <DataTrigger
+                                TargetType="ImageButton"
+                                Binding="{Binding IsLocationButtonSelected}"
+                                Value="False">
+                                <Setter Property="BackgroundColor" Value="Transparent" />
+                            </DataTrigger>
+                        </ImageButton.Triggers>
+                    </ImageButton>
                     <BoxView
                         BackgroundColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
                                                           Light={StaticResource LightPrimaryTextColor}}"
@@ -77,11 +93,27 @@
                         Grid.Row="0"
                         Opacity="0.3" />
                     <ImageButton
+                        x:Name="WifiButton"
                         BackgroundColor="Transparent"
-                        Command="{Binding BlueToothButtonCommand}"
-                        Grid.Column="2"
+                        Command="{Binding WifiButtonCommand}"
+                        Grid.Column="4"
                         Grid.Row="0"
-                        Source="bluetooth_icon.png" />
+                        Source="wifi_icon.png">
+                        <ImageButton.Triggers>
+                            <DataTrigger
+                                TargetType="ImageButton"
+                                Binding="{Binding IsWifiButtonSelected}"
+                                Value="True">
+                                <Setter Property="BackgroundColor" Value="#FFFFFF" />
+                            </DataTrigger>
+                            <DataTrigger
+                                TargetType="ImageButton"
+                                Binding="{Binding IsWifiButtonSelected}"
+                                Value="False">
+                                <Setter Property="BackgroundColor" Value="Transparent" />
+                            </DataTrigger>
+                        </ImageButton.Triggers>
+                    </ImageButton>
                     <BoxView
                         BackgroundColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
                                                           Light={StaticResource LightPrimaryTextColor}}"
@@ -89,11 +121,27 @@
                         Grid.Row="0"
                         Opacity="0.3" />
                     <ImageButton
+                        x:Name="BluetoothButton"
                         BackgroundColor="Transparent"
-                        Command="{Binding WifiButtonCommand}"
-                        Grid.Column="4"
+                        Command="{Binding BlueToothButtonCommand}"
+                        Grid.Column="2"
                         Grid.Row="0"
-                        Source="wifi_icon.png" />
+                        Source="bluetooth_icon.png">
+                        <ImageButton.Triggers>
+                            <DataTrigger
+                                TargetType="ImageButton"
+                                Binding="{Binding IsBluetoothButtonSelected}"
+                                Value="True">
+                                <Setter Property="BackgroundColor" Value="#FFFFFF" />
+                            </DataTrigger>
+                            <DataTrigger
+                                TargetType="ImageButton"
+                                Binding="{Binding IsBluetoothButtonSelected}"
+                                Value="False">
+                                <Setter Property="BackgroundColor" Value="Transparent" />
+                            </DataTrigger>
+                        </ImageButton.Triggers>
+                    </ImageButton>
                 </Grid>
             </Frame>
             

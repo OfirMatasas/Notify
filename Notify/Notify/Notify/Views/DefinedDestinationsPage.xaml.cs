@@ -3,12 +3,12 @@ using Xamarin.Forms.Xaml;
 namespace Notify.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class DestinationsDefinedPage : ContentPage
+    public partial class DefinedDestinationsPage : ContentPage
     {
-        public DestinationsDefinedPage()
+        public DefinedDestinationsPage()
         {
             InitializeComponent();
-            BindingContext = new ViewModels.DestinationsDefinedViewModel();
+            BindingContext = new ViewModels.DefinedDestinationsViewModel();
         }
     }
 }

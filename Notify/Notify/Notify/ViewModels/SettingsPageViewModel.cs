@@ -192,7 +192,7 @@ namespace Notify.ViewModels
         }
         private async void onDestinationsSettingsButtonClicked()
         {
-            await Shell.Current.Navigation.PushAsync(new DestinationsDefinedPage());
+            await Shell.Current.Navigation.PushAsync(new DefinedDestinationsPage());
         }
         
         private void DarkModeToggleCommandHandler()
