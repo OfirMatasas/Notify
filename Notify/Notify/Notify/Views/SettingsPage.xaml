@@ -65,7 +65,7 @@
                 Command="{Binding GoLocationSettingsPageCommand}"
                 CornerRadius="30"
                 Margin="40,40,40,5"
-                Text="Set Address Destination"
+                Text="Set Location Destinations"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
                                             Dark={StaticResource LightButtonTextColor}}">
             </Button>
@@ -79,7 +79,7 @@
                 Command="{Binding GoWifiSettingsPageCommand}"
                 CornerRadius="30"
                 Margin="40,5,40,5"
-                Text="Set Wi-Fi Destination"
+                Text="Set Wi-Fi Destinations"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
                                             Dark={StaticResource LightButtonTextColor}}">
             </Button>
@@ -93,7 +93,7 @@
                 Command="{Binding GoBluetoothSettingsPageCommand}"
                 CornerRadius="30"
                 Margin="40,5,40,5"
-                Text="Set Bluetooth Destination"
+                Text="Set Bluetooth Destinations"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
                                             Dark={StaticResource LightButtonTextColor}}">
             </Button>
