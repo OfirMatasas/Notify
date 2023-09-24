@@ -62,25 +62,23 @@
     <ShellItem Route="bluetooth_settings">
         <ShellContent ContentTemplate="{DataTemplate Views:BluetoothSettingsPage}" />
     </ShellItem>
+    
+    <ShellItem Route="user_destinations_settings">
+        <ShellContent ContentTemplate="{DataTemplate Views:DefinedDestinationsPage}" />
+    </ShellItem>
 
     <TabBar Route="main">
         <Tab
-            Icon="profile.png"
-            Route="home"
-            Title="Home">
-            <ShellContent ContentTemplate="{DataTemplate Views:ProfilePage}" />
+            Icon="notification.png"
+            Route="notifications"
+            Title="Notifications">
+            <ShellContent ContentTemplate="{DataTemplate Views:NotificationsPage}" />
         </Tab>
         <Tab
             Icon="friends.png"
             Route="friends"
             Title="friends">
             <ShellContent ContentTemplate="{DataTemplate Views:FriendsPage}" />
-        </Tab>
-        <Tab
-            Icon="notification.png"
-            Route="notifications"
-            Title="Notifications">
-            <ShellContent ContentTemplate="{DataTemplate Views:NotificationsPage}" />
         </Tab>
         <Tab
             Icon="settings.png"

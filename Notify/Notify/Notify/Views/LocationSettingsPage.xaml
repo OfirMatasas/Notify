@@ -33,7 +33,8 @@
                 Text="❮"
                 TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
                                             Light={StaticResource LightPrimaryTextColor}}"
-                VerticalOptions="Start" />
+                VerticalOptions="Start">
+            </Button>
 
             <Label
                 Grid.Row="1"
@@ -42,7 +43,8 @@
                 HorizontalTextAlignment="Center"
                 Style="{StaticResource Body1FontSize_ExoBold}"
                 Text="Location Settings"
-                VerticalTextAlignment="Center" />
+                VerticalTextAlignment="Center">
+            </Label>
             
             <materialDesignControls1:MaterialPicker
                 Grid.Row="2"
@@ -56,7 +58,8 @@
                 LabelTextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
                                                  Light={StaticResource LightPrimaryTextColor}}"
                 BackgroundColor="White"
-                SelectedItem="{Binding SelectedLocation}"/>
+                SelectedItem="{Binding SelectedLocation}">
+            </materialDesignControls1:MaterialPicker>
             
             <StackLayout
                 Grid.Row="3"
@@ -68,7 +71,8 @@
                     Text="Use Current Location"
                     TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
                                             Light={StaticResource LightPrimaryTextColor}}"
-                    VerticalOptions="Center" />
+                    VerticalOptions="Center">
+                </Label>
             </StackLayout>
             
             <Grid
@@ -137,7 +141,8 @@
                 CornerRadius="30"
                 Text="Get Address Suggestion"
                 TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
-                                            Light={StaticResource LightPrimaryTextColor}}" />
+                                            Light={StaticResource LightPrimaryTextColor}}">
+            </Button>
             
             <Button
                 Grid.Row="8"
@@ -152,7 +157,8 @@
                 Text="{Binding RemoveLocationButtonText}"
                 TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
                                             Light={StaticResource LightPrimaryTextColor}}"
-                IsEnabled="{Binding IsRemoveButtonEnabled}" />
+                IsEnabled="{Binding IsRemoveButtonEnabled}">
+            </Button>
             
             <Button
                 Grid.Row="9"
@@ -166,7 +172,8 @@
                 Command="{Binding UpdateLocationCommand}"
                 Text="UPDATE LOCATION"
                 TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
-                                            Light={StaticResource LightPrimaryTextColor}}" />
+                                            Light={StaticResource LightPrimaryTextColor}}">
+            </Button>
             
         </Grid>
     </ContentPage.Content>
