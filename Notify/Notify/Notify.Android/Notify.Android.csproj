@@ -106,6 +106,7 @@
     <AndroidResource Include="Resources\drawable\blank_profile_picture.png" />
     <AndroidResource Include="Resources\drawable\bluetooth.png" />
     <AndroidResource Include="Resources\drawable\bluetooth_icon.png" />
+    <AndroidResource Include="Resources\drawable\bluetooth_icon_white.png" />
     <AndroidResource Include="Resources\drawable\delete_button.png" />
     <AndroidResource Include="Resources\drawable\dynamic_location_colored_icon.png" />
     <AndroidResource Include="Resources\drawable\edit_button.png" />
@@ -117,6 +118,7 @@
     <AndroidResource Include="Resources\drawable\groups.png" />
     <AndroidResource Include="Resources\drawable\location_colored_icon.png" />
     <AndroidResource Include="Resources\drawable\location_icon.png" />
+    <AndroidResource Include="Resources\drawable\location_icon_white.png" />
     <AndroidResource Include="Resources\drawable\profile.png" />
     <AndroidResource Include="Resources\drawable\refresh_icon.png" />
     <AndroidResource Include="Resources\drawable\home.png" />
@@ -134,6 +136,7 @@
     <AndroidResource Include="Resources\drawable\time_colored_icon.png" />
     <AndroidResource Include="Resources\drawable\wifi.png" />
     <AndroidResource Include="Resources\drawable\wifi_icon.png" />
+    <AndroidResource Include="Resources\drawable\wifi_icon_white.png" />
     <AndroidResource Include="Resources\mipmap-anydpi-v26\icon.xml" />
     <AndroidResource Include="Resources\mipmap-anydpi-v26\icon_round.xml" />
     <AndroidResource Include="Resources\mipmap-hdpi\Notify_adaptive_back.png">

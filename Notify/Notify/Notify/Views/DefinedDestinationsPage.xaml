@@ -3,15 +3,27 @@
     NavigationPage.HasNavigationBar="False"
     x:Class="Notify.Views.DefinedDestinationsPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:helpers="clr-namespace:Notify.Helpers;assembly=Notify">
-    
+    xmlns:helpers="clr-namespace:Notify.Helpers;assembly=Notify"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
     <ContentPage.Resources>
         <ResourceDictionary>
             <helpers:NullOrEmptyToBoolConverter x:Key="NullOrEmptyToBoolConverter" />
+            <helpers:BoolToIconConverter
+                SelectedIcon="location_icon_white.png"
+                UnselectedIcon="location_icon.png"
+                x:Key="LocationIconConverter" />
+            <helpers:BoolToIconConverter
+                SelectedIcon="wifi_icon_white.png"
+                UnselectedIcon="wifi_icon.png"
+                x:Key="WifiIconConverter" />
+            <helpers:BoolToIconConverter
+                SelectedIcon="bluetooth_icon_white.png"
+                UnselectedIcon="bluetooth_icon.png"
+                x:Key="BluetoothIconConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
-    
+
     <ContentPage.Content>
         <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, *, Auto">
 
@@ -25,39 +37,37 @@
                     </LinearGradientBrush>
                 </BoxView.Background>
             </BoxView>
-                
+
             <Button
-                Grid.Row="0"
-                Margin="-20, 0, 0, 0"
                 Background="Transparent"
                 BackgroundColor="Transparent"
                 Command="{Binding BackCommand}"
                 FontAttributes="Bold"
                 FontSize="Title"
+                Grid.Row="0"
                 HorizontalOptions="Start"
+                Margin="-20,0,0,0"
                 Text="❮"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
-                                                Dark={StaticResource DarkPrimaryTextColor}}"
-                VerticalOptions="Start">
-            </Button>
-            
+                                            Dark={StaticResource DarkPrimaryTextColor}}"
+                VerticalOptions="Start" />
+
             <Label
-                Grid.Row="1"
                 FontAttributes="Bold"
                 FontSize="Title"
+                Grid.Row="1"
                 HorizontalTextAlignment="Center"
                 Style="{StaticResource Body1FontSize_ExoBold}"
                 Text="Defined Destinations"
                 TextColor="{AppThemeBinding Light={StaticResource LightButtonTextColor},
-                                                Dark={StaticResource DarkPrimaryTextColor}}"
-                VerticalTextAlignment="Center">
-            </Label>
-               
+                                            Dark={StaticResource DarkPrimaryTextColor}}"
+                VerticalTextAlignment="Center" />
+
             <Frame
-                Grid.Row="2"
                 BackgroundColor="{AppThemeBinding Dark={StaticResource DarkCollectionViewColor},
                                                   Light={StaticResource LightCollectionViewColor}}"
                 CornerRadius="20"
+                Grid.Row="2"
                 HasShadow="True"
                 HeightRequest="70"
                 Margin="20,30,20,0"
@@ -65,27 +75,12 @@
                 WidthRequest="300">
                 <Grid ColumnDefinitions="*,2,*,2,*" VerticalOptions="Center">
                     <ImageButton
-                        x:Name="LocationButton"
                         BackgroundColor="Transparent"
                         Command="{Binding LocationButtonCommand}"
                         Grid.Column="0"
                         Grid.Row="0"
-                        Source="location_icon.png">
-                        <ImageButton.Triggers>
-                            <DataTrigger
-                                TargetType="ImageButton"
-                                Binding="{Binding IsLocationButtonSelected}"
-                                Value="True">
-                                <Setter Property="BackgroundColor" Value="White" />
-                            </DataTrigger>
-                            <DataTrigger
-                                TargetType="ImageButton"
-                                Binding="{Binding IsLocationButtonSelected}"
-                                Value="False">
-                                <Setter Property="BackgroundColor" Value="Transparent" />
-                            </DataTrigger>
-                        </ImageButton.Triggers>
-                    </ImageButton>
+                        Source="{Binding IsLocationButtonSelected, Converter={StaticResource LocationIconConverter}}"
+                        x:Name="LocationButton" />
                     <BoxView
                         BackgroundColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
                                                           Light={StaticResource LightPrimaryTextColor}}"
@@ -93,27 +88,12 @@
                         Grid.Row="0"
                         Opacity="0.3" />
                     <ImageButton
-                        x:Name="WifiButton"
                         BackgroundColor="Transparent"
                         Command="{Binding WifiButtonCommand}"
                         Grid.Column="4"
                         Grid.Row="0"
-                        Source="wifi_icon.png">
-                        <ImageButton.Triggers>
-                            <DataTrigger
-                                TargetType="ImageButton"
-                                Binding="{Binding IsWifiButtonSelected}"
-                                Value="True">
-                                <Setter Property="BackgroundColor" Value="#FFFFFF" />
-                            </DataTrigger>
-                            <DataTrigger
-                                TargetType="ImageButton"
-                                Binding="{Binding IsWifiButtonSelected}"
-                                Value="False">
-                                <Setter Property="BackgroundColor" Value="Transparent" />
-                            </DataTrigger>
-                        </ImageButton.Triggers>
-                    </ImageButton>
+                        Source="{Binding IsWifiButtonSelected, Converter={StaticResource WifiIconConverter}}"
+                        x:Name="WifiButton" />
                     <BoxView
                         BackgroundColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
                                                           Light={StaticResource LightPrimaryTextColor}}"
@@ -121,33 +101,18 @@
                         Grid.Row="0"
                         Opacity="0.3" />
                     <ImageButton
-                        x:Name="BluetoothButton"
                         BackgroundColor="Transparent"
                         Command="{Binding BlueToothButtonCommand}"
                         Grid.Column="2"
                         Grid.Row="0"
-                        Source="bluetooth_icon.png">
-                        <ImageButton.Triggers>
-                            <DataTrigger
-                                TargetType="ImageButton"
-                                Binding="{Binding IsBluetoothButtonSelected}"
-                                Value="True">
-                                <Setter Property="BackgroundColor" Value="#FFFFFF" />
-                            </DataTrigger>
-                            <DataTrigger
-                                TargetType="ImageButton"
-                                Binding="{Binding IsBluetoothButtonSelected}"
-                                Value="False">
-                                <Setter Property="BackgroundColor" Value="Transparent" />
-                            </DataTrigger>
-                        </ImageButton.Triggers>
-                    </ImageButton>
+                        Source="{Binding IsBluetoothButtonSelected, Converter={StaticResource BluetoothIconConverter}}"
+                        x:Name="BluetoothButton" />
                 </Grid>
             </Frame>
-            
+
             <CollectionView
-                Grid.Row="3"
                 BackgroundColor="transparent"
+                Grid.Row="3"
                 HeightRequest="600"
                 IsVisible="True"
                 ItemsSource="{Binding ScrollViewContent}"
@@ -157,13 +122,15 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Frame
-                            BackgroundColor="#FFFFFF"
-                            HeightRequest="{OnPlatform Android=120, iOS=140}"
+                            BackgroundColor="#EEEEEE"
+                            HeightRequest="{OnPlatform Android=120,
+                                                       iOS=140}"
+                            Opacity="0.9"
                             Padding="10">
                             <StackLayout>
                                 <Label
-                                    FontSize="Medium"
                                     FontAttributes="Bold"
+                                    FontSize="Medium"
                                     HorizontalOptions="Center"
                                     Text="{Binding Name, StringFormat='Name: {0}'}"
                                     TextColor="#393E46" />
@@ -187,7 +154,7 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-            
+
         </Grid>
     </ContentPage.Content>
 </ContentPage>

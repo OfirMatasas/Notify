@@ -22,7 +22,27 @@ namespace Notify.Helpers
             return null;
         }
     }
+    
+    public class BoolToIconConverter : IValueConverter
+    {
+        public string SelectedIcon { get; set; }
+        public string UnselectedIcon { get; set; }
 
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is bool boolValue)
+            {
+                return boolValue ? SelectedIcon : UnselectedIcon;
+            }
+            return UnselectedIcon;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
+    
     public class IdToIsExpandedConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
